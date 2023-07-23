@@ -1,0 +1,84 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 256,
+				"texture_height": 256,
+				"visible_bounds_width": 6,
+				"visible_bounds_height": 5.5,
+				"visible_bounds_offset": [0, 2.25, 0]
+			},
+			"bones": [
+				{
+					"name": "whole",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "body",
+					"parent": "whole",
+					"pivot": [0, 42, 0],
+					"cubes": [
+						{"origin": [-19, 51, -19], "size": [38, 11, 38], "uv": [0, 49]},
+						{"origin": [-19, 24, -19], "size": [38, 11, 38], "uv": [0, 0]},
+						{"origin": [8, 35, -19], "size": [11, 16, 38], "uv": [98, 98]},
+						{"origin": [-19, 35, -19], "size": [11, 16, 38], "uv": [0, 98]},
+						{"origin": [-8, 35, 18], "size": [16, 16, 1], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "head",
+					"parent": "body",
+					"pivot": [0, 43, -12],
+					"cubes": [
+						{"origin": [-2, 35, -21], "size": [4, 6, 1], "uv": [0, 17]},
+						{"origin": [-8, 35, -20], "size": [16, 16, 16], "uv": [60, 98]}
+					]
+				},
+				{
+					"name": "waist",
+					"parent": "body",
+					"pivot": [0, 24, 4],
+					"cubes": [
+						{"origin": [-10, 16, -2], "size": [20, 8, 12], "uv": [152, 78]}
+					]
+				},
+				{
+					"name": "arm_left",
+					"parent": "whole",
+					"pivot": [26, 51, 0],
+					"cubes": [
+						{"origin": [19, 0, -7], "size": [14, 64, 14], "uv": [152, 0]},
+						{"origin": [19, 0, 7], "size": [14, 8, 8], "uv": [152, 152]}
+					]
+				},
+				{
+					"name": "arm_right",
+					"parent": "whole",
+					"pivot": [-26, 51, 0],
+					"cubes": [
+						{"origin": [-33, 0, -7], "size": [14, 64, 14], "uv": [0, 152]},
+						{"origin": [-33, 0, 7], "size": [14, 8, 8], "uv": [114, 70]}
+					]
+				},
+				{
+					"name": "leg_left",
+					"parent": "whole",
+					"pivot": [10, 16, 4],
+					"cubes": [
+						{"origin": [4, 0, -4], "size": [12, 16, 16], "uv": [112, 152]}
+					]
+				},
+				{
+					"name": "leg_right",
+					"parent": "whole",
+					"pivot": [-10, 16, 4],
+					"cubes": [
+						{"origin": [-16, 0, -4], "size": [12, 16, 16], "uv": [56, 152]}
+					]
+				}
+			]
+		}
+	]
+}

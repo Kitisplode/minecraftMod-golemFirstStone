@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "fabricplayground",
+	"version": "${version}",
+	"name": "fabric playground",
+	"description": "I'm just playing around with fabric",
+	"authors": [
+		"Kitisplode"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/fabricplayground/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.kitisplode.fabricplayground.FabricPlaygroundMod"
+		],
+		"client": [
+			"com.kitisplode.fabricplayground.FabricPlaygroundModClient"
+		],
+		"fabric-datagen": [
+			"com.kitisplode.fabricplayground.FabricPlaygroundModDataGenerator"
+		]
+	},
+	"mixins": [
+		"fabricplayground.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.21",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
