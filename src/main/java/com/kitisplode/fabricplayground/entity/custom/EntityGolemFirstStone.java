@@ -1,16 +1,24 @@
 package com.kitisplode.fabricplayground.entity.custom;
 
+import com.kitisplode.fabricplayground.entity.goal.MultiStageAttackGoal;
+import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -20,48 +28,58 @@ import software.bernie.geckolib.core.animation.Animation;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
-public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity
-{
-	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
+import java.util.List;
 
-	public int attackState;
-	private int attackTimer;
-	private final int attackTime1Windup = 40;
-	private final int attackTime1Attack = 20;
-	private final int attackTime = attackTime1Windup + attackTime1Attack;
+public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity, IEntityWithDelayedMeleeAttack
+{
+	private static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstStone.class, TrackedDataHandlerRegistry.INTEGER);
+	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
+	private final float attackAOERange = 4.0f;
+	private final float attackKnockbackAmount = 2.0f;
+	private final float attackKnockbackAmountVertical = 0.5f;
+	private final float attackVerticalRange = 1.5f;
 
 	public EntityGolemFirstStone(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
 	{
 		super(pEntityType, pLevel);
-		attackState = 0;
-		attackTimer = 0;
 	}
 
 	public static DefaultAttributeContainer.Builder setAttributes()
 	{
 		return GolemEntity.createMobAttributes()
-			.add(EntityAttributes.GENERIC_MAX_HEALTH, 100.0D)
+			.add(EntityAttributes.GENERIC_MAX_HEALTH, 1000.0D)
 			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25f)
-			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 15.0f);
+			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 30.0f)
+			.add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0f);
 	}
 
-//	@Override
-//	protected void initGoals()
-//	{
-//		this.goalSelector.add(1, new LookAroundGoal(this));
-//		this.goalSelector.add(2, new WanderAroundFarGoal(this, 0.4D));
-//		this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
-//
-//		this.targetSelector
-//			.add(3, new TargetGoal(this, MobEntity.class, 5, false, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
-//	}
+	@Override
+	protected void initDataTracker()
+	{
+		super.initDataTracker();
+		this.dataTracker.startTracking(ATTACK_STATE, 0);
+	}
+
+	public int getAttackState()
+	{
+		return this.dataTracker.get(ATTACK_STATE);
+	}
+
+	public void setAttackState(int pInt)
+	{
+		this.dataTracker.set(ATTACK_STATE, pInt);
+	}
+
+	private float getAttackDamage() {
+		return (float)this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+	}
+
 	@Override
 	protected void initGoals() {
-		this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0, true));
+		this.goalSelector.add(1, new MultiStageAttackGoal(this, 1.0, true, 5.0D, new int[]{60, 20, 15}));
 		this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.3, 32.0F));
 		this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.2, false));
 		this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.2));
-		this.goalSelector.add(5, new IronGolemLookGoal(this));
 		this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
 		this.goalSelector.add(8, new LookAroundGoal(this));
 		this.targetSelector.add(1, new TrackIronGolemTargetGoal(this));
@@ -74,21 +92,48 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity
 	@Override
 	public void tickMovement() {
 		super.tickMovement();
-		if (this.attackTimer > 0) {
-			--this.attackTimer;
-		}
-		if (isAttacking() || this.attackTimer > 0)
-		{
-			setForwardSpeed(0.0f);
-			setSidewaysSpeed(0.0f);
-		}
 	}
 
 	@Override
-	public boolean tryAttack(Entity target)
+	public boolean tryAttack(Entity pTarget)
 	{
-		this.attackTimer = this.attackTime;
-		return super.tryAttack(target);
+		if (getAttackState() != 3) return false;
+		attackDust();
+		attackAOE();
+		return true;
+	}
+
+	private void attackDust()
+	{
+		AreaEffectCloudEntity dust = new AreaEffectCloudEntity(getWorld(), getX(),getY(),getZ());
+		dust.setParticleType(ParticleTypes.SMOKE);
+		dust.setRadius(5.0f);
+		dust.setDuration(1);
+		dust.setPos(getX(),getY(),getZ());
+		getWorld().spawnEntity(dust);
+	}
+
+	private void attackAOE()
+	{
+		List<LivingEntity> targetList = getWorld().getNonSpectatingEntities(LivingEntity.class, getBoundingBox().expand(attackAOERange));
+		for (LivingEntity target : targetList)
+		{
+			// Do not damage ourselves.
+			if (target == this) continue;
+			// Do not damage targets that are too far on the y axis.
+			if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
+
+			// Apply damage.
+			float forceMultiplier = (float)Math.sqrt((attackAOERange - (double)this.distanceTo(target)) / attackAOERange);
+			float totalDamage = getAttackDamage() * forceMultiplier;
+			target.damage(getDamageSources().mobAttack(this), totalDamage);
+			// Apply knockback.
+			double knockbackResistance = Math.max(0.0, 1.0 - target.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE));
+			double knockbackForce = knockbackResistance * attackKnockbackAmount;
+			Vec3d knockbackDirection = target.getPos().subtract(getPos()).normalize().add(0,attackKnockbackAmountVertical,0);
+			target.setVelocity(target.getVelocity().add(knockbackDirection.multiply(knockbackForce)));
+			applyDamageEffects(this, target);
+		}
 	}
 
 	@Override
@@ -97,32 +142,25 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity
 		controllerRegistrar.add(new AnimationController<>(this, "controller", 0, event ->
 		{
 			EntityGolemFirstStone pGolem = event.getAnimatable();
-			if (pGolem.isAttacking())
+			if (pGolem.getAttackState() > 0)
 			{
-				if (pGolem.attackTimer == 0)
-					pGolem.attackTimer = pGolem.attackTime;
-			}
-			if (pGolem.attackTimer > 0)
-			{
-				if (pGolem.attackTimer <= pGolem.attackTime - pGolem.attackTime1Windup)
+				switch (pGolem.getAttackState())
 				{
-					pGolem.attackState = 1;
-				}
-				if (pGolem.attackState == 0)
-				{
-					event.getController().setAnimationSpeed(0.5);
-					return event.setAndContinue(RawAnimation.begin().then("animation.first_stone.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
-				}
-				else
-				{
-					event.getController().setAnimationSpeed(1.00);
-					return event.setAndContinue(RawAnimation.begin().then("animation.first_stone.attack", Animation.LoopType.HOLD_ON_LAST_FRAME));
+					case 1:
+						event.getController().setAnimationSpeed(0.5);
+						return event.setAndContinue(RawAnimation.begin().then("animation.first_stone.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
+					case 2:
+						event.getController().setAnimationSpeed(1.00);
+						return event.setAndContinue(RawAnimation.begin().then("animation.first_stone.attack", Animation.LoopType.HOLD_ON_LAST_FRAME));
+					default:
+						event.getController().setAnimationSpeed(1.00);
+						return event.setAndContinue(RawAnimation.begin().then("animation.first_stone.attack_end", Animation.LoopType.HOLD_ON_LAST_FRAME));
 				}
 			}
 			else
 			{
 				event.getController().setAnimationSpeed(1.00);
-				pGolem.attackState = 0;
+				pGolem.setAttackState(0);
 				if (getVelocity().horizontalLengthSquared() > 0.001D || event.isMoving())
 					return event.setAndContinue(RawAnimation.begin().thenLoop("animation.first_stone.walk"));
 			}

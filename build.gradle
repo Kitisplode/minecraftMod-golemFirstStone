@@ -60,6 +60,7 @@ sourceSets {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+//	mappings loom.officialMojangMappings()
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
@@ -67,9 +68,6 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	modApi("me.shedaniel.cloth:cloth-config-fabric:11.1.106"){exclude(group: "net.fabricmc.fabric-api")}
-
-	modImplementation include ("maven.modrinth:gravity-api:${project.gravity_api_version}"){
-	}
 	
 	// Uncomment the following line to enable the deprecated Fabric API modules. 
 	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.

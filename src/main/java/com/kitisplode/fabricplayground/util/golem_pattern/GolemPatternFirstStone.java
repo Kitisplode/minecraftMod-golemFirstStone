@@ -85,7 +85,7 @@ public class GolemPatternFirstStone extends AbstractGolemPattern
 		EntityGolemFirstStone golem = ModEntities.ENTITY_GOLEM_FIRST_STONE.create(pLevel);
 		if (golem != null)
 		{
-			//golem.setPlayerCreated(true);
+			golem.setPlayerCreated(true);
 
 			positionGolem(pLevel,
 				pPatternMatch,
