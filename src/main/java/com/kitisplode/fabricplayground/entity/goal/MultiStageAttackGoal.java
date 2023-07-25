@@ -3,18 +3,14 @@ package com.kitisplode.fabricplayground.entity.goal;
 import com.kitisplode.fabricplayground.FabricPlaygroundMod;
 import com.kitisplode.fabricplayground.entity.custom.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.fabricplayground.util.ExtraMath;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.Optional;
-
-
 public class MultiStageAttackGoal extends MeleeAttackGoal
 {
-    private IEntityWithDelayedMeleeAttack actor;
+    private final IEntityWithDelayedMeleeAttack actor;
     private int attackState;
     private int attackTimer;
     private final double attackRange;
@@ -121,7 +117,7 @@ public class MultiStageAttackGoal extends MeleeAttackGoal
         // When we actually change state to one where we should attack, do the actual attack.
         if (previousAttackState != attackState)
         {
-//            FabricPlaygroundMod.LOGGER.info("attacktimer: " + attackTimer + " | attackstate: " + attackState);
+            FabricPlaygroundMod.LOGGER.info("attacktimer: " + attackTimer + " | attackstate: " + attackState);
             attack(target);
         }
     }

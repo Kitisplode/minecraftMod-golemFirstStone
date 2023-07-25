@@ -76,7 +76,7 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 
 	@Override
 	protected void initGoals() {
-		this.goalSelector.add(1, new MultiStageAttackGoal(this, 1.0, true, 5.0D, new int[]{60, 20, 15}));
+		this.goalSelector.add(1, new MultiStageAttackGoal(this, 1.0, true, 6.0D, new int[]{70, 30, 25}));
 		this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.3, 32.0F));
 		this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.2, false));
 		this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.2));
@@ -122,9 +122,10 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 			if (target == this) continue;
 			// Do not damage targets that are too far on the y axis.
 			if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
+			if (target instanceof GolemEntity) continue;
 
 			// Apply damage.
-			float forceMultiplier = (float)Math.sqrt((attackAOERange - (double)this.distanceTo(target)) / attackAOERange);
+			float forceMultiplier = Math.abs((attackAOERange - this.distanceTo(target)) / attackAOERange);
 			float totalDamage = getAttackDamage() * forceMultiplier;
 			target.damage(getDamageSources().mobAttack(this), totalDamage);
 			// Apply knockback.
@@ -134,6 +135,12 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 			target.setVelocity(target.getVelocity().add(knockbackDirection.multiply(knockbackForce)));
 			applyDamageEffects(this, target);
 		}
+	}
+
+	@Override
+	public boolean isPushable()
+	{
+		return false;
 	}
 
 	@Override
