@@ -1,6 +1,7 @@
 package com.kitisplode.fabricplayground.item;
 
 import com.kitisplode.fabricplayground.FabricPlaygroundMod;
+import com.kitisplode.fabricplayground.block.ModBlocks;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -15,8 +16,9 @@ public class ModItemGroups
             new Identifier(FabricPlaygroundMod.MOD_ID, "itemgroup_test"),
             FabricItemGroup.builder()
                     .displayName(Text.translatable("itemgroup.itemgroup_test"))
-                    .icon( () -> new ItemStack(ModItems.ITEM_TEST))
+                    .icon( () -> new ItemStack(ModBlocks.BLOCK_HEAD_STONE))
                     .entries((displayContext, entries) -> {
+                        entries.add(ModBlocks.BLOCK_HEAD_STONE);
                         entries.add(ModItems.ITEM_TEST);
                     }).build());
 

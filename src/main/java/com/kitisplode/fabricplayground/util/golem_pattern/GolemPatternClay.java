@@ -36,13 +36,6 @@ public class GolemPatternClay extends AbstractGolemPattern
         EntityGolemClay golem = ModEntities.ENTITY_GOLEM_CLAY.create(pLevel);
         if (golem != null)
         {
-            positionGolem(pLevel,
-                    pPatternMatch,
-                    pPatternMatch.translate(spawnPositionOffset.getX(),
-                                    spawnPositionOffset.getY(),
-                                    spawnPositionOffset.getZ())
-                            .getBlockPos(),
-                    golem);
         }
         return golem;
     }

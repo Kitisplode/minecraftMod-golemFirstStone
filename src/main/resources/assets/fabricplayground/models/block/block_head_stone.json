@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "fabricplayground:block/block_head_stone",
+    "side": "minecraft:block/stone",
+    "top": "minecraft:block/stone",
+    "particle": "minecraft:block/stone"
+  }
+}

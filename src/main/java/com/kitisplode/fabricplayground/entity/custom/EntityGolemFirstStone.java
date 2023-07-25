@@ -1,5 +1,6 @@
 package com.kitisplode.fabricplayground.entity.custom;
 
+import com.kitisplode.fabricplayground.FabricPlaygroundMod;
 import com.kitisplode.fabricplayground.entity.goal.MultiStageAttackGoal;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
@@ -95,9 +96,11 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 	}
 
 	@Override
-	public boolean tryAttack(Entity pTarget)
+	public boolean tryAttack()
 	{
 		if (getAttackState() != 3) return false;
+
+//		FabricPlaygroundMod.LOGGER.info("First of Stone attacked! | attackstate: " + getAttackState());
 		attackDust();
 		attackAOE();
 		return true;

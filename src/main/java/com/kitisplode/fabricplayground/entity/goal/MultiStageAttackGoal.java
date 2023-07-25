@@ -40,6 +40,7 @@ public class MultiStageAttackGoal extends MeleeAttackGoal
     @Override
     public boolean shouldContinue()
     {
+        if (attackState > 0) return true;
         return super.shouldContinue();
     }
 
@@ -74,14 +75,16 @@ public class MultiStageAttackGoal extends MeleeAttackGoal
     public void tick()
     {
         LivingEntity target = this.mob.getTarget();
-        if (target == null) {
-            return;
-        }
-        this.mob.getLookControl().lookAt(target, 30.0f, 30.0f);
-        double distanceToTarget = this.mob.getSquaredDistanceToAttackPosOf(target);
         // If we're not attacking, try to attack if we can.
         if (attackTimer <= 0)
         {
+            if (target == null)
+            {
+                return;
+            }
+            turnTowardsTarget(target);
+            this.mob.getLookControl().lookAt(target, 30.0f, 30.0f);
+            double distanceToTarget = this.mob.getSquaredDistanceToAttackPosOf(target);
             // Approach the target if we're not in attack range (can't beat them up without getting closer)
             if (distanceToTarget > attackRange)
             {
@@ -107,18 +110,13 @@ public class MultiStageAttackGoal extends MeleeAttackGoal
         {
             attackTimer--;// = Math.max(attackTimer - 1, 0);
         }
-        if (attackState < 1)
-        {
-            turnTowardsTarget(target);
-        }
         int previousAttackState = attackState;
         attackState = calculateCurrentAttackState(attackTimer);
         actor.setAttackState(attackState);
         // When we actually change state to one where we should attack, do the actual attack.
         if (previousAttackState != attackState)
         {
-            FabricPlaygroundMod.LOGGER.info("attacktimer: " + attackTimer + " | attackstate: " + attackState);
-            attack(target);
+            attack();
         }
     }
 
@@ -141,8 +139,8 @@ public class MultiStageAttackGoal extends MeleeAttackGoal
         mob.setBodyYaw(MathHelper.lerp(0.5f, (float)mob.getBodyYaw(), (float)targetAngle));
     }
 
-    private void attack(LivingEntity target) {
-        mob.tryAttack(target);
+    private void attack() {
+        actor.tryAttack();
     }
 
 

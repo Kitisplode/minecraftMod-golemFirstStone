@@ -1,5 +1,9 @@
 {
   "item.fabricplayground.item_test": "Test Item",
 
+  "block.fabricplayground.block_head_stone": "Carved Stone Head",
+
+  "entity.fabricplayground.entity_golem_first_stone": "First of Stone",
+
   "itemgroup.itemgroup_test": "Test Mod"
 }

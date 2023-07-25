@@ -26,6 +26,11 @@ public class GolemPatternFirstStone extends AbstractGolemPattern
 		|| state.isOf(Blocks.MOSSY_STONE_BRICKS)
 		|| state.isOf(Blocks.ANDESITE));
 
+	private static final Predicate<BlockState> airPredicate = state -> state != null
+			&& (state.isAir()
+			|| !state.isOpaque()
+	);
+
 	public GolemPatternFirstStone(Predicate<BlockState> pPredicate)
 	{
 		super(pPredicate);
@@ -51,7 +56,7 @@ public class GolemPatternFirstStone extends AbstractGolemPattern
 			)
 			.where('^', CachedBlockPosition.matchesBlockState(spawnBlockPredicate))
 			.where('#', CachedBlockPosition.matchesBlockState(buildingBlockPredicate))
-			.where('~', (p_284868_) -> {return p_284868_.getBlockState().isAir();})
+			.where('~', CachedBlockPosition.matchesBlockState(airPredicate))
 			.build());
 		// Mirrored version
 		patternList.add(BlockPatternBuilder.start()
@@ -75,7 +80,7 @@ public class GolemPatternFirstStone extends AbstractGolemPattern
 			)
 			.where('^', CachedBlockPosition.matchesBlockState(spawnBlockPredicate))
 			.where('#', CachedBlockPosition.matchesBlockState(buildingBlockPredicate))
-			.where('~', (p_284868_) -> {return p_284868_.getBlockState().isAir();})
+			.where('~', CachedBlockPosition.matchesBlockState(airPredicate))
 			.build());
 	}
 
@@ -86,14 +91,6 @@ public class GolemPatternFirstStone extends AbstractGolemPattern
 		if (golem != null)
 		{
 			golem.setPlayerCreated(true);
-
-			positionGolem(pLevel,
-				pPatternMatch,
-				pPatternMatch.translate(spawnPositionOffset.getX(),
-						spawnPositionOffset.getY(),
-						spawnPositionOffset.getZ())
-					.getBlockPos(),
-				golem);
 		}
 		return golem;
 	}

@@ -1,5 +1,7 @@
 package com.kitisplode.fabricplayground.util.golem_pattern;
 
+import com.kitisplode.fabricplayground.FabricPlaygroundMod;
+import com.kitisplode.fabricplayground.util.ExtraMath;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -7,8 +9,12 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.BlockPattern;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.passive.GolemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -49,23 +55,36 @@ abstract public class AbstractGolemPattern
         return null;
     }
 
-    public void SpawnGolem(World pLevel, BlockPattern.Result pPatternMatch, BlockPos pPos)
+    public Entity SpawnGolem(World pLevel, BlockPattern.Result pPatternMatch, BlockPos pPos, PlayerEntity pPlayer)
     {
         clearPatternBlocks(pLevel, pPatternMatch);
 
         // Spawn the golem.
         Entity pGolem = SpawnGolemForReal(pLevel, pPatternMatch, pPos);
+        if (pGolem != null)
+        {
+            BlockPos spawnPosition = pPatternMatch.translate(spawnPositionOffset.getX(),
+                            spawnPositionOffset.getY(),
+                            spawnPositionOffset.getZ())
+                    .getBlockPos();
+            positionGolem(pLevel,
+                    spawnPosition,
+                    (float)ExtraMath.getYawBetweenPoints(spawnPosition.toCenterPos(), pPlayer.getPos()),
+                    pGolem);
+        }
 
         updatePatternBlocks(pLevel, pPatternMatch);
+        return pGolem;
     }
 
     // Intended to be overridden to actually spawn the golem.
     protected abstract Entity SpawnGolemForReal(World pLevel, BlockPattern.Result pPatternMatch, BlockPos pPos);
 
-    protected void positionGolem(World pLevel, BlockPattern.Result pPatternMatch, BlockPos pPos, Entity pGolem)
+    private void positionGolem(World pLevel, BlockPos pPos, float pYaw, Entity pGolem)
     {
+//        FabricPlaygroundMod.LOGGER.info("pYaw " + pYaw);
         if (pGolem == null) return;
-        pGolem.refreshPositionAndAngles((double)pPos.getX() + 0.5D, (double)pPos.getY() + 0.05D, (double)pPos.getZ() + 0.5D, 0.0F, 0.0F);
+        pGolem.refreshPositionAndAngles((double)pPos.getX() + 0.5D, (double)pPos.getY() + 0.05D, (double)pPos.getZ() + 0.5D, pYaw, 0.0F);
         pLevel.spawnEntity(pGolem);
 
         for(ServerPlayerEntity serverplayer : pLevel.getNonSpectatingEntities(ServerPlayerEntity.class, pGolem.getBoundingBox().expand(5.0D))) {
