@@ -55,7 +55,7 @@ abstract public class AbstractGolemPattern
         return null;
     }
 
-    public Entity SpawnGolem(World pLevel, BlockPattern.Result pPatternMatch, BlockPos pPos, PlayerEntity pPlayer)
+    public Entity SpawnGolem(World pLevel, BlockPattern.Result pPatternMatch, BlockPos pPos, Entity pPlayer)
     {
         clearPatternBlocks(pLevel, pPatternMatch);
 

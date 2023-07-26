@@ -1,60 +1,56 @@
-package com.kitisplode.fabricplayground.item.custom;
+package com.kitisplode.fabricplayground.block.custom;
 
 import com.kitisplode.fabricplayground.block.ModBlocks;
-import com.kitisplode.fabricplayground.util.ExtraMath;
 import com.kitisplode.fabricplayground.util.golem_pattern.AbstractGolemPattern;
 import com.kitisplode.fabricplayground.util.golem_pattern.GolemPatternClay;
 import com.kitisplode.fabricplayground.util.golem_pattern.GolemPatternFirstStone;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.WearableCarvedPumpkinBlock;
 import net.minecraft.block.pattern.BlockPattern;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
-public class ItemWordLife extends Item
+public class BlockHeadStone extends WearableCarvedPumpkinBlock
 {
     private static ArrayList<AbstractGolemPattern> patternList = new ArrayList();
     private static final Predicate<BlockState> SPAWN_BLOCK_PREDICATE = state -> state != null
             && (state.isOf(ModBlocks.BLOCK_HEAD_STONE));
 
-    public ItemWordLife(Settings pSettings)
-    {
-        super(pSettings);
+    public BlockHeadStone(AbstractBlock.Settings settings) {
+        super(settings);
         if (patternList.size() == 0)
         {
-            patternList.add(new GolemPatternClay(SPAWN_BLOCK_PREDICATE));
             patternList.add(new GolemPatternFirstStone(SPAWN_BLOCK_PREDICATE));
         }
     }
 
-    @Override @NotNull
-    public TypedActionResult<ItemStack> use(World pLevel, PlayerEntity pPlayer, Hand pHand)
+    public boolean canDispense(WorldView world, BlockPos pos)
     {
-        BlockHitResult ray = this.raycast(pLevel, pPlayer, RaycastContext.FluidHandling.NONE);
-        BlockPos lookPos = ray.getBlockPos();
-
-        if (trySpawnGolem(pLevel, lookPos, pPlayer))
-        {
-            pPlayer.getStackInHand(pHand).decrement(1);
-            return TypedActionResult.success(pPlayer.getStackInHand(pHand), true);
-        }
-
-        return TypedActionResult.fail(pPlayer.getStackInHand(pHand));
+        return false;
     }
 
-    private boolean trySpawnGolem(World pLevel, BlockPos pPos, PlayerEntity pPlayer) {
+    @Override
+    public void onPlaced(World pWorld, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlayer, ItemStack pItemStack)
+    {
+        this.trySpawnGolem(pWorld, pPos, pPlayer);
+    }
+
+    @Override
+    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+        return;
+    }
+
+    private boolean trySpawnGolem(World pLevel, BlockPos pPos, Entity pPlayer) {
         for (int i = 0; i < patternList.size(); i++)
         {
             AbstractGolemPattern currentPattern = patternList.get(i);

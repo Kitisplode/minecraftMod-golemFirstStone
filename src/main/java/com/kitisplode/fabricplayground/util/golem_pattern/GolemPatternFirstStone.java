@@ -1,5 +1,6 @@
 package com.kitisplode.fabricplayground.util.golem_pattern;
 
+import com.kitisplode.fabricplayground.block.ModBlocks;
 import com.kitisplode.fabricplayground.entity.ModEntities;
 import com.kitisplode.fabricplayground.entity.custom.EntityGolemFirstStone;
 import net.minecraft.block.BlockState;
@@ -31,6 +32,10 @@ public class GolemPatternFirstStone extends AbstractGolemPattern
 			|| !state.isOpaque()
 	);
 
+	private static final Predicate<BlockState> corePredicate = state -> state != null
+			&& (state.isOf(ModBlocks.BLOCK_CORE_STONE)
+	);
+
 	public GolemPatternFirstStone(Predicate<BlockState> pPredicate)
 	{
 		super(pPredicate);
@@ -44,7 +49,7 @@ public class GolemPatternFirstStone extends AbstractGolemPattern
 			)
 			.aisle(
 				"###",
-				"###",
+				"#*#",
 				"###",
 				"#~#"
 			)
@@ -57,6 +62,7 @@ public class GolemPatternFirstStone extends AbstractGolemPattern
 			.where('^', CachedBlockPosition.matchesBlockState(spawnBlockPredicate))
 			.where('#', CachedBlockPosition.matchesBlockState(buildingBlockPredicate))
 			.where('~', CachedBlockPosition.matchesBlockState(airPredicate))
+			.where('*', CachedBlockPosition.matchesBlockState(corePredicate))
 			.build());
 		// Mirrored version
 		patternList.add(BlockPatternBuilder.start()
@@ -68,7 +74,7 @@ public class GolemPatternFirstStone extends AbstractGolemPattern
 			)
 			.aisle(
 				"###",
-				"^##",
+				"^*#",
 				"###",
 				"~~~"
 			)
@@ -81,6 +87,7 @@ public class GolemPatternFirstStone extends AbstractGolemPattern
 			.where('^', CachedBlockPosition.matchesBlockState(spawnBlockPredicate))
 			.where('#', CachedBlockPosition.matchesBlockState(buildingBlockPredicate))
 			.where('~', CachedBlockPosition.matchesBlockState(airPredicate))
+			.where('*', CachedBlockPosition.matchesBlockState(corePredicate))
 			.build());
 	}
 

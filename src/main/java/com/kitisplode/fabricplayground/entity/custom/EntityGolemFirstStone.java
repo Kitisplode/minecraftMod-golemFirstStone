@@ -17,6 +17,8 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
+import net.minecraft.entity.passive.MerchantEntity;
+import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
@@ -37,7 +39,7 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 	private final float attackAOERange = 4.0f;
 	private final float attackKnockbackAmount = 2.0f;
-	private final float attackKnockbackAmountVertical = 0.5f;
+	private final float attackKnockbackAmountVertical = 0.25f;
 	private final float attackVerticalRange = 1.5f;
 
 	public EntityGolemFirstStone(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
@@ -123,9 +125,14 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 		{
 			// Do not damage ourselves.
 			if (target == this) continue;
+			// Do not damage targets that are villagers or golems.
+			if (target instanceof VillagerEntity) continue;
+			if (target instanceof MerchantEntity) continue;
+			if (target instanceof GolemEntity) continue;
+			// Do not damage players if the golem is player made.
+			if (target instanceof PlayerEntity && isPlayerCreated()) continue;
 			// Do not damage targets that are too far on the y axis.
 			if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
-			if (target instanceof GolemEntity) continue;
 
 			// Apply damage.
 			float forceMultiplier = Math.abs((attackAOERange - this.distanceTo(target)) / attackAOERange);

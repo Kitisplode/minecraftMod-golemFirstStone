@@ -1,11 +1,12 @@
 package com.kitisplode.fabricplayground.block;
 
 import com.kitisplode.fabricplayground.FabricPlaygroundMod;
+import com.kitisplode.fabricplayground.block.custom.BlockHeadStone;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.CarvedPumpkinBlock;
+import net.minecraft.block.WearableCarvedPumpkinBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -14,7 +15,8 @@ import net.minecraft.util.Identifier;
 
 public class ModBlocks
 {
-    public static final Block BLOCK_HEAD_STONE = registerBlock("block_head_stone", new CarvedPumpkinBlock(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block BLOCK_HEAD_STONE = registerBlock("block_head_stone", new BlockHeadStone(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block BLOCK_CORE_STONE = registerBlock("block_core_stone", new Block(FabricBlockSettings.copyOf(Blocks.STONE)));
 
     private static Block registerBlock(String pName, Block pBlock)
     {

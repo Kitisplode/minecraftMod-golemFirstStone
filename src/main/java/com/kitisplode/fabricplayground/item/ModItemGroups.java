@@ -19,6 +19,7 @@ public class ModItemGroups
                     .icon( () -> new ItemStack(ModBlocks.BLOCK_HEAD_STONE))
                     .entries((displayContext, entries) -> {
                         entries.add(ModBlocks.BLOCK_HEAD_STONE);
+                        entries.add(ModBlocks.BLOCK_CORE_STONE);
                         entries.add(ModItems.ITEM_TEST);
                     }).build());
 
