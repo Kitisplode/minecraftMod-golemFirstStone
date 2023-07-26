@@ -1,9 +1,9 @@
 {
 	"schemaVersion": 1,
-	"id": "fabricplayground",
+	"id": "golemfirststonemod",
 	"version": "${version}",
-	"name": "fabric playground",
-	"description": "I'm just playing around with fabric",
+	"name": "Golem: First of Stone",
+	"description": "Adds the First of Stone from Minecraft Legends to Minecraft as a standalone.",
 	"authors": [
 		"Kitisplode"
 	],
@@ -12,21 +12,21 @@
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
 	"license": "MIT",
-	"icon": "assets/fabricplayground/icon.png",
+	"icon": "assets/golemfirststonemod/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.kitisplode.fabricplayground.FabricPlaygroundMod"
+			"com.kitisplode.golemfirststonemod.GolemFirstStoneMod"
 		],
 		"client": [
-			"com.kitisplode.fabricplayground.FabricPlaygroundModClient"
+			"com.kitisplode.golemfirststonemod.GolemFirstStoneModClient"
 		],
 		"fabric-datagen": [
-			"com.kitisplode.fabricplayground.FabricPlaygroundModDataGenerator"
+			"com.kitisplode.golemfirststonemod.GolemFirstStoneModDataGenerator"
 		]
 	},
 	"mixins": [
-		"fabricplayground.mixins.json"
+		"golemfirststonemod.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.14.21",
@@ -35,6 +35,5 @@
 		"fabric-api": "*"
 	},
 	"suggests": {
-		"another-mod": "*"
 	}
 }

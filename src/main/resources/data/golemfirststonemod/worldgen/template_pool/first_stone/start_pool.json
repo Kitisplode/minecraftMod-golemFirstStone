@@ -1,0 +1,15 @@
+{
+  "name": "golemfirststonemod:first_stone/start_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "golemfirststonemod:first_stone",
+        "processors": "golemfirststonemod:randomize_stone",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}
