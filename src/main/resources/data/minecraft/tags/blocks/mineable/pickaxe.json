@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "fabricplayground:block_head_stone"
+    "fabricplayground:block_head_stone",
+    "fabricplayground:block_core_stone"
   ]
 }
