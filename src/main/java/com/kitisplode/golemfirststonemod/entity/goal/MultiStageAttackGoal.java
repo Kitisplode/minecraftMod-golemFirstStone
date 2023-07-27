@@ -135,7 +135,7 @@ public class MultiStageAttackGoal extends MeleeAttackGoal
     private void turnTowardsTarget(LivingEntity target)
     {
         double targetAngle = ExtraMath.getYawBetweenPoints(mob.getPos(), target.getPos());
-        mob.setBodyYaw(MathHelper.lerp(0.5f, (float)mob.getBodyYaw(), (float)targetAngle));
+        mob.setBodyYaw(MathHelper.lerp(0.5f, (float)mob.getBodyYaw(), (float)targetAngle * MathHelper.RADIANS_PER_DEGREE));
     }
 
     private void attack() {
