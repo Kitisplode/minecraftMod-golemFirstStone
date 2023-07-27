@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "fabricplayground:block_head_stone",
-    "fabricplayground:block_core_stone"
+    "golemfirststonemod:block_head_stone",
+    "golemfirststonemod:block_core_stone"
   ]
 }
