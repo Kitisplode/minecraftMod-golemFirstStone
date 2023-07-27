@@ -2,8 +2,8 @@ package com.kitisplode.golemfirststonemod.entity.client;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.custom.EntityGolemFirstStone;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -13,21 +13,21 @@ import software.bernie.geckolib.model.data.EntityModelData;
 public class EntityModelGolemFirstStone extends GeoModel<EntityGolemFirstStone>
 {
 	@Override
-	public Identifier getModelResource(EntityGolemFirstStone animatable)
+	public ResourceLocation getModelResource(EntityGolemFirstStone animatable)
 	{
-		return new Identifier(GolemFirstStoneMod.MOD_ID, "geo/first_stone_2.geo.json");
+		return new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/first_stone_2.geo.json");
 	}
 
 	@Override
-	public Identifier getTextureResource(EntityGolemFirstStone animatable)
+	public ResourceLocation getTextureResource(EntityGolemFirstStone animatable)
 	{
-		return new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/first_stone_2.png");
+		return new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/first_stone_2.png");
 	}
 
 	@Override
-	public Identifier getAnimationResource(EntityGolemFirstStone animatable)
+	public ResourceLocation getAnimationResource(EntityGolemFirstStone animatable)
 	{
-		return new Identifier(GolemFirstStoneMod.MOD_ID, "animations/first_stone_2.animation.json");
+		return new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/first_stone_2.animation.json");
 	}
 
 	@Override
@@ -37,8 +37,8 @@ public class EntityModelGolemFirstStone extends GeoModel<EntityGolemFirstStone>
 		if (head != null)
 		{
 			EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
-			head.setRotX(MathHelper.clamp(entityData.headPitch(), -20.0f, 20.0f) * MathHelper.RADIANS_PER_DEGREE);
-			head.setRotY(MathHelper.clamp(entityData.netHeadYaw(), -20.0f, 20.0f) * MathHelper.RADIANS_PER_DEGREE);
+			head.setRotX(Mth.clamp(entityData.headPitch(), -20.0f, 20.0f) * Mth.DEG_TO_RAD);
+			head.setRotY(Mth.clamp(entityData.netHeadYaw(), -20.0f, 20.0f) * Mth.DEG_TO_RAD);
 		}
 	}
 }

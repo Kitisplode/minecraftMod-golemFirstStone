@@ -1,20 +1,21 @@
 package com.kitisplode.golemfirststonemod.item;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModItems
 {
-    private static Item registerItem(String pName, Item pItem)
-    {
-        return Registry.register(Registries.ITEM, new Identifier(GolemFirstStoneMod.MOD_ID, pName), pItem);
-    }
+    // Create a list of items to be registered
+    public static final DeferredRegister<Item> ITEMS =
+            DeferredRegister.create(ForgeRegistries.ITEMS, GolemFirstStoneMod.MOD_ID);
 
-    public static void registerModItems()
+    // Called to actually register the items list.
+    public static void register(IEventBus eventBus)
     {
-        GolemFirstStoneMod.LOGGER.info("Registering Mod Items for " + GolemFirstStoneMod.MOD_ID);
+        ITEMS.register(eventBus);
     }
 }

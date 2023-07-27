@@ -2,36 +2,51 @@ package com.kitisplode.golemfirststonemod.block;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.block.custom.BlockHeadStone;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ExperienceDroppingBlock;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.intprovider.ConstantIntProvider;
+import com.kitisplode.golemfirststonemod.item.ModItems;
+import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DropExperienceBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
+
+import java.util.function.Supplier;
 
 public class ModBlocks
 {
-    public static final Block BLOCK_HEAD_STONE = registerBlock("block_head_stone", new BlockHeadStone(FabricBlockSettings.copyOf(Blocks.STONE)));
-    public static final Block BLOCK_CORE_STONE = registerBlock("block_core_stone", new ExperienceDroppingBlock(FabricBlockSettings.copyOf(Blocks.STONE), ConstantIntProvider.create(50)));
+    // Set up the list for blocks to be registered.
+    public static final DeferredRegister<Block> BLOCKS =
+            DeferredRegister.create(ForgeRegistries.BLOCKS, GolemFirstStoneMod.MOD_ID);
 
-    private static Block registerBlock(String pName, Block pBlock)
+    public static final RegistryObject<Block> BLOCK_HEAD_STONE = registerBlock("block_head_stone",
+            () -> new BlockHeadStone(BlockBehaviour.Properties.copy(Blocks.STONE)));
+    public static final RegistryObject<Block> BLOCK_CORE_STONE = registerBlock("block_core_stone",
+            () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.STONE), ConstantInt.of(50)));
+
+
+    // Private helper method to register each of the blocks' corresponding block items.
+    private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block)
     {
-        registerBlockItem(pName, pBlock);
-        return Registry.register(Registries.BLOCK, new Identifier(GolemFirstStoneMod.MOD_ID, pName), pBlock);
+        RegistryObject<T> toReturn = BLOCKS.register(name, block);
+        registerBlockItem(name, toReturn);
+        return toReturn;
     }
 
-    private static Item registerBlockItem(String pName, Block pBlock)
+    // Private helper method to register a block's corresponding item.
+    private static <T extends Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block)
     {
-        return Registry.register(Registries.ITEM, new Identifier(GolemFirstStoneMod.MOD_ID, pName), new BlockItem(pBlock, new FabricItemSettings()));
+        return ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
     }
 
-    public static void registerModBlocks()
+    // Called for registering the blocks.
+    public static void register(IEventBus eventBus)
     {
-        GolemFirstStoneMod.LOGGER.info("Registering ModBlocks for " + GolemFirstStoneMod.MOD_ID);
+        BLOCKS.register(eventBus);
     }
 }

@@ -1,34 +1,28 @@
 package com.kitisplode.golemfirststonemod.entity;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.client.EntityRendererGolemFirstStone;
 import com.kitisplode.golemfirststonemod.entity.custom.EntityGolemFirstStone;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModEntities
 {
-    public static final EntityType<EntityGolemFirstStone> ENTITY_GOLEM_FIRST_STONE = Registry.register(
-            Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_golem_first_stone"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityGolemFirstStone::new)
-                    .dimensions(EntityDimensions.fixed(2.5f, 4.0f))
-                    .build()
-    );
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
+            DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, GolemFirstStoneMod.MOD_ID);
 
-    public static void registerModEntities()
-    {
-        FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_FIRST_STONE, EntityGolemFirstStone.setAttributes());
-    }
+    public static final RegistryObject<EntityType<EntityGolemFirstStone>> ENTITY_GOLEM_FIRST_STONE =
+            ENTITY_TYPES.register("entity_golem_first_stone",
+                    () -> EntityType.Builder.of(EntityGolemFirstStone::new, MobCategory.MISC)
+                            .sized(0.5f, 0.5f)
+                            .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_golem_first_stone").toString()));
 
-    public static void registerModEntitiesRenderers()
+    public static void register(IEventBus eventBus)
     {
-        EntityRendererRegistry.register(ENTITY_GOLEM_FIRST_STONE, EntityRendererGolemFirstStone::new);
+        ENTITY_TYPES.register(eventBus);
     }
 }
