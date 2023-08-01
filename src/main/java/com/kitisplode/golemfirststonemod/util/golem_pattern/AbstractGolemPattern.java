@@ -92,7 +92,7 @@ abstract public class AbstractGolemPattern
     {
         for(int i = 0; i < pPatternMatch.getWidth(); ++i) {
             for(int j = 0; j < pPatternMatch.getHeight(); ++j) {
-                for(int k = 0; k < pPatternMatch.getHeight(); ++k)
+                for(int k = 0; k < pPatternMatch.getDepth(); ++k)
                 {
                     CachedBlockPosition blockinworld = pPatternMatch.translate(i, j, k);
                     pLevel.setBlockState(blockinworld.getBlockPos(), Blocks.AIR.getDefaultState(), Block.NOTIFY_LISTENERS);

@@ -1,6 +1,7 @@
 {
   "block.golemfirststonemod.block_head_stone": "Carved Stone Head",
   "block.golemfirststonemod.block_core_stone": "Carved Stone Core",
+  "block.golemfirststonemod.block_head_oak": "Carved Oak Head",
   "block.golemfirststonemod.block_core_oak": "Carved Oak Core",
 
   "entity.golemfirststonemod.entity_golem_first_stone": "First of Stone",

@@ -1,7 +1,11 @@
 package com.kitisplode.golemfirststonemod.block.custom;
 
+import com.kitisplode.golemfirststonemod.block.ModBlocks;
 import com.kitisplode.golemfirststonemod.util.golem_pattern.GolemPatternFirstStone;
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.BlockState;
+
+import java.util.function.Predicate;
 
 public class BlockHeadStone extends AbstractBlockHead
 {
@@ -16,5 +20,11 @@ public class BlockHeadStone extends AbstractBlockHead
         {
             patternList.add(new GolemPatternFirstStone(SPAWN_BLOCK_PREDICATE));
         }
+    }
+
+    protected Predicate<BlockState> setupPredicates()
+    {
+        return state -> state != null
+                && (state.isOf(this));
     }
 }

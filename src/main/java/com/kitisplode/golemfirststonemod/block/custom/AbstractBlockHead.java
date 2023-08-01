@@ -1,5 +1,6 @@
 package com.kitisplode.golemfirststonemod.block.custom;
 
+import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.block.ModBlocks;
 import com.kitisplode.golemfirststonemod.util.golem_pattern.AbstractGolemPattern;
 import net.minecraft.block.AbstractBlock;
@@ -19,16 +20,18 @@ import java.util.function.Predicate;
 
 abstract public class AbstractBlockHead extends WearableCarvedPumpkinBlock
 {
-    protected static ArrayList<AbstractGolemPattern> patternList = new ArrayList();
-    protected static final Predicate<BlockState> SPAWN_BLOCK_PREDICATE = state -> state != null
-            && (state.isOf(ModBlocks.BLOCK_HEAD_STONE));
+    protected ArrayList<AbstractGolemPattern> patternList = new ArrayList();
+    protected Predicate<BlockState> SPAWN_BLOCK_PREDICATE;
 
     public AbstractBlockHead(AbstractBlock.Settings settings) {
         super(settings);
+        SPAWN_BLOCK_PREDICATE = setupPredicates();
         setupPatterns();
     }
 
     abstract protected void setupPatterns();
+
+    abstract protected Predicate<BlockState> setupPredicates();
 
     public boolean canDispense(WorldView world, BlockPos pos)
     {
@@ -38,6 +41,7 @@ abstract public class AbstractBlockHead extends WearableCarvedPumpkinBlock
     @Override
     public void onPlaced(World pWorld, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlayer, ItemStack pItemStack)
     {
+        GolemFirstStoneMod.LOGGER.info("block state: " + pState.toString());
         this.trySpawnGolem(pWorld, pPos, pPlayer);
     }
 
