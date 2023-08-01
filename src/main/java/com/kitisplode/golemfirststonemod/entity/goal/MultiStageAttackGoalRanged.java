@@ -4,11 +4,19 @@ import com.kitisplode.golemfirststonemod.entity.custom.IEntityWithDelayedMeleeAt
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.ai.pathing.Path;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
-public class MultiStageAttackGoal extends MeleeAttackGoal
+public class MultiStageAttackGoalRanged extends MeleeAttackGoal
 {
+    private Path path;
+    private long lastUpdateTime;
+
+    private long targetOutVisionTimer;
+    private int targetOutVisionTime = 20 * 5;
+
     private final IEntityWithDelayedMeleeAttack actor;
     private int attackState;
     private int attackTimer;
@@ -18,8 +26,9 @@ public class MultiStageAttackGoal extends MeleeAttackGoal
     private Double targetY;
     private Double targetZ;
     private final int[] attackStages;
+    private final int turnDuringState;
 
-    public MultiStageAttackGoal(IEntityWithDelayedMeleeAttack pMob, double pSpeed, boolean pauseWhenMobIdle, double pAttackRange, int[] pAttackStages)
+    public MultiStageAttackGoalRanged(IEntityWithDelayedMeleeAttack pMob, double pSpeed, boolean pauseWhenMobIdle, double pAttackRange, int[] pAttackStages, int pTurnDuringState)
     {
         super((PathAwareEntity) pMob,pSpeed, pauseWhenMobIdle);
         actor = pMob;
@@ -28,18 +37,51 @@ public class MultiStageAttackGoal extends MeleeAttackGoal
         attackTimer = 0;
         attackRange = pAttackRange;
         attackStages = pAttackStages.clone();
+        turnDuringState = pTurnDuringState;
+    }
+
+    public MultiStageAttackGoalRanged(IEntityWithDelayedMeleeAttack pMob, double pSpeed, boolean pauseWhenMobIdle, double pAttackRange, int[] pAttackStages)
+    {
+        super((PathAwareEntity) pMob,pSpeed, pauseWhenMobIdle);
+        actor = pMob;
+        speed = pSpeed;
+        attackState = 0;
+        attackTimer = 0;
+        attackRange = pAttackRange;
+        attackStages = pAttackStages.clone();
+        turnDuringState = 0;
     }
 
     @Override
     public boolean canStart()
     {
-        return super.canStart();
+        long l = this.mob.getWorld().getTime();
+        if (l - this.lastUpdateTime < 20L) {
+            return false;
+        }
+        this.lastUpdateTime = l;
+        LivingEntity target = this.mob.getTarget();
+        if (target == null) {
+            return false;
+        }
+        if (!target.isAlive()) {
+            return false;
+        }
+        this.path = this.mob.getNavigation().findPathTo(target, 0);
+        if (this.path != null) {
+            return true;
+        }
+
+        Vec3d distanceFlattened = new Vec3d(target.getX() - this.mob.getX(), 0, target.getZ() - this.mob.getZ());
+		double distanceSquared = distanceFlattened.lengthSquared();
+        return this.getSquaredMaxAttackDistance(target) >= distanceSquared;//this.mob.squaredDistanceTo(target.getX(), target.getY(), target.getZ());
     }
 
     @Override
     public boolean shouldContinue()
     {
         if (attackState > 0) return true;
+        if (targetOutVisionTimer >= targetOutVisionTime) return false;
         return super.shouldContinue();
     }
 
@@ -47,6 +89,7 @@ public class MultiStageAttackGoal extends MeleeAttackGoal
     public void start()
     {
         super.start();
+        targetOutVisionTimer = 0;
         attackTimer = 0;
         actor.setAttackState(0);
         targetX = null;
@@ -58,6 +101,7 @@ public class MultiStageAttackGoal extends MeleeAttackGoal
     public void stop()
     {
         super.stop();
+        targetOutVisionTimer = 0;
         attackTimer = 0;
         actor.setAttackState(0);
         targetX = null;
@@ -74,6 +118,7 @@ public class MultiStageAttackGoal extends MeleeAttackGoal
     public void tick()
     {
         LivingEntity target = this.mob.getTarget();
+
         // If we're not attacking, try to attack if we can.
         if (attackTimer <= 0)
         {
@@ -81,11 +126,16 @@ public class MultiStageAttackGoal extends MeleeAttackGoal
             {
                 return;
             }
-            turnTowardsTarget(target);
-            this.mob.getLookControl().lookAt(target, 30.0f, 30.0f);
+            // If we can't see the target, count down the timer
+            if (!this.mob.canSee(target))
+            {
+                targetOutVisionTimer++;
+            }
+            else
+                targetOutVisionTimer = 0;
             double distanceToTarget = this.mob.getSquaredDistanceToAttackPosOf(target);
             // Approach the target if we're not in attack range (can't beat them up without getting closer)
-            if (distanceToTarget > attackRange)
+            if (distanceToTarget > attackRange || !this.mob.canSee(target))
             {
                 if (targetX == null || targetY == null || targetZ == null || target.squaredDistanceTo(targetX, targetY, targetZ) >= 1.0)
                 {
@@ -108,6 +158,16 @@ public class MultiStageAttackGoal extends MeleeAttackGoal
         else
         {
             attackTimer--;// = Math.max(attackTimer - 1, 0);
+        }
+        // Turn towards the target.
+        if (attackState <= turnDuringState && target != null)
+        {
+            this.mob.getLookControl().lookAt(target, 30.0f, 30.0f);
+            turnTowardsTarget(target);
+            if (Math.abs(mob.getBodyYaw() - ExtraMath.getYawBetweenPoints(mob.getPos(), target.getPos()) * MathHelper.DEGREES_PER_RADIAN) > 15)
+            {
+                attackTimer++;
+            }
         }
         int previousAttackState = attackState;
         attackState = calculateCurrentAttackState(attackTimer);
@@ -134,13 +194,20 @@ public class MultiStageAttackGoal extends MeleeAttackGoal
 
     private void turnTowardsTarget(LivingEntity target)
     {
-        double targetAngle = ExtraMath.getYawBetweenPoints(mob.getPos(), target.getPos());
-        mob.setBodyYaw(MathHelper.lerp(0.5f, (float)mob.getBodyYaw(), (float)targetAngle * MathHelper.RADIANS_PER_DEGREE));
+        double targetAngle = ExtraMath.getYawBetweenPoints(mob.getPos(), target.getPos()) * MathHelper.DEGREES_PER_RADIAN;
+        mob.setYaw((float)targetAngle);
+        mob.setBodyYaw(mob.getYaw());
     }
 
-    private void attack() {
+    private void attack()
+    {
         actor.tryAttack();
     }
 
-
+    @Override
+    protected double getSquaredMaxAttackDistance(LivingEntity entity) {
+        if (attackRange <= 9)
+            return this.mob.getWidth() * 2.0f * (this.mob.getWidth() * 2.0f) + entity.getWidth();
+        return attackRange;
+    }
 }

@@ -41,7 +41,7 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 	private final float attackAOERange = 4.0f;
 	private final float attackKnockbackAmount = 2.0f;
 	private final float attackKnockbackAmountVertical = 0.25f;
-	private final float attackVerticalRange = 1.5f;
+	private final float attackVerticalRange = 2.0f;
 
 	public EntityGolemFirstStone(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
 	{
@@ -51,11 +51,22 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 	public static DefaultAttributeContainer.Builder setAttributes()
 	{
 		return GolemEntity.createMobAttributes()
-			.add(EntityAttributes.GENERIC_MAX_HEALTH, 1000.0D)
+			.add(EntityAttributes.GENERIC_MAX_HEALTH, 750.0D)
 			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25f)
 			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 30.0f)
 			.add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0f);
+//			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48);
 	}
+
+//	public boolean isCollidable() {
+//		return true;
+//	}
+
+//	@Override
+//	public boolean isPushable()
+//	{
+//		return false;
+//	}
 
 	@Override
 	protected void initDataTracker()
@@ -79,11 +90,17 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 	}
 
 	@Override
+	public double getEyeY()
+	{
+		return getY() + 2.2f;
+	}
+
+	@Override
 	protected void initGoals() {
 		this.goalSelector.add(1, new MultiStageAttackGoal(this, 1.0, true, 6.0D, new int[]{70, 30, 25}));
-		this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.3, 32.0F));
-		this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.2, false));
-		this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.2));
+		this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.8, 32.0F));
+		this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.8, false));
+		this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.8));
 		this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
 		this.goalSelector.add(8, new LookAroundGoal(this));
 		this.targetSelector.add(1, new TrackIronGolemTargetGoal(this));
@@ -103,7 +120,6 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 	{
 		if (getAttackState() != 3) return false;
 
-//		FabricPlaygroundMod.LOGGER.info("First of Stone attacked! | attackstate: " + getAttackState());
 		this.getWorld().sendEntityStatus(this, EntityStatuses.PLAY_ATTACK_SOUND);
 		this.playSound(SoundEvents.ENTITY_GENERIC_EXPLODE, 1.0f, 1.0f);
 		attackDust();
@@ -167,12 +183,6 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 			itemStack.decrement(1);
 		}
 		return ActionResult.success(this.getWorld().isClient);
-	}
-
-	@Override
-	public boolean isPushable()
-	{
-		return false;
 	}
 
 	@Override

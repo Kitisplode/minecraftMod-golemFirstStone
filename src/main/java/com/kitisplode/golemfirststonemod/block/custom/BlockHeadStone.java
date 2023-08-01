@@ -2,6 +2,7 @@ package com.kitisplode.golemfirststonemod.block.custom;
 
 import com.kitisplode.golemfirststonemod.block.ModBlocks;
 import com.kitisplode.golemfirststonemod.util.golem_pattern.AbstractGolemPattern;
+import com.kitisplode.golemfirststonemod.util.golem_pattern.GolemPatternFirstOak;
 import com.kitisplode.golemfirststonemod.util.golem_pattern.GolemPatternFirstStone;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
@@ -29,6 +30,7 @@ public class BlockHeadStone extends WearableCarvedPumpkinBlock
         if (patternList.size() == 0)
         {
             patternList.add(new GolemPatternFirstStone(SPAWN_BLOCK_PREDICATE));
+            patternList.add(new GolemPatternFirstOak(SPAWN_BLOCK_PREDICATE));
         }
     }
 

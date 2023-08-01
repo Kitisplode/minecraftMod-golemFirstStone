@@ -10,6 +10,7 @@ import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +65,7 @@ abstract public class AbstractGolemPattern
                     .getBlockPos();
             positionGolem(pLevel,
                     spawnPosition,
-                    (float)ExtraMath.getYawBetweenPoints(spawnPosition.toCenterPos(), pPlayer.getPos()),
+                    (float)ExtraMath.getYawBetweenPoints(spawnPosition.toCenterPos(), pPlayer.getPos()) * MathHelper.DEGREES_PER_RADIAN,
                     pGolem);
         }
 
