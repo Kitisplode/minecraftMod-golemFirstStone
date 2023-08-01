@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "golemfirststonemod:block_head_oak",
+    "golemfirststonemod:block_core_oak"
+  ]
+}

@@ -1,6 +1,7 @@
 package com.kitisplode.golemfirststonemod.block;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
+import com.kitisplode.golemfirststonemod.block.custom.BlockHeadOak;
 import com.kitisplode.golemfirststonemod.block.custom.BlockHeadStone;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -18,6 +19,8 @@ public class ModBlocks
 {
     public static final Block BLOCK_HEAD_STONE = registerBlock("block_head_stone", new BlockHeadStone(FabricBlockSettings.copyOf(Blocks.STONE)));
     public static final Block BLOCK_CORE_STONE = registerBlock("block_core_stone", new ExperienceDroppingBlock(FabricBlockSettings.copyOf(Blocks.STONE), ConstantIntProvider.create(50)));
+    public static final Block BLOCK_HEAD_OAK = registerBlock("block_head_oak", new BlockHeadOak(FabricBlockSettings.copyOf(Blocks.OAK_WOOD)));
+    public static final Block BLOCK_CORE_OAK = registerBlock("block_core_oak", new ExperienceDroppingBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD), ConstantIntProvider.create(50)));
 
     private static Block registerBlock(String pName, Block pBlock)
     {

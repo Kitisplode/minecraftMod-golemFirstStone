@@ -20,6 +20,8 @@ public class ModItemGroups
                     .entries((displayContext, entries) -> {
                         entries.add(ModBlocks.BLOCK_HEAD_STONE);
                         entries.add(ModBlocks.BLOCK_CORE_STONE);
+                        entries.add(ModBlocks.BLOCK_HEAD_OAK);
+                        entries.add(ModBlocks.BLOCK_CORE_OAK);
                     }).build());
 
     public static void registerItemGroups()
