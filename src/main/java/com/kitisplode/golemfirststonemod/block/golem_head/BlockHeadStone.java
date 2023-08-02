@@ -1,6 +1,5 @@
-package com.kitisplode.golemfirststonemod.block.custom;
+package com.kitisplode.golemfirststonemod.block.golem_head;
 
-import com.kitisplode.golemfirststonemod.block.ModBlocks;
 import com.kitisplode.golemfirststonemod.util.golem_pattern.GolemPatternFirstStone;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;

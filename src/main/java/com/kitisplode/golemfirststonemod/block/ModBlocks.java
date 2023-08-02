@@ -1,8 +1,8 @@
 package com.kitisplode.golemfirststonemod.block;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.block.custom.BlockHeadOak;
-import com.kitisplode.golemfirststonemod.block.custom.BlockHeadStone;
+import com.kitisplode.golemfirststonemod.block.golem_head.BlockHeadOak;
+import com.kitisplode.golemfirststonemod.block.golem_head.BlockHeadStone;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;

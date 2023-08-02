@@ -1,4 +1,4 @@
-package com.kitisplode.golemfirststonemod.block.custom;
+package com.kitisplode.golemfirststonemod.block.golem_head;
 
 import com.kitisplode.golemfirststonemod.block.ModBlocks;
 import com.kitisplode.golemfirststonemod.util.golem_pattern.GolemPatternFirstOak;
