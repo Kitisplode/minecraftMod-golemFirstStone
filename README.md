@@ -1,4 +1,4 @@
-# Golem: Firsts Mod (Fabric)
+# Minecraft Mod - Golem: Firsts of Legend (Fabric)
 
 ---
 

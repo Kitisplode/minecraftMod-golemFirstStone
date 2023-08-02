@@ -2,8 +2,8 @@
 	"schemaVersion": 1,
 	"id": "golemfirststonemod",
 	"version": "${version}",
-	"name": "Golem: First of Stone",
-	"description": "Adds the First of Stone from Minecraft Legends to Minecraft as a standalone.",
+	"name": "Golem: Firsts of Legend",
+	"description": "Adds the First of Stone and First of Oak from Minecraft Legends to Minecraft.",
 	"authors": [
 		"Kitisplode"
 	],
