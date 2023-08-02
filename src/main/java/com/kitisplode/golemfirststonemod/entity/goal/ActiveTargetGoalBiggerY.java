@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 
 public class ActiveTargetGoalBiggerY<T extends LivingEntity> extends ActiveTargetGoal
 {
-    private float yRange;
+    private final float yRange;
 
     public ActiveTargetGoalBiggerY(MobEntity mob, Class<T> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable Predicate<LivingEntity> targetPredicate,
                                    float pYRange)

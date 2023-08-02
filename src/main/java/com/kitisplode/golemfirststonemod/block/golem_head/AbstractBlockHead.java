@@ -41,7 +41,6 @@ abstract public class AbstractBlockHead extends WearableCarvedPumpkinBlock
     @Override
     public void onPlaced(World pWorld, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlayer, ItemStack pItemStack)
     {
-        GolemFirstStoneMod.LOGGER.info("block state: " + pState.toString());
         this.trySpawnGolem(pWorld, pPos, pPlayer);
     }
 

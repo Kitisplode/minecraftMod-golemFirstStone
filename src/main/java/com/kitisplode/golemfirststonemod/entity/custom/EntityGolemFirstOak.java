@@ -53,22 +53,12 @@ public class EntityGolemFirstOak extends IronGolemEntity implements GeoEntity, I
 	public static DefaultAttributeContainer.Builder setAttributes()
 	{
 		return GolemEntity.createMobAttributes()
-			.add(EntityAttributes.GENERIC_MAX_HEALTH, 750.0D)
+			.add(EntityAttributes.GENERIC_MAX_HEALTH, 1000.0f)
 			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25f)
 			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 10.0f)
 			.add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0f)
 			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32);
 	}
-
-//	public boolean isCollidable() {
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean isPushable()
-//	{
-//		return false;
-//	}
 
 	@Override
 	protected void initDataTracker()
@@ -135,7 +125,6 @@ public class EntityGolemFirstOak extends IronGolemEntity implements GeoEntity, I
 		// If we still don't have a target, maybe we shouldn't do anything? lol
 		if (this.getTarget() == null) return false;
 
-//		GolemFirstStoneMod.LOGGER.info("First of Oak attacked! | attackstate: " + getAttackState());
 		this.getWorld().sendEntityStatus(this, EntityStatuses.PLAY_ATTACK_SOUND);
 		this.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, 1.0f, 1.0f);
 		attackDust();
@@ -224,7 +213,7 @@ public class EntityGolemFirstOak extends IronGolemEntity implements GeoEntity, I
 	@Override
 	protected ActionResult interactMob(PlayerEntity player, Hand hand) {
 		ItemStack itemStack = player.getStackInHand(hand);
-		if (!itemStack.isOf(Items.STONE)) {
+		if (!itemStack.isOf(Items.OAK_WOOD)) {
 			return ActionResult.PASS;
 		}
 		float f = this.getHealth();

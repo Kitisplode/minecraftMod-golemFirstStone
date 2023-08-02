@@ -42,14 +42,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
 
     public MultiStageAttackGoalRanged(IEntityWithDelayedMeleeAttack pMob, double pSpeed, boolean pauseWhenMobIdle, double pAttackRange, int[] pAttackStages)
     {
-        super((PathAwareEntity) pMob,pSpeed, pauseWhenMobIdle);
-        actor = pMob;
-        speed = pSpeed;
-        attackState = 0;
-        attackTimer = 0;
-        attackRange = pAttackRange;
-        attackStages = pAttackStages.clone();
-        turnDuringState = 0;
+        this(pMob, pSpeed, pauseWhenMobIdle, pAttackRange, pAttackStages, 0);
     }
 
     @Override
@@ -73,8 +66,8 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         }
 
         Vec3d distanceFlattened = new Vec3d(target.getX() - this.mob.getX(), 0, target.getZ() - this.mob.getZ());
-		double distanceSquared = distanceFlattened.lengthSquared();
-        return this.getSquaredMaxAttackDistance(target) >= distanceSquared;//this.mob.squaredDistanceTo(target.getX(), target.getY(), target.getZ());
+		double distanceFlatSquared = distanceFlattened.lengthSquared();
+        return this.getSquaredMaxAttackDistance(target) >= distanceFlatSquared;//this.mob.squaredDistanceTo(target.getX(), target.getY(), target.getZ());
     }
 
     @Override
@@ -127,7 +120,8 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
                 return;
             }
             // If we can't see the target, count down the timer
-            if (!this.mob.canSee(target))
+            boolean canSeeTarget = this.mob.canSee(target);
+            if (!canSeeTarget)
             {
                 targetOutVisionTimer++;
             }
@@ -135,7 +129,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
                 targetOutVisionTimer = 0;
             double distanceToTarget = this.mob.getSquaredDistanceToAttackPosOf(target);
             // Approach the target if we're not in attack range (can't beat them up without getting closer)
-            if (distanceToTarget > attackRange || !this.mob.canSee(target))
+            if (distanceToTarget > attackRange || !canSeeTarget)
             {
                 if (targetX == null || targetY == null || targetZ == null || target.squaredDistanceTo(targetX, targetY, targetZ) >= 1.0)
                 {
