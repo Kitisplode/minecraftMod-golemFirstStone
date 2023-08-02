@@ -1,7 +1,8 @@
 package com.kitisplode.golemfirststonemod.block;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.block.custom.BlockHeadStone;
+import com.kitisplode.golemfirststonemod.block.golem_head.BlockHeadOak;
+import com.kitisplode.golemfirststonemod.block.golem_head.BlockHeadStone;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.item.BlockItem;
@@ -9,7 +10,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DropExperienceBlock;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -28,6 +28,10 @@ public class ModBlocks
             () -> new BlockHeadStone(BlockBehaviour.Properties.copy(Blocks.STONE)));
     public static final RegistryObject<Block> BLOCK_CORE_STONE = registerBlock("block_core_stone",
             () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.STONE), ConstantInt.of(50)));
+    public static final RegistryObject<Block> BLOCK_HEAD_OAK = registerBlock("block_head_oak",
+            () -> new BlockHeadOak(BlockBehaviour.Properties.copy(Blocks.OAK_WOOD)));
+    public static final RegistryObject<Block> BLOCK_CORE_OAK = registerBlock("block_core_oak",
+            () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.OAK_WOOD), ConstantInt.of(50)));
 
 
     // Private helper method to register each of the blocks' corresponding block items.

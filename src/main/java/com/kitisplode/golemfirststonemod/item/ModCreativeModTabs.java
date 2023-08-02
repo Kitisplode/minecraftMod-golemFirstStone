@@ -15,14 +15,16 @@ public class ModCreativeModTabs
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, GolemFirstStoneMod.MOD_ID);
 
-    public static final RegistryObject<CreativeModeTab> MOD_PLAYGROUND_TAB = CREATIVE_MODE_TABS.register("mod_playground_tab",
+    public static final RegistryObject<CreativeModeTab> MOD_PLAYGROUND_TAB = CREATIVE_MODE_TABS.register("golemfirststonemod",
             () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.BLOCK_HEAD_STONE.get()))  // Set the tab's icon
-                    .title(Component.translatable("creativetab.mod_playground_tab"))        // Fetch the tab name translation
+                    .title(Component.translatable("creativetab.golemfirststonemod"))        // Fetch the tab name translation
                     .displayItems((pParameters, pOutput) -> {                                    // List included items
                         // Items
                         // Blocks
                         pOutput.accept(ModBlocks.BLOCK_HEAD_STONE.get());
                         pOutput.accept(ModBlocks.BLOCK_CORE_STONE.get());
+                        pOutput.accept(ModBlocks.BLOCK_HEAD_OAK.get());
+                        pOutput.accept(ModBlocks.BLOCK_CORE_OAK.get());
                     })
                     .build());
 

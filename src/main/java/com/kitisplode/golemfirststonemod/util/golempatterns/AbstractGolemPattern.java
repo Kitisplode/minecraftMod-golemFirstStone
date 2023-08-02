@@ -65,7 +65,7 @@ public abstract class AbstractGolemPattern
                     .getPos();
             positionGolem(pLevel,
                     spawnPosition,
-                    (float) ExtraMath.getYawBetweenPoints(spawnPosition.getCenter(), pPlayer.position()),
+                    (float) ExtraMath.getYawBetweenPoints(spawnPosition.getCenter(), pPlayer.position()) * Mth.DEG_TO_RAD,
                     pGolem);
         }
 
@@ -91,7 +91,7 @@ public abstract class AbstractGolemPattern
     {
         for(int i = 0; i < pPatternMatch.getWidth(); ++i) {
             for(int j = 0; j < pPatternMatch.getHeight(); ++j) {
-                for(int k = 0; k < pPatternMatch.getHeight(); ++k)
+                for(int k = 0; k < pPatternMatch.getDepth(); ++k)
                 {
                     BlockInWorld blockinworld = pPatternMatch.getBlock(i, j, k);
                     pLevel.setBlock(blockinworld.getPos(), Blocks.AIR.defaultBlockState(), 2);

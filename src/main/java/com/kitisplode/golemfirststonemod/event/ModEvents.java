@@ -2,6 +2,7 @@ package com.kitisplode.golemfirststonemod.event;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
+import com.kitisplode.golemfirststonemod.entity.custom.EntityGolemFirstOak;
 import com.kitisplode.golemfirststonemod.entity.custom.EntityGolemFirstStone;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -14,5 +15,6 @@ public class ModEvents
     public static void entityAttributeEvent(EntityAttributeCreationEvent event)
     {
         event.put(ModEntities.ENTITY_GOLEM_FIRST_STONE.get(), EntityGolemFirstStone.setAttributes());
+        event.put(ModEntities.ENTITY_GOLEM_FIRST_OAK.get(), EntityGolemFirstOak.setAttributes());
     }
 }

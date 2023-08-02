@@ -1,8 +1,6 @@
-package com.kitisplode.golemfirststonemod.block.custom;
+package com.kitisplode.golemfirststonemod.block.golem_head;
 
-import com.kitisplode.golemfirststonemod.block.ModBlocks;
 import com.kitisplode.golemfirststonemod.util.golempatterns.AbstractGolemPattern;
-import com.kitisplode.golemfirststonemod.util.golempatterns.GolemPatternFirstStone;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,19 +16,20 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
-public class BlockHeadStone extends EquipableCarvedPumpkinBlock
+abstract public class AbstractBlockHead extends EquipableCarvedPumpkinBlock
 {
-    private static ArrayList<AbstractGolemPattern> patternList = new ArrayList();
-    private static final Predicate<BlockState> SPAWN_BLOCK_PREDICATE = state -> state != null
-            && (state.is(ModBlocks.BLOCK_HEAD_STONE.get()));
+    protected ArrayList<AbstractGolemPattern> patternList = new ArrayList();
+    protected Predicate<BlockState> SPAWN_BLOCK_PREDICATE;
 
-    public BlockHeadStone(BlockBehaviour.Properties settings) {
+    public AbstractBlockHead(BlockBehaviour.Properties settings) {
         super(settings);
-        if (patternList.size() == 0)
-        {
-            patternList.add(new GolemPatternFirstStone(SPAWN_BLOCK_PREDICATE));
-        }
+        SPAWN_BLOCK_PREDICATE = setupPredicates();
+        setupPatterns();
     }
+
+    abstract protected void setupPatterns();
+
+    abstract protected Predicate<BlockState> setupPredicates();
 
     @Override
     public boolean canSpawnGolem(LevelReader pLevel, BlockPos pPos)
