@@ -12,4 +12,5 @@
     + added Carved Oak Head and Carved Oak Core blocks
     + added First of Oak structure
     + redid First of Stone textures
-    + ported from Fabric to Forge (WIP lol)
+    + ported from Fabric to Forge
+    + fixed issue with First of Stone hitbox being tiny
