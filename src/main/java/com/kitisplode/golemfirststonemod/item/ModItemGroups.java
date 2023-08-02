@@ -13,9 +13,9 @@ import net.minecraft.util.Identifier;
 public class ModItemGroups
 {
     public static final ItemGroup ITEMGROUP_TEST = Registry.register(Registries.ITEM_GROUP,
-            new Identifier(GolemFirstStoneMod.MOD_ID, "itemgroup_test"),
+            new Identifier(GolemFirstStoneMod.MOD_ID, "golemfirststonemod"),
             FabricItemGroup.builder()
-                    .displayName(Text.translatable("itemgroup.itemgroup_test"))
+                    .displayName(Text.translatable("creativetab.golemfirststonemod"))
                     .icon( () -> new ItemStack(ModBlocks.BLOCK_HEAD_STONE))
                     .entries((displayContext, entries) -> {
                         entries.add(ModBlocks.BLOCK_HEAD_STONE);
