@@ -1,4 +1,4 @@
-package com.kitisplode.golemfirststonemod.entity.custom;
+package com.kitisplode.golemfirststonemod.entity.entity;
 
 
 public interface IEntityWithDelayedMeleeAttack

@@ -1,28 +1,28 @@
 package com.kitisplode.golemfirststonemod.entity.client;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstStone;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstBrick;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class EntityRendererGolemFirstStone extends GeoEntityRenderer<EntityGolemFirstStone>
+public class EntityRendererGolemFirstBrick extends GeoEntityRenderer<EntityGolemFirstBrick>
 {
-	public EntityRendererGolemFirstStone(EntityRendererFactory.Context renderManager)
+	public EntityRendererGolemFirstBrick(EntityRendererFactory.Context renderManager)
 	{
-		super(renderManager, new EntityModelGolemFirstStone());
+		super(renderManager, new EntityModelGolemFirstBrick());
 	}
 
 	@Override
-	public Identifier getTextureLocation(EntityGolemFirstStone animatable)
+	public Identifier getTextureLocation(EntityGolemFirstBrick animatable)
 	{
-		return new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/first_stone_2.png");
+		return new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/first_brick.png");
 	}
 
 	@Override
-	public void render(EntityGolemFirstStone entity, float entityYaw, float partialTick, MatrixStack poseStack,
+	public void render(EntityGolemFirstBrick entity, float entityYaw, float partialTick, MatrixStack poseStack,
 					   VertexConsumerProvider bufferSource, int packedLight)
 	{
 		super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);

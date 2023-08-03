@@ -1,7 +1,11 @@
-package com.kitisplode.golemfirststonemod.entity.custom;
+package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
+import com.kitisplode.golemfirststonemod.entity.entity.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.goal.MultiStageAttackGoal;
-import net.minecraft.entity.*;
+import net.minecraft.entity.AreaEffectCloudEntity;
+import net.minecraft.entity.EntityStatuses;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -34,16 +38,16 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.List;
 
-public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity, IEntityWithDelayedMeleeAttack
+public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity, IEntityWithDelayedMeleeAttack
 {
-	private static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstStone.class, TrackedDataHandlerRegistry.INTEGER);
+	private static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstBrick.class, TrackedDataHandlerRegistry.INTEGER);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 	private final float attackAOERange = 4.0f;
 	private final float attackKnockbackAmount = 2.0f;
 	private final float attackKnockbackAmountVertical = 0.25f;
 	private final float attackVerticalRange = 2.0f;
 
-	public EntityGolemFirstStone(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
+	public EntityGolemFirstBrick(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
 	{
 		super(pEntityType, pLevel);
 	}
@@ -190,20 +194,20 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 	{
 		controllerRegistrar.add(new AnimationController<>(this, "controller", 0, event ->
 		{
-			EntityGolemFirstStone pGolem = event.getAnimatable();
+			EntityGolemFirstBrick pGolem = event.getAnimatable();
 			if (pGolem.getAttackState() > 0)
 			{
 				switch (pGolem.getAttackState())
 				{
 					case 1:
 						event.getController().setAnimationSpeed(0.5);
-						return event.setAndContinue(RawAnimation.begin().then("animation.first_stone.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
+						return event.setAndContinue(RawAnimation.begin().then("animation.first_brick.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
 					case 2:
 						event.getController().setAnimationSpeed(1.00);
-						return event.setAndContinue(RawAnimation.begin().then("animation.first_stone.attack", Animation.LoopType.HOLD_ON_LAST_FRAME));
+						return event.setAndContinue(RawAnimation.begin().then("animation.first_brick.attack", Animation.LoopType.HOLD_ON_LAST_FRAME));
 					default:
 						event.getController().setAnimationSpeed(1.00);
-						return event.setAndContinue(RawAnimation.begin().then("animation.first_stone.attack_end", Animation.LoopType.HOLD_ON_LAST_FRAME));
+						return event.setAndContinue(RawAnimation.begin().then("animation.first_brick.attack_end", Animation.LoopType.HOLD_ON_LAST_FRAME));
 				}
 			}
 			else
@@ -211,9 +215,9 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 				event.getController().setAnimationSpeed(1.00);
 				pGolem.setAttackState(0);
 				if (getVelocity().horizontalLengthSquared() > 0.001D || event.isMoving())
-					return event.setAndContinue(RawAnimation.begin().thenLoop("animation.first_stone.walk"));
+					return event.setAndContinue(RawAnimation.begin().thenLoop("animation.first_brick.walk"));
 			}
-			return event.setAndContinue(RawAnimation.begin().thenLoop("animation.first_stone.idle"));
+			return event.setAndContinue(RawAnimation.begin().thenLoop("animation.first_brick.idle"));
 		}));
 	}
 

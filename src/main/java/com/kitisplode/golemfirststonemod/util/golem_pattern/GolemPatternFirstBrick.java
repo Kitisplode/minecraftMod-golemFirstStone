@@ -2,7 +2,8 @@ package com.kitisplode.golemfirststonemod.util.golem_pattern;
 
 import com.kitisplode.golemfirststonemod.block.ModBlocks;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstBrick;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstStone;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.BlockPattern;
@@ -15,14 +16,16 @@ import net.minecraft.world.World;
 
 import java.util.function.Predicate;
 
-public class GolemPatternFirstOak extends AbstractGolemPattern
+public class GolemPatternFirstBrick extends AbstractGolemPattern
 {
 	private static final Predicate<BlockState> buildingBlockPredicate = state -> state != null
-		&& (state.isOf(Blocks.OAK_PLANKS)
-		|| state.isOf(Blocks.OAK_LOG)
-		|| state.isOf(Blocks.STRIPPED_OAK_LOG)
-		|| state.isOf(Blocks.STRIPPED_OAK_WOOD)
-		|| state.isOf(Blocks.OAK_WOOD));
+		&& (state.isOf(Blocks.BRICKS)
+		|| state.isOf(Blocks.MUD_BRICKS)
+		|| state.isOf(Blocks.NETHER_BRICKS)
+		|| state.isOf(Blocks.RED_NETHER_BRICKS)
+		|| state.isOf(Blocks.CRACKED_NETHER_BRICKS)
+		|| state.isOf(Blocks.GRANITE)
+		|| state.isOf(Blocks.POLISHED_GRANITE));
 
 	private static final Predicate<BlockState> airPredicate = state -> state != null
 			&& (state.isAir()
@@ -30,10 +33,10 @@ public class GolemPatternFirstOak extends AbstractGolemPattern
 	);
 
 	private static final Predicate<BlockState> corePredicate = state -> state != null
-			&& (state.isOf(ModBlocks.BLOCK_CORE_OAK)
+			&& (state.isOf(ModBlocks.BLOCK_CORE_STONE)
 	);
 
-	public GolemPatternFirstOak(Predicate<BlockState> pPredicate)
+	public GolemPatternFirstBrick(Predicate<BlockState> pPredicate)
 	{
 		super(pPredicate);
 		spawnPositionOffset = new Vec3i(1,2,1);
@@ -91,7 +94,7 @@ public class GolemPatternFirstOak extends AbstractGolemPattern
 	@Override
 	protected Entity SpawnGolemForReal(World pLevel, BlockPattern.Result pPatternMatch, BlockPos pPos)
 	{
-		EntityGolemFirstOak golem = ModEntities.ENTITY_GOLEM_FIRST_OAK.create(pLevel);
+		EntityGolemFirstBrick golem = ModEntities.ENTITY_GOLEM_FIRST_BRICK.create(pLevel);
 		if (golem != null)
 		{
 			golem.setPlayerCreated(true);

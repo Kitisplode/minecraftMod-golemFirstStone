@@ -1,7 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.client;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstBrick;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import software.bernie.geckolib.constant.DataTickets;
@@ -10,28 +10,28 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
-public class EntityModelGolemFirstOak extends GeoModel<EntityGolemFirstOak>
+public class EntityModelGolemFirstBrick extends GeoModel<EntityGolemFirstBrick>
 {
 	@Override
-	public Identifier getModelResource(EntityGolemFirstOak animatable)
+	public Identifier getModelResource(EntityGolemFirstBrick animatable)
 	{
-		return new Identifier(GolemFirstStoneMod.MOD_ID, "geo/first_oak.geo.json");
+		return new Identifier(GolemFirstStoneMod.MOD_ID, "geo/first_brick.geo.json");
 	}
 
 	@Override
-	public Identifier getTextureResource(EntityGolemFirstOak animatable)
+	public Identifier getTextureResource(EntityGolemFirstBrick animatable)
 	{
-		return new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/first_oak.png");
+		return new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/first_brick.png");
 	}
 
 	@Override
-	public Identifier getAnimationResource(EntityGolemFirstOak animatable)
+	public Identifier getAnimationResource(EntityGolemFirstBrick animatable)
 	{
-		return new Identifier(GolemFirstStoneMod.MOD_ID, "animations/first_oak.animation.json");
+		return new Identifier(GolemFirstStoneMod.MOD_ID, "animations/first_brick.animation.json");
 	}
 
 	@Override
-	public void setCustomAnimations(EntityGolemFirstOak animatable, long instanceId, AnimationState<EntityGolemFirstOak> animationState)
+	public void setCustomAnimations(EntityGolemFirstBrick animatable, long instanceId, AnimationState<EntityGolemFirstBrick> animationState)
 	{
 		CoreGeoBone head = getAnimationProcessor().getBone("head");
 		if (head != null)

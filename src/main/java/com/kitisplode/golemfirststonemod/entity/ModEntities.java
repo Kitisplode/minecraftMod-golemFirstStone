@@ -1,11 +1,13 @@
 package com.kitisplode.golemfirststonemod.entity;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
+import com.kitisplode.golemfirststonemod.entity.client.EntityRendererGolemFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.client.EntityRendererGolemFirstOak;
 import com.kitisplode.golemfirststonemod.entity.client.EntityRendererGolemFirstStone;
-import com.kitisplode.golemfirststonemod.entity.custom.EntityGolemFirstOak;
-import com.kitisplode.golemfirststonemod.entity.custom.EntityGolemFirstStone;
-import com.kitisplode.golemfirststonemod.entity.custom.EntityProjectileFirstOak;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstBrick;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstStone;
+import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileFirstOak;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -39,11 +41,18 @@ public class ModEntities
                     .trackRangeBlocks(4).trackedUpdateRate(10)
                     .build()
     );
+    public static final EntityType<EntityGolemFirstBrick> ENTITY_GOLEM_FIRST_BRICK = Registry.register(
+            Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_golem_first_brick"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityGolemFirstBrick::new)
+                    .dimensions(EntityDimensions.fixed(2.5f, 4.0f))
+                    .build()
+    );
 
     public static void registerModEntities()
     {
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_FIRST_STONE, EntityGolemFirstStone.setAttributes());
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_FIRST_OAK, EntityGolemFirstOak.setAttributes());
+        FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_FIRST_BRICK, EntityGolemFirstBrick.setAttributes());
     }
 
     public static void registerModEntitiesRenderers()
@@ -51,5 +60,6 @@ public class ModEntities
         EntityRendererRegistry.register(ENTITY_GOLEM_FIRST_STONE, EntityRendererGolemFirstStone::new);
         EntityRendererRegistry.register(ENTITY_GOLEM_FIRST_OAK, EntityRendererGolemFirstOak::new);
         EntityRendererRegistry.register(ENTITY_PROJECTILE_FIRST_OAK, ArrowEntityRenderer::new);
+        EntityRendererRegistry.register(ENTITY_GOLEM_FIRST_BRICK, EntityRendererGolemFirstBrick::new);
     }
 }

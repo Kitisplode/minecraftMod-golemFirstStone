@@ -1,8 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.client;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.custom.EntityGolemFirstOak;
-import com.kitisplode.golemfirststonemod.entity.custom.EntityGolemFirstStone;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;

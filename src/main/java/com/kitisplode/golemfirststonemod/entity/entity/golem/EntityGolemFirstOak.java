@@ -1,6 +1,8 @@
-package com.kitisplode.golemfirststonemod.entity.custom;
+package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
+import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileFirstOak;
+import com.kitisplode.golemfirststonemod.entity.entity.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.goal.ActiveTargetGoalBiggerY;
 import com.kitisplode.golemfirststonemod.entity.goal.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;

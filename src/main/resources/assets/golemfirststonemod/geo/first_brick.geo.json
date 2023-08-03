@@ -1,0 +1,80 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 256,
+				"texture_height": 256,
+				"visible_bounds_width": 7,
+				"visible_bounds_height": 6.5,
+				"visible_bounds_offset": [0, 2.75, 0]
+			},
+			"bones": [
+				{
+					"name": "whole",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "body",
+					"parent": "whole",
+					"pivot": [0, 42, 0],
+					"cubes": [
+						{"origin": [-20, 56, -20], "size": [40, 8, 40], "uv": [0, 48]},
+						{"origin": [-20, 24, -20], "size": [40, 8, 40], "uv": [0, 0]},
+						{"origin": [12, 32, -20], "size": [8, 24, 40], "uv": [96, 96]},
+						{"origin": [-20, 32, -20], "size": [8, 24, 40], "uv": [0, 96]},
+						{"origin": [-12, 32, 12], "size": [24, 24, 8], "uv": [56, 96]},
+						{"origin": [-5, 64, -20], "size": [10, 10, 10], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "head",
+					"parent": "body",
+					"pivot": [0, 43, -12],
+					"cubes": [
+						{"origin": [-8, 36, -17], "size": [16, 16, 16], "uv": [152, 85]}
+					]
+				},
+				{
+					"name": "waist",
+					"parent": "body",
+					"pivot": [0, 24, 4]
+				},
+				{
+					"name": "arm_left",
+					"parent": "whole",
+					"pivot": [27, 51, 0],
+					"cubes": [
+						{"origin": [20, 0, -6], "size": [16, 73, 12], "uv": [160, 0]},
+						{"origin": [36, 17, -6], "size": [11, 46, 12], "uv": [102, 160]}
+					]
+				},
+				{
+					"name": "arm_right",
+					"parent": "whole",
+					"pivot": [-27, 51, 0],
+					"cubes": [
+						{"origin": [-36, 0, -6], "size": [16, 73, 12], "uv": [0, 160]},
+						{"origin": [-47, 17, -6], "size": [11, 46, 12], "uv": [56, 160]}
+					]
+				},
+				{
+					"name": "leg_left",
+					"parent": "whole",
+					"pivot": [10, 16, 4],
+					"cubes": [
+						{"origin": [-10, 16, -6], "size": [20, 8, 12], "uv": [148, 160]},
+						{"origin": [-8, 0, -4], "size": [16, 16, 8], "uv": [148, 180]},
+						{"origin": [-8, 0, -12], "size": [16, 8, 8], "uv": [152, 117]}
+					]
+				},
+				{
+					"name": "leg_right",
+					"parent": "whole",
+					"pivot": [-10, 16, 4]
+				}
+			]
+		}
+	]
+}
