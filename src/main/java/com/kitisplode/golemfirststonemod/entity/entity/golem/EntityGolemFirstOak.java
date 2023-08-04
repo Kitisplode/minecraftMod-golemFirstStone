@@ -3,8 +3,8 @@ package com.kitisplode.golemfirststonemod.entity.entity.golem;
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileFirstOak;
 import com.kitisplode.golemfirststonemod.entity.entity.IEntityWithDelayedMeleeAttack;
-import com.kitisplode.golemfirststonemod.entity.goal.ActiveTargetGoalBiggerY;
-import com.kitisplode.golemfirststonemod.entity.goal.MultiStageAttackGoalRanged;
+import com.kitisplode.golemfirststonemod.entity.goal.target.ActiveTargetGoalBiggerY;
+import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
@@ -91,7 +91,7 @@ public class EntityGolemFirstOak extends IronGolemEntity implements GeoEntity, I
 
 	@Override
 	protected void initGoals() {
-		this.goalSelector.add(1, new MultiStageAttackGoalRanged(this, 1.0, true, 1024.0, new int[]{40, 18, 13}, 0));
+		this.goalSelector.add(1, new MultiStageAttackGoalRanged(this, 1.0, true, 1024.0, new int[]{40, 18, 13}, 0, 0));
 		this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.8, 48.0F));
 		this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.8, false));
 		this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.8));

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "~~~",
+    "~#~",
+    "~~~"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:lodestone"
+    },
+    "~": {
+      "item": "minecraft:emerald_block"
+    }
+  },
+  "result": {
+    "item": "golemfirststonemod:block_head_brick"
+  }
+}

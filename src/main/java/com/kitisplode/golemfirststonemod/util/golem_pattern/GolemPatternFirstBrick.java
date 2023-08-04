@@ -33,7 +33,7 @@ public class GolemPatternFirstBrick extends AbstractGolemPattern
 	);
 
 	private static final Predicate<BlockState> corePredicate = state -> state != null
-			&& (state.isOf(ModBlocks.BLOCK_CORE_STONE)
+			&& (state.isOf(ModBlocks.BLOCK_CORE_BRICK)
 	);
 
 	public GolemPatternFirstBrick(Predicate<BlockState> pPredicate)

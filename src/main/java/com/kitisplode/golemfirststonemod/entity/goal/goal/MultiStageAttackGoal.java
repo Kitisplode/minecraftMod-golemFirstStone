@@ -1,4 +1,4 @@
-package com.kitisplode.golemfirststonemod.entity.goal;
+package com.kitisplode.golemfirststonemod.entity.goal.goal;
 
 import com.kitisplode.golemfirststonemod.entity.entity.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;

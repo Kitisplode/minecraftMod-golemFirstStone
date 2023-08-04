@@ -1,0 +1,13 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures":
+  {
+    "down": "minecraft:block/emerald_block",
+    "east": "golemfirststonemod:block/block_head_brick",
+    "north": "golemfirststonemod:block/block_head_brick",
+    "particle": "minecraft:block/emerald_block",
+    "south": "golemfirststonemod:block/block_head_brick",
+    "up": "minecraft:block/emerald_block",
+    "west": "golemfirststonemod:block/block_head_brick"
+  }
+}

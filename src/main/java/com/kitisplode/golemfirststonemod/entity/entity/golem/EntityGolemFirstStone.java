@@ -1,7 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
 import com.kitisplode.golemfirststonemod.entity.entity.IEntityWithDelayedMeleeAttack;
-import com.kitisplode.golemfirststonemod.entity.goal.MultiStageAttackGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoal;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;

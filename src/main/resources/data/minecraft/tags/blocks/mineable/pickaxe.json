@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     "golemfirststonemod:block_head_stone",
-    "golemfirststonemod:block_core_stone"
+    "golemfirststonemod:block_core_stone",
+    "golemfirststonemod:block_head_brick",
+    "golemfirststonemod:block_core_brick"
   ]
 }

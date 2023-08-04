@@ -1,4 +1,4 @@
-package com.kitisplode.golemfirststonemod.entity.goal;
+package com.kitisplode.golemfirststonemod.entity.goal.goal;
 
 import com.kitisplode.golemfirststonemod.entity.entity.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
@@ -15,7 +15,10 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
     private long lastUpdateTime;
 
     private long targetOutVisionTimer;
-    private int targetOutVisionTime = 20 * 5;
+    private final int targetOutVisionTime = 20 * 5;
+
+    private long cooldownTimer;
+    private final int cooldownTime;
 
     private final IEntityWithDelayedMeleeAttack actor;
     private int attackState;
@@ -28,7 +31,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
     private final int[] attackStages;
     private final int turnDuringState;
 
-    public MultiStageAttackGoalRanged(IEntityWithDelayedMeleeAttack pMob, double pSpeed, boolean pauseWhenMobIdle, double pAttackRange, int[] pAttackStages, int pTurnDuringState)
+    public MultiStageAttackGoalRanged(IEntityWithDelayedMeleeAttack pMob, double pSpeed, boolean pauseWhenMobIdle, double pAttackRange, int[] pAttackStages, int pTurnDuringState, int pCooldownTime)
     {
         super((PathAwareEntity) pMob,pSpeed, pauseWhenMobIdle);
         actor = pMob;
@@ -38,11 +41,12 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         attackRange = pAttackRange;
         attackStages = pAttackStages.clone();
         turnDuringState = pTurnDuringState;
+        cooldownTime = pCooldownTime;
     }
 
     public MultiStageAttackGoalRanged(IEntityWithDelayedMeleeAttack pMob, double pSpeed, boolean pauseWhenMobIdle, double pAttackRange, int[] pAttackStages)
     {
-        this(pMob, pSpeed, pauseWhenMobIdle, pAttackRange, pAttackStages, 0);
+        this(pMob, pSpeed, pauseWhenMobIdle, pAttackRange, pAttackStages, 0, 0);
     }
 
     @Override
@@ -110,6 +114,13 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
     @Override
     public void tick()
     {
+        // If our cooldown timer is active, don't do anything else
+//        if (cooldownTimer > 0)
+//        {
+//            cooldownTimer--;
+//            return;
+//        }
+
         LivingEntity target = this.mob.getTarget();
 
         // If we're not attacking, try to attack if we can.
@@ -169,6 +180,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         // When we actually change state to one where we should attack, do the actual attack.
         if (previousAttackState != attackState)
         {
+//            if (attackState == 0) cooldownTimer = cooldownTime;
             attack();
         }
     }
