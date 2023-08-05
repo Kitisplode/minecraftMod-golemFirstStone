@@ -157,59 +157,13 @@ public class EntityGolemFirstOak extends IronGolemEntity implements GeoEntity, I
 		{
 			EntityProjectileFirstOak arrow = new EntityProjectileFirstOak(this.getWorld(), this, attackAOERange, getAttackDamage());
 
-//			double height = target.getEyeY() - this.getEyeY();
-//			Vec3d distanceFlattened = new Vec3d(target.getX() - this.getX(), 0, target.getZ() - this.getZ());
-//			double distanceSquared = distanceFlattened.lengthSquared();
-//			if (height >= -1 || distanceSquared > 144)
-//			{
-//				double pitch = attackGetPitch(height, distanceSquared);
-//				if (Double.isNaN(pitch))
-//				{
-//					return;
-//				}
-//				double dPitch = pitch * MathHelper.DEGREES_PER_RADIAN;
-//				double yaw = ExtraMath.getYawBetweenPoints(this.getPos(), target.getPos()) * MathHelper.DEGREES_PER_RADIAN;
-//				arrow.setVelocity(this, (float) -dPitch, (float) yaw, 0, projectileSpeed, 0);
-//				Vec3d shootingVelocity = ArrowMath.toHit(target.getPos(), this.getEyePos(), target.getVelocity(), projectileSpeed, 0.01, 0.05);
-//				if (shootingVelocity == null)
-//				{
-//					GolemFirstStoneMod.LOGGER.info("First of Oak: Velocity to target not valid...");
-//					return;
-//				}
-//			}
-//			else
-			{
-				Vec3d shootingVelocity = target.getEyePos().subtract(this.getEyePos()).normalize().multiply(projectileSpeed);
-				arrow.setVelocity(shootingVelocity);
-			}
+			Vec3d shootingVelocity = target.getEyePos().subtract(this.getEyePos()).normalize().multiply(projectileSpeed);
+			arrow.setVelocity(shootingVelocity);
 			arrow.age = 35;
 			arrow.setDamage(getAttackDamage());
 			arrow.setNoGravity(true);
-//			arrow.setNoDrag(false);
 			this.getWorld().spawnEntity(arrow);
 		}
-	}
-
-	private double attackGetPitch(double height, double distanceSquared)
-	{
-		double pitch;
-		if (height == 0)
-		{
-			pitch = ExtraMath.getTrajectorySameHeight(MathHelper.sqrt((float)distanceSquared), projectileSpeed, 0.08);
-		}
-		else
-		{
-			pitch = ExtraMath.getTrajectoryDifferentHeight(distanceSquared,
-					height,
-					projectileSpeed,
-					0.08);
-		}
-		if (Double.isNaN(pitch))
-		{
-			GolemFirstStoneMod.LOGGER.info("First of Oak: Pitch to target not valid...");
-			return Double.NaN;
-		}
-		return pitch;
 	}
 
 	@Override

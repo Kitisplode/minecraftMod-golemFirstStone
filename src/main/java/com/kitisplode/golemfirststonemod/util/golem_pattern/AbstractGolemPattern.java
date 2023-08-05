@@ -78,7 +78,6 @@ abstract public class AbstractGolemPattern
 
     private void positionGolem(World pLevel, BlockPos pPos, float pYaw, Entity pGolem)
     {
-//        FabricPlaygroundMod.LOGGER.info("pYaw " + pYaw);
         if (pGolem == null) return;
         pGolem.refreshPositionAndAngles((double)pPos.getX() + 0.5D, (double)pPos.getY() + 0.05D, (double)pPos.getZ() + 0.5D, pYaw, 0.0F);
         pLevel.spawnEntity(pGolem);

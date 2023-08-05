@@ -1,7 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.IEntityWithDelayedMeleeAttack;
+import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.entity.goal.target.PassiveTargetGoal;
 import net.minecraft.entity.AreaEffectCloudEntity;
@@ -29,7 +29,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -88,10 +87,6 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 		this.dataTracker.set(ATTACK_STATE, pInt);
 	}
 
-	private float getAttackDamage() {
-		return (float)this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
-	}
-
 	@Override
 	public double getEyeY()
 	{
@@ -107,21 +102,9 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 		this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
 		this.goalSelector.add(8, new LookAroundGoal(this));
 		this.targetSelector
-				.add(1, new PassiveTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, false, false, playerTarget()));
+				.add(1, new PassiveTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, false, false, golemTarget()));
 		this.targetSelector
 			.add(2, new PassiveTargetGoal<MobEntity>(this, MobEntity.class, 5, false, false, golemTarget()));
-	}
-
-	private Predicate<LivingEntity> playerTarget()
-	{
-		return entity ->
-		{
-			// Check players.
-			float thing = MathHelper.abs(entity.getLastAttackedTime() - entity.age);
-			if (thing < shieldHurtTime)
-				return true;
-			return false;
-		};
 	}
 
 	private Predicate<LivingEntity> golemTarget()
@@ -130,28 +113,27 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 		{
 			// Skip itself.
 			if (entity == this) return false;
-			// Check other golems, villagers
+			// Check other golems, villagers, and players
 			if (entity instanceof GolemEntity
-					|| entity instanceof MerchantEntity)
+					|| entity instanceof MerchantEntity
+					|| (entity instanceof PlayerEntity && isPlayerCreated()))
 			{
-				// For golems currently being attacked:
+				// For entities currently being attacked:
 				LivingEntity targetCurrentAttacker = entity.getAttacker();
 				if (targetCurrentAttacker != null && targetCurrentAttacker.isAlive())
 				{
 					return golemTarget_checkTargetAttacker(targetCurrentAttacker);
 				}
 
-				// For golems not currently being attacked but attacked recently.
+				// For entities not currently being attacked but attacked recently.
 				LivingEntity targetLastAttacker = entity.getLastAttacker();
 				if (targetLastAttacker != null)
 				{
 					if (MathHelper.abs(entity.getLastAttackedTime() - entity.age) < shieldHurtTime)
 					{
-						GolemFirstStoneMod.LOGGER.info("golem last attacked time: " + entity.getLastAttackedTime() + " | golem age: " + entity.age);
 						return golemTarget_checkTargetAttacker(targetLastAttacker);
 					}
 				}
-//				if (entity.getHealth() < entity.getMaxHealth()) return true;
 			}
 			return false;
 		};
@@ -182,6 +164,7 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 
 		this.getWorld().sendEntityStatus(this, EntityStatuses.PLAY_ATTACK_SOUND);
 		this.playSound(SoundEvents.ITEM_SHIELD_BLOCK, 1.0f, 1.0f);
+		this.playSound(SoundEvents.BLOCK_BEACON_POWER_SELECT, 1.0f, 1.0f);
 		attackDust();
 		attackAOE();
 
@@ -203,11 +186,16 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 	private void attackDust()
 	{
 		AreaEffectCloudEntity dust = new AreaEffectCloudEntity(getWorld(), getX(),getY(),getZ());
-		dust.setParticleType(ParticleTypes.SMOKE);
+		dust.setParticleType(ParticleTypes.HAPPY_VILLAGER);
 		dust.setRadius(attackAOERange + 1);
 		dust.setDuration(1);
 		dust.setPos(getX(),getY(),getZ());
 		getWorld().spawnEntity(dust);
+
+		EntityEffectShieldFirstBrick shield = new EntityEffectShieldFirstBrick(getWorld(), getX(),getY(),getZ());
+		shield.setLifeTime(20);
+		shield.setFullScale(attackAOERange * 2.0f);
+		getWorld().spawnEntity(shield);
 	}
 
 	private void attackAOE()
@@ -233,24 +221,13 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 				if (statusEffectInstance2.isDurationBelow(20)) continue;
 				target.addStatusEffect(statusEffectInstance2, this);
 			}
-
-			// Apply damage.
-//			float forceMultiplier = Math.abs((attackAOERange - this.distanceTo(target)) / attackAOERange);
-//			float totalDamage = getAttackDamage() * forceMultiplier;
-//			target.damage(getDamageSources().mobAttack(this), totalDamage);
-//			// Apply knockback.
-//			double knockbackResistance = Math.max(0.0, 1.0 - target.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE));
-//			double knockbackForce = knockbackResistance * attackKnockbackAmount;
-//			Vec3d knockbackDirection = target.getPos().subtract(getPos()).normalize().add(0,attackKnockbackAmountVertical,0);
-//			target.setVelocity(target.getVelocity().add(knockbackDirection.multiply(knockbackForce)));
-//			applyDamageEffects(this, target);
 		}
 	}
 
 	@Override
 	protected ActionResult interactMob(PlayerEntity player, Hand hand) {
 		ItemStack itemStack = player.getStackInHand(hand);
-		if (!itemStack.isOf(Items.STONE)) {
+		if (!itemStack.isOf(Items.BRICKS)) {
 			return ActionResult.PASS;
 		}
 		float f = this.getHealth();

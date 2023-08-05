@@ -1,7 +1,5 @@
 package com.kitisplode.golemfirststonemod.block.golem_head;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.block.ModBlocks;
 import com.kitisplode.golemfirststonemod.util.golem_pattern.AbstractGolemPattern;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
@@ -20,7 +18,7 @@ import java.util.function.Predicate;
 
 abstract public class AbstractBlockHead extends WearableCarvedPumpkinBlock
 {
-    protected ArrayList<AbstractGolemPattern> patternList = new ArrayList();
+    protected ArrayList<AbstractGolemPattern> patternList = new ArrayList<>();
     protected Predicate<BlockState> SPAWN_BLOCK_PREDICATE;
 
     public AbstractBlockHead(AbstractBlock.Settings settings) {

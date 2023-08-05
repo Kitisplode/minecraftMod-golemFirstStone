@@ -1,6 +1,5 @@
 package com.kitisplode.golemfirststonemod.block.golem_head;
 
-import com.kitisplode.golemfirststonemod.block.ModBlocks;
 import com.kitisplode.golemfirststonemod.util.golem_pattern.GolemPatternFirstOak;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
@@ -25,6 +24,6 @@ public class BlockHeadOak extends AbstractBlockHead
     protected Predicate<BlockState> setupPredicates()
     {
         return state -> state != null
-                && (state.isOf(ModBlocks.BLOCK_HEAD_OAK));
+                && (state.isOf(this));
     }
 }

@@ -4,6 +4,8 @@ import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.client.EntityRendererGolemFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.client.EntityRendererGolemFirstOak;
 import com.kitisplode.golemfirststonemod.entity.client.EntityRendererGolemFirstStone;
+import com.kitisplode.golemfirststonemod.entity.client.EntityRendererShieldFirstBrick;
+import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstStone;
@@ -47,6 +49,12 @@ public class ModEntities
                     .dimensions(EntityDimensions.fixed(2.5f, 4.0f))
                     .build()
     );
+    public static final EntityType<EntityEffectShieldFirstBrick> ENTITY_SHIELD_FIRST_BRICK = Registry.register(
+            Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_shield_first_brick"),
+            FabricEntityTypeBuilder.<EntityEffectShieldFirstBrick>create(SpawnGroup.MISC, EntityEffectShieldFirstBrick::new)
+                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f))
+                    .build()
+    );
 
     public static void registerModEntities()
     {
@@ -61,5 +69,6 @@ public class ModEntities
         EntityRendererRegistry.register(ENTITY_GOLEM_FIRST_OAK, EntityRendererGolemFirstOak::new);
         EntityRendererRegistry.register(ENTITY_PROJECTILE_FIRST_OAK, ArrowEntityRenderer::new);
         EntityRendererRegistry.register(ENTITY_GOLEM_FIRST_BRICK, EntityRendererGolemFirstBrick::new);
+        EntityRendererRegistry.register(ENTITY_SHIELD_FIRST_BRICK, EntityRendererShieldFirstBrick::new);
     }
 }

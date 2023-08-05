@@ -59,16 +59,6 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 //			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48);
 	}
 
-//	public boolean isCollidable() {
-//		return true;
-//	}
-
-//	@Override
-//	public boolean isPushable()
-//	{
-//		return false;
-//	}
-
 	@Override
 	protected void initDataTracker()
 	{
