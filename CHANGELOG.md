@@ -11,3 +11,8 @@
     + added Carved Oak Head and Carved Oak Core blocks
     + added First of Oak structure
     + redid First of Stone textures
+
+## 0.0.3
+    + added First of Brick entity
+    + added Sculpted Emerald Head and Molded Brick Core blocks
+    + added First of Brick structure
