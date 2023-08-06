@@ -1,6 +1,6 @@
-package com.kitisplode.golemfirststonemod.entity.goal;
+package com.kitisplode.golemfirststonemod.entity.goal.goal;
 
-import com.kitisplode.golemfirststonemod.entity.custom.IEntityWithDelayedMeleeAttack;
+import com.kitisplode.golemfirststonemod.entity.entity.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,25 +49,24 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         long i = this.mob.level().getGameTime();
         if (i - this.lastUpdateTime < 20L) {
             return false;
-        } else {
-            this.lastUpdateTime = i;
-            LivingEntity target = this.mob.getTarget();
-            if (target == null) {
-                return false;
-            } else if (!target.isAlive()) {
-                return false;
-            } else {
-                this.path = this.mob.getNavigation().createPath(target, 0);
-                if (this.path != null) {
-                    return true;
-                } else {
-
-                    Vec3 distanceFlattened = new Vec3(target.getX() - this.mob.getX(), 0, target.getZ() - this.mob.getZ());
-                    double distanceFlatSquared = distanceFlattened.lengthSqr();
-                    return this.getAttackReachSqr(target) >= distanceFlatSquared;//this.mob.distanceToSqr(target.getX(), target.getY(), target.getZ());
-                }
-            }
         }
+        this.lastUpdateTime = i;
+        LivingEntity target = this.mob.getTarget();
+        if (target == null) {
+            return false;
+        }
+        if (!target.isAlive()) {
+            return false;
+        }
+        this.path = this.mob.getNavigation().createPath(target, 0);
+        if (this.path != null) {
+            return true;
+        }
+
+        Vec3 distanceFlattened = new Vec3(target.getX() - this.mob.getX(), 0, target.getZ() - this.mob.getZ());
+        double distanceFlatSquared = distanceFlattened.lengthSqr();
+        return this.getAttackReachSqr(target) >= distanceFlatSquared;//this.mob.distanceToSqr(target.getX(), target.getY(), target.getZ());
+
     }
 
     @Override
@@ -149,17 +148,13 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         }
         else
         {
-            attackTimer--;// = Math.max(attackTimer - 1, 0);
+            attackTimer--;
         }
         // Turn towards the target.
         if (attackState <= turnDuringState && target != null)
         {
             this.mob.getLookControl().setLookAt(target, 30.0f, 30.0f);
             turnTowardsTarget(target);
-            if (Math.abs(mob.getYRot() - ExtraMath.getYawBetweenPoints(mob.position(), target.position()) * Mth.DEG_TO_RAD) > 15)
-            {
-                attackTimer++;
-            }
         }
         int previousAttackState = attackState;
         attackState = calculateCurrentAttackState(attackTimer);
@@ -186,8 +181,8 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
 
     private void turnTowardsTarget(LivingEntity target)
     {
-        double targetAngle = ExtraMath.getYawBetweenPoints(mob.position(), target.position());
-        mob.setYRot(Mth.lerp(0.5f, (float)mob.getYRot(), (float)targetAngle * Mth.RAD_TO_DEG));
+        double targetAngle = ExtraMath.getYawBetweenPoints(mob.position(), target.position()) * Mth.RAD_TO_DEG;
+        mob.setYRot((float)targetAngle);
         mob.setYBodyRot(mob.getYRot());
     }
 

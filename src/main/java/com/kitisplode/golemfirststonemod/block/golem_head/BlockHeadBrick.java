@@ -1,22 +1,21 @@
 package com.kitisplode.golemfirststonemod.block.golem_head;
 
 import com.kitisplode.golemfirststonemod.block.ModBlocks;
-import com.kitisplode.golemfirststonemod.util.golempatterns.GolemPatternFirstStone;
-import net.minecraft.world.level.block.state.BlockBehaviour;
+import com.kitisplode.golemfirststonemod.util.golempatterns.GolemPatternFirstBrick;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Predicate;
 
-public class BlockHeadStone extends AbstractBlockHead
+public class BlockHeadBrick extends AbstractBlockHead
 {
-    public BlockHeadStone(BlockBehaviour.Properties settings) {
+    public BlockHeadBrick(Properties settings) {
         super(settings);
     }
 
     @Override
     protected void setupPatterns()
     {
-        patternList.add(new GolemPatternFirstStone(SPAWN_BLOCK_PREDICATE));
+        patternList.add(new GolemPatternFirstBrick(SPAWN_BLOCK_PREDICATE));
     }
 
     @Override

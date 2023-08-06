@@ -23,6 +23,6 @@ public class BlockHeadOak extends AbstractBlockHead
     protected Predicate<BlockState> setupPredicates()
     {
         return state -> state != null
-                && (state.is(ModBlocks.BLOCK_HEAD_OAK.get()));
+                && (state.is(this));
     }
 }

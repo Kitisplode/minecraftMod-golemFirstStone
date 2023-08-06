@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "golemfirststonemod:structure_first_brick",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 1642136476,
+    "spacing": 256,
+    "separation": 200,
+    "type": "minecraft:random_spread"
+  }
+}

@@ -25,6 +25,8 @@ public class ModCreativeModTabs
                         pOutput.accept(ModBlocks.BLOCK_CORE_STONE.get());
                         pOutput.accept(ModBlocks.BLOCK_HEAD_OAK.get());
                         pOutput.accept(ModBlocks.BLOCK_CORE_OAK.get());
+                        pOutput.accept(ModBlocks.BLOCK_HEAD_BRICK.get());
+                        pOutput.accept(ModBlocks.BLOCK_CORE_BRICK.get());
                     })
                     .build());
 

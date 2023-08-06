@@ -1,6 +1,7 @@
 package com.kitisplode.golemfirststonemod.block;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
+import com.kitisplode.golemfirststonemod.block.golem_head.BlockHeadBrick;
 import com.kitisplode.golemfirststonemod.block.golem_head.BlockHeadOak;
 import com.kitisplode.golemfirststonemod.block.golem_head.BlockHeadStone;
 import com.kitisplode.golemfirststonemod.item.ModItems;
@@ -32,6 +33,10 @@ public class ModBlocks
             () -> new BlockHeadOak(BlockBehaviour.Properties.copy(Blocks.OAK_WOOD)));
     public static final RegistryObject<Block> BLOCK_CORE_OAK = registerBlock("block_core_oak",
             () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.OAK_WOOD), ConstantInt.of(50)));
+    public static final RegistryObject<Block> BLOCK_HEAD_BRICK = registerBlock("block_head_brick",
+            () -> new BlockHeadBrick(BlockBehaviour.Properties.copy(Blocks.EMERALD_BLOCK)));
+    public static final RegistryObject<Block> BLOCK_CORE_BRICK = registerBlock("block_core_brick",
+            () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.MUD_BRICKS), ConstantInt.of(50)));
 
 
     // Private helper method to register each of the blocks' corresponding block items.

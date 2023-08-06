@@ -1,4 +1,4 @@
-package com.kitisplode.golemfirststonemod.entity.custom;
+package com.kitisplode.golemfirststonemod.entity.entity.projectile;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import net.minecraft.world.damagesource.DamageSource;

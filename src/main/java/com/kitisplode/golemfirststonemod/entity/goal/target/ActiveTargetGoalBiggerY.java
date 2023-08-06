@@ -1,4 +1,4 @@
-package com.kitisplode.golemfirststonemod.entity.goal;
+package com.kitisplode.golemfirststonemod.entity.goal.target;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
