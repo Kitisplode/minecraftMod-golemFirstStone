@@ -190,16 +190,17 @@ public class EntityGolemFirstBrick extends IronGolem implements GeoEntity, IEnti
 
     private void attackDust()
     {
+        float range = attackAOERange + 1;
         AreaEffectCloud dust = new AreaEffectCloud(level(), getX(),getY(),getZ());
         dust.setParticle(ParticleTypes.HAPPY_VILLAGER);
-        dust.setRadius(attackAOERange);
+        dust.setRadius(range);
         dust.setDuration(1);
         dust.setPos(getX(),getY(),getZ());
         level().addFreshEntity(dust);
 
         EntityEffectShieldFirstBrick shield = new EntityEffectShieldFirstBrick(level(), getX(),getY(),getZ());
         shield.setLifeTime(20);
-        shield.setFullScale(attackAOERange * 2.0f);
+        shield.setFullScale(range * 2.0f);
         level().addFreshEntity(shield);
     }
 
