@@ -46,7 +46,6 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 {
 	private static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstBrick.class, TrackedDataHandlerRegistry.INTEGER);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-	private final int shieldCooldown = 20 * 15;
 	private final int shieldHurtTime = 30;
 	private final int shieldAbsorptionTime = 20 * 5;
 	private final int shieldAbsorptionAmount = 0;
@@ -95,7 +94,7 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 
 	@Override
 	protected void initGoals() {
-		this.goalSelector.add(1, new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(attackAOERange), new int[]{70, 30, 25}, 0, shieldCooldown));
+		this.goalSelector.add(1, new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(attackAOERange), new int[]{70, 30, 25}, 0));
 		this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.8, 32.0F));
 		this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.8, false));
 		this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.8));
@@ -153,11 +152,6 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 	}
 
 	@Override
-	public void tickMovement() {
-		super.tickMovement();
-	}
-
-	@Override
 	public boolean tryAttack()
 	{
 		if (getAttackState() != 3) return false;
@@ -185,16 +179,17 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 
 	private void attackDust()
 	{
+		float range = attackAOERange + 1;
 		AreaEffectCloudEntity dust = new AreaEffectCloudEntity(getWorld(), getX(),getY(),getZ());
 		dust.setParticleType(ParticleTypes.HAPPY_VILLAGER);
-		dust.setRadius(attackAOERange + 1);
+		dust.setRadius(range);
 		dust.setDuration(1);
 		dust.setPos(getX(),getY(),getZ());
 		getWorld().spawnEntity(dust);
 
 		EntityEffectShieldFirstBrick shield = new EntityEffectShieldFirstBrick(getWorld(), getX(),getY(),getZ());
 		shield.setLifeTime(20);
-		shield.setFullScale(attackAOERange * 2.0f);
+		shield.setFullScale(range * 2.0f);
 		getWorld().spawnEntity(shield);
 	}
 

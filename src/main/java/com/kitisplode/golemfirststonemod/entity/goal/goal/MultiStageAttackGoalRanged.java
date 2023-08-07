@@ -28,7 +28,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
     private final int[] attackStages;
     private final int turnDuringState;
 
-    public MultiStageAttackGoalRanged(IEntityWithDelayedMeleeAttack pMob, double pSpeed, boolean pauseWhenMobIdle, double pAttackRange, int[] pAttackStages, int pTurnDuringState, int pCooldownTime)
+    public MultiStageAttackGoalRanged(IEntityWithDelayedMeleeAttack pMob, double pSpeed, boolean pauseWhenMobIdle, double pAttackRange, int[] pAttackStages, int pTurnDuringState)
     {
         super((PathAwareEntity) pMob,pSpeed, pauseWhenMobIdle);
         actor = pMob;
@@ -42,7 +42,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
 
     public MultiStageAttackGoalRanged(IEntityWithDelayedMeleeAttack pMob, double pSpeed, boolean pauseWhenMobIdle, double pAttackRange, int[] pAttackStages)
     {
-        this(pMob, pSpeed, pauseWhenMobIdle, pAttackRange, pAttackStages, 0, 0);
+        this(pMob, pSpeed, pauseWhenMobIdle, pAttackRange, pAttackStages, 0);
     }
 
     @Override
@@ -110,9 +110,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
     @Override
     public void tick()
     {
-
         LivingEntity target = this.mob.getTarget();
-
         // If we're not attacking, try to attack if we can.
         if (attackTimer <= 0)
         {
@@ -159,10 +157,6 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         {
             this.mob.getLookControl().lookAt(target, 30.0f, 30.0f);
             turnTowardsTarget(target);
-            if (Math.abs(mob.getBodyYaw() - ExtraMath.getYawBetweenPoints(mob.getPos(), target.getPos()) * MathHelper.DEGREES_PER_RADIAN) > 15)
-            {
-                attackTimer++;
-            }
         }
         int previousAttackState = attackState;
         attackState = calculateCurrentAttackState(attackTimer);
