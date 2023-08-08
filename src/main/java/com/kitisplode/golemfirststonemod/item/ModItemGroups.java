@@ -24,6 +24,8 @@ public class ModItemGroups
                         entries.add(ModBlocks.BLOCK_CORE_OAK);
                         entries.add(ModBlocks.BLOCK_HEAD_BRICK);
                         entries.add(ModBlocks.BLOCK_CORE_BRICK);
+                        entries.add(ModBlocks.BLOCK_HEAD_DIORITE);
+                        entries.add(ModBlocks.BLOCK_CORE_DIORITE);
                     }).build());
 
     public static void registerItemGroups()

@@ -5,6 +5,8 @@
   "block.golemfirststonemod.block_core_oak": "Carved Oak Core",
   "block.golemfirststonemod.block_head_brick": "Sculpted Emerald Head",
   "block.golemfirststonemod.block_core_brick": "Molded Brick Core",
+  "block.golemfirststonemod.block_head_diorite": "Sculpted Gold Head",
+  "block.golemfirststonemod.block_core_diorite": "Chiseled Diorite Core",
 
   "entity.golemfirststonemod.entity_golem_first_stone": "First of Stone",
   "entity.golemfirststonemod.entity_golem_first_oak": "First of Oak",
