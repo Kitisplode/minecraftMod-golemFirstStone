@@ -46,7 +46,7 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
     {
         super(pEntityType, pLevel);
         // Pick the pawn type randomly.
-        setPawnType(pLevel.getRandom().nextBetween(0,2));
+        setPawnType(pLevel.getRandom().nextInt(3));
         this.moveControl = new EntityPawnFirstDiorite.SlimeMoveControl(this);
     }
 

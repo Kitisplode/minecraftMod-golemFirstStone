@@ -3,7 +3,7 @@
 	"id": "golemfirststonemod",
 	"version": "${version}",
 	"name": "Golem: Firsts of Legend",
-	"description": "Adds First of Stone, First of Oak, and First of Brick from Minecraft Legends to Minecraft.",
+	"description": "Adds First of Stone, First of Oak, First of Brick, and First of Diorite golems from Minecraft Legends to Minecraft.",
 	"authors": [
 		"Kitisplode"
 	],

@@ -1,6 +1,13 @@
 {
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "golemfirststonemod:block/block_core_diorite"
+  "parent": "minecraft:block/cube",
+  "textures":
+  {
+    "down": "minecraft:block/polished_diorite",
+    "east": "golemfirststonemod:block/block_core_diorite",
+    "north": "golemfirststonemod:block/block_core_diorite",
+    "particle": "golemfirststonemod:block/block_core_diorite",
+    "south": "golemfirststonemod:block/block_core_diorite",
+    "up": "minecraft:block/polished_diorite",
+    "west": "golemfirststonemod:block/block_core_diorite"
   }
 }

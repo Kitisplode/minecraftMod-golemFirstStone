@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "~~~",
+    "~#~",
+    "~~~"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:lodestone"
+    },
+    "~": {
+      "item": "minecraft:gold_block"
+    }
+  },
+  "result": {
+    "item": "golemfirststonemod:block_head_diorite"
+  }
+
+}

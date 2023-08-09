@@ -24,7 +24,8 @@ public class GolemPatternFirstBrick extends AbstractGolemPattern
 		|| state.isOf(Blocks.RED_NETHER_BRICKS)
 		|| state.isOf(Blocks.CRACKED_NETHER_BRICKS)
 		|| state.isOf(Blocks.GRANITE)
-		|| state.isOf(Blocks.POLISHED_GRANITE));
+		|| state.isOf(Blocks.POLISHED_GRANITE)
+			|| state.isOf(Blocks.SNOW));
 
 	private static final Predicate<BlockState> airPredicate = state -> state != null
 			&& (state.isAir()

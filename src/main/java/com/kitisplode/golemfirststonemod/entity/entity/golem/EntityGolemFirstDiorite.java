@@ -49,7 +49,7 @@ public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntit
 	private static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstDiorite.class, TrackedDataHandlerRegistry.INTEGER);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 	private final float attackRange = 32.0f;
-	private final int pawnsToSpawn = 3;
+	private final int pawnsToSpawn = 4;
 
 	public EntityGolemFirstDiorite(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
 	{
@@ -125,7 +125,7 @@ public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntit
 		if (getAttackState() != 3) return false;
 
 		this.getWorld().sendEntityStatus(this, EntityStatuses.PLAY_ATTACK_SOUND);
-		this.playSound(SoundEvents.BLOCK_BEACON_ACTIVATE, 1.0f, 1.0f);
+		this.playSound(SoundEvents.BLOCK_BEACON_POWER_SELECT, 1.0f, 1.0f);
 		spawnPawns(pawnsToSpawn);
 		return true;
 	}
@@ -135,15 +135,18 @@ public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntit
 		for (int i = 0; i < pawnCount; i++)
 		{
 			double direction = this.random.nextInt(360) * MathHelper.RADIANS_PER_DEGREE;
-			double offset = this.random.nextInt(8) + 2;
+			double offset = this.random.nextInt(4) + 2;
 			Vec3d spawnOffset = new Vec3d(Math.sin(direction) * offset,
 					0.0f,
 					Math.cos(direction) * offset);
-			BlockState bs = getWorld().getBlockState(new BlockPos((int)(getX() + spawnOffset.getX()), (int)getY(),(int)(getZ() + spawnOffset.getZ())));
-			while (!(bs.isAir() || bs.isOpaque()))
+			BlockState bs = getWorld().getBlockState(new BlockPos((int)(getX() + spawnOffset.getX()), (int)(getY() + spawnOffset.getY()),(int)(getZ() + spawnOffset.getZ())));
+			int failCount = 0;
+			while (!bs.isAir() || bs.isOpaque())
 			{
-				spawnOffset.add(0,1,0);
-				bs = getWorld().getBlockState(new BlockPos((int)(getX() + spawnOffset.getX()), (int)getY(),(int)(getZ() + spawnOffset.getZ())));
+				spawnOffset = spawnOffset.add(0,1,0);
+				bs = getWorld().getBlockState(new BlockPos((int)(getX() + spawnOffset.getX()), (int)(getY() + spawnOffset.getY()),(int)(getZ() + spawnOffset.getZ())));
+				failCount++;
+				if (failCount > 5) break;
 			}
 
 			EntityPawnFirstDiorite pawn = ModEntities.ENTITY_PAWN_FIRST_DIORITE.create(getWorld());

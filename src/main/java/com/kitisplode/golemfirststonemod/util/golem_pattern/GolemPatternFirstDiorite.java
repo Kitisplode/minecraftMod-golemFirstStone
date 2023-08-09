@@ -25,6 +25,7 @@ public class GolemPatternFirstDiorite extends AbstractGolemPattern
 	private static final Predicate<BlockState> airPredicate = state -> state != null
 			&& (state.isAir()
 			|| !state.isOpaque()
+			|| state.isOf(Blocks.SNOW)
 	);
 
 	private static final Predicate<BlockState> corePredicate = state -> state != null

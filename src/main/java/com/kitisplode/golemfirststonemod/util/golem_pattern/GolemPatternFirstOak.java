@@ -22,7 +22,8 @@ public class GolemPatternFirstOak extends AbstractGolemPattern
 		|| state.isOf(Blocks.OAK_LOG)
 		|| state.isOf(Blocks.STRIPPED_OAK_LOG)
 		|| state.isOf(Blocks.STRIPPED_OAK_WOOD)
-		|| state.isOf(Blocks.OAK_WOOD));
+		|| state.isOf(Blocks.OAK_WOOD)
+			|| state.isOf(Blocks.SNOW));
 
 	private static final Predicate<BlockState> airPredicate = state -> state != null
 			&& (state.isAir()
