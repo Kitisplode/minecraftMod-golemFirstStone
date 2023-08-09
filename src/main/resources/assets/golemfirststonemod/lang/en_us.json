@@ -11,6 +11,8 @@
   "entity.golemfirststonemod.entity_golem_first_stone": "First of Stone",
   "entity.golemfirststonemod.entity_golem_first_oak": "First of Oak",
   "entity.golemfirststonemod.entity_golem_first_brick": "First of Brick",
+  "entity.golemfirststonemod.entity_golem_first_diorite": "First of Diorite",
+  "entity.golemfirststonemod.entity_pawn_first_diorite": "Diorite Pawn",
 
   "creativetab.golemfirststonemod": "Golem: Firsts of Legend"
 }

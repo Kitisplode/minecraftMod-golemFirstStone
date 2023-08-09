@@ -1,6 +1,7 @@
-package com.kitisplode.golemfirststonemod.entity.client;
+package com.kitisplode.golemfirststonemod.entity.client.renderer;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
+import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelShieldFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -12,8 +13,6 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class EntityRendererShieldFirstBrick extends GeoEntityRenderer<EntityEffectShieldFirstBrick>
 {
-	private float currentScale = 1.0f;
-
 	public EntityRendererShieldFirstBrick(EntityRendererFactory.Context renderManager)
 	{
 		super(renderManager, new EntityModelShieldFirstBrick());

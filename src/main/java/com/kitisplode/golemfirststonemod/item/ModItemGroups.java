@@ -26,6 +26,7 @@ public class ModItemGroups
                         entries.add(ModBlocks.BLOCK_CORE_BRICK);
                         entries.add(ModBlocks.BLOCK_HEAD_DIORITE);
                         entries.add(ModBlocks.BLOCK_CORE_DIORITE);
+                        entries.add(ModItems.ITEM_SPAWN_PAWN_FIRST_DIORITE);
                     }).build());
 
     public static void registerItemGroups()

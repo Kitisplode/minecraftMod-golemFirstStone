@@ -6,6 +6,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.IEntityWithDelayedMeleeAt
 import com.kitisplode.golemfirststonemod.entity.goal.target.ActiveTargetGoalBiggerY;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
+import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -129,22 +130,8 @@ public class EntityGolemFirstOak extends IronGolemEntity implements GeoEntity, I
 
 		this.getWorld().sendEntityStatus(this, EntityStatuses.PLAY_ATTACK_SOUND);
 		this.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, 1.0f, 1.0f);
-		attackDust();
 		attack();
 		return true;
-	}
-
-	private void attackDust()
-	{
-		Vec3d particlePos = new Vec3d(65,0,0).rotateY(this.getYaw() * MathHelper.RADIANS_PER_DEGREE);
-		if (!this.getWorld().isClient())
-		{
-			((ServerWorld) this.getWorld()).spawnParticles(ParticleTypes.EXPLOSION,
-					this.getX() + particlePos.getX(),
-					this.getY() + particlePos.getY(),
-					this.getZ() + particlePos.getZ(),
-					2, 0.0, 0.0, 0.0, 0.0);
-		}
 	}
 
 	private void attack()

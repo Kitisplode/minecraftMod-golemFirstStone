@@ -1,6 +1,7 @@
-package com.kitisplode.golemfirststonemod.entity.client;
+package com.kitisplode.golemfirststonemod.entity.client.renderer;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
+import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelGolemFirstOak;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -13,6 +14,7 @@ public class EntityRendererGolemFirstOak extends GeoEntityRenderer<EntityGolemFi
 	public EntityRendererGolemFirstOak(EntityRendererFactory.Context renderManager)
 	{
 		super(renderManager, new EntityModelGolemFirstOak());
+		this.shadowRadius = 1.25f;
 	}
 
 	@Override

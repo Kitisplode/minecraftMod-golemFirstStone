@@ -1,4 +1,4 @@
-package com.kitisplode.golemfirststonemod.entity.client;
+package com.kitisplode.golemfirststonemod.entity.client.model;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstDiorite;
@@ -28,7 +28,7 @@ public class EntityModelGolemFirstDiorite extends GeoModel<EntityGolemFirstDiori
 	@Override
 	public Identifier getAnimationResource(EntityGolemFirstDiorite animatable)
 	{
-		return new Identifier(GolemFirstStoneMod.MOD_ID, "animations/first_stone_2.animation.json");
+		return new Identifier(GolemFirstStoneMod.MOD_ID, "animations/first_diorite.animation.json");
 	}
 
 	@Override

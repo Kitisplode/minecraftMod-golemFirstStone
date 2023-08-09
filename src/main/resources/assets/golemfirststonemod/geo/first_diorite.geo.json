@@ -30,14 +30,14 @@
 				{
 					"name": "head",
 					"parent": "body",
-					"pivot": [0, 43, -12],
+					"pivot": [0, 43, -8],
 					"cubes": [
 						{"origin": [-8, 35, -16], "size": [16, 16, 16], "uv": [50, 88]}
 					]
 				},
 				{
 					"name": "waist",
-					"parent": "body",
+					"parent": "whole",
 					"pivot": [0, 24, 4],
 					"cubes": [
 						{"origin": [-10, 16, -4], "size": [20, 8, 12], "uv": [56, 152]}

@@ -1,7 +1,7 @@
-package com.kitisplode.golemfirststonemod.entity.client;
+package com.kitisplode.golemfirststonemod.entity.client.model;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstStone;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import software.bernie.geckolib.constant.DataTickets;
@@ -10,28 +10,28 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
-public class EntityModelGolemFirstStone extends GeoModel<EntityGolemFirstStone>
+public class EntityModelGolemFirstOak extends GeoModel<EntityGolemFirstOak>
 {
 	@Override
-	public Identifier getModelResource(EntityGolemFirstStone animatable)
+	public Identifier getModelResource(EntityGolemFirstOak animatable)
 	{
-		return new Identifier(GolemFirstStoneMod.MOD_ID, "geo/first_stone_2.geo.json");
+		return new Identifier(GolemFirstStoneMod.MOD_ID, "geo/first_oak.geo.json");
 	}
 
 	@Override
-	public Identifier getTextureResource(EntityGolemFirstStone animatable)
+	public Identifier getTextureResource(EntityGolemFirstOak animatable)
 	{
-		return new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/first_stone_2.png");
+		return new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/first_oak.png");
 	}
 
 	@Override
-	public Identifier getAnimationResource(EntityGolemFirstStone animatable)
+	public Identifier getAnimationResource(EntityGolemFirstOak animatable)
 	{
-		return new Identifier(GolemFirstStoneMod.MOD_ID, "animations/first_stone_2.animation.json");
+		return new Identifier(GolemFirstStoneMod.MOD_ID, "animations/first_oak.animation.json");
 	}
 
 	@Override
-	public void setCustomAnimations(EntityGolemFirstStone animatable, long instanceId, AnimationState<EntityGolemFirstStone> animationState)
+	public void setCustomAnimations(EntityGolemFirstOak animatable, long instanceId, AnimationState<EntityGolemFirstOak> animationState)
 	{
 		CoreGeoBone head = getAnimationProcessor().getBone("head");
 		if (head != null)

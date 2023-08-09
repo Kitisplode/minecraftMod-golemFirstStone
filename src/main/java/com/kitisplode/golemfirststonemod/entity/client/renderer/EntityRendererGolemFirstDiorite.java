@@ -1,8 +1,8 @@
-package com.kitisplode.golemfirststonemod.entity.client;
+package com.kitisplode.golemfirststonemod.entity.client.renderer;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
+import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelGolemFirstDiorite;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstDiorite;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstStone;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
@@ -14,6 +14,7 @@ public class EntityRendererGolemFirstDiorite extends GeoEntityRenderer<EntityGol
 	public EntityRendererGolemFirstDiorite(EntityRendererFactory.Context renderManager)
 	{
 		super(renderManager, new EntityModelGolemFirstDiorite());
+		this.shadowRadius = 1.25f;
 	}
 
 	@Override
