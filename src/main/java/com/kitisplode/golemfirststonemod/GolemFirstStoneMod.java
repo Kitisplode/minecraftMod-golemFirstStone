@@ -2,10 +2,7 @@ package com.kitisplode.golemfirststonemod;
 
 import com.kitisplode.golemfirststonemod.block.ModBlocks;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.client.EntityRendererGolemFirstBrick;
-import com.kitisplode.golemfirststonemod.entity.client.EntityRendererGolemFirstOak;
-import com.kitisplode.golemfirststonemod.entity.client.EntityRendererGolemFirstStone;
-import com.kitisplode.golemfirststonemod.entity.client.EntityRendererShieldFirstBrick;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.*;
 import com.kitisplode.golemfirststonemod.item.ModCreativeModTabs;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import com.mojang.logging.LogUtils;
@@ -92,6 +89,8 @@ public class GolemFirstStoneMod
             EntityRenderers.register(ModEntities.ENTITY_PROJECTILE_FIRST_OAK.get(), TippableArrowRenderer::new);
             EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_BRICK.get(), EntityRendererGolemFirstBrick::new);
             EntityRenderers.register(ModEntities.ENTITY_SHIELD_FIRST_BRICK.get(), EntityRendererShieldFirstBrick::new);
+            EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_DIORITE.get(), EntityRendererGolemFirstDiorite::new);
+            EntityRenderers.register(ModEntities.ENTITY_PAWN_FIRST_DIORITE.get(), EntityRendererPawnFirstDiorite::new);
         }
     }
 }

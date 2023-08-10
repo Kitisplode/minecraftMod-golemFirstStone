@@ -19,3 +19,9 @@
     + added First of Brick entity
     + added Sculpted Emerald Head and Molded Brick Core blocks
     + added First of Brick structure
+
+## 0.0.4
+    + added First of Diorite entity
+    + added Diorite Pawn entity
+    + added Sculpted Gold Head and Chiseled Diorite Core blocks
+    + added First of Diorite structure

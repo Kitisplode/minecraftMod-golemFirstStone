@@ -1,0 +1,15 @@
+{
+  "name": "golemfirststonemod:first_diorite/start_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "golemfirststonemod:first_diorite",
+        "processors": "golemfirststonemod:randomize_diorite",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

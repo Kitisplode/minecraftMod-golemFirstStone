@@ -19,7 +19,6 @@ public class ModCreativeModTabs
             () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.BLOCK_HEAD_STONE.get()))  // Set the tab's icon
                     .title(Component.translatable("creativetab.golemfirststonemod"))        // Fetch the tab name translation
                     .displayItems((pParameters, pOutput) -> {                                    // List included items
-                        // Items
                         // Blocks
                         pOutput.accept(ModBlocks.BLOCK_HEAD_STONE.get());
                         pOutput.accept(ModBlocks.BLOCK_CORE_STONE.get());
@@ -27,6 +26,10 @@ public class ModCreativeModTabs
                         pOutput.accept(ModBlocks.BLOCK_CORE_OAK.get());
                         pOutput.accept(ModBlocks.BLOCK_HEAD_BRICK.get());
                         pOutput.accept(ModBlocks.BLOCK_CORE_BRICK.get());
+                        pOutput.accept(ModBlocks.BLOCK_HEAD_DIORITE.get());
+                        pOutput.accept(ModBlocks.BLOCK_CORE_DIORITE.get());
+                        // Items
+                        pOutput.accept(ModItems.ITEM_SPAWN_PAWN_FIRST_DIORITE.get());
                     })
                     .build());
 

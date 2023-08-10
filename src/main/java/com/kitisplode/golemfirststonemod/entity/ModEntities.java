@@ -3,8 +3,10 @@ package com.kitisplode.golemfirststonemod.entity;
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstBrick;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstDiorite;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstStone;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.pawn.EntityPawnFirstDiorite;
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileFirstOak;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -49,6 +51,18 @@ public class ModEntities
                     () -> EntityType.Builder.<EntityEffectShieldFirstBrick>of(EntityEffectShieldFirstBrick::new, MobCategory.MISC)
                             .sized(0.5f, 0.5f)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_shield_first_brick").toString()));
+
+    public static final RegistryObject<EntityType<EntityGolemFirstDiorite>> ENTITY_GOLEM_FIRST_DIORITE =
+            ENTITY_TYPES.register("entity_golem_first_diorite",
+                    () -> EntityType.Builder.of(EntityGolemFirstDiorite::new, MobCategory.MISC)
+                            .sized(2.5f, 4.0f)
+                            .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_golem_first_diorite").toString()));
+
+    public static final RegistryObject<EntityType<EntityPawnFirstDiorite>> ENTITY_PAWN_FIRST_DIORITE =
+            ENTITY_TYPES.register("entity_pawn_first_diorite",
+                    () -> EntityType.Builder.of(EntityPawnFirstDiorite::new, MobCategory.MISC)
+                            .sized(0.8f, 1.0f)
+                            .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_pawn_first_diorite").toString()));
 
     public static void register(IEventBus eventBus)
     {
