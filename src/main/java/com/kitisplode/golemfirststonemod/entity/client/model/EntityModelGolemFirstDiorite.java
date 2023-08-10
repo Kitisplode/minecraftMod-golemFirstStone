@@ -37,9 +37,13 @@ public class EntityModelGolemFirstDiorite extends GeoModel<EntityGolemFirstDiori
 		CoreGeoBone head = getAnimationProcessor().getBone("head");
 		if (head != null)
 		{
-			EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
-			head.setRotX(MathHelper.clamp(entityData.headPitch(), -20.0f, 20.0f) * MathHelper.RADIANS_PER_DEGREE);
-			head.setRotY(MathHelper.clamp(entityData.netHeadYaw(), -20.0f, 20.0f) * MathHelper.RADIANS_PER_DEGREE);
+			if (animationState.isCurrentAnimationStage("animation.first_diorite.idle"))
+			{
+				EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
+				head.setRotX(MathHelper.clamp(entityData.headPitch(), -20.0f, 20.0f) * MathHelper.RADIANS_PER_DEGREE);
+				head.setRotY(MathHelper.clamp(entityData.netHeadYaw(), -20.0f, 20.0f) * MathHelper.RADIANS_PER_DEGREE);
+				head.setRotZ(0);
+			}
 		}
 	}
 }

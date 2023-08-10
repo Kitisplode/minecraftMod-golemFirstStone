@@ -1,10 +1,10 @@
-# Minecraft Mod - Golem: Firsts of Legend (Fabric)
+# Minecraft Mod - Golem: Firsts of Legend Version 0.0.4 (Fabric)
 
 ---
 
 **A simple mod to add the Golem Firsts from Minecraft Legends into Minecraft Java Edition.**
 
-Currently includes the First of Stone, the First of Oak, and the First of Brick.
+Currently contains all the Firsts, including the First of Stone, the First of Oak, the First of Brick, and the first of Diorite.
 
 ---
 
@@ -29,5 +29,10 @@ First of Brick, instead of attacking, will approach allies that are under attack
 First of Diorite also does not attack directly, instead summoning a small group of Diorite Pawns to attack its targets instead.
 
 ---
+
+Features currently planned for future updates:
++ Add the flame inside of First of Diorite's head lol
++ Add some interactions between the Firsts and the villagers, similar to the Iron Golem.
++ Change the way to obtain the heads to something more interesting than just crafting them.
 
 **Requires Fabric Modloader, Fabric API, and GeckoLib. Supports Minecraft Java Edition 1.20.1 only.**

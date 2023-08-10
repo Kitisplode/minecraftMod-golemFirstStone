@@ -25,12 +25,12 @@ public class GolemPatternFirstStone extends AbstractGolemPattern
 		|| state.isOf(Blocks.CRACKED_STONE_BRICKS)
 		|| state.isOf(Blocks.CHISELED_STONE_BRICKS)
 		|| state.isOf(Blocks.MOSSY_STONE_BRICKS)
-		|| state.isOf(Blocks.ANDESITE)
-			|| state.isOf(Blocks.SNOW));
+		|| state.isOf(Blocks.ANDESITE));
 
 	private static final Predicate<BlockState> airPredicate = state -> state != null
 			&& (state.isAir()
 			|| !state.isOpaque()
+			|| state.isOf(Blocks.SNOW)
 	);
 
 	private static final Predicate<BlockState> corePredicate = state -> state != null
