@@ -47,10 +47,10 @@ public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntit
 	private static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstDiorite.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Boolean> DANDORI_STATE = DataTracker.registerData(EntityGolemFirstDiorite.class, TrackedDataHandlerRegistry.BOOLEAN);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-	private final float attackRange = 32.0f;
-	private final int pawnsToSpawn = 4;
-	private final double dandoriMoveRange = 6;
-	private final double dandoriSeeRange = 20;
+	private static final float attackRange = 24.0f;
+	private static final int pawnsToSpawn = 3;
+	private static final double dandoriMoveRange = 6;
+	private static final double dandoriSeeRange = 20;
 
 	public EntityGolemFirstDiorite(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
 	{
@@ -64,7 +64,7 @@ public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntit
 			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25f)
 			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 30.0f)
 			.add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0f)
-			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48);
+			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32);
 	}
 
 	@Override
@@ -166,6 +166,7 @@ public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntit
 
 			EntityPawnFirstDiorite pawn = ModEntities.ENTITY_PAWN_FIRST_DIORITE.create(getWorld());
 			if (pawn == null) continue;
+			pawn.setOwner(this);
 			pawn.setPlayerCreated(isPlayerCreated());
 			pawn.refreshPositionAndAngles(getX() + spawnOffset.getX(), getY() + spawnOffset.getY(), getZ() + spawnOffset.getZ(), 0.0f, 0.0F);
 			getWorld().spawnEntity(pawn);

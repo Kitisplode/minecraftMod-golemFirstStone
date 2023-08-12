@@ -12,7 +12,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
@@ -47,12 +46,14 @@ public class ItemDandoriCall extends Item
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand)
     {
-        effectWhistle(world, user, dandoriForceTime);
+        if (!world.isClient())
+        {
+            effectWhistle(world, user, dandoriForceTime);
 
-        user.playSound(ModSounds.ITEM_DANDORI_CALL, 1.0f, 1.0f);
-        user.playSound(SoundEvents.BLOCK_BEACON_POWER_SELECT, 1.0f, 1.0f);
-        dandoriWhistle(world, user, false);
-
+            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.9f);
+            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 1.1f);
+            dandoriWhistle(world, user, false);
+        }
         user.setCurrentHand(hand);
         ItemStack itemStack = user.getStackInHand(hand);
         return TypedActionResult.pass(itemStack);
@@ -61,15 +62,15 @@ public class ItemDandoriCall extends Item
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks)
     {
-        if (remainingUseTicks % 10 == 0)
+        if (remainingUseTicks % 10 == 0 && !world.isClient())
         {
             int actualDandoriForceTime = maxUseTime - dandoriForceTime;
             if (remainingUseTicks < actualDandoriForceTime)
             {
                 if (remainingUseTicks + 10 >= actualDandoriForceTime)
                 {
-                    user.playSound(ModSounds.ITEM_DANDORI_CALL, 1.0f, 3.0f);
-                    user.playSound(SoundEvents.BLOCK_BEACON_POWER_SELECT, 1.0f, 3.0f);
+                    user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.9f);
+                    user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 1.2f);
                     effectWhistle(world, user, actualDandoriForceTime);
                 }
                 dandoriWhistle(world, user, true);
@@ -119,6 +120,7 @@ public class ItemDandoriCall extends Item
                 if (!((IronGolemEntity) target).isPlayerCreated()) continue;
             }
 
+            GolemFirstStoneMod.LOGGER.info("Dandori'd! " + target.getUuid().toString());
             targetCount++;
             // If the pik doesn't have a target, or if we're forcing dandori, activate the pik's dandori mode.
             if (target.getTarget() == null || forceDandori)

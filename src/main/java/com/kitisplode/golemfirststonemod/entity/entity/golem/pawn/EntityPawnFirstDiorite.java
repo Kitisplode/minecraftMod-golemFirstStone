@@ -1,9 +1,12 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem.pawn;
 
+import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstDiorite;
+import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.Goal;
@@ -18,14 +21,21 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
+import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.ServerConfigHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
@@ -34,13 +44,24 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Predicate;
 
 public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
 {
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private static final TrackedData<Integer> PAWN_TYPE = DataTracker.registerData(EntityGolemFirstDiorite.class, TrackedDataHandlerRegistry.INTEGER);
+    protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     private int pawnType = 0;
     private boolean onGroundLastTick;
+    public static final double firstDioriteRange = 32;
+    public static final double panicRange = 26;
+    public static final double safeRange = 8;
+    private EntityGolemFirstDiorite owner = null;
+    private int timeWithoutParent = 0;
+    private static final int timeWithoutParentMax = 100;
 
     public EntityPawnFirstDiorite(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
     {
@@ -56,7 +77,7 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0f)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5f)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 5.0f)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48);
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32);
     }
 
     @Override
@@ -75,6 +96,7 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
     {
         super.initDataTracker();
         this.dataTracker.startTracking(PAWN_TYPE, pawnType);
+        this.dataTracker.startTracking(OWNER_UUID, Optional.empty());
     }
 
     public int getPawnType()
@@ -95,11 +117,28 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
     @Override
     protected void initGoals()
     {
-        this.goalSelector.add(1, new EntityPawnFirstDiorite.FaceTowardTargetGoal(this));
+        this.goalSelector.add(1, new EntityPawnFirstDiorite.LookAtOwnerGoal(this));
+        this.goalSelector.add(2, new EntityPawnFirstDiorite.FaceTowardTargetGoal(this));
         this.goalSelector.add(3, new EntityPawnFirstDiorite.RandomLookGoal(this));
         this.goalSelector.add(5, new EntityPawnFirstDiorite.MoveGoal(this));
         this.targetSelector
-                .add(1, new ActiveTargetGoal<>(this, MobEntity.class, 5, false, false, entity -> entity instanceof Monster));
+                .add(2, new ActiveTargetGoal<>(this, MobEntity.class, 5, false, false, attackTarget()));
+    }
+
+    private Predicate<LivingEntity> attackTarget()
+    {
+        return entity ->
+        {
+            if (entity instanceof Monster)
+            {
+                if (this.getOwner() != null)
+                {
+                    return this.getOwner().squaredDistanceTo(entity) < MathHelper.square(firstDioriteRange);
+                }
+                return true;
+            }
+            return false;
+        };
     }
 
     @Override
@@ -126,18 +165,83 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
             }
             this.playSound(this.getSquishSound(), 1, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2f + 1.0f) / 0.8f);
         }
+        if (this.getOwner() == null && this.isPlayerCreated())
+        {
+            if (timeWithoutParent++ % 20 == 0)
+            {
+                TargetPredicate tp = TargetPredicate.createNonAttackable().setBaseMaxDistance(firstDioriteRange * 2);
+                EntityGolemFirstDiorite newParent = getWorld().getClosestEntity(EntityGolemFirstDiorite.class, tp, this, getX(), getY(), getZ(), getBoundingBox().expand(firstDioriteRange * 2));
+                if (newParent != null)
+                {
+                    this.setOwner(newParent);
+                }
+            }
+        }
+        else timeWithoutParent = 0;
+
+        if (timeWithoutParent > timeWithoutParentMax)
+        {
+            if (timeWithoutParent % 20 == 0) this.damage(this.getDamageSources().starve(), 1);
+        }
     }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putBoolean("wasOnGround", this.onGroundLastTick);
+//        if (this.getOwnerUuid() != null) {
+//            nbt.putUuid("Owner", this.getOwnerUuid());
+//        }
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         this.onGroundLastTick = nbt.getBoolean("wasOnGround");
+//        UUID uUID;
+//        super.readCustomDataFromNbt(nbt);
+//        if (nbt.containsUuid("Owner"))
+//        {
+//            uUID = nbt.getUuid("Owner");
+//        }
+//        else uUID = null;
+//        if (uUID != null) {
+//            try
+//            {
+//                this.setOwnerUuid(uUID);
+//            } catch (Throwable throwable)
+//            {
+//            }
+//        }
+    }
+
+//    @Nullable
+//    public UUID getOwnerUuid() {
+//        return this.dataTracker.get(OWNER_UUID).orElse(null);
+//    }
+//
+//    public void setOwnerUuid(@Nullable UUID uuid) {
+//        this.dataTracker.set(OWNER_UUID, Optional.ofNullable(uuid));
+//    }
+
+    @Nullable
+    public LivingEntity getOwner()
+    {
+//        List<LivingEntity> targetList = getWorld().getNonSpectatingEntities(LivingEntity.class, getBoundingBox().expand(firstDioriteRange * 2));
+//        for (LivingEntity target : targetList)
+//        {
+//            if (!(target instanceof EntityGolemFirstDiorite)) continue;
+//            if (target.getUuid() == this.getOwnerUuid()) return target;
+//        }
+//        return null;
+        return owner;
+    }
+
+    public void setOwner(LivingEntity entity)
+    {
+        if (entity instanceof EntityGolemFirstDiorite)
+            owner = (EntityGolemFirstDiorite) entity;
+//        this.setOwnerUuid(entity.getUuid());
     }
 
     @Override
@@ -212,6 +316,25 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
     @Override public AnimatableInstanceCache getAnimatableInstanceCache()
     {
         return cache;
+    }
+
+    public Identifier getTextureLocation()
+    {
+        int pawnType = this.getPawnType();
+        if (this.getOwner() == null)
+            return switch (pawnType)
+            {
+                case 0 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/diorite_action.png");
+                case 1 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/diorite_foresight.png");
+                default -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/diorite_knowledge.png");
+            };
+        else
+            return switch (pawnType)
+            {
+                case 0 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/diorite_action_active.png");
+                case 1 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/diorite_foresight_active.png");
+                default -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/diorite_knowledge_active.png");
+            };
     }
 
 
@@ -331,6 +454,67 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
         }
     }
 
+    static class LookAtOwnerGoal
+    extends Goal {
+        private final EntityPawnFirstDiorite pawn;
+        private int ticksLeft;
+
+        public LookAtOwnerGoal(EntityPawnFirstDiorite pawn)
+        {
+            this.pawn = pawn;
+            this.setControls(EnumSet.of(Goal.Control.LOOK));
+        }
+
+        @Override
+        public boolean canStart() {
+            if (this.pawn.getOwner() == null)
+                return false;
+            else
+            {
+                if (this.pawn.getOwner().squaredDistanceTo(this.pawn) > MathHelper.square(EntityPawnFirstDiorite.panicRange)
+                        || (this.pawn.getOwner().squaredDistanceTo(this.pawn) > MathHelper.square(EntityPawnFirstDiorite.safeRange) && this.pawn.getTarget() == null))
+                {
+                    return (this.pawn.isOnGround() || this.pawn.hasStatusEffect(StatusEffects.LEVITATION)) && this.pawn.getMoveControl() instanceof EntityPawnFirstDiorite.SlimeMoveControl;
+                }
+            }
+            return false;
+        }
+        @Override
+        public void start() {
+            this.ticksLeft = EntityPawnFirstDiorite.LookAtOwnerGoal.toGoalTicks(300);
+            super.start();
+        }
+
+        @Override
+        public boolean shouldContinue() {
+            LivingEntity livingEntity = this.pawn.getOwner();
+            if (livingEntity == null) {
+                return false;
+            }
+            if (livingEntity.squaredDistanceTo(this.pawn) < MathHelper.square(EntityPawnFirstDiorite.panicRange))
+                return false;
+            return --this.ticksLeft > 0;
+        }
+
+        @Override
+        public boolean shouldRunEveryTick() {
+            return true;
+        }
+
+        @Override
+        public void tick() {
+            MoveControl moveControl;
+            LivingEntity livingEntity = this.pawn.getOwner();
+            if (livingEntity != null) {
+                this.pawn.lookAtEntity(livingEntity, 10.0f, 10.0f);
+            }
+            if ((moveControl = this.pawn.getMoveControl()) instanceof EntityPawnFirstDiorite.SlimeMoveControl) {
+                EntityPawnFirstDiorite.SlimeMoveControl slimeMoveControl = (EntityPawnFirstDiorite.SlimeMoveControl)moveControl;
+                slimeMoveControl.look(this.pawn.getYaw(), !this.pawn.isAiDisabled());
+            }
+        }
+    }
+
     static class RandomLookGoal
             extends Goal {
         private final EntityPawnFirstDiorite pawn;
@@ -344,6 +528,13 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
 
         @Override
         public boolean canStart() {
+            if (this.pawn.getOwner() != null)
+            {
+                if (this.pawn.getOwner().squaredDistanceTo(this.pawn) > MathHelper.square(EntityPawnFirstDiorite.panicRange))
+                {
+                    return false;
+                }
+            }
             return this.pawn.getTarget() == null && (this.pawn.isOnGround() || this.pawn.hasStatusEffect(StatusEffects.LEVITATION)) && this.pawn.getMoveControl() instanceof EntityPawnFirstDiorite.SlimeMoveControl;
         }
 

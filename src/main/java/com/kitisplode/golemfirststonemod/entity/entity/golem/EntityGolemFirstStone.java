@@ -62,8 +62,8 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 			.add(EntityAttributes.GENERIC_MAX_HEALTH, 1000.0f)
 			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25f)
 			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 30.0f)
-			.add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0f);
-//			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48);
+			.add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0f)
+			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16);
 	}
 
 	@Override

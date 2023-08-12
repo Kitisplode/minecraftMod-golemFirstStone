@@ -20,13 +20,7 @@ public class EntityRendererPawnFirstDiorite extends GeoEntityRenderer<EntityPawn
 	@Override
 	public Identifier getTextureLocation(EntityPawnFirstDiorite animatable)
 	{
-		int pawnType = animatable.getPawnType();
-		return switch (pawnType)
-		{
-			case 0 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/diorite_action.png");
-			case 1 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/diorite_foresight.png");
-			default -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/diorite_knowledge.png");
-		};
+		return animatable.getTextureLocation();
 	}
 
 	@Override
