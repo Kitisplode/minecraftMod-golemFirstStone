@@ -44,11 +44,6 @@ public class DandoriFollowGoal extends Goal
     @Override
     public boolean canStart()
     {
-        // If it's an iron golem, only dandori player created golems.
-        if (pik instanceof IronGolemEntity)
-        {
-            if (!((IronGolemEntity)mob).isPlayerCreated()) return false;
-        }
         // Dandori only things that are in dandori mode.
         if (!pik.getDandoriState()) return false;
         // Get the nearest player that we should follow.

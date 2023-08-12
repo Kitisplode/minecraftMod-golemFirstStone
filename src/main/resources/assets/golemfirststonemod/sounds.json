@@ -1,0 +1,9 @@
+{
+  "item_dandori_call":
+  {
+    "subtitle": "sound.golemfirststonemod.item_dandori_call",
+    "sounds": [
+      "golemfirststonemod:item_dandori_call"
+    ]
+  }
+}

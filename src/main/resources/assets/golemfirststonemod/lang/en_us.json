@@ -17,5 +17,7 @@
   "entity.golemfirststonemod.entity_golem_first_diorite": "First of Diorite",
   "entity.golemfirststonemod.entity_pawn_first_diorite": "Diorite Pawn",
 
+  "sound.golemfirststonemod.item_dandori_call": "Dandori Whistle",
+
   "creativetab.golemfirststonemod": "Golem: Firsts of Legend"
 }

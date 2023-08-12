@@ -4,6 +4,7 @@ import com.kitisplode.golemfirststonemod.block.ModBlocks;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.item.ModItemGroups;
 import com.kitisplode.golemfirststonemod.item.ModItems;
+import com.kitisplode.golemfirststonemod.sound.ModSounds;
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;
@@ -21,5 +22,6 @@ public class GolemFirstStoneMod implements ModInitializer {
 		ModBlocks.registerModBlocks();
 		ModItems.registerModItems();
 		ModEntities.registerModEntities();
+		ModSounds.registerModSounds();
 	}
 }
