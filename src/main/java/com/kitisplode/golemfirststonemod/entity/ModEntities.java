@@ -2,6 +2,7 @@ package com.kitisplode.golemfirststonemod.entity;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.client.renderer.*;
+import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstDiorite;
@@ -66,6 +67,12 @@ public class ModEntities
                     .dimensions(EntityDimensions.fixed(0.8f, 1.0f))
                     .build()
     );
+    public static final EntityType<EntityEffectCubeDandoriWhistle> ENTITY_EFFECT_CUBE_DANDORI_WHISTLE = Registry.register(
+            Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_effect_cube_dandori_whistle"),
+            FabricEntityTypeBuilder.<EntityEffectCubeDandoriWhistle>create(SpawnGroup.MISC, EntityEffectCubeDandoriWhistle::new)
+                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f))
+                    .build()
+    );
 
     public static void registerModEntities()
     {
@@ -85,5 +92,6 @@ public class ModEntities
         EntityRendererRegistry.register(ENTITY_SHIELD_FIRST_BRICK, EntityRendererShieldFirstBrick::new);
         EntityRendererRegistry.register(ENTITY_GOLEM_FIRST_DIORITE, EntityRendererGolemFirstDiorite::new);
         EntityRendererRegistry.register(ENTITY_PAWN_FIRST_DIORITE, EntityRendererPawnFirstDiorite::new);
+        EntityRendererRegistry.register(ENTITY_EFFECT_CUBE_DANDORI_WHISTLE, EntityRendererShieldFirstBrick::new);
     }
 }

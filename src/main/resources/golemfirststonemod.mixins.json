@@ -3,6 +3,8 @@
 	"package": "com.kitisplode.golemfirststonemod.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
+		"MixinIronGolemEntity",
+		"MixinSnowGolemEntity"
 	],
 	"injectors": {
 		"defaultRequire": 1

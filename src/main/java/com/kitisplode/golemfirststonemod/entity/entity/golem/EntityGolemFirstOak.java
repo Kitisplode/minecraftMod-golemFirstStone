@@ -1,12 +1,12 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
+import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileFirstOak;
 import com.kitisplode.golemfirststonemod.entity.entity.IEntityWithDelayedMeleeAttack;
+import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.target.ActiveTargetGoalBiggerY;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoalRanged;
-import com.kitisplode.golemfirststonemod.util.ExtraMath;
-import net.minecraft.entity.AreaEffectCloudEntity;
+import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -24,11 +24,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -39,12 +38,15 @@ import software.bernie.geckolib.core.animation.Animation;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
-public class EntityGolemFirstOak extends IronGolemEntity implements GeoEntity, IEntityWithDelayedMeleeAttack
+public class EntityGolemFirstOak extends IronGolemEntity implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
 {
 	private static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstOak.class, TrackedDataHandlerRegistry.INTEGER);
+	private static final TrackedData<Boolean> DANDORI_STATE = DataTracker.registerData(EntityGolemFirstOak.class, TrackedDataHandlerRegistry.BOOLEAN);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 	private final float attackAOERange = 4.0f;
 	private final float projectileSpeed = 2.0f;
+	private final double dandoriMoveRange = 6;
+	private final double dandoriSeeRange = 20;
 
 	private boolean printTargetMessage = false;
 
@@ -67,7 +69,20 @@ public class EntityGolemFirstOak extends IronGolemEntity implements GeoEntity, I
 	protected void initDataTracker()
 	{
 		super.initDataTracker();
-		this.dataTracker.startTracking(ATTACK_STATE, 0);
+		if (!this.dataTracker.containsKey(ATTACK_STATE))
+			this.dataTracker.startTracking(ATTACK_STATE, 0);
+		if (!this.dataTracker.containsKey(DANDORI_STATE))
+			this.dataTracker.startTracking(DANDORI_STATE, false);
+	}
+
+	public boolean getDandoriState()
+	{
+		return this.dataTracker.get(DANDORI_STATE);
+	}
+
+	public void setDandoriState(boolean pDandoriState)
+	{
+		this.dataTracker.set(DANDORI_STATE, pDandoriState);
 	}
 
 	public int getAttackState()
@@ -92,10 +107,11 @@ public class EntityGolemFirstOak extends IronGolemEntity implements GeoEntity, I
 
 	@Override
 	protected void initGoals() {
-		this.goalSelector.add(1, new MultiStageAttackGoalRanged(this, 1.0, true, 1024.0, new int[]{40, 18, 13}, 0));
-		this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.8, 48.0F));
-		this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.8, false));
-		this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.8));
+		this.goalSelector.add(1, new DandoriFollowGoal(this, 1.0, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL), dandoriMoveRange, dandoriSeeRange));
+		this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, 1024.0, new int[]{40, 18, 13}, 0));
+		this.goalSelector.add(3, new WanderNearTargetGoal(this, 0.8, 48.0F));
+		this.goalSelector.add(3, new WanderAroundPointOfInterestGoal(this, 0.8, false));
+		this.goalSelector.add(5, new IronGolemWanderAroundGoal(this, 0.8));
 		this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
 		this.goalSelector.add(8, new LookAroundGoal(this));
 		this.targetSelector.add(1, new TrackIronGolemTargetGoal(this));
@@ -170,6 +186,27 @@ public class EntityGolemFirstOak extends IronGolemEntity implements GeoEntity, I
 			itemStack.decrement(1);
 		}
 		return ActionResult.success(this.getWorld().isClient);
+	}
+
+	@Override
+	public void handleStatus(byte status)
+	{
+		switch(status)
+		{
+			case EntityStatuses.ADD_POSITIVE_PLAYER_REACTION_PARTICLES:
+				addDandoriParticles();
+				break;
+			default:
+				super.handleStatus(status);
+				break;
+		}
+	}
+
+	private void addDandoriParticles()
+	{
+		this.getWorld().addParticle(ParticleTypes.NOTE,
+				this.getX(), this.getEyeY() + 3, this.getZ(),
+				0,1,0);
 	}
 
 	@Override

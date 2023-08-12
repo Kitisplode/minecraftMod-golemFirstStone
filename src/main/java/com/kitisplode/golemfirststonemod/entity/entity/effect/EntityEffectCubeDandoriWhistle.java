@@ -4,12 +4,13 @@ import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -18,23 +19,24 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class EntityEffectShieldFirstBrick extends AbstractEntityEffectCube implements GeoEntity
+public class EntityEffectCubeDandoriWhistle extends AbstractEntityEffectCube implements GeoEntity
 {
     protected AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-    private static final TrackedData<Integer> LIFETIME = DataTracker.registerData(EntityEffectShieldFirstBrick.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Float> FINALSIZE = DataTracker.registerData(EntityEffectShieldFirstBrick.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final Identifier texture = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/first_brick_shield.png");
+    private static final TrackedData<Integer> LIFETIME = DataTracker.registerData(EntityEffectCubeDandoriWhistle.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Float> FINALSIZE = DataTracker.registerData(EntityEffectCubeDandoriWhistle.class, TrackedDataHandlerRegistry.FLOAT);
+    private static final Identifier texture = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/dandori_whistle.png");
 
     private final int defaultLifeTime = 20;
     private int lifeTime = defaultLifeTime;
     private float finalSize = 20.0f;
+    private LivingEntity owner = null;
 
-    public EntityEffectShieldFirstBrick(EntityType<? extends Entity> type, World world)
+    public EntityEffectCubeDandoriWhistle(EntityType<? extends Entity> type, World world)
     {
         super(type, world);
     }
 
-    public EntityEffectShieldFirstBrick(World pWorld, double pX, double pY, double pZ)
+    public EntityEffectCubeDandoriWhistle(World pWorld, double pX, double pY, double pZ)
     {
         super(ModEntities.ENTITY_SHIELD_FIRST_BRICK, pWorld);
         setPosition(pX, pY, pZ);
@@ -55,33 +57,45 @@ public class EntityEffectShieldFirstBrick extends AbstractEntityEffectCube imple
 
     public void setLifeTime(int pLifeTime)
     {
-        lifeTime = Math.max(pLifeTime, defaultLifeTime);
+        this.lifeTime = Math.max(pLifeTime, defaultLifeTime);
         this.dataTracker.set(LIFETIME, lifeTime);
     }
     public int getLifeTime()
     {
-        return lifeTime = this.dataTracker.get(LIFETIME);
+        return this.lifeTime = this.dataTracker.get(LIFETIME);
     }
 
     public void setFullScale(float pFinalSize)
     {
-        finalSize = Math.max(pFinalSize, 1.0f);
+        this.finalSize = Math.max(pFinalSize, 1.0f);
         this.dataTracker.set(FINALSIZE, finalSize);
     }
     public float getFullScale()
     {
-        return finalSize = this.dataTracker.get(FINALSIZE);
+        return this.finalSize = this.dataTracker.get(FINALSIZE);
+    }
+
+    public void setOwner(LivingEntity pOwner)
+    {
+        owner = pOwner;
     }
 
     @Override
     public void tick()
     {
         super.tick();
+        if (owner != null && owner.isAlive())
+        {
+            Vec3d newPos = new Vec3d(MathHelper.lerp(0.5, this.getX(), owner.getX()),
+                    MathHelper.lerp(0.5, this.getY(), owner.getY()),
+                    MathHelper.lerp(0.5, this.getZ(), owner.getZ()));
+            setPosition(newPos);
+        }
         this.getLifeTime();
         this.getFullScale();
-        scaleH = MathHelper.lerp(0.12f, scaleH, finalSize);
-        scaleY = ((float)Math.sin(((float)this.age / (float)lifeTime * 180.0f) * MathHelper.RADIANS_PER_DEGREE) * finalSize) / 4.0f;
-        if (this.age >= lifeTime)
+        this.scaleH = MathHelper.lerp(0.24f, this.scaleH, this.finalSize);
+        this.scaleY = MathHelper.lerp(0.12f, this.scaleY, this.finalSize) / 5.0f;
+        if (this.age >= this.lifeTime)
         {
             this.kill();
         }

@@ -1,8 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.client.renderer;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelShieldFirstBrick;
-import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
+import com.kitisplode.golemfirststonemod.entity.entity.effect.AbstractEntityEffectCube;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -11,7 +10,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class EntityRendererShieldFirstBrick extends GeoEntityRenderer<EntityEffectShieldFirstBrick>
+public class EntityRendererShieldFirstBrick extends GeoEntityRenderer<AbstractEntityEffectCube>
 {
 	public EntityRendererShieldFirstBrick(EntityRendererFactory.Context renderManager)
 	{
@@ -19,17 +18,17 @@ public class EntityRendererShieldFirstBrick extends GeoEntityRenderer<EntityEffe
 	}
 
 	@Override
-	public Identifier getTextureLocation(EntityEffectShieldFirstBrick animatable)
+	public Identifier getTextureLocation(AbstractEntityEffectCube animatable)
 	{
-		return new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/first_brick_shield.png");
+		return animatable.getTexture();
 	}
 
 	@Override
-	public void render(EntityEffectShieldFirstBrick entity, float entityYaw, float partialTick, MatrixStack poseStack,
+	public void render(AbstractEntityEffectCube entity, float entityYaw, float partialTick, MatrixStack poseStack,
 					   VertexConsumerProvider bufferSource, int packedLight)
 	{
 		float fullScale = entity.getScaleH();
-		poseStack.scale(fullScale, entity.getScaleY() / 4.0f, fullScale);
+		poseStack.scale(fullScale, entity.getScaleY(), fullScale);
 		VertexConsumer vc = bufferSource.getBuffer(RenderLayer.getEntityTranslucentEmissive(this.getTextureLocation(entity)));
 		super.animatable = entity;
 		defaultRender(poseStack, entity, bufferSource, null, vc, entityYaw, partialTick, packedLight);

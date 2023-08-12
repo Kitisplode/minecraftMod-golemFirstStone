@@ -1,9 +1,13 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
+import com.kitisplode.golemfirststonemod.entity.ModEntities;
+import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
+import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.entity.goal.target.PassiveTargetGoal;
+import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
@@ -25,6 +29,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -42,9 +47,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity, IEntityWithDelayedMeleeAttack
+public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
 {
 	private static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstBrick.class, TrackedDataHandlerRegistry.INTEGER);
+	private static final TrackedData<Boolean> DANDORI_STATE = DataTracker.registerData(EntityGolemFirstBrick.class, TrackedDataHandlerRegistry.BOOLEAN);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 	private final int shieldHurtTime = 30;
 	private final int shieldAbsorptionTime = 20 * 5;
@@ -52,6 +58,8 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 	private final float attackAOERange = 10.0f;
 	private final float attackVerticalRange = 5.0f;
 	private final ArrayList<StatusEffectInstance> shieldStatusEffects = new ArrayList();
+	private final double dandoriMoveRange = 6;
+	private final double dandoriSeeRange = 20;
 
 	public EntityGolemFirstBrick(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
 	{
@@ -73,7 +81,20 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 	protected void initDataTracker()
 	{
 		super.initDataTracker();
-		this.dataTracker.startTracking(ATTACK_STATE, 0);
+		if (!this.dataTracker.containsKey(ATTACK_STATE))
+			this.dataTracker.startTracking(ATTACK_STATE, 0);
+		if (!this.dataTracker.containsKey(DANDORI_STATE))
+			this.dataTracker.startTracking(DANDORI_STATE, false);
+	}
+
+	public boolean getDandoriState()
+	{
+		return this.dataTracker.get(DANDORI_STATE);
+	}
+
+	public void setDandoriState(boolean pDandoriState)
+	{
+		this.dataTracker.set(DANDORI_STATE, pDandoriState);
 	}
 
 	public int getAttackState()
@@ -94,9 +115,10 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 
 	@Override
 	protected void initGoals() {
-		this.goalSelector.add(1, new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(attackAOERange), new int[]{70, 30, 25}, 0));
-		this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.8, 32.0F));
-		this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.8, false));
+		this.goalSelector.add(1, new DandoriFollowGoal(this, 1.0, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL), dandoriMoveRange, dandoriSeeRange));
+		this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(attackAOERange), new int[]{70, 30, 25}, 0));
+		this.goalSelector.add(3, new WanderNearTargetGoal(this, 0.8, 32.0F));
+		this.goalSelector.add(3, new WanderAroundPointOfInterestGoal(this, 0.8, false));
 		this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.8));
 		this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
 		this.goalSelector.add(8, new LookAroundGoal(this));
@@ -187,10 +209,14 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 		dust.setPos(getX(),getY(),getZ());
 		getWorld().spawnEntity(dust);
 
-		EntityEffectShieldFirstBrick shield = new EntityEffectShieldFirstBrick(getWorld(), getX(),getY(),getZ());
-		shield.setLifeTime(20);
-		shield.setFullScale(range * 2.0f);
-		getWorld().spawnEntity(shield);
+		EntityEffectShieldFirstBrick shield = ModEntities.ENTITY_SHIELD_FIRST_BRICK.create(getWorld());
+		if (shield != null)
+		{
+			shield.setPosition(getPos());
+			shield.setLifeTime(20);
+			shield.setFullScale(range * 2.0f);
+			getWorld().spawnEntity(shield);
+		}
 	}
 
 	private void attackAOE()
@@ -203,7 +229,8 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 			// Do not shield targets that are NOT villagers, golems, or players.
 			if (!(target instanceof MerchantEntity
 					|| target instanceof GolemEntity
-					|| (target instanceof PlayerEntity && isPlayerCreated())))
+					|| (target instanceof PlayerEntity && isPlayerCreated()))
+					|| (target.getFirstPassenger() != null && target.getFirstPassenger() instanceof PlayerEntity))
 				continue;
 			// Do not shield targets that are too far on the y axis.
 			if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
@@ -236,6 +263,27 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 			itemStack.decrement(1);
 		}
 		return ActionResult.success(this.getWorld().isClient);
+	}
+
+	@Override
+	public void handleStatus(byte status)
+	{
+		switch(status)
+		{
+			case EntityStatuses.ADD_POSITIVE_PLAYER_REACTION_PARTICLES:
+				addDandoriParticles();
+				break;
+			default:
+				super.handleStatus(status);
+				break;
+		}
+	}
+
+	private void addDandoriParticles()
+	{
+		this.getWorld().addParticle(ParticleTypes.NOTE,
+				this.getX(), this.getEyeY() + 3, this.getZ(),
+				0,1,0);
 	}
 
 	@Override

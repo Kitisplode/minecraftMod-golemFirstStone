@@ -62,7 +62,7 @@ public class EntityProjectileFirstOak extends ArrowEntity
             if (target instanceof GolemEntity) return;
             if (target instanceof VillagerEntity) return;
             if (target instanceof MerchantEntity) return;
-            if (target instanceof PlayerEntity)
+            if (target instanceof PlayerEntity || (target.getFirstPassenger() != null && target.getFirstPassenger() instanceof PlayerEntity))
             {
                 if (golemOwner != null && golemOwner.isPlayerCreated()) return;
             }
@@ -97,7 +97,7 @@ public class EntityProjectileFirstOak extends ArrowEntity
             if (target instanceof MerchantEntity) continue;
             if (target instanceof GolemEntity) continue;
             // Do not damage players if the golem is player made.
-            if (target instanceof PlayerEntity)
+            if (target instanceof PlayerEntity || (target.getFirstPassenger() != null && target.getFirstPassenger() instanceof PlayerEntity))
             {
                 if (golemOwner != null && golemOwner.isPlayerCreated()) continue;
             }
