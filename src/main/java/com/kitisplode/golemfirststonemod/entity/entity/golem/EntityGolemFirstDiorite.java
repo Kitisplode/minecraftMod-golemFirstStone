@@ -11,6 +11,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -25,8 +26,10 @@ import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.server.ServerConfigHandler;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -34,6 +37,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
@@ -42,15 +46,19 @@ import software.bernie.geckolib.core.animation.Animation;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
+import java.util.Optional;
+import java.util.UUID;
+
 public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
 {
 	private static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstDiorite.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Boolean> DANDORI_STATE = DataTracker.registerData(EntityGolemFirstDiorite.class, TrackedDataHandlerRegistry.BOOLEAN);
+	protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(EntityGolemFirstDiorite.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-	private static final float attackRange = 24.0f;
+	private static final float attackRange = 20.0f;
 	private static final int pawnsToSpawn = 3;
 	private static final double dandoriMoveRange = 6;
-	private static final double dandoriSeeRange = 20;
+	private static final double dandoriSeeRange = 36;
 
 	public EntityGolemFirstDiorite(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
 	{
@@ -64,7 +72,7 @@ public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntit
 			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25f)
 			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 30.0f)
 			.add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0f)
-			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32);
+			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 24);
 	}
 
 	@Override
@@ -75,6 +83,63 @@ public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntit
 			this.dataTracker.startTracking(ATTACK_STATE, 0);
 		if (!this.dataTracker.containsKey(DANDORI_STATE))
 			this.dataTracker.startTracking(DANDORI_STATE, false);
+		if (!this.dataTracker.containsKey(OWNER_UUID))
+			this.dataTracker.startTracking(OWNER_UUID, Optional.empty());
+	}
+
+	@Override
+	public void writeCustomDataToNbt(NbtCompound nbt)
+	{
+		super.writeCustomDataToNbt(nbt);
+		if (this.getOwnerUuid() != null) {
+			nbt.putUuid("Owner", this.getOwnerUuid());
+		}
+	}
+	@Override
+	public void readCustomDataFromNbt(NbtCompound nbt)
+	{
+		super.readCustomDataFromNbt(nbt);
+		UUID uUID;
+		if (nbt.containsUuid("Owner")) {
+			uUID = nbt.getUuid("Owner");
+		} else {
+			String string = nbt.getString("Owner");
+			uUID = ServerConfigHandler.getPlayerUuidByName(this.getServer(), string);
+		}
+		if (uUID != null) {
+			try {
+				this.setOwnerUuid(uUID);
+			} catch (Throwable throwable) {
+			}
+		}
+	}
+	@Override
+	public LivingEntity getOwner()
+	{
+		UUID uUID = this.getOwnerUuid();
+		if (uUID == null)
+			return null;
+		return this.getWorld().getPlayerByUuid(uUID);
+	}
+	@Override
+	public void setOwner(LivingEntity newOwner)
+	{
+		if (newOwner != null)
+		{
+			setOwnerUuid(newOwner.getUuid());
+		}
+	}
+	@Override
+	public boolean isOwner(LivingEntity entity)
+	{
+		return entity.getUuid() == this.getOwnerUuid();
+	}
+	@Nullable
+	private UUID getOwnerUuid() {
+		return this.dataTracker.get(OWNER_UUID).orElse(null);
+	}
+	private void setOwnerUuid(@Nullable UUID uuid) {
+		this.dataTracker.set(OWNER_UUID, Optional.ofNullable(uuid));
 	}
 
 	public boolean getDandoriState()

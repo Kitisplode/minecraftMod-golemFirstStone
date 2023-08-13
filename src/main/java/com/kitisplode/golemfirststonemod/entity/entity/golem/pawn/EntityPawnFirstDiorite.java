@@ -53,7 +53,6 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
 {
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private static final TrackedData<Integer> PAWN_TYPE = DataTracker.registerData(EntityGolemFirstDiorite.class, TrackedDataHandlerRegistry.INTEGER);
-    protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     private int pawnType = 0;
     private boolean onGroundLastTick;
     public static final double firstDioriteRange = 32;
@@ -96,7 +95,6 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
     {
         super.initDataTracker();
         this.dataTracker.startTracking(PAWN_TYPE, pawnType);
-        this.dataTracker.startTracking(OWNER_UUID, Optional.empty());
     }
 
     public int getPawnType()

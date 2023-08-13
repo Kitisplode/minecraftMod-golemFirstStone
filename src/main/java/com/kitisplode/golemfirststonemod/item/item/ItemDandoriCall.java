@@ -49,11 +49,11 @@ public class ItemDandoriCall extends Item
         if (!world.isClient())
         {
             effectWhistle(world, user, dandoriForceTime);
-
-            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.9f);
-            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 1.1f);
             dandoriWhistle(world, user, false);
         }
+
+        user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.9f);
+        user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 1.1f);
         user.setCurrentHand(hand);
         ItemStack itemStack = user.getStackInHand(hand);
         return TypedActionResult.pass(itemStack);
@@ -62,19 +62,22 @@ public class ItemDandoriCall extends Item
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks)
     {
-        if (remainingUseTicks % 10 == 0 && !world.isClient())
+        if (remainingUseTicks % 10 == 0)
         {
-            int actualDandoriForceTime = maxUseTime - dandoriForceTime;
-            if (remainingUseTicks < actualDandoriForceTime)
+            if (!world.isClient())
             {
-                if (remainingUseTicks + 10 >= actualDandoriForceTime)
+                int actualDandoriForceTime = maxUseTime - dandoriForceTime;
+                if (remainingUseTicks < actualDandoriForceTime)
                 {
-                    user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.9f);
-                    user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 1.2f);
-                    effectWhistle(world, user, actualDandoriForceTime);
+                    if (remainingUseTicks + 10 >= actualDandoriForceTime)
+                    {
+                        effectWhistle(world, user, actualDandoriForceTime);
+                    }
+                    dandoriWhistle(world, user, true);
                 }
-                dandoriWhistle(world, user, true);
             }
+            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.9f);
+            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 1.2f);
         }
         if (remainingUseTicks % 8 == 0 && world.isClient())
         {
@@ -114,13 +117,25 @@ public class ItemDandoriCall extends Item
             if (!(target instanceof IEntityDandoriFollower)) continue;
             // Skip things that already have dandori active?
             if (((IEntityDandoriFollower) target).getDandoriState()) continue;
+            // If the thing has an owner, skip ones unless we are the owner.
+            boolean targetHasOwner = ((IEntityDandoriFollower) target).getOwner() != null;
+            if (targetHasOwner)
+            {
+                if (!((IEntityDandoriFollower) target).isOwner(user)) continue;
+            }
             // Skip iron golems that are not player-made
             if (target instanceof IronGolemEntity)
             {
                 if (!((IronGolemEntity) target).isPlayerCreated()) continue;
+                // If the golem is player made but has no owner, just update their owner to us now /shrug
+                else if (!targetHasOwner)
+                {
+                    ((IEntityDandoriFollower) target).setOwner(user);
+                }
             }
 
-            GolemFirstStoneMod.LOGGER.info("Dandori'd! " + target.getUuid().toString());
+
+//            GolemFirstStoneMod.LOGGER.info("Dandori'd! " + target.getUuid().toString());
             targetCount++;
             // If the pik doesn't have a target, or if we're forcing dandori, activate the pik's dandori mode.
             if (target.getTarget() == null || forceDandori)

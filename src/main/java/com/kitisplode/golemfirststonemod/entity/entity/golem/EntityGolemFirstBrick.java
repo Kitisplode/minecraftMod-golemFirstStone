@@ -28,13 +28,16 @@ import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.server.ServerConfigHandler;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
@@ -45,21 +48,24 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
 {
 	private static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstBrick.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Boolean> DANDORI_STATE = DataTracker.registerData(EntityGolemFirstBrick.class, TrackedDataHandlerRegistry.BOOLEAN);
+	protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(EntityGolemFirstBrick.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-	private final int shieldHurtTime = 30;
-	private final int shieldAbsorptionTime = 20 * 5;
-	private final int shieldAbsorptionAmount = 0;
-	private final float attackAOERange = 10.0f;
-	private final float attackVerticalRange = 5.0f;
-	private final ArrayList<StatusEffectInstance> shieldStatusEffects = new ArrayList();
-	private final double dandoriMoveRange = 6;
-	private final double dandoriSeeRange = 20;
+	private static final int shieldHurtTime = 30;
+	private static final int shieldAbsorptionTime = 20 * 5;
+	private static final int shieldAbsorptionAmount = 0;
+	private static final float attackAOERange = 10.0f;
+	private static final float attackVerticalRange = 5.0f;
+	private final ArrayList<StatusEffectInstance> shieldStatusEffects = new ArrayList<>();
+	private static final double dandoriMoveRange = 6;
+	private static final double dandoriSeeRange = 36;
 
 	public EntityGolemFirstBrick(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
 	{
@@ -85,6 +91,63 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 			this.dataTracker.startTracking(ATTACK_STATE, 0);
 		if (!this.dataTracker.containsKey(DANDORI_STATE))
 			this.dataTracker.startTracking(DANDORI_STATE, false);
+		if (!this.dataTracker.containsKey(OWNER_UUID))
+			this.dataTracker.startTracking(OWNER_UUID, Optional.empty());
+	}
+
+	@Override
+	public void writeCustomDataToNbt(NbtCompound nbt)
+	{
+		super.writeCustomDataToNbt(nbt);
+		if (this.getOwnerUuid() != null) {
+			nbt.putUuid("Owner", this.getOwnerUuid());
+		}
+	}
+	@Override
+	public void readCustomDataFromNbt(NbtCompound nbt)
+	{
+		super.readCustomDataFromNbt(nbt);
+		UUID uUID;
+		if (nbt.containsUuid("Owner")) {
+			uUID = nbt.getUuid("Owner");
+		} else {
+			String string = nbt.getString("Owner");
+			uUID = ServerConfigHandler.getPlayerUuidByName(this.getServer(), string);
+		}
+		if (uUID != null) {
+			try {
+				this.setOwnerUuid(uUID);
+			} catch (Throwable throwable) {
+			}
+		}
+	}
+	@Override
+	public LivingEntity getOwner()
+	{
+		UUID uUID = this.getOwnerUuid();
+		if (uUID == null)
+			return null;
+		return this.getWorld().getPlayerByUuid(uUID);
+	}
+	@Override
+	public void setOwner(LivingEntity newOwner)
+	{
+		if (newOwner != null)
+		{
+			setOwnerUuid(newOwner.getUuid());
+		}
+	}
+	@Override
+	public boolean isOwner(LivingEntity entity)
+	{
+		return entity.getUuid() == this.getOwnerUuid();
+	}
+	@Nullable
+	private UUID getOwnerUuid() {
+		return this.dataTracker.get(OWNER_UUID).orElse(null);
+	}
+	private void setOwnerUuid(@Nullable UUID uuid) {
+		this.dataTracker.set(OWNER_UUID, Optional.ofNullable(uuid));
 	}
 
 	public boolean getDandoriState()

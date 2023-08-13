@@ -1,5 +1,6 @@
 package com.kitisplode.golemfirststonemod.util.golem_pattern;
 
+import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
@@ -8,6 +9,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.BlockPattern;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -67,6 +69,12 @@ abstract public class AbstractGolemPattern
                     spawnPosition,
                     (float)ExtraMath.getYawBetweenPoints(spawnPosition.toCenterPos(), pPlayer.getPos()) * MathHelper.DEGREES_PER_RADIAN,
                     pGolem);
+
+
+            if (pGolem instanceof IEntityDandoriFollower && pPlayer instanceof LivingEntity)
+            {
+                ((IEntityDandoriFollower)pGolem).setOwner((LivingEntity)pPlayer);
+            }
         }
 
         updatePatternBlocks(pLevel, pPatternMatch);
