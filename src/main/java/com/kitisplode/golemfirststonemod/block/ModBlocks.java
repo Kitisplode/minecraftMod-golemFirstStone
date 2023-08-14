@@ -29,6 +29,7 @@ public class ModBlocks
     public static final Block BLOCK_CORE_BRICK = registerBlock("block_core_brick", new ExperienceDroppingBlock(FabricBlockSettings.copyOf(Blocks.MUD_BRICKS), ConstantIntProvider.create(50)));
     public static final Block BLOCK_HEAD_DIORITE = registerBlock("block_head_diorite", new BlockHeadDiorite(FabricBlockSettings.copyOf(Blocks.GOLD_BLOCK).nonOpaque()));
     public static final Block BLOCK_CORE_DIORITE = registerBlock("block_core_diorite", new ExperienceDroppingBlock(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE), ConstantIntProvider.create(50)));
+    public static final Block BLOCK_DANDORI = registerBlock("block_dandori", new Block(FabricBlockSettings.copyOf(Blocks.CARTOGRAPHY_TABLE)));
 
     private static Block registerBlock(String pName, Block pBlock)
     {

@@ -56,11 +56,13 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
     private int pawnType = 0;
     private boolean onGroundLastTick;
     public static final double firstDioriteRange = 32;
-    public static final double panicRange = 26;
+    public static final double panicRange = 20;
     public static final double safeRange = 8;
     private EntityGolemFirstDiorite owner = null;
     private int timeWithoutParent = 0;
     private static final int timeWithoutParentMax = 100;
+    private int timeWithoutTarget = 0;
+    private static final int timeWithoutTargetMax = 30 * 20;
 
     public EntityPawnFirstDiorite(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
     {
@@ -131,7 +133,7 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
             {
                 if (this.getOwner() != null)
                 {
-                    return this.getOwner().squaredDistanceTo(entity) < MathHelper.square(firstDioriteRange);
+                    return this.getOwner().squaredDistanceTo(entity) < MathHelper.square(panicRange);
                 }
                 return true;
             }
@@ -163,23 +165,28 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
             }
             this.playSound(this.getSquishSound(), 1, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2f + 1.0f) / 0.8f);
         }
-        if (this.getOwner() == null && this.isPlayerCreated())
+        if (this.isPlayerCreated())
         {
-            if (timeWithoutParent++ % 20 == 0)
+            if (this.getOwner() == null)
             {
-                TargetPredicate tp = TargetPredicate.createNonAttackable().setBaseMaxDistance(firstDioriteRange * 2);
-                EntityGolemFirstDiorite newParent = getWorld().getClosestEntity(EntityGolemFirstDiorite.class, tp, this, getX(), getY(), getZ(), getBoundingBox().expand(firstDioriteRange * 2));
-                if (newParent != null)
+                if (timeWithoutParent++ % 20 == 0)
                 {
-                    this.setOwner(newParent);
+                    TargetPredicate tp = TargetPredicate.createNonAttackable().setBaseMaxDistance(firstDioriteRange * 2);
+                    EntityGolemFirstDiorite newParent = getWorld().getClosestEntity(EntityGolemFirstDiorite.class, tp, this, getX(), getY(), getZ(), getBoundingBox().expand(firstDioriteRange * 2));
+                    if (newParent != null)
+                    {
+                        this.setOwner(newParent);
+                    }
                 }
             }
-        }
-        else timeWithoutParent = 0;
+            else timeWithoutParent = 0;
+            if (this.getTarget() == null) timeWithoutTarget++;
+            else timeWithoutTarget = 0;
 
-        if (timeWithoutParent > timeWithoutParentMax)
-        {
-            if (timeWithoutParent % 20 == 0) this.damage(this.getDamageSources().starve(), 1);
+            if (timeWithoutParent > timeWithoutParentMax || timeWithoutTarget > timeWithoutTargetMax)
+            {
+                if (this.age % 20 == 0) this.damage(this.getDamageSources().starve(), 1);
+            }
         }
     }
 
@@ -187,51 +194,17 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putBoolean("wasOnGround", this.onGroundLastTick);
-//        if (this.getOwnerUuid() != null) {
-//            nbt.putUuid("Owner", this.getOwnerUuid());
-//        }
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         this.onGroundLastTick = nbt.getBoolean("wasOnGround");
-//        UUID uUID;
-//        super.readCustomDataFromNbt(nbt);
-//        if (nbt.containsUuid("Owner"))
-//        {
-//            uUID = nbt.getUuid("Owner");
-//        }
-//        else uUID = null;
-//        if (uUID != null) {
-//            try
-//            {
-//                this.setOwnerUuid(uUID);
-//            } catch (Throwable throwable)
-//            {
-//            }
-//        }
     }
-
-//    @Nullable
-//    public UUID getOwnerUuid() {
-//        return this.dataTracker.get(OWNER_UUID).orElse(null);
-//    }
-//
-//    public void setOwnerUuid(@Nullable UUID uuid) {
-//        this.dataTracker.set(OWNER_UUID, Optional.ofNullable(uuid));
-//    }
 
     @Nullable
     public LivingEntity getOwner()
     {
-//        List<LivingEntity> targetList = getWorld().getNonSpectatingEntities(LivingEntity.class, getBoundingBox().expand(firstDioriteRange * 2));
-//        for (LivingEntity target : targetList)
-//        {
-//            if (!(target instanceof EntityGolemFirstDiorite)) continue;
-//            if (target.getUuid() == this.getOwnerUuid()) return target;
-//        }
-//        return null;
         return owner;
     }
 
@@ -239,7 +212,6 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
     {
         if (entity instanceof EntityGolemFirstDiorite)
             owner = (EntityGolemFirstDiorite) entity;
-//        this.setOwnerUuid(entity.getUuid());
     }
 
     @Override
@@ -282,12 +254,12 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.BLOCK_BONE_BLOCK_PLACE;
+        return null;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.BLOCK_BONE_BLOCK_HIT;
+        return null;
     }
 
     protected SoundEvent getSquishSound() {

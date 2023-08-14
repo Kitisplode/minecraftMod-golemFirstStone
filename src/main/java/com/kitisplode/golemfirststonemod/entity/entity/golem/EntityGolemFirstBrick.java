@@ -22,6 +22,7 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.MerchantEntity;
@@ -181,7 +182,6 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 		this.goalSelector.add(1, new DandoriFollowGoal(this, 1.0, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL), dandoriMoveRange, dandoriSeeRange));
 		this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(attackAOERange), new int[]{70, 30, 25}, 0));
 		this.goalSelector.add(3, new WanderNearTargetGoal(this, 0.8, 32.0F));
-		this.goalSelector.add(3, new WanderAroundPointOfInterestGoal(this, 0.8, false));
 		this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.8));
 		this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
 		this.goalSelector.add(8, new LookAroundGoal(this));
@@ -234,6 +234,12 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 		if (targetAttacker instanceof GolemEntity) return false;
 		// Otherwise, this is a good target.
 		return true;
+	}
+
+	@Override
+	public boolean canTarget(LivingEntity entity)
+	{
+		return !(entity instanceof Monster);
 	}
 
 	@Override

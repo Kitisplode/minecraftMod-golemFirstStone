@@ -1,0 +1,6 @@
+accessWidener   v1      named
+# Comment
+#accessible      method  net/minecraft/world/poi/PointOfInterestTypes    of                  (Ljava/lang/String;)Lnet/minecraft/registry/RegistryKey;
+#accessible      method  net/minecraft/world/poi/PointOfInterestTypes    register            (Lnet/minecraft/registry/Registry;Lnet/minecraft/registry/RegistryKey;Ljava/util/Set;II)Lnet/minecraft/world/poi/PointOfInterestType;
+#accessible      method  net/minecraft/world/poi/PointOfInterestTypes    getStatesOfBlock    (Lnet/minecraft/block/Block;)Ljava/util/Set;
+#accessible      method  net/minecraft/village/VillagerProfession        register            (Ljava/lang/String;Lnet/minecraft/registry/RegistryKey;Lnet/minecraft/sound/SoundEvent;)Lnet/minecraft/village/VillagerProfession;

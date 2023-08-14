@@ -177,15 +177,11 @@ public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntit
 		this.goalSelector.add(1, new DandoriFollowGoal(this, 1.0, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL), dandoriMoveRange, dandoriSeeRange));
 		this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(attackRange), new int[]{300, 240, 50}));
 		this.goalSelector.add(3, new WanderNearTargetGoal(this, 0.8, 32.0F));
-		this.goalSelector.add(3, new WanderAroundPointOfInterestGoal(this, 0.8, false));
 		this.goalSelector.add(5, new IronGolemWanderAroundGoal(this, 0.8));
 		this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
 		this.goalSelector.add(8, new LookAroundGoal(this));
-		this.targetSelector.add(1, new TrackIronGolemTargetGoal(this));
-		this.targetSelector.add(2, new RevengeGoal(this));
 		this.targetSelector
 			.add(3, new ActiveTargetGoal(this, MobEntity.class, 5, false, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
-		this.targetSelector.add(4, new UniversalAngerGoal<>(this, false));
 	}
 
 	@Override

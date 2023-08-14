@@ -5,5 +5,19 @@
     "sounds": [
       "golemfirststonemod:item_dandori_call"
     ]
+  },
+  "item_dandori_attack_fail":
+  {
+    "subtitle": "sound.golemfirststonemod.item_dandori_attack_fail",
+    "sounds": [
+      "golemfirststonemod:item_dandori_attack_fail"
+    ]
+  },
+  "item_dandori_attack_win":
+  {
+    "subtitle": "sound.golemfirststonemod.item_dandori_attack_win",
+    "sounds": [
+      "golemfirststonemod:item_dandori_attack_win"
+    ]
   }
 }

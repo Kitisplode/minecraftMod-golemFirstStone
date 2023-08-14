@@ -1,6 +1,5 @@
 package com.kitisplode.golemfirststonemod.item.item;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
@@ -25,7 +24,7 @@ public class ItemDandoriCall extends Item
 {
     static private final double dandoriRange = 10;
     static private final int maxUseTime = 40;
-    static private final int dandoriForceTime = 20;
+    static private final int dandoriForceTime = 10;
     static private final int cooldownTime = 20;
 
     public ItemDandoriCall(Settings settings)
@@ -76,17 +75,12 @@ public class ItemDandoriCall extends Item
                     dandoriWhistle(world, user, true);
                 }
             }
+            else
+            {
+                spawnParticles(world, user);
+            }
             user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.9f);
             user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 1.2f);
-        }
-        if (remainingUseTicks % 8 == 0 && world.isClient())
-        {
-            Vec3d particlePos = new Vec3d(0,0,1);
-            particlePos = particlePos.rotateY(user.getYaw() * -MathHelper.RADIANS_PER_DEGREE);
-            particlePos = particlePos.add(user.getVelocity());
-            world.addParticle(ParticleTypes.NOTE,
-                    user.getX() + particlePos.x, user.getEyeY(), user.getZ() + particlePos.z,
-                    particlePos.x * 3, particlePos.y, particlePos.z * 3);
         }
     }
 
@@ -133,8 +127,6 @@ public class ItemDandoriCall extends Item
                     ((IEntityDandoriFollower) target).setOwner(user);
                 }
             }
-
-
 //            GolemFirstStoneMod.LOGGER.info("Dandori'd! " + target.getUuid().toString());
             targetCount++;
             // If the pik doesn't have a target, or if we're forcing dandori, activate the pik's dandori mode.
@@ -142,6 +134,16 @@ public class ItemDandoriCall extends Item
                 ((IEntityDandoriFollower)target).setDandoriState(true);
         }
         return targetCount;
+    }
+
+    private void spawnParticles(World world, LivingEntity user)
+    {
+        Vec3d particlePos = new Vec3d(0,0,1);
+        particlePos = particlePos.rotateY(user.getYaw() * -MathHelper.RADIANS_PER_DEGREE);
+        particlePos = particlePos.add(user.getVelocity());
+        world.addParticle(ParticleTypes.NOTE,
+                user.getX() + particlePos.x, user.getEyeY(), user.getZ() + particlePos.z,
+                particlePos.x * 3, particlePos.y, particlePos.z * 3);
     }
 
     private void effectWhistle(World world, LivingEntity user, int time)

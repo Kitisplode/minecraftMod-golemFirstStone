@@ -1,6 +1,7 @@
 {
   "item.golemfirststonemod.item_spawn_pawn_first_diorite": "Diorite Pawn Spawn Egg",
   "item.golemfirststonemod.item_dandori_call": "Golem Dandori Call",
+  "item.golemfirststonemod.item_dandori_attack": "Golem Dandori Attack",
 
   "block.golemfirststonemod.block_head_stone": "Chiseled Stone Head",
   "block.golemfirststonemod.block_core_stone": "Chiseled Stone Core",
@@ -10,6 +11,7 @@
   "block.golemfirststonemod.block_core_brick": "Molded Brick Core",
   "block.golemfirststonemod.block_head_diorite": "Sculpted Gold Head",
   "block.golemfirststonemod.block_core_diorite": "Chiseled Diorite Core",
+  "block.golemfirststonemod.block_dandori": "Dandori Block",
 
   "entity.golemfirststonemod.entity_golem_first_stone": "First of Stone",
   "entity.golemfirststonemod.entity_golem_first_oak": "First of Oak",
@@ -17,7 +19,11 @@
   "entity.golemfirststonemod.entity_golem_first_diorite": "First of Diorite",
   "entity.golemfirststonemod.entity_pawn_first_diorite": "Diorite Pawn",
 
-  "sound.golemfirststonemod.item_dandori_call": "Dandori Whistle",
+  "entity.minecraft.villager.villager_dandori": "Dandori Acolyte",
+
+  "sound.golemfirststonemod.item_dandori_call": "Golem Dandori Call",
+  "sound.golemfirststonemod.item_dandori_attack_fail": "Golem Dandori Attack - Failed",
+  "sound.golemfirststonemod.item_dandori_attack_win": "Golem Dandori Attack - Success",
 
   "creativetab.golemfirststonemod": "Golem: Firsts of Legend"
 }

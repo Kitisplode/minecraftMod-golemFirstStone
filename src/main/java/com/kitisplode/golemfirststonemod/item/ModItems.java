@@ -2,6 +2,7 @@ package com.kitisplode.golemfirststonemod.item;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
+import com.kitisplode.golemfirststonemod.item.item.ItemDandoriAttack;
 import com.kitisplode.golemfirststonemod.item.item.ItemDandoriCall;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
@@ -18,6 +19,8 @@ public class ModItems
                     new FabricItemSettings()));
     public static final Item ITEM_DANDORI_CALL = registerItem("item_dandori_call",
             new ItemDandoriCall(new FabricItemSettings().maxCount(1)));
+    public static final Item ITEM_DANDORI_ATTACK = registerItem("item_dandori_attack",
+            new ItemDandoriAttack(new FabricItemSettings().maxCount(1)));
 
     private static Item registerItem(String pName, Item pItem)
     {
