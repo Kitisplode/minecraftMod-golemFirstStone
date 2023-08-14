@@ -295,12 +295,10 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 		{
 			// Do not shield ourselves.
 			if (target == this) continue;
-			// Do not shield targets that are NOT villagers, golems, or players.
-			if (!(target instanceof MerchantEntity
-					|| target instanceof GolemEntity
-					|| (target instanceof PlayerEntity && isPlayerCreated()))
-					|| (target.getFirstPassenger() != null && target.getFirstPassenger() instanceof PlayerEntity))
-				continue;
+			// Do not shield targets that are monsters.
+			if (target instanceof Monster) continue;
+			// Do not shield targets that are players if we are not player created.
+			if (target instanceof PlayerEntity && !isPlayerCreated()) continue;
 			// Do not shield targets that are too far on the y axis.
 			if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
 

@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.MerchantEntity;
@@ -59,10 +60,10 @@ public class EntityProjectileFirstOak extends ArrowEntity
         // Skip some targets.
         if (target != null)
         {
-            if (target instanceof GolemEntity) return;
-            if (target instanceof VillagerEntity) return;
-            if (target instanceof MerchantEntity) return;
-            if (target instanceof PlayerEntity || (target.getFirstPassenger() != null && target.getFirstPassenger() instanceof PlayerEntity))
+            // Do not hit targets that are not monsters. Or players, if we're not player made.
+            if (!(target instanceof Monster || target instanceof PlayerEntity))
+                return;
+            if (target instanceof PlayerEntity)
             {
                 if (golemOwner != null && golemOwner.isPlayerCreated()) return;
             }
@@ -92,12 +93,11 @@ public class EntityProjectileFirstOak extends ArrowEntity
         List<LivingEntity> targetList = getWorld().getNonSpectatingEntities(LivingEntity.class, getBoundingBox().expand(attackAOERange));
         for (LivingEntity target : targetList)
         {
-            // Do not damage targets that are villagers or golems.
-            if (target instanceof VillagerEntity) continue;
-            if (target instanceof MerchantEntity) continue;
-            if (target instanceof GolemEntity) continue;
-            // Do not damage players if the golem is player made.
-            if (target instanceof PlayerEntity || (target.getFirstPassenger() != null && target.getFirstPassenger() instanceof PlayerEntity))
+            // Skip targets that are not monsters or players.
+            if (!(target instanceof Monster || target instanceof PlayerEntity))
+                continue;
+            // Skip players only if we are player created.
+            if (target instanceof PlayerEntity)
             {
                 if (golemOwner != null && golemOwner.isPlayerCreated()) continue;
             }
