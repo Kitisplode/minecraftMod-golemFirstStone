@@ -17,23 +17,25 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.List;
 
+// Code copied from https://github.com/finallion/VillagersPlus-FABRIC/blob/f646582b2f44a32d1f184c47f0f2544573c6c225/src/main/java/com/finallion/villagersplus/mixin/StructurePoolAccessor.java
+// TODO: ask permission to use this code
 public class ModStructures
 {
     private static final RegistryKey<StructureProcessorList> EMPTY_PROCESSOR_LIST_KEY = RegistryKey.of(RegistryKeys.PROCESSOR_LIST, new Identifier("minecraft", "empty"));
-    private static final Identifier plainsPoolLocation = new Identifier("minecraft:village/plains/houses");
-    private static final Identifier savannaPoolLocation = new Identifier("minecraft:village/savanna/houses");
-    private static final Identifier desertPoolLocation = new Identifier("minecraft:village/desert/houses");
-    private static final Identifier snowyPoolLocation = new Identifier("minecraft:village/snowy/houses");
+    private static final Identifier plainsPoolLocation = new Identifier("minecraft:village/plains/town_centers");
+    private static final Identifier savannaPoolLocation = new Identifier("minecraft:village/savanna/town_centers");
+    private static final Identifier desertPoolLocation = new Identifier("minecraft:village/desert/town_centers");
+    private static final Identifier snowyPoolLocation = new Identifier("minecraft:village/snowy/town_centers");
 
     public static void registerJigsaws(MinecraftServer server)
     {
         Registry<StructurePool> templatePoolRegistry = server.getRegistryManager().get(RegistryKeys.TEMPLATE_POOL);
         Registry<StructureProcessorList> processorListRegistry = server.getRegistryManager().get(RegistryKeys.PROCESSOR_LIST);
 
-        addBuildingToPool(templatePoolRegistry, processorListRegistry, plainsPoolLocation, "golemfirststonemod:village/villager_stone", 1);
-        addBuildingToPool(templatePoolRegistry, processorListRegistry, savannaPoolLocation, "golemfirststonemod:village/villager_oak", 1);
-        addBuildingToPool(templatePoolRegistry, processorListRegistry, desertPoolLocation, "golemfirststonemod:village/villager_brick", 1);
-        addBuildingToPool(templatePoolRegistry, processorListRegistry, snowyPoolLocation, "golemfirststonemod:village/villager_diorite", 1);
+        addBuildingToPool(templatePoolRegistry, processorListRegistry, plainsPoolLocation, "golemfirststonemod:village/villager_stone_2", 20);
+        addBuildingToPool(templatePoolRegistry, processorListRegistry, savannaPoolLocation, "golemfirststonemod:village/villager_oak_2", 20);
+        addBuildingToPool(templatePoolRegistry, processorListRegistry, desertPoolLocation, "golemfirststonemod:village/villager_brick_2", 20);
+        addBuildingToPool(templatePoolRegistry, processorListRegistry, snowyPoolLocation, "golemfirststonemod:village/villager_diorite_2", 20);
 
         GolemFirstStoneMod.LOGGER.info("register village structures");
     }
