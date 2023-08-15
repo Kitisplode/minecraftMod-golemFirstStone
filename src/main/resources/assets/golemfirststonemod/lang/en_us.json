@@ -12,6 +12,10 @@
   "block.golemfirststonemod.block_head_diorite": "Sculpted Gold Head",
   "block.golemfirststonemod.block_core_diorite": "Chiseled Diorite Core",
   "block.golemfirststonemod.block_dandori": "Dandori Block",
+  "block.golemfirststonemod.block_villager_stone": "Stoneworker Workstation",
+  "block.golemfirststonemod.block_villager_oak": "Woodcarver Workstation",
+  "block.golemfirststonemod.block_villager_brick": "Brickcarver Workstation",
+  "block.golemfirststonemod.block_villager_diorite": "Diorite Workstation",
 
   "entity.golemfirststonemod.entity_golem_first_stone": "First of Stone",
   "entity.golemfirststonemod.entity_golem_first_oak": "First of Oak",

@@ -35,4 +35,9 @@ Features currently planned for future updates:
 + Add some interactions between the Firsts and the villagers, similar to the Iron Golem.
 + Change the way to obtain the heads to something more interesting than just crafting them.
 
+---
+
+Compatibility notes:
++ There are mixins for Snow Golems, Iron Golems, and Carved Pumpkin Blocks, so this mod may be incompatible with other mods that affect those, too.
+
 **Requires Fabric Modloader, Fabric API, and GeckoLib. Supports Minecraft Java Edition 1.20.1 only.**

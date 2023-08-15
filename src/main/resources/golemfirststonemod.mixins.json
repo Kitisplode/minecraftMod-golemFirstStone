@@ -5,7 +5,8 @@
 	"mixins": [
 		"block/MixinCarvedPumpkinBlock",
 		"entity/MixinIronGolemEntity",
-		"entity/MixinSnowGolemEntity"
+		"entity/MixinSnowGolemEntity",
+		"MixinStructurePoolAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1

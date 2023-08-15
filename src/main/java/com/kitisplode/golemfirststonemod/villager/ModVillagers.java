@@ -35,6 +35,26 @@ public class ModVillagers
             RegistryKey.of(RegistryKeys.POINT_OF_INTEREST_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "poi_dandori")),
             SoundEvents.ENTITY_VILLAGER_WORK_ARMORER);
 
+    public static final PointOfInterestType POI_VILLAGER_STONE = registerPOI("poi_villager_stone", ModBlocks.BLOCK_VILLAGER_STONE);
+    public static final VillagerProfession VILLAGER_STONE = registerProfession("villager_stone",
+            RegistryKey.of(RegistryKeys.POINT_OF_INTEREST_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "poi_villager_stone")),
+            SoundEvents.ENTITY_VILLAGER_WORK_ARMORER);
+
+    public static final PointOfInterestType POI_VILLAGER_OAK = registerPOI("poi_villager_oak", ModBlocks.BLOCK_VILLAGER_OAK);
+    public static final VillagerProfession VILLAGER_OAK = registerProfession("villager_oak",
+            RegistryKey.of(RegistryKeys.POINT_OF_INTEREST_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "poi_villager_oak")),
+            SoundEvents.ENTITY_VILLAGER_WORK_ARMORER);
+
+    public static final PointOfInterestType POI_VILLAGER_BRICK = registerPOI("poi_villager_brick", ModBlocks.BLOCK_VILLAGER_BRICK);
+    public static final VillagerProfession VILLAGER_BRICK = registerProfession("villager_brick",
+            RegistryKey.of(RegistryKeys.POINT_OF_INTEREST_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "poi_villager_brick")),
+            SoundEvents.ENTITY_VILLAGER_WORK_ARMORER);
+
+    public static final PointOfInterestType POI_VILLAGER_DIORITE = registerPOI("poi_villager_diorite", ModBlocks.BLOCK_VILLAGER_DIORITE);
+    public static final VillagerProfession VILLAGER_DIORITE = registerProfession("villager_diorite",
+            RegistryKey.of(RegistryKeys.POINT_OF_INTEREST_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "poi_villager_diorite")),
+            SoundEvents.ENTITY_VILLAGER_WORK_ARMORER);
+
     public static VillagerProfession registerProfession(String name, RegistryKey<PointOfInterestType> type, SoundEvent sound)
     {
         return Registry.register(Registries.VILLAGER_PROFESSION, new Identifier(GolemFirstStoneMod.MOD_ID, name),
@@ -60,6 +80,40 @@ public class ModVillagers
                             new ItemStack(Items.EMERALD, 3),
                             new ItemStack(ModItems.ITEM_DANDORI_CALL, 1),
                             6, 2, 0.02f
+                    ));
+                });
+
+
+        TradeOfferHelper.registerVillagerOffers(VILLAGER_STONE, 1,
+                factories -> {
+                    factories.add((entity,random) -> new TradeOffer(
+                            new ItemStack(Items.EMERALD, 64),
+                            new ItemStack(ModBlocks.BLOCK_HEAD_STONE, 1),
+                            1, 2, 0.02f
+                    ));
+                });
+        TradeOfferHelper.registerVillagerOffers(VILLAGER_OAK, 1,
+                factories -> {
+                    factories.add((entity,random) -> new TradeOffer(
+                            new ItemStack(Items.EMERALD, 64),
+                            new ItemStack(ModBlocks.BLOCK_HEAD_OAK, 1),
+                            1, 2, 0.02f
+                    ));
+                });
+        TradeOfferHelper.registerVillagerOffers(VILLAGER_BRICK, 1,
+                factories -> {
+                    factories.add((entity,random) -> new TradeOffer(
+                            new ItemStack(Items.EMERALD, 64),
+                            new ItemStack(ModBlocks.BLOCK_HEAD_BRICK, 1),
+                            1, 2, 0.02f
+                    ));
+                });
+        TradeOfferHelper.registerVillagerOffers(VILLAGER_DIORITE, 1,
+                factories -> {
+                    factories.add((entity,random) -> new TradeOffer(
+                            new ItemStack(Items.EMERALD, 64),
+                            new ItemStack(ModBlocks.BLOCK_HEAD_DIORITE, 1),
+                            1, 2, 0.02f
                     ));
                 });
     }

@@ -1,0 +1,13 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures":
+  {
+    "down": "minecraft:block/oak_planks",
+    "east": "minecraft:block/oak_planks",
+    "north": "minecraft:block/oak_planks",
+    "particle": "minecraft:block/oak_planks",
+    "south": "minecraft:block/oak_planks",
+    "up": "golemfirststonemod:block/block_dandori",
+    "west": "minecraft:block/oak_planks"
+  }
+}

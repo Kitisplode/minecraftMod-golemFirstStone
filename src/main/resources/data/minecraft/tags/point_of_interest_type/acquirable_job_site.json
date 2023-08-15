@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
-    "golemfirststonemod:poi_dandori"
+    "golemfirststonemod:poi_dandori",
+    "golemfirststonemod:poi_villager_stone",
+    "golemfirststonemod:poi_villager_oak",
+    "golemfirststonemod:poi_villager_brick",
+    "golemfirststonemod:poi_villager_diorite"
   ]
 }

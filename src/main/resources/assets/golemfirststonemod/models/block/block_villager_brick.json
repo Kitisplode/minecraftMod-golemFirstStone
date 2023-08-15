@@ -1,0 +1,13 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures":
+  {
+    "down": "minecraft:block/mud_bricks",
+    "east": "minecraft:block/mud_bricks",
+    "north": "minecraft:block/mud_bricks",
+    "particle": "minecraft:block/mud_bricks",
+    "south": "minecraft:block/mud_bricks",
+    "up": "golemfirststonemod:block/block_dandori",
+    "west": "minecraft:block/mud_bricks"
+  }
+}
