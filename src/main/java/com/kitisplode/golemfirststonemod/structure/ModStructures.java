@@ -32,10 +32,10 @@ public class ModStructures
         Registry<StructurePool> templatePoolRegistry = server.getRegistryManager().get(RegistryKeys.TEMPLATE_POOL);
         Registry<StructureProcessorList> processorListRegistry = server.getRegistryManager().get(RegistryKeys.PROCESSOR_LIST);
 
-        addBuildingToPool(templatePoolRegistry, processorListRegistry, plainsPoolLocation, "golemfirststonemod:village/villager_stone_2", 20);
-        addBuildingToPool(templatePoolRegistry, processorListRegistry, savannaPoolLocation, "golemfirststonemod:village/villager_oak_2", 20);
-        addBuildingToPool(templatePoolRegistry, processorListRegistry, desertPoolLocation, "golemfirststonemod:village/villager_brick_2", 20);
-        addBuildingToPool(templatePoolRegistry, processorListRegistry, snowyPoolLocation, "golemfirststonemod:village/villager_diorite_2", 20);
+        addBuildingToPool(templatePoolRegistry, processorListRegistry, plainsPoolLocation, "golemfirststonemod:village/villager_stone_2", 50);
+        addBuildingToPool(templatePoolRegistry, processorListRegistry, savannaPoolLocation, "golemfirststonemod:village/villager_oak_2", 50);
+        addBuildingToPool(templatePoolRegistry, processorListRegistry, desertPoolLocation, "golemfirststonemod:village/villager_brick_2", 50);
+        addBuildingToPool(templatePoolRegistry, processorListRegistry, snowyPoolLocation, "golemfirststonemod:village/villager_diorite_2", 50);
 
         GolemFirstStoneMod.LOGGER.info("register village structures");
     }

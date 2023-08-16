@@ -17,6 +17,9 @@ public class ModItems
     public static final Item ITEM_SPAWN_PAWN_FIRST_DIORITE = registerItem("item_spawn_pawn_first_diorite",
             new SpawnEggItem(ModEntities.ENTITY_PAWN_FIRST_DIORITE, 0xDFDFDF, 0xEBEBEB,
                     new FabricItemSettings()));
+    public static final Item ITEM_SPAWN_VILLAGER_DANDORI = registerItem("item_spawn_villager_dandori",
+            new SpawnEggItem(ModEntities.ENTITY_VILLAGER_DANDORI, 0xDFDFDF, 0x38A836,
+                    new FabricItemSettings()));
     public static final Item ITEM_DANDORI_CALL = registerItem("item_dandori_call",
             new ItemDandoriCall(new FabricItemSettings().maxCount(1)));
     public static final Item ITEM_DANDORI_ATTACK = registerItem("item_dandori_attack",

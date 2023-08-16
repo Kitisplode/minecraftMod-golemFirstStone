@@ -194,12 +194,15 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putBoolean("wasOnGround", this.onGroundLastTick);
+        nbt.putInt("pawnType", this.pawnType);
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         this.onGroundLastTick = nbt.getBoolean("wasOnGround");
+        if (nbt.contains("pawnType"))
+            setPawnType(nbt.getInt("pawnType"));
     }
 
     @Nullable

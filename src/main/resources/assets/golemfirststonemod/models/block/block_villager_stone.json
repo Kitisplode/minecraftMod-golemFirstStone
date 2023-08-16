@@ -7,7 +7,7 @@
     "north": "minecraft:block/stone",
     "particle": "minecraft:block/stone",
     "south": "minecraft:block/stone",
-    "up": "golemfirststonemod:block/block_dandori",
+    "up": "golemfirststonemod:block/block_head_stone",
     "west": "minecraft:block/stone"
   }
 }

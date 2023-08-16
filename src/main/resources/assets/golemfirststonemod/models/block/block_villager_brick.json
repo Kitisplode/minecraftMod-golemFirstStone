@@ -7,7 +7,7 @@
     "north": "minecraft:block/mud_bricks",
     "particle": "minecraft:block/mud_bricks",
     "south": "minecraft:block/mud_bricks",
-    "up": "golemfirststonemod:block/block_dandori",
+    "up": "golemfirststonemod:block/block_core_brick",
     "west": "minecraft:block/mud_bricks"
   }
 }

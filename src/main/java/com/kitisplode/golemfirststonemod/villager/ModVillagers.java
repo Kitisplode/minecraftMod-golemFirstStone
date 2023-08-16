@@ -30,11 +30,6 @@ public class ModVillagers
 //
 //    public static final VillagerProfession VILLAGER_DANDORI = VillagerProfession.register("villager_dandori", POI_KEY_DANDORI, SoundEvents.ENTITY_VILLAGER_WORK_ARMORER);
 
-    public static final PointOfInterestType POI_DANDORI = registerPOI("poi_dandori", ModBlocks.BLOCK_DANDORI);
-    public static final VillagerProfession VILLAGER_DANDORI = registerProfession("villager_dandori",
-            RegistryKey.of(RegistryKeys.POINT_OF_INTEREST_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "poi_dandori")),
-            SoundEvents.ENTITY_VILLAGER_WORK_ARMORER);
-
     public static final PointOfInterestType POI_VILLAGER_STONE = registerPOI("poi_villager_stone", ModBlocks.BLOCK_VILLAGER_STONE);
     public static final VillagerProfession VILLAGER_STONE = registerProfession("villager_stone",
             RegistryKey.of(RegistryKeys.POINT_OF_INTEREST_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "poi_villager_stone")),
@@ -74,16 +69,6 @@ public class ModVillagers
 
     public static void registerModTrades()
     {
-        TradeOfferHelper.registerVillagerOffers(VILLAGER_DANDORI, 1,
-                factories -> {
-                    factories.add((entity,random) -> new TradeOffer(
-                            new ItemStack(Items.EMERALD, 3),
-                            new ItemStack(ModItems.ITEM_DANDORI_CALL, 1),
-                            6, 2, 0.02f
-                    ));
-                });
-
-
         TradeOfferHelper.registerVillagerOffers(VILLAGER_STONE, 1,
                 factories -> {
                     factories.add((entity,random) -> new TradeOffer(

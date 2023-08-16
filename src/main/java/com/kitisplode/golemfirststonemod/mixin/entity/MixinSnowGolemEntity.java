@@ -128,7 +128,7 @@ public abstract class MixinSnowGolemEntity
     @Inject(method = ("initGoals"), at = @At("HEAD"))
     protected void initGoals(CallbackInfo ci)
     {
-        this.goalSelector.add(0, new DandoriFollowGoal(this, 1.25, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(0, new DandoriFollowGoal(this, 1.25, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
     }
 
     @Override

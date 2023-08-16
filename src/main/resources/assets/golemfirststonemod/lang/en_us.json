@@ -1,5 +1,6 @@
 {
   "item.golemfirststonemod.item_spawn_pawn_first_diorite": "Diorite Pawn Spawn Egg",
+  "item.golemfirststonemod.item_spawn_villager_dandori": "Dandori Villager Spawn Egg",
   "item.golemfirststonemod.item_dandori_call": "Golem Dandori Call",
   "item.golemfirststonemod.item_dandori_attack": "Golem Dandori Attack",
 
@@ -12,18 +13,24 @@
   "block.golemfirststonemod.block_head_diorite": "Sculpted Gold Head",
   "block.golemfirststonemod.block_core_diorite": "Chiseled Diorite Core",
   "block.golemfirststonemod.block_dandori": "Dandori Block",
-  "block.golemfirststonemod.block_villager_stone": "Stoneworker Workstation",
-  "block.golemfirststonemod.block_villager_oak": "Woodcarver Workstation",
-  "block.golemfirststonemod.block_villager_brick": "Brickcarver Workstation",
-  "block.golemfirststonemod.block_villager_diorite": "Diorite Workstation",
+  "block.golemfirststonemod.block_villager_stone": "Golem Stoneworker Workstation",
+  "block.golemfirststonemod.block_villager_oak": "Golem Woodcarver Workstation",
+  "block.golemfirststonemod.block_villager_brick": "Golem Lapidarist Workstation",
+  "block.golemfirststonemod.block_villager_diorite": "Golem Goldsmith Workstation",
 
   "entity.golemfirststonemod.entity_golem_first_stone": "First of Stone",
   "entity.golemfirststonemod.entity_golem_first_oak": "First of Oak",
   "entity.golemfirststonemod.entity_golem_first_brick": "First of Brick",
   "entity.golemfirststonemod.entity_golem_first_diorite": "First of Diorite",
   "entity.golemfirststonemod.entity_pawn_first_diorite": "Diorite Pawn",
+  "entity.golemfirststonemod.entity_pawn_clay": "Clay Pawn",
+  "entity.golemfirststonemod.entity_villager_dandori": "Golem Acolyte",
 
-  "entity.minecraft.villager.villager_dandori": "Dandori Acolyte",
+  "entity.minecraft.villager.villager_dandori": "Golem Acolyte",
+  "entity.minecraft.villager.villager_stone": "Golem Stoneworker",
+  "entity.minecraft.villager.villager_oak": "Golem Oakcarver",
+  "entity.minecraft.villager.villager_brick": "Golem Lapidarist",
+  "entity.minecraft.villager.villager_diorite": "Golem Goldsmith",
 
   "sound.golemfirststonemod.item_dandori_call": "Golem Dandori Call",
   "sound.golemfirststonemod.item_dandori_attack_fail": "Golem Dandori Attack - Failed",

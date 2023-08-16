@@ -168,7 +168,7 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 
 	@Override
 	protected void initGoals() {
-		this.goalSelector.add(1, new DandoriFollowGoal(this, 1.0, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL), dandoriMoveRange, dandoriSeeRange));
+		this.goalSelector.add(1, new DandoriFollowGoal(this, 1.0, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
 		this.goalSelector.add(2, new MultiStageAttackGoal(this, 1.0, true, 6.0D, new int[]{70, 30, 25}));
 		this.goalSelector.add(3, new WanderNearTargetGoal(this, 0.8, 32.0F));
 		this.goalSelector.add(5, new IronGolemWanderAroundGoal(this, 0.8));

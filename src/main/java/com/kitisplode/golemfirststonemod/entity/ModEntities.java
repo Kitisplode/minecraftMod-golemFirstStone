@@ -2,6 +2,7 @@ package com.kitisplode.golemfirststonemod.entity;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.client.renderer.*;
+import com.kitisplode.golemfirststonemod.entity.entity.EntityVillagerDandori;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstBrick;
@@ -73,6 +74,12 @@ public class ModEntities
                     .dimensions(EntityDimensions.fixed(0.5f, 0.5f))
                     .build()
     );
+    public static final EntityType<EntityVillagerDandori> ENTITY_VILLAGER_DANDORI = Registry.register(
+            Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_villager_dandori"),
+            FabricEntityTypeBuilder.<EntityVillagerDandori>create(SpawnGroup.MISC, EntityVillagerDandori::new)
+                    .dimensions(EntityDimensions.fixed(0.8f, 0.95f))
+                    .build()
+    );
 
     public static void registerModEntities()
     {
@@ -81,6 +88,7 @@ public class ModEntities
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_FIRST_BRICK, EntityGolemFirstBrick.setAttributes());
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_FIRST_DIORITE, EntityGolemFirstDiorite.setAttributes());
         FabricDefaultAttributeRegistry.register(ENTITY_PAWN_FIRST_DIORITE, EntityPawnFirstDiorite.setAttributes());
+        FabricDefaultAttributeRegistry.register(ENTITY_VILLAGER_DANDORI, EntityVillagerDandori.setAttributes());
     }
 
     public static void registerModEntitiesRenderers()
@@ -93,5 +101,6 @@ public class ModEntities
         EntityRendererRegistry.register(ENTITY_GOLEM_FIRST_DIORITE, EntityRendererGolemFirstDiorite::new);
         EntityRendererRegistry.register(ENTITY_PAWN_FIRST_DIORITE, EntityRendererPawnFirstDiorite::new);
         EntityRendererRegistry.register(ENTITY_EFFECT_CUBE_DANDORI_WHISTLE, EntityRendererShieldFirstBrick::new);
+        EntityRendererRegistry.register(ENTITY_VILLAGER_DANDORI, EntityRendererVillagerDandori::new);
     }
 }
