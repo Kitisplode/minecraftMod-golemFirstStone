@@ -159,8 +159,8 @@ dependencies {
 }
 
 mixin {
-    add sourceSets.main, 'modplayground.mixins.refmap.json'
-    config 'modplayground.mixins.json'
+    add sourceSets.main, 'golemfirststonemod.mixins.refmap.json'
+    config 'golemfirststonemod.mixins.json'
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
