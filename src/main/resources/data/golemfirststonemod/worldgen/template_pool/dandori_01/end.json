@@ -1,0 +1,17 @@
+{
+  "name": "golemfirststonemod:dandori_01/path",
+  "fallback": "golemfirststonemod:dandori_01/end",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "golemfirststonemod:dandori/str_dandori_path_01",
+        "processors": {
+          "processors": []
+        },
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}
