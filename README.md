@@ -1,4 +1,4 @@
-# Minecraft Mod - Golem: Firsts of Legend Version 0.0.4 (Fabric)
+# Minecraft Mod - Golem: Firsts of Legend Version 0.0.5 (Fabric)
 
 ---
 
