@@ -216,14 +216,17 @@ public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntit
 					0.0f,
 					Math.cos(direction) * offset);
 			BlockState bs = getWorld().getBlockState(new BlockPos((int)(getX() + spawnOffset.getX()), (int)(getY() + spawnOffset.getY()),(int)(getZ() + spawnOffset.getZ())));
+			BlockState bsUnder = getWorld().getBlockState(new BlockPos((int)(getX() + spawnOffset.getX()), (int)(getY() + spawnOffset.getY() - 1),(int)(getZ() + spawnOffset.getZ())));
 			int failCount = 0;
-			while (!bs.isAir() || bs.isOpaque())
+			while (!bs.isAir() || bs.isOpaque() || bsUnder.isAir() || !bsUnder.isOpaque())
 			{
 				spawnOffset = spawnOffset.add(0,1,0);
 				bs = getWorld().getBlockState(new BlockPos((int)(getX() + spawnOffset.getX()), (int)(getY() + spawnOffset.getY()),(int)(getZ() + spawnOffset.getZ())));
+				bsUnder = getWorld().getBlockState(new BlockPos((int)(getX() + spawnOffset.getX()), (int)(getY() + spawnOffset.getY() - 1),(int)(getZ() + spawnOffset.getZ())));
 				failCount++;
 				if (failCount > 5) break;
 			}
+			if (failCount > 5) continue;
 
 			EntityPawn pawn = ModEntities.ENTITY_PAWN_FIRST_DIORITE.create(getWorld());
 			if (pawn == null) continue;

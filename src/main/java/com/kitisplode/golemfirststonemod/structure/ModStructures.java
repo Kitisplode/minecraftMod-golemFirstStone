@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Code copied from https://github.com/finallion/VillagersPlus-FABRIC/blob/f646582b2f44a32d1f184c47f0f2544573c6c225/src/main/java/com/finallion/villagersplus/mixin/StructurePoolAccessor.java
-// TODO: ask permission to use this code
 public class ModStructures
 {
     private static final RegistryKey<StructureProcessorList> EMPTY_PROCESSOR_LIST_KEY = RegistryKey.of(RegistryKeys.PROCESSOR_LIST, new Identifier("minecraft", "empty"));

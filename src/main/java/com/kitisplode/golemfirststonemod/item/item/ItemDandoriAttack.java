@@ -98,7 +98,7 @@ public class ItemDandoriAttack extends Item
     private int dandoriAttack(World world, LivingEntity user, Vec3d position, boolean forceDandori)
     {
         // Find the target nearest the given position.
-        TargetPredicate tp = TargetPredicate.createNonAttackable().setBaseMaxDistance(attackRingDiameter).setPredicate(entity -> entity instanceof Monster);
+        TargetPredicate tp = TargetPredicate.createAttackable().setBaseMaxDistance(attackRingDiameter).setPredicate(entity -> entity instanceof Monster);
         LivingEntity enemy = world.getClosestEntity(LivingEntity.class, tp, null, position.getX(), position.getY(), position.getZ(), entityDimensions.getBoxAt(position));
         if (enemy == null)
         {

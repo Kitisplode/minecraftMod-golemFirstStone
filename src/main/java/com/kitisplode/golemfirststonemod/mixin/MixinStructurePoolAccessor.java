@@ -10,8 +10,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.List;
 
-// Code copied from https://github.com/finallion/VillagersPlus-FABRIC/blob/f646582b2f44a32d1f184c47f0f2544573c6c225/src/main/java/com/finallion/villagersplus/mixin/StructurePoolAccessor.java
-// TODO: ask permission to use this code
+// Code copied with permission from https://github.com/finallion/VillagersPlus-FABRIC/blob/f646582b2f44a32d1f184c47f0f2544573c6c225/src/main/java/com/finallion/villagersplus/mixin/StructurePoolAccessor.java
 @Mixin(StructurePool.class)
 public interface MixinStructurePoolAccessor
 {

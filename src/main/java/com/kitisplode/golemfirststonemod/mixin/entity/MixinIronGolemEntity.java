@@ -111,7 +111,6 @@ public abstract class MixinIronGolemEntity extends GolemEntity implements Angera
         this.dataTracker.set(OWNER_UUID, Optional.ofNullable(uuid));
     }
 
-
     public boolean getDandoriState()
     {
         return this.dataTracker.get(DANDORI_STATE);

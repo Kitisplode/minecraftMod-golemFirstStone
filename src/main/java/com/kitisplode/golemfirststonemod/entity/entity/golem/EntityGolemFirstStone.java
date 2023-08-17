@@ -50,12 +50,12 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 	private static final TrackedData<Boolean> DANDORI_STATE = DataTracker.registerData(EntityGolemFirstStone.class, TrackedDataHandlerRegistry.BOOLEAN);
 	protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(EntityGolemFirstStone.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-	private final float attackAOERange = 4.0f;
-	private final float attackKnockbackAmount = 2.0f;
-	private final float attackKnockbackAmountVertical = 0.25f;
-	private final float attackVerticalRange = 2.0f;
-	private final double dandoriMoveRange = 6;
-	private final double dandoriSeeRange = 36;
+	private static final float attackAOERange = 4.0f;
+	private static final float attackKnockbackAmount = 2.0f;
+	private static final float attackKnockbackAmountVertical = 0.25f;
+	private static final float attackVerticalRange = 2.0f;
+	private static final double dandoriMoveRange = 6;
+	private static final double dandoriSeeRange = 36;
 
 	public EntityGolemFirstStone(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
 	{
@@ -213,8 +213,8 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 			// Do not damage ourselves.
 			if (target == this) continue;
 			// Do not damage targets that are not monsters. Or players, if we're not player made.
-			if (target instanceof Monster
-			    || (target instanceof PlayerEntity && !isPlayerCreated()))
+			if (!(target instanceof Monster
+			    || (target instanceof PlayerEntity && !isPlayerCreated())))
 				continue;
 			// Do not damage targets that are too far on the y axis.
 			if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;

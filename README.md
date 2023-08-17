@@ -1,4 +1,4 @@
-# Minecraft Mod - Golem: Firsts of Legend Version 0.0.5 (Fabric)
+# Minecraft Mod - Golem Dandori: Firsts of Legend Version 0.0.5 (Fabric)
 
 ---
 
@@ -35,6 +35,7 @@ First of Diorite also does not attack directly, instead summoning a small group 
 Features currently planned for future updates:
 + Add the flame inside of First of Diorite's head lol
 + Add some interactions between the Firsts and the villagers, similar to the Iron Golem.
++ Maybe some of the other golems from other Minecraft spinoffs?
 + Dandori???
 
 ---

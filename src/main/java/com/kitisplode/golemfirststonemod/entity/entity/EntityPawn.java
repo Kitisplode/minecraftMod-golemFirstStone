@@ -422,6 +422,11 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity
 
         @Override
         public boolean canStart() {
+            LivingEntity owner = this.pawn.getOwner();
+            if (owner != null)
+            {
+                if (owner.squaredDistanceTo(this.pawn) > MathHelper.square(this.pawn.panicRange)) return false;
+            }
             LivingEntity livingEntity = this.pawn.getTarget();
             if (livingEntity == null) {
                 return false;
@@ -482,12 +487,14 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity
 
         @Override
         public boolean canStart() {
-            if (this.pawn.getOwner() == null)
+            LivingEntity owner = this.pawn.getOwner();
+            if (owner == null)
                 return false;
             else
             {
-                if (this.pawn.getOwner().squaredDistanceTo(this.pawn) > MathHelper.square(this.pawn.panicRange)
-                        || (this.pawn.getOwner().squaredDistanceTo(this.pawn) > MathHelper.square(this.pawn.safeRange) && this.pawn.getTarget() == null))
+                double sqrDistanceToOwner = owner.squaredDistanceTo(this.pawn);
+                if (sqrDistanceToOwner > MathHelper.square(this.pawn.panicRange)
+                        || (sqrDistanceToOwner > MathHelper.square(this.pawn.safeRange) && this.pawn.getTarget() == null))
                 {
                     return (this.pawn.isOnGround() || this.pawn.hasStatusEffect(StatusEffects.LEVITATION)) && this.pawn.getMoveControl() instanceof EntityPawn.SlimeMoveControl;
                 }
@@ -543,12 +550,10 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity
 
         @Override
         public boolean canStart() {
-            if (this.pawn.getOwner() != null)
+            LivingEntity owner = this.pawn.getOwner();
+            if (owner != null)
             {
-                if (this.pawn.getOwner().squaredDistanceTo(this.pawn) > MathHelper.square(this.pawn.panicRange))
-                {
-                    return false;
-                }
+                if (owner.squaredDistanceTo(this.pawn) > MathHelper.square(this.pawn.panicRange)) return false;
             }
             return this.pawn.getTarget() == null && (this.pawn.isOnGround() || this.pawn.hasStatusEffect(StatusEffects.LEVITATION)) && this.pawn.getMoveControl() instanceof EntityPawn.SlimeMoveControl;
         }
