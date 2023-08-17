@@ -174,6 +174,7 @@ public class EntityGolemFirstOak extends IronGolemEntity implements GeoEntity, I
 		this.goalSelector.add(5, new IronGolemWanderAroundGoal(this, 0.8));
 		this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
 		this.goalSelector.add(8, new LookAroundGoal(this));
+		this.targetSelector.add(2, new RevengeGoal(this, new Class[0]));
 		this.targetSelector
 			.add(1, new ActiveTargetGoalBiggerY<>(this, MobEntity.class, 5, true, false, entity -> entity instanceof Monster, 32));
 	}
