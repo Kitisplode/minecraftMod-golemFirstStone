@@ -30,11 +30,11 @@ public class ModItemGroups
                         entries.add(ModBlocks.BLOCK_VILLAGER_OAK);
                         entries.add(ModBlocks.BLOCK_VILLAGER_BRICK);
                         entries.add(ModBlocks.BLOCK_VILLAGER_DIORITE);
-                        entries.add(ModBlocks.BLOCK_DANDORI);
-                        entries.add(ModItems.ITEM_SPAWN_PAWN_FIRST_DIORITE);
-                        entries.add(ModItems.ITEM_SPAWN_VILLAGER_DANDORI);
-                        entries.add(ModItems.ITEM_DANDORI_CALL);
-                        entries.add(ModItems.ITEM_DANDORI_ATTACK);
+//                        entries.add(ModBlocks.BLOCK_DANDORI);
+//                        entries.add(ModItems.ITEM_SPAWN_PAWN_FIRST_DIORITE);
+//                        entries.add(ModItems.ITEM_SPAWN_VILLAGER_DANDORI);
+//                        entries.add(ModItems.ITEM_DANDORI_CALL);
+//                        entries.add(ModItems.ITEM_DANDORI_ATTACK);
                     }).build());
 
     public static void registerItemGroups()
