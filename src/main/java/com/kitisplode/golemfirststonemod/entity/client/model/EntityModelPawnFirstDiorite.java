@@ -1,32 +1,25 @@
 package com.kitisplode.golemfirststonemod.entity.client.model;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.pawn.EntityPawnFirstDiorite;
+import com.kitisplode.golemfirststonemod.entity.entity.EntityPawn;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.model.GeoModel;
 
-public class EntityModelPawnFirstDiorite extends GeoModel<EntityPawnFirstDiorite>
+public class EntityModelPawnFirstDiorite extends GeoModel<EntityPawn>
 {
 	@Override
-	public Identifier getModelResource(EntityPawnFirstDiorite animatable)
+	public Identifier getModelResource(EntityPawn animatable)
 	{
-		int pawnType = animatable.getPawnType();
-		return switch (pawnType)
-		{
-			case 0 -> new Identifier(GolemFirstStoneMod.MOD_ID, "geo/diorite_action.geo.json");
-			case 1 -> new Identifier(GolemFirstStoneMod.MOD_ID, "geo/diorite_foresight.geo.json");
-			default -> new Identifier(GolemFirstStoneMod.MOD_ID, "geo/diorite_knowledge.geo.json");
-		};
+		return animatable.getModelLocation();
 	}
 
 	@Override
-	public Identifier getTextureResource(EntityPawnFirstDiorite animatable)
+	public Identifier getTextureResource(EntityPawn animatable)
 	{
 		return animatable.getTextureLocation();
 	}
 
 	@Override
-	public Identifier getAnimationResource(EntityPawnFirstDiorite animatable)
+	public Identifier getAnimationResource(EntityPawn animatable)
 	{
 		return null;
 	}

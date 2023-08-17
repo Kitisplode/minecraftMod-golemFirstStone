@@ -1,7 +1,6 @@
-package com.kitisplode.golemfirststonemod.entity.entity.golem.pawn;
+package com.kitisplode.golemfirststonemod.entity.entity;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.entity.EntityVillagerDandori;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstDiorite;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -21,7 +20,6 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -42,11 +40,11 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.EnumSet;
 import java.util.function.Predicate;
 
-public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
+public class EntityPawn extends IronGolemEntity implements GeoEntity
 {
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-    protected static final TrackedData<Integer> OWNER_TYPE = DataTracker.registerData(EntityPawnFirstDiorite.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> PAWN_TYPE = DataTracker.registerData(EntityPawnFirstDiorite.class, TrackedDataHandlerRegistry.INTEGER);
+    protected static final TrackedData<Integer> OWNER_TYPE = DataTracker.registerData(EntityPawn.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> PAWN_TYPE = DataTracker.registerData(EntityPawn.class, TrackedDataHandlerRegistry.INTEGER);
     private int pawnType = 0;
     private boolean onGroundLastTick;
     public static final double ownerSearchRange = 32;
@@ -59,10 +57,10 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
     private static final int timeWithoutTargetMax = 30 * 20;
     public enum OWNER_TYPES {WANDERING, FIRST_OF_DIORITE, PLAYER, VILLAGER_DANDORI};
 
-    public EntityPawnFirstDiorite(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
+    public EntityPawn(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
     {
         super(pEntityType, pLevel);
-        this.moveControl = new EntityPawnFirstDiorite.SlimeMoveControl(this);
+        this.moveControl = new EntityPawn.SlimeMoveControl(this);
     }
 
     public static DefaultAttributeContainer.Builder setAttributes()
@@ -129,10 +127,10 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
     @Override
     protected void initGoals()
     {
-        this.goalSelector.add(1, new EntityPawnFirstDiorite.LookAtOwnerGoal(this));
-        this.goalSelector.add(2, new EntityPawnFirstDiorite.FaceTowardTargetGoal(this));
-        this.goalSelector.add(3, new EntityPawnFirstDiorite.RandomLookGoal(this));
-        this.goalSelector.add(5, new EntityPawnFirstDiorite.MoveGoal(this));
+        this.goalSelector.add(1, new EntityPawn.LookAtOwnerGoal(this));
+        this.goalSelector.add(2, new EntityPawn.FaceTowardTargetGoal(this));
+        this.goalSelector.add(3, new EntityPawn.RandomLookGoal(this));
+        this.goalSelector.add(5, new EntityPawn.MoveGoal(this));
         this.targetSelector
                 .add(2, new ActiveTargetGoal<>(this, MobEntity.class, 5, false, false, attackTarget()));
     }
@@ -363,10 +361,10 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
     {
         private float targetYaw;
         private int ticksUntilJump;
-        private final EntityPawnFirstDiorite pawn;
+        private final EntityPawn pawn;
         private boolean jumpOften;
 
-        public SlimeMoveControl(EntityPawnFirstDiorite pawn) {
+        public SlimeMoveControl(EntityPawn pawn) {
             super(pawn);
             this.pawn = pawn;
             this.targetYaw = 180.0f * pawn.getYaw() / (float)Math.PI;
@@ -414,10 +412,10 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
     static class FaceTowardTargetGoal
             extends Goal
     {
-        private final EntityPawnFirstDiorite pawn;
+        private final EntityPawn pawn;
         private int ticksLeft;
 
-        public FaceTowardTargetGoal(EntityPawnFirstDiorite pawn) {
+        public FaceTowardTargetGoal(EntityPawn pawn) {
             this.pawn = pawn;
             this.setControls(EnumSet.of(Goal.Control.LOOK));
         }
@@ -431,12 +429,12 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
             if (!this.pawn.canTarget(livingEntity)) {
                 return false;
             }
-            return this.pawn.getMoveControl() instanceof EntityPawnFirstDiorite.SlimeMoveControl;
+            return this.pawn.getMoveControl() instanceof EntityPawn.SlimeMoveControl;
         }
 
         @Override
         public void start() {
-            this.ticksLeft = EntityPawnFirstDiorite.FaceTowardTargetGoal.toGoalTicks(150);
+            this.ticksLeft = EntityPawn.FaceTowardTargetGoal.toGoalTicks(150);
             super.start();
         }
 
@@ -464,8 +462,8 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
             if (livingEntity != null) {
                 this.pawn.lookAtEntity(livingEntity, 10.0f, 10.0f);
             }
-            if ((moveControl = this.pawn.getMoveControl()) instanceof EntityPawnFirstDiorite.SlimeMoveControl) {
-                EntityPawnFirstDiorite.SlimeMoveControl slimeMoveControl = (EntityPawnFirstDiorite.SlimeMoveControl)moveControl;
+            if ((moveControl = this.pawn.getMoveControl()) instanceof EntityPawn.SlimeMoveControl) {
+                EntityPawn.SlimeMoveControl slimeMoveControl = (EntityPawn.SlimeMoveControl)moveControl;
                 slimeMoveControl.look(this.pawn.getYaw(), !this.pawn.isAiDisabled());
             }
         }
@@ -473,10 +471,10 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
 
     static class LookAtOwnerGoal
     extends Goal {
-        private final EntityPawnFirstDiorite pawn;
+        private final EntityPawn pawn;
         private int ticksLeft;
 
-        public LookAtOwnerGoal(EntityPawnFirstDiorite pawn)
+        public LookAtOwnerGoal(EntityPawn pawn)
         {
             this.pawn = pawn;
             this.setControls(EnumSet.of(Goal.Control.LOOK));
@@ -491,14 +489,14 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
                 if (this.pawn.getOwner().squaredDistanceTo(this.pawn) > MathHelper.square(this.pawn.panicRange)
                         || (this.pawn.getOwner().squaredDistanceTo(this.pawn) > MathHelper.square(this.pawn.safeRange) && this.pawn.getTarget() == null))
                 {
-                    return (this.pawn.isOnGround() || this.pawn.hasStatusEffect(StatusEffects.LEVITATION)) && this.pawn.getMoveControl() instanceof EntityPawnFirstDiorite.SlimeMoveControl;
+                    return (this.pawn.isOnGround() || this.pawn.hasStatusEffect(StatusEffects.LEVITATION)) && this.pawn.getMoveControl() instanceof EntityPawn.SlimeMoveControl;
                 }
             }
             return false;
         }
         @Override
         public void start() {
-            this.ticksLeft = EntityPawnFirstDiorite.LookAtOwnerGoal.toGoalTicks(200);
+            this.ticksLeft = EntityPawn.LookAtOwnerGoal.toGoalTicks(200);
             super.start();
         }
 
@@ -525,8 +523,8 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
             if (livingEntity != null) {
                 this.pawn.lookAtEntity(livingEntity, 10.0f, 10.0f);
             }
-            if ((moveControl = this.pawn.getMoveControl()) instanceof EntityPawnFirstDiorite.SlimeMoveControl) {
-                EntityPawnFirstDiorite.SlimeMoveControl slimeMoveControl = (EntityPawnFirstDiorite.SlimeMoveControl)moveControl;
+            if ((moveControl = this.pawn.getMoveControl()) instanceof EntityPawn.SlimeMoveControl) {
+                EntityPawn.SlimeMoveControl slimeMoveControl = (EntityPawn.SlimeMoveControl)moveControl;
                 slimeMoveControl.look(this.pawn.getYaw(), !this.pawn.isAiDisabled());
             }
         }
@@ -534,11 +532,11 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
 
     static class RandomLookGoal
             extends Goal {
-        private final EntityPawnFirstDiorite pawn;
+        private final EntityPawn pawn;
         private float targetYaw;
         private int timer;
 
-        public RandomLookGoal(EntityPawnFirstDiorite pawn) {
+        public RandomLookGoal(EntityPawn pawn) {
             this.pawn = pawn;
             this.setControls(EnumSet.of(Goal.Control.LOOK));
         }
@@ -552,7 +550,7 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
                     return false;
                 }
             }
-            return this.pawn.getTarget() == null && (this.pawn.isOnGround() || this.pawn.hasStatusEffect(StatusEffects.LEVITATION)) && this.pawn.getMoveControl() instanceof EntityPawnFirstDiorite.SlimeMoveControl;
+            return this.pawn.getTarget() == null && (this.pawn.isOnGround() || this.pawn.hasStatusEffect(StatusEffects.LEVITATION)) && this.pawn.getMoveControl() instanceof EntityPawn.SlimeMoveControl;
         }
 
         @Override
@@ -562,8 +560,8 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
                 this.timer = this.getTickCount(40 + this.pawn.getRandom().nextInt(60));
                 this.targetYaw = this.pawn.getRandom().nextInt(360);
             }
-            if ((moveControl = this.pawn.getMoveControl()) instanceof EntityPawnFirstDiorite.SlimeMoveControl) {
-                EntityPawnFirstDiorite.SlimeMoveControl slimeMoveControl = (EntityPawnFirstDiorite.SlimeMoveControl)moveControl;
+            if ((moveControl = this.pawn.getMoveControl()) instanceof EntityPawn.SlimeMoveControl) {
+                EntityPawn.SlimeMoveControl slimeMoveControl = (EntityPawn.SlimeMoveControl)moveControl;
                 slimeMoveControl.look(this.targetYaw, false);
             }
         }
@@ -571,9 +569,9 @@ public class EntityPawnFirstDiorite extends IronGolemEntity implements GeoEntity
 
     static class MoveGoal
             extends Goal {
-        private final EntityPawnFirstDiorite pawn;
+        private final EntityPawn pawn;
 
-        public MoveGoal(EntityPawnFirstDiorite pawn) {
+        public MoveGoal(EntityPawn pawn) {
             this.pawn = pawn;
             this.setControls(EnumSet.of(Goal.Control.JUMP, Goal.Control.MOVE));
         }

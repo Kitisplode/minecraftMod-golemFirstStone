@@ -28,7 +28,8 @@
     + added Golem Dandori Call item
     + added Golem Dandori Attack item
     + integrated Dandori system into Iron and Snow Golems
-    + added Dandori Villager profession
+    + Dandori???
+    + added new Villager Professions and Structures as an alternate option to obtain First Heads
     + QoL - Made First of Stone and First of Brick AoE attacks damage Monsters only
     + QoL - Made First of Brick AoE shields apply to all non-Monsters
     + Balance - Made Diorite Pawns stay closer to their First of Diorite

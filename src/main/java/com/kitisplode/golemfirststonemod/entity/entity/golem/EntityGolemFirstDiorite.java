@@ -3,7 +3,7 @@ package com.kitisplode.golemfirststonemod.entity.entity.golem;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.IEntityWithDelayedMeleeAttack;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.pawn.EntityPawnFirstDiorite;
+import com.kitisplode.golemfirststonemod.entity.entity.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.item.ModItems;
@@ -225,10 +225,12 @@ public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntit
 				if (failCount > 5) break;
 			}
 
-			EntityPawnFirstDiorite pawn = ModEntities.ENTITY_PAWN_FIRST_DIORITE.create(getWorld());
+			EntityPawn pawn = ModEntities.ENTITY_PAWN_FIRST_DIORITE.create(getWorld());
 			if (pawn == null) continue;
 			pawn.setOwner(this);
+			pawn.setOwnerType(EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal());
 			pawn.setPlayerCreated(isPlayerCreated());
+			pawn.setPawnTypeDiorite();
 			pawn.refreshPositionAndAngles(getX() + spawnOffset.getX(), getY() + spawnOffset.getY(), getZ() + spawnOffset.getZ(), 0.0f, 0.0F);
 			getWorld().spawnEntity(pawn);
 

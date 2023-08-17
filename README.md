@@ -16,6 +16,8 @@ Craft a *Sculpted Emerald Head* with a Lodestone and Emerald blocks, then place 
 
 Craft a *Sculpted Gold Head* with a Lodestone and Gold blocks, then place it in a First of Diorite structure in the world.
 
+You can alternatively obtain the First Heads from associated villagers in some villages.
+
 ---
 
 Each First has 1000 HP and special attacks.
@@ -33,7 +35,7 @@ First of Diorite also does not attack directly, instead summoning a small group 
 Features currently planned for future updates:
 + Add the flame inside of First of Diorite's head lol
 + Add some interactions between the Firsts and the villagers, similar to the Iron Golem.
-+ Change the way to obtain the heads to something more interesting than just crafting them.
++ Dandori???
 
 ---
 

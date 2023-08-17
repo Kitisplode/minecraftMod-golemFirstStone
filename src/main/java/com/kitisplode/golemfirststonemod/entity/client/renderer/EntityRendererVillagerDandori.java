@@ -16,7 +16,7 @@ public class EntityRendererVillagerDandori extends GeoEntityRenderer<EntityVilla
 	public EntityRendererVillagerDandori(EntityRendererFactory.Context renderManager)
 	{
 		super(renderManager, new EntityModelVillagerDandori());
-		this.shadowRadius = 0.8f;
+		this.shadowRadius = 0.4f;
 	}
 
 	@Override

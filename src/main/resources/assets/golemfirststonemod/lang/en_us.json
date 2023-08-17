@@ -35,6 +35,7 @@
   "sound.golemfirststonemod.item_dandori_call": "Golem Dandori Call",
   "sound.golemfirststonemod.item_dandori_attack_fail": "Golem Dandori Attack - Failed",
   "sound.golemfirststonemod.item_dandori_attack_win": "Golem Dandori Attack - Success",
+  "sound.golemfirststonemod.entity_villager_dandori_pluck": "Golem Acolyte Summoned Pawn",
 
   "creativetab.golemfirststonemod": "Golem: Firsts of Legend"
 }

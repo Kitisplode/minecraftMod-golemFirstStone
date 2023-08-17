@@ -9,7 +9,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstBri
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstDiorite;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstStone;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.pawn.EntityPawnFirstDiorite;
+import com.kitisplode.golemfirststonemod.entity.entity.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileFirstOak;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -62,9 +62,9 @@ public class ModEntities
                     .dimensions(EntityDimensions.fixed(2.5f, 4.0f))
                     .build()
     );
-    public static final EntityType<EntityPawnFirstDiorite> ENTITY_PAWN_FIRST_DIORITE = Registry.register(
+    public static final EntityType<EntityPawn> ENTITY_PAWN_FIRST_DIORITE = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_pawn_first_diorite"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityPawnFirstDiorite::new)
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityPawn::new)
                     .dimensions(EntityDimensions.fixed(0.8f, 1.0f))
                     .build()
     );
@@ -77,7 +77,7 @@ public class ModEntities
     public static final EntityType<EntityVillagerDandori> ENTITY_VILLAGER_DANDORI = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_villager_dandori"),
             FabricEntityTypeBuilder.<EntityVillagerDandori>create(SpawnGroup.MISC, EntityVillagerDandori::new)
-                    .dimensions(EntityDimensions.fixed(0.8f, 0.95f))
+                    .dimensions(EntityDimensions.fixed(0.8f, 1.0f))
                     .build()
     );
 
@@ -87,7 +87,7 @@ public class ModEntities
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_FIRST_OAK, EntityGolemFirstOak.setAttributes());
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_FIRST_BRICK, EntityGolemFirstBrick.setAttributes());
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_FIRST_DIORITE, EntityGolemFirstDiorite.setAttributes());
-        FabricDefaultAttributeRegistry.register(ENTITY_PAWN_FIRST_DIORITE, EntityPawnFirstDiorite.setAttributes());
+        FabricDefaultAttributeRegistry.register(ENTITY_PAWN_FIRST_DIORITE, EntityPawn.setAttributes());
         FabricDefaultAttributeRegistry.register(ENTITY_VILLAGER_DANDORI, EntityVillagerDandori.setAttributes());
     }
 

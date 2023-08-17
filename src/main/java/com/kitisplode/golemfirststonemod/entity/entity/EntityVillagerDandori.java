@@ -1,10 +1,12 @@
 package com.kitisplode.golemfirststonemod.entity.entity;
 
 import com.google.common.collect.ImmutableMap;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstBrick;
+import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.item.ModItems;
+import com.kitisplode.golemfirststonemod.sound.ModSounds;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.ai.goal.*;
@@ -14,10 +16,10 @@ import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.passive.WanderingTraderEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
@@ -31,9 +33,11 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.Animation;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 public class EntityVillagerDandori
     extends MerchantEntity
@@ -49,6 +53,9 @@ public class EntityVillagerDandori
                     new TradeOffers.SellItemFactory(ModItems.ITEM_DANDORI_ATTACK,32, 1, 1, 25)
             }));
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
+    private static final int piksCountMax = 6;
+    private static final double piksSearchRange = 24.0;
+    private static final int piksSpawnTime = 100;
 
     public EntityVillagerDandori(EntityType<? extends MerchantEntity> entityType, World world)
     {
@@ -87,6 +94,7 @@ public class EntityVillagerDandori
         this.goalSelector.add(8, new WanderAroundFarGoal(this, 0.35));
         this.goalSelector.add(9, new StopAndLookAtEntityGoal(this, PlayerEntity.class, 3.0f, 1.0f));
         this.goalSelector.add(10, new LookAtEntityGoal(this, MobEntity.class, 8.0f));
+        this.goalSelector.add(11, new EntityVillagerDandori.SpawnPiksGoal(this, piksSearchRange, piksCountMax, piksSpawnTime));
     }
 
     @Override
@@ -124,6 +132,12 @@ public class EntityVillagerDandori
     @Override
     public boolean isLeveledMerchant() {
         return false;
+    }
+
+    @Override
+    public double getEyeY()
+    {
+        return getY() + 0.6f;
     }
 
     @Override
@@ -166,5 +180,73 @@ public class EntityVillagerDandori
     public AnimatableInstanceCache getAnimatableInstanceCache()
     {
         return cache;
+    }
+
+    private EntityPawn spawnPik()
+    {
+        this.playSound(ModSounds.ENTITY_VILLAGER_DANDORI_PLUCK, 0.2f, this.random.nextFloat() * 0.4f + 0.3f);
+
+        EntityPawn pawn = ModEntities.ENTITY_PAWN_FIRST_DIORITE.create(getWorld());
+        if (pawn == null) return null;
+        pawn.setOwner(this);
+        pawn.setOwnerType(EntityPawn.OWNER_TYPES.VILLAGER_DANDORI.ordinal());
+        pawn.setPawnTypePik();
+        pawn.setVelocity(0,0.5,0);
+        pawn.refreshPositionAndAngles(getX(), getY(), getZ(), 0.0f, 0.0F);
+        getWorld().spawnEntity(pawn);
+
+        AreaEffectCloudEntity dust = new AreaEffectCloudEntity(getWorld(), getX(), getY(), getZ());
+        dust.setParticleType(ParticleTypes.POOF);
+        dust.setRadius(1.0f);
+        dust.setDuration(1);
+        dust.setPos(dust.getX(),dust.getY(),dust.getZ());
+        getWorld().spawnEntity(dust);
+        return pawn;
+    }
+
+    class SpawnPiksGoal
+    extends Goal
+    {
+        final EntityVillagerDandori villager;
+        final double pikSearchRange;
+        final int pikCountMax;
+        int timer = 0;
+        final int time;
+
+        SpawnPiksGoal(EntityVillagerDandori pVillager, double pPikSearchRange, int pikCountMax, int time)
+        {
+            this.villager = pVillager;
+            this.pikSearchRange = pPikSearchRange;
+            this.pikCountMax = pikCountMax;
+            this.time = time;
+            this.timer = time - 10;
+        }
+
+        @Override
+        public boolean canStart()
+        {
+            // Scan the nearby area and see if we have enough piks around.
+            List<EntityPawn> listPiks = this.villager.getWorld().getEntitiesByClass(EntityPawn.class, this.villager.getBoundingBox().expand(this.pikSearchRange), pikPredicate());
+            return listPiks.size() < this.pikCountMax;
+        }
+
+        @Override
+        public void tick()
+        {
+            timer++;
+            if (timer > time)
+            {
+                villager.spawnPik();
+                timer = 0;
+            }
+        }
+
+        private Predicate<EntityPawn> pikPredicate()
+        {
+            return entity ->
+            {
+                return entity.getOwner() == this.villager;
+            };
+        }
     }
 }

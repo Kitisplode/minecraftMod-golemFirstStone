@@ -19,5 +19,12 @@
     "sounds": [
       "golemfirststonemod:item_dandori_attack_win"
     ]
+  },
+  "entity_villager_dandori_pluck":
+  {
+    "subtitle": "sound.golemfirststonemod.entity_villager_dandori_pluck",
+    "sounds": [
+      "golemfirststonemod:entity_villager_dandori_pluck"
+    ]
   }
 }

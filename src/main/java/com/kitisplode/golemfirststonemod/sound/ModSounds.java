@@ -11,6 +11,7 @@ public class ModSounds
     public static SoundEvent ITEM_DANDORI_CALL = registerSoundEvent("item_dandori_call");
     public static SoundEvent ITEM_DANDORI_ATTACK_FAIL = registerSoundEvent("item_dandori_attack_fail");
     public static SoundEvent ITEM_DANDORI_ATTACK_WIN = registerSoundEvent("item_dandori_attack_win");
+    public static SoundEvent ENTITY_VILLAGER_DANDORI_PLUCK = registerSoundEvent("entity_villager_dandori_pluck");
 
     private static SoundEvent registerSoundEvent(String name)
     {
