@@ -1,0 +1,13 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures":
+  {
+    "down": "minecraft:block/stone",
+    "east": "minecraft:block/stone",
+    "north": "minecraft:block/stone",
+    "particle": "minecraft:block/stone",
+    "south": "minecraft:block/stone",
+    "up": "golemfirststonemod:block/block_head_stone",
+    "west": "minecraft:block/stone"
+  }
+}

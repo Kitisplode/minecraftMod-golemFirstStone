@@ -1,14 +1,19 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
+import com.kitisplode.golemfirststonemod.entity.ModEntities;
+import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
-import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.entity.goal.target.PassiveTargetGoal;
+import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -23,21 +28,15 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.DefendVillageTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
@@ -46,21 +45,28 @@ import software.bernie.geckolib.core.animation.Animation;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 
-public class EntityGolemFirstBrick extends IronGolem implements GeoEntity, IEntityWithDelayedMeleeAttack
+public class EntityGolemFirstBrick extends IronGolem implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
 {
     private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemFirstBrick.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> DANDORI_STATE = SynchedEntityData.defineId(EntityGolemFirstBrick.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(EntityGolemFirstBrick.class, EntityDataSerializers.OPTIONAL_UUID);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-    private final int shieldHurtTime = 30;
-    private final int shieldAbsorptionTime = 20 * 5;
-    private final int shieldAbsorptionAmount = 0;
-    private final float attackAOERange = 10.0f;
-    private final float attackVerticalRange = 5.0f;
-    private final ArrayList<MobEffectInstance> shieldStatusEffects = new ArrayList();
+    private static final int shieldHurtTime = 30;
+    private static final int shieldAbsorptionTime = 20 * 5;
+    private static final int shieldAbsorptionAmount = 0;
+    private static final float attackAOERange = 10.0f;
+    private static final float attackVerticalRange = 5.0f;
+    private static final ArrayList<MobEffectInstance> shieldStatusEffects = new ArrayList<>();
+    private static final double dandoriMoveRange = 6;
+    private static final double dandoriSeeRange = 36;
 
     public EntityGolemFirstBrick(EntityType<? extends IronGolem> pEntityType, Level pLevel)
     {
@@ -83,17 +89,69 @@ public class EntityGolemFirstBrick extends IronGolem implements GeoEntity, IEnti
     protected void defineSynchedData()
     {
         super.defineSynchedData();
-        this.entityData.define(ATTACK_STATE, 0);
+        if (!this.entityData.hasItem(ATTACK_STATE)) this.entityData.define(ATTACK_STATE, 0);
+        if (!this.entityData.hasItem(DANDORI_STATE)) this.entityData.define(DANDORI_STATE, false);
+        if (!this.entityData.hasItem(DATA_OWNERUUID_ID)) this.entityData.define(DATA_OWNERUUID_ID, Optional.empty());
+    }
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        if (this.getOwnerUUID() != null) {
+            pCompound.putUUID("Owner", this.getOwnerUUID());
+        }
+    }
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        UUID uuid;
+        if (pCompound.hasUUID("Owner")) {
+            uuid = pCompound.getUUID("Owner");
+        } else {
+            String s = pCompound.getString("Owner");
+            uuid = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), s);
+        }
+        if (uuid != null) {
+            try {
+                this.setOwnerUUID(uuid);
+            } catch (Throwable throwable) {}
+        }
+    }
+    @Nullable
+    public UUID getOwnerUUID() {
+        return this.entityData.get(DATA_OWNERUUID_ID).orElse((UUID)null);
+    }
+
+    public void setOwnerUUID(@Nullable UUID pUuid) {
+        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(pUuid));
+    }
+    public LivingEntity getOwner()
+    {
+        UUID uUID = this.getOwnerUUID();
+        if (uUID == null) return null;
+        return this.level().getPlayerByUUID(uUID);
+    }
+    public void setOwner(LivingEntity pOwner)
+    {
+        if (pOwner != null) setOwnerUUID(pOwner.getUUID());
+    }
+    public boolean isOwner(LivingEntity pEntity) {
+        return pEntity == this.getOwner();
     }
 
     public int getAttackState()
     {
         return this.entityData.get(ATTACK_STATE);
     }
-
     public void setAttackState(int pInt)
     {
         this.entityData.set(ATTACK_STATE, pInt);
+    }
+
+    public boolean getDandoriState()
+    {
+        return this.entityData.get(DANDORI_STATE);
+    }
+    public void setDandoriState(boolean pDandoriState)
+    {
+        this.entityData.set(DANDORI_STATE, pDandoriState);
     }
 
     private float getAttackDamage() {
@@ -109,9 +167,9 @@ public class EntityGolemFirstBrick extends IronGolem implements GeoEntity, IEnti
     @Override
     protected void registerGoals()
     {
-        this.goalSelector.addGoal(1, new MultiStageAttackGoalRanged(this, 1.0, true, Mth.square(attackAOERange), new int[]{70, 30, 25}));
-        this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
-        this.goalSelector.addGoal(2, new MoveBackToVillageGoal(this, 0.8D, false));
+        this.goalSelector.addGoal(1, new DandoriFollowGoal(this, 1.0, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(2, new MultiStageAttackGoalRanged(this, 1.0, true, Mth.square(attackAOERange), new int[]{70, 30, 25}));
+        this.goalSelector.addGoal(3, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
         this.goalSelector.addGoal(4, new GolemRandomStrollInVillageGoal(this, 0.8D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
@@ -165,6 +223,10 @@ public class EntityGolemFirstBrick extends IronGolem implements GeoEntity, IEnti
         return true;
     }
 
+    public boolean canAttack(LivingEntity entity) {
+        return !(entity instanceof Enemy);
+    }
+
     @Override
     public boolean tryAttack()
     {
@@ -198,10 +260,14 @@ public class EntityGolemFirstBrick extends IronGolem implements GeoEntity, IEnti
         dust.setPos(getX(),getY(),getZ());
         level().addFreshEntity(dust);
 
-        EntityEffectShieldFirstBrick shield = new EntityEffectShieldFirstBrick(level(), getX(),getY(),getZ());
-        shield.setLifeTime(20);
-        shield.setFullScale(range * 2.0f);
-        level().addFreshEntity(shield);
+        EntityEffectShieldFirstBrick shield = ModEntities.ENTITY_SHIELD_FIRST_BRICK.get().create(level());
+        if (shield != null)
+        {
+            shield.setPos(this.position());
+            shield.setLifeTime(20);
+            shield.setFullScale(range * 2.0f);
+            level().addFreshEntity(shield);
+        }
     }
 
     private void attackAOE()
@@ -211,11 +277,10 @@ public class EntityGolemFirstBrick extends IronGolem implements GeoEntity, IEnti
         {
             // Do not target ourselves.
             if (target == this) continue;
-            // Do not shield targets that are NOT villagers, golems, or players.
-            if (!(target instanceof Merchant
-                    || target instanceof AbstractGolem
-                    || (target instanceof Player && isPlayerCreated())))
-                continue;
+            // Do not shield targets that are monsters.
+            if (target instanceof Enemy) continue;
+            // Do not shield targets that are players if we are not player created.
+            if (target instanceof Player && !isPlayerCreated()) continue;
             // Do not damage targets that are too far on the y axis.
             if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
 
@@ -249,6 +314,12 @@ public class EntityGolemFirstBrick extends IronGolem implements GeoEntity, IEnti
                 return InteractionResult.sidedSuccess(this.level().isClientSide);
             }
         }
+    }
+
+    public void handleEntityEvent(byte pId)
+    {
+        if (pId == IEntityDandoriFollower.ENTITY_EVENT_DANDORI_START) addDandoriParticles();
+        else super.handleEntityEvent(pId);
     }
 
     @Override

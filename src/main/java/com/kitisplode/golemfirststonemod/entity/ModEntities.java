@@ -1,16 +1,22 @@
 package com.kitisplode.golemfirststonemod.entity;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.*;
+import com.kitisplode.golemfirststonemod.entity.entity.EntityVillagerDandori;
+import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstDiorite;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstStone;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.pawn.EntityPawnFirstDiorite;
+import com.kitisplode.golemfirststonemod.entity.entity.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileFirstOak;
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.renderer.entity.TippableArrowRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -58,14 +64,49 @@ public class ModEntities
                             .sized(2.5f, 4.0f)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_golem_first_diorite").toString()));
 
-    public static final RegistryObject<EntityType<EntityPawnFirstDiorite>> ENTITY_PAWN_FIRST_DIORITE =
+    public static final RegistryObject<EntityType<EntityPawn>> ENTITY_PAWN_FIRST_DIORITE =
             ENTITY_TYPES.register("entity_pawn_first_diorite",
-                    () -> EntityType.Builder.of(EntityPawnFirstDiorite::new, MobCategory.MISC)
+                    () -> EntityType.Builder.of(EntityPawn::new, MobCategory.MISC)
                             .sized(0.8f, 1.0f)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_pawn_first_diorite").toString()));
+
+    public static final RegistryObject<EntityType<EntityEffectCubeDandoriWhistle>> ENTITY_EFFECT_CUBE_DANDORI_WHISTLE =
+            ENTITY_TYPES.register("entity_effect_cube_dandori_whistle",
+                    () -> EntityType.Builder.<EntityEffectCubeDandoriWhistle>of(EntityEffectCubeDandoriWhistle::new, MobCategory.MISC)
+                            .sized(0.5f, 0.5f)
+                            .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_effect_cube_dandori_whistle").toString()));
+
+    public static final RegistryObject<EntityType<EntityVillagerDandori>> ENTITY_VILLAGER_DANDORI =
+            ENTITY_TYPES.register("entity_villager_dandori",
+                    () -> EntityType.Builder.of(EntityVillagerDandori::new, MobCategory.MISC)
+                            .sized(0.8f, 1.0f)
+                            .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_villager_dandori").toString()));
 
     public static void register(IEventBus eventBus)
     {
         ENTITY_TYPES.register(eventBus);
+    }
+
+    public static void registerAttributes(EntityAttributeCreationEvent event)
+    {
+        event.put(ModEntities.ENTITY_GOLEM_FIRST_STONE.get(), EntityGolemFirstStone.setAttributes());
+        event.put(ModEntities.ENTITY_GOLEM_FIRST_OAK.get(), EntityGolemFirstOak.setAttributes());
+        event.put(ModEntities.ENTITY_GOLEM_FIRST_BRICK.get(), EntityGolemFirstBrick.setAttributes());
+        event.put(ModEntities.ENTITY_GOLEM_FIRST_DIORITE.get(), EntityGolemFirstDiorite.setAttributes());
+        event.put(ModEntities.ENTITY_PAWN_FIRST_DIORITE.get(), EntityPawn.setAttributes());
+        event.put(ModEntities.ENTITY_VILLAGER_DANDORI.get(), EntityVillagerDandori.setAttributes());
+    }
+
+    public static void registerRenderers()
+    {
+        EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_STONE.get(), EntityRendererGolemFirstStone::new);
+        EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_OAK.get(), EntityRendererGolemFirstOak::new);
+        EntityRenderers.register(ModEntities.ENTITY_PROJECTILE_FIRST_OAK.get(), TippableArrowRenderer::new);
+        EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_BRICK.get(), EntityRendererGolemFirstBrick::new);
+        EntityRenderers.register(ModEntities.ENTITY_SHIELD_FIRST_BRICK.get(), EntityRendererShieldFirstBrick::new);
+        EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_DIORITE.get(), EntityRendererGolemFirstDiorite::new);
+        EntityRenderers.register(ModEntities.ENTITY_PAWN_FIRST_DIORITE.get(), EntityRendererPawn::new);
+        EntityRenderers.register(ModEntities.ENTITY_EFFECT_CUBE_DANDORI_WHISTLE.get(), EntityRendererShieldFirstBrick::new);
+        EntityRenderers.register(ModEntities.ENTITY_VILLAGER_DANDORI.get(), EntityRendererVillagerDandori::new);
     }
 }

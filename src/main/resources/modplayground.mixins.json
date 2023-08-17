@@ -5,6 +5,10 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "golemfirststonemod.mixins.refmap.json",
   "mixins": [
+    "block/MixinCarvedPumpkinBlock",
+    "entity/MixinIronGolem",
+    "entity/MixinSnowGolem",
+    "MixinStructurePoolAccessor"
   ],
   "client": [
 

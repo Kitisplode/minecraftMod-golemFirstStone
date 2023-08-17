@@ -1,4 +1,4 @@
-# Minecraft Mod - Golem: Firsts of Legend 0.0.4 (Forge)
+# Minecraft Mod - Golem: Firsts of Legend 0.0.5 (Forge)
 
 ---
 
@@ -15,6 +15,8 @@ Craft a *Carved Oak Head* with a Lodestone and Oak Wood blocks, and place it in 
 Craft a *Sculpted Emerald Head* with a Lodestone and Emerald blocks, then place it in a First of Brick structure in the world.
 
 Craft a *Sculpted Gold Head* with a Lodestone and Gold blocks, then place it in a First of Diorite structure in the world.
+
+You can alternatively obtain the First Heads from associated villagers in some villages.
 
 ---
 
@@ -33,6 +35,14 @@ First of Diorite also does not attack directly, instead summoning a small group 
 Features currently planned for future updates:
 + Add the flame inside of First of Diorite's head lol
 + Add some interactions between the Firsts and the villagers, similar to the Iron Golem.
-+ Change the way to obtain the heads to something more interesting than just crafting them.
++ Maybe some of the other golems from other Minecraft spinoffs?
++ Dandori???
+
+---
+
+Compatibility notes:
++ There are mixins for Snow Golems, Iron Golems, and Carved Pumpkin Blocks, so this mod may be incompatible with other mods that affect those, too.
+
+
 
 **Requires Forge Modloader and GeckoLib. Supports Minecraft Java Edition 1.20.1 only.**

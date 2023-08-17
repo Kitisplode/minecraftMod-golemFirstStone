@@ -49,9 +49,8 @@ abstract public class AbstractBlockHead extends EquipableCarvedPumpkinBlock
     }
 
     private boolean trySpawnGolem(Level pLevel, BlockPos pPos, Entity pPlayer) {
-        for (int i = 0; i < patternList.size(); i++)
+        for (AbstractGolemPattern currentPattern : patternList)
         {
-            AbstractGolemPattern currentPattern = patternList.get(i);
             // Check each pattern in the pattern list.
             BlockPattern.BlockPatternMatch match = currentPattern.CheckForPatternMatch(pLevel, pPos);
             // If there is no match, go to the next pattern.

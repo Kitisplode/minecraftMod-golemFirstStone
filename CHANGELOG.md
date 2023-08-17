@@ -25,3 +25,16 @@
     + added Diorite Pawn entity
     + added Sculpted Gold Head and Chiseled Diorite Core blocks
     + added First of Diorite structure
+
+## 0.0.5
+    + added Dandori system
+    + added Golem Dandori Call item
+    + added Golem Dandori Attack item
+    + integrated Dandori system into Iron and Snow Golems
+    + added new Villager Professions and Structures as an alternate option to obtain First Heads
+    + QoL - Made First of Stone and First of Brick AoE attacks damage Monsters only
+    + QoL - Made First of Brick AoE shields apply to all non-Monsters
+    + Balance - Made Diorite Pawns stay closer to their First of Diorite
+    + Balance - Made Diorite Pawns die off if they don't have a target for 30 seconds
+    + Balance - Reduced number of Diorite Pawns spawned to 3 at a time
+    + Dandori???

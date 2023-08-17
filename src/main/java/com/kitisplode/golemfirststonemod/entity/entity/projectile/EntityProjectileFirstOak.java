@@ -7,6 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
@@ -59,9 +60,9 @@ public class EntityProjectileFirstOak extends Arrow
         // Skip some targets.
         if (target != null)
         {
-            if (target instanceof AbstractGolem) return;
-            if (target instanceof AbstractVillager) return;
-            if (target instanceof Merchant) return;
+            // Do not hit targets that are not monsters. Or players, if we're not player made.
+            if (!(target instanceof Enemy || target instanceof Player))
+                return;
             if (target instanceof Player)
             {
                 if (golemOwner != null && golemOwner.isPlayerCreated()) return;
@@ -93,10 +94,10 @@ public class EntityProjectileFirstOak extends Arrow
         for (LivingEntity target : targetList)
         {
             // Do not damage targets that are villagers or golems.
-            if (target instanceof AbstractVillager) continue;
-            if (target instanceof Merchant) continue;
-            if (target instanceof AbstractGolem) continue;
-            // Do not damage players if the golem is player made.
+            // Skip targets that are not monsters or players.
+            if (!(target instanceof Enemy || target instanceof Player))
+                continue;
+            // Skip players only if we are player created.
             if (target instanceof Player)
             {
                 if (golemOwner != null && golemOwner.isPlayerCreated()) return;

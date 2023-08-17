@@ -2,18 +2,18 @@ package com.kitisplode.golemfirststonemod;
 
 import com.kitisplode.golemfirststonemod.block.ModBlocks;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.client.renderer.*;
 import com.kitisplode.golemfirststonemod.item.ModCreativeModTabs;
 import com.kitisplode.golemfirststonemod.item.ModItems;
+import com.kitisplode.golemfirststonemod.sound.ModSounds;
+import com.kitisplode.golemfirststonemod.structure.ModStructures;
+import com.kitisplode.golemfirststonemod.villager.ModPOIs;
+import com.kitisplode.golemfirststonemod.villager.ModProfessions;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.client.renderer.entity.TippableArrowRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,6 +44,10 @@ public class GolemFirstStoneMod
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModEntities.register(modEventBus);
+        ModSounds.register(modEventBus);
+
+        ModPOIs.POI_TYPES.register(modEventBus);
+        ModProfessions.VILLAGER_PROFESSIONS.register(modEventBus);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
@@ -60,6 +64,7 @@ public class GolemFirstStoneMod
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP");
         LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber);
+
     }
 
     // Add the example block item to the building blocks tab
@@ -75,6 +80,11 @@ public class GolemFirstStoneMod
         LOGGER.info("HELLO from server starting");
     }
 
+    @SubscribeEvent
+    public void onServerAboutToStartEvent(ServerAboutToStartEvent event) {
+        ModStructures.registerJigsaws(event.getServer());
+    }
+
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents
@@ -86,15 +96,9 @@ public class GolemFirstStoneMod
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
 
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.BLOCK_HEAD_DIORITE.get(), RenderType.cutout());
-
-            EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_STONE.get(), EntityRendererGolemFirstStone::new);
-            EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_OAK.get(), EntityRendererGolemFirstOak::new);
-            EntityRenderers.register(ModEntities.ENTITY_PROJECTILE_FIRST_OAK.get(), TippableArrowRenderer::new);
-            EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_BRICK.get(), EntityRendererGolemFirstBrick::new);
-            EntityRenderers.register(ModEntities.ENTITY_SHIELD_FIRST_BRICK.get(), EntityRendererShieldFirstBrick::new);
-            EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_DIORITE.get(), EntityRendererGolemFirstDiorite::new);
-            EntityRenderers.register(ModEntities.ENTITY_PAWN_FIRST_DIORITE.get(), EntityRendererPawnFirstDiorite::new);
+            ModItems.registerModelPredicates();
+            ModBlocks.registerRenderLayers();
+            ModEntities.registerRenderers();
         }
     }
 }

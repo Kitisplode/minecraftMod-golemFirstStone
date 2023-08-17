@@ -28,8 +28,16 @@ public class ModCreativeModTabs
                         pOutput.accept(ModBlocks.BLOCK_CORE_BRICK.get());
                         pOutput.accept(ModBlocks.BLOCK_HEAD_DIORITE.get());
                         pOutput.accept(ModBlocks.BLOCK_CORE_DIORITE.get());
+                        pOutput.accept(ModBlocks.BLOCK_VILLAGER_STONE.get());
+                        pOutput.accept(ModBlocks.BLOCK_VILLAGER_OAK.get());
+                        pOutput.accept(ModBlocks.BLOCK_VILLAGER_BRICK.get());
+                        pOutput.accept(ModBlocks.BLOCK_VILLAGER_DIORITE.get());
                         // Items
-                        pOutput.accept(ModItems.ITEM_SPAWN_PAWN_FIRST_DIORITE.get());
+//                        pOutput.accept(ModItems.ITEM_SPAWN_PAWN_FIRST_DIORITE.get());
+//                        pOutput.accept(ModItems.ITEM_SPAWN_VILLAGER_DANDORI.get());
+//                        pOutput.accept(ModItems.ITEM_DANDORI_CALL.get());
+//                        pOutput.accept(ModItems.ITEM_DANDORI_ATTACK.get());
+
                     })
                     .build());
 

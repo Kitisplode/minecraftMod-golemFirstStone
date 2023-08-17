@@ -1,0 +1,30 @@
+{
+  "item_dandori_call":
+  {
+    "subtitle": "sound.golemfirststonemod.item_dandori_call",
+    "sounds": [
+      "golemfirststonemod:item_dandori_call"
+    ]
+  },
+  "item_dandori_attack_fail":
+  {
+    "subtitle": "sound.golemfirststonemod.item_dandori_attack_fail",
+    "sounds": [
+      "golemfirststonemod:item_dandori_attack_fail"
+    ]
+  },
+  "item_dandori_attack_win":
+  {
+    "subtitle": "sound.golemfirststonemod.item_dandori_attack_win",
+    "sounds": [
+      "golemfirststonemod:item_dandori_attack_win"
+    ]
+  },
+  "entity_villager_dandori_pluck":
+  {
+    "subtitle": "sound.golemfirststonemod.entity_villager_dandori_pluck",
+    "sounds": [
+      "golemfirststonemod:entity_villager_dandori_pluck"
+    ]
+  }
+}

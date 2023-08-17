@@ -27,6 +27,7 @@ public class GolemPatternFirstOak extends AbstractGolemPattern
 	private static final Predicate<BlockState> airPredicate = state -> state != null
 			&& (state.isAir()
 			|| !state.canOcclude()
+			|| state.is(Blocks.SNOW)
 	);
 
 	private static final Predicate<BlockState> corePredicate = state -> state != null

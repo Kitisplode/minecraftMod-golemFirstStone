@@ -6,6 +6,8 @@ import com.kitisplode.golemfirststonemod.block.golem_head.BlockHeadDiorite;
 import com.kitisplode.golemfirststonemod.block.golem_head.BlockHeadOak;
 import com.kitisplode.golemfirststonemod.block.golem_head.BlockHeadStone;
 import com.kitisplode.golemfirststonemod.item.ModItems;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -42,6 +44,14 @@ public class ModBlocks
             () -> new BlockHeadDiorite(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).noOcclusion()));
     public static final RegistryObject<Block> BLOCK_CORE_DIORITE = registerBlock("block_core_diorite",
             () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.POLISHED_DIORITE), ConstantInt.of(50)));
+    public static final RegistryObject<Block> BLOCK_VILLAGER_STONE = registerBlock("block_villager_stone",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE)));
+    public static final RegistryObject<Block> BLOCK_VILLAGER_OAK = registerBlock("block_villager_oak",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
+    public static final RegistryObject<Block> BLOCK_VILLAGER_BRICK = registerBlock("block_villager_brick",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.MUD_BRICKS)));
+    public static final RegistryObject<Block> BLOCK_VILLAGER_DIORITE = registerBlock("block_villager_diorite",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.DIORITE)));
 
 
     // Private helper method to register each of the blocks' corresponding block items.
@@ -62,5 +72,10 @@ public class ModBlocks
     public static void register(IEventBus eventBus)
     {
         BLOCKS.register(eventBus);
+    }
+
+    public static void registerRenderLayers()
+    {
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BLOCK_HEAD_DIORITE.get(), RenderType.cutout());
     }
 }
