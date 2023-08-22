@@ -1,28 +1,32 @@
 package com.kitisplode.golemfirststonemod.item.item;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Tameable;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.IronGolemEntity;
+import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -34,11 +38,18 @@ public class ItemDandoriAttack extends Item
     static private final int dandoriForceTime = 10;
     static private final double maxAttackRange = 48;
     static private final float attackRingDiameter = 6.0f;
-    static private final EntityDimensions entityDimensions = new EntityDimensions(attackRingDiameter, attackRingDiameter, false);
+    static private final EntityDimensions entityDimensions = new EntityDimensions(1, 1, false);
 
     public ItemDandoriAttack(Settings settings)
     {
         super(settings);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context)
+    {
+        tooltip.add(Text.translatable("item.golemfirststonemod.item_description.item_dandori_attack_1"));
+        tooltip.add(Text.translatable("item.golemfirststonemod.item_description.item_dandori_attack_2"));
     }
 
     @Override
@@ -76,7 +87,9 @@ public class ItemDandoriAttack extends Item
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
     {
-        BlockHitResult ray = ItemDandoriAttack.raycast(world, (PlayerEntity) user, RaycastContext.FluidHandling.ANY, maxAttackRange);
+        RaycastContext.FluidHandling fh = RaycastContext.FluidHandling.ANY;
+        if (user.isSubmergedInWater()) fh = RaycastContext.FluidHandling.NONE;
+        BlockHitResult ray = ItemDandoriAttack.raycast(world, (PlayerEntity) user, fh, maxAttackRange);
         Vec3d pos = ray.getPos();
         if (user.squaredDistanceTo(pos) <= MathHelper.square(maxAttackRange))
         {
@@ -84,7 +97,11 @@ public class ItemDandoriAttack extends Item
             boolean actualDandoriForce = remainingUseTicks < actualDandoriForceTime;
             int attackers = dandoriAttack(world, user, pos, true);
             if (attackers == 0) user.playSound(ModSounds.ITEM_DANDORI_ATTACK_FAIL, 1.0f, 0.9f);
-            else user.playSound(ModSounds.ITEM_DANDORI_ATTACK_WIN, 1.0f, 1.0f);
+            else
+            {
+                user.playSound(ModSounds.ITEM_DANDORI_ATTACK_WIN, 1.0f, 1.0f);
+                ((IEntityWithDandoriCount) user).setRecountDandori();
+            }
             effectRing(world, 20, attackRingDiameter, pos);
 
         }
@@ -98,8 +115,16 @@ public class ItemDandoriAttack extends Item
     private int dandoriAttack(World world, LivingEntity user, Vec3d position, boolean forceDandori)
     {
         // Find the target nearest the given position.
-        TargetPredicate tp = TargetPredicate.createAttackable().setBaseMaxDistance(attackRingDiameter).setPredicate(entity -> entity instanceof Monster);
-        LivingEntity enemy = world.getClosestEntity(LivingEntity.class, tp, null, position.getX(), position.getY(), position.getZ(), entityDimensions.getBoxAt(position));
+        TargetPredicate tp = TargetPredicate.createAttackable().setBaseMaxDistance(attackRingDiameter).setPredicate(entity ->
+            {
+                if (entity instanceof Monster) return true;
+                if (entity instanceof IEntityDandoriFollower) return !((IEntityDandoriFollower) entity).isOwner(user);
+                if (entity instanceof Tameable) return ((Tameable) entity).getOwner() != user;
+                if (entity instanceof MerchantEntity) return false;
+                return true;
+            }
+        );
+        LivingEntity enemy = world.getClosestEntity(LivingEntity.class, tp, user, position.getX(), position.getY(), position.getZ(), entityDimensions.getBoxAt(position).expand(attackRingDiameter));
         if (enemy == null)
         {
             return 0;
@@ -133,7 +158,7 @@ public class ItemDandoriAttack extends Item
             }
             // Skip anything that can't target the enemy.
             if (!target.canTarget(enemy)) continue;
-//            GolemFirstStoneMod.LOGGER.info("Attacking! " + target.getUuid().toString());
+
             targetCount++;
             // Make the pik target the enemy we got earlier.
             target.setTarget(enemy);

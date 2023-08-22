@@ -6,6 +6,7 @@
 		"block/MixinCarvedPumpkinBlock",
 		"entity/MixinIronGolemEntity",
 		"entity/MixinSnowGolemEntity",
+		"entity/MixinPlayerEntity",
 		"MixinStructurePoolAccessor"
 	],
 	"injectors": {

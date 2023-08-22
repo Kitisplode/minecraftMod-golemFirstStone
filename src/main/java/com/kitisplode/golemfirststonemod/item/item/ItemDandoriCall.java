@@ -1,9 +1,11 @@
 package com.kitisplode.golemfirststonemod.item.item;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
@@ -11,12 +13,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -24,12 +28,19 @@ public class ItemDandoriCall extends Item
 {
     static private final double dandoriRange = 10;
     static private final int maxUseTime = 40;
-    static private final int dandoriForceTime = 10;
+    static private final int dandoriForceTime = 5;
     static private final int cooldownTime = 20;
 
     public ItemDandoriCall(Settings settings)
     {
         super(settings);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context)
+    {
+        tooltip.add(Text.translatable("item.golemfirststonemod.item_description.item_dandori_call_1"));
+        tooltip.add(Text.translatable("item.golemfirststonemod.item_description.item_dandori_call_2"));
     }
 
     @Override
@@ -47,8 +58,16 @@ public class ItemDandoriCall extends Item
     {
         if (!world.isClient())
         {
+            if (!user.isSneaking())
+            {
+                int dandoriCount = dandoriWhistle(world, user, false, true);
+                if (dandoriCount > 0) ((IEntityWithDandoriCount) user).setRecountDandori();
+            }
+            else
+            {
+                dandoriWhistle(world, user, true, false);
+            }
             effectWhistle(world, user, dandoriForceTime);
-            dandoriWhistle(world, user, false);
         }
 
         user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.9f);
@@ -68,11 +87,15 @@ public class ItemDandoriCall extends Item
                 int actualDandoriForceTime = maxUseTime - dandoriForceTime;
                 if (remainingUseTicks < actualDandoriForceTime)
                 {
+                    if (!user.isSneaking())
+                    {
+                        int dandoriCount = dandoriWhistle(world, user, true, true);
+                        if (dandoriCount > 0) ((IEntityWithDandoriCount) user).setRecountDandori();
+                    }
                     if (remainingUseTicks + 10 >= actualDandoriForceTime)
                     {
                         effectWhistle(world, user, actualDandoriForceTime);
                     }
-                    dandoriWhistle(world, user, true);
                 }
             }
             else
@@ -99,7 +122,7 @@ public class ItemDandoriCall extends Item
             ((PlayerEntity)user).getItemCooldownManager().set(this, cooldownTime);
     }
 
-    private int dandoriWhistle(World world, LivingEntity user, boolean forceDandori)
+    private int dandoriWhistle(World world, LivingEntity user, boolean forceDandori, boolean dandoriValue)
     {
         int targetCount = 0;
         List<MobEntity> targetList = world.getNonSpectatingEntities(MobEntity.class, user.getBoundingBox().expand(dandoriRange));
@@ -110,7 +133,7 @@ public class ItemDandoriCall extends Item
             // Skip anything that doesn't follow dandori rules
             if (!(target instanceof IEntityDandoriFollower)) continue;
             // Skip things that already have dandori active?
-            if (((IEntityDandoriFollower) target).getDandoriState()) continue;
+            if (((IEntityDandoriFollower) target).getDandoriState() == dandoriValue) continue;
             // If the thing has an owner, skip ones unless we are the owner.
             boolean targetHasOwner = ((IEntityDandoriFollower) target).getOwner() != null;
             if (targetHasOwner)
@@ -131,7 +154,7 @@ public class ItemDandoriCall extends Item
             targetCount++;
             // If the pik doesn't have a target, or if we're forcing dandori, activate the pik's dandori mode.
             if (target.getTarget() == null || forceDandori)
-                ((IEntityDandoriFollower)target).setDandoriState(true);
+                ((IEntityDandoriFollower)target).setDandoriState(dandoriValue);
         }
         return targetCount;
     }

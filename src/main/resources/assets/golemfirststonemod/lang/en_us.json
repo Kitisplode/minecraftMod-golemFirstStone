@@ -1,6 +1,6 @@
 {
   "item.golemfirststonemod.item_spawn_pawn_first_diorite": "Diorite Pawn Spawn Egg",
-  "item.golemfirststonemod.item_spawn_villager_dandori": "Dandori Villager Spawn Egg",
+  "item.golemfirststonemod.item_spawn_villager_dandori": "Dandori Acolyte Spawn Egg",
   "item.golemfirststonemod.item_dandori_call": "Golem Dandori Call",
   "item.golemfirststonemod.item_dandori_attack": "Golem Dandori Attack",
 
@@ -24,7 +24,7 @@
   "entity.golemfirststonemod.entity_golem_first_diorite": "First of Diorite",
   "entity.golemfirststonemod.entity_pawn_first_diorite": "Diorite Pawn",
   "entity.golemfirststonemod.entity_pawn_clay": "Clay Pawn",
-  "entity.golemfirststonemod.entity_villager_dandori": "Golem Acolyte",
+  "entity.golemfirststonemod.entity_villager_dandori": "Dandori Acolyte",
 
   "entity.minecraft.villager.villager_dandori": "Golem Acolyte",
   "entity.minecraft.villager.villager_stone": "Golem Stoneworker",
@@ -32,10 +32,16 @@
   "entity.minecraft.villager.villager_brick": "Golem Lapidarist",
   "entity.minecraft.villager.villager_diorite": "Golem Goldsmith",
 
+  "item.golemfirststonemod.item_description.item_dandori_call_1": "Use to call your idle golems to follow you.",
+  "item.golemfirststonemod.item_description.item_dandori_call_2": " Hold a little longer to call golems that are busy, too.",
+
+  "item.golemfirststonemod.item_description.item_dandori_attack_1": "Use and release to have your golem followers",
+  "item.golemfirststonemod.item_description.item_dandori_attack_2": " attack a target you're looking near.",
+
   "sound.golemfirststonemod.item_dandori_call": "Golem Dandori Call",
   "sound.golemfirststonemod.item_dandori_attack_fail": "Golem Dandori Attack - Failed",
   "sound.golemfirststonemod.item_dandori_attack_win": "Golem Dandori Attack - Success",
-  "sound.golemfirststonemod.entity_villager_dandori_pluck": "Golem Acolyte Summoned Pawn",
+  "sound.golemfirststonemod.entity_villager_dandori_pluck": "Dandori Acolyte Summoned Pawn",
 
-  "creativetab.golemfirststonemod": "Golem: Firsts of Legend"
+  "creativetab.golemfirststonemod": "Golem Dandori: Firsts of Legend"
 }

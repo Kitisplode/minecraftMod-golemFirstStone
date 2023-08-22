@@ -7,6 +7,7 @@ import com.kitisplode.golemfirststonemod.sound.ModSounds;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.entity.AreaEffectCloudEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.ai.goal.*;
@@ -160,6 +161,14 @@ public class EntityVillagerDandori
     }
 
     @Override
+    public void pushAwayFrom(Entity entity)
+    {
+        if (entity instanceof EntityPawn && ((EntityPawn) entity).getOwner() == this)
+            return;
+        super.pushAwayFrom(entity);
+    }
+
+    @Override
     public boolean canImmediatelyDespawn(double distanceSquared) {
         return false;
     }
@@ -188,8 +197,8 @@ public class EntityVillagerDandori
 
         EntityPawn pawn = ModEntities.ENTITY_PAWN_FIRST_DIORITE.create(getWorld());
         if (pawn == null) return null;
-        pawn.setOwner(this);
         pawn.setOwnerType(EntityPawn.OWNER_TYPES.VILLAGER_DANDORI.ordinal());
+        pawn.setOwner(this);
         pawn.setPawnTypePik();
         pawn.setVelocity(0,0.5,0);
         pawn.refreshPositionAndAngles(getX(), getY(), getZ(), 0.0f, 0.0F);

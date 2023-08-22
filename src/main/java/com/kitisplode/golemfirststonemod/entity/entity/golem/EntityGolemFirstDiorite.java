@@ -1,8 +1,9 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
-import com.kitisplode.golemfirststonemod.entity.entity.IEntityWithDelayedMeleeAttack;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.entity.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoalRanged;
@@ -146,9 +147,12 @@ public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntit
 	{
 		return this.dataTracker.get(DANDORI_STATE);
 	}
-
 	public void setDandoriState(boolean pDandoriState)
 	{
+		if (!pDandoriState)
+		{
+			if (this.getOwner() != null && this.getDandoriState()) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+		}
 		this.dataTracker.set(DANDORI_STATE, pDandoriState);
 	}
 
@@ -156,7 +160,6 @@ public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntit
 	{
 		return this.dataTracker.get(ATTACK_STATE);
 	}
-
 	public void setAttackState(int pInt)
 	{
 		this.dataTracker.set(ATTACK_STATE, pInt);
@@ -231,8 +234,8 @@ public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntit
 
 			EntityPawn pawn = ModEntities.ENTITY_PAWN_FIRST_DIORITE.create(getWorld());
 			if (pawn == null) continue;
-			pawn.setOwner(this);
 			pawn.setOwnerType(EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal());
+			pawn.setOwner(this);
 			pawn.setPlayerCreated(isPlayerCreated());
 			pawn.setPawnTypeDiorite();
 			pawn.refreshPositionAndAngles(getX() + spawnOffset.getX(), getY() + spawnOffset.getY(), getZ() + spawnOffset.getZ(), 0.0f, 0.0F);
@@ -271,7 +274,7 @@ public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntit
 	{
 		switch(status)
 		{
-			case EntityStatuses.ADD_POSITIVE_PLAYER_REACTION_PARTICLES:
+			case IEntityDandoriFollower.ENTITY_EVENT_DANDORI_START:
 				addDandoriParticles();
 				break;
 			default:
@@ -280,11 +283,14 @@ public class EntityGolemFirstDiorite extends IronGolemEntity implements GeoEntit
 		}
 	}
 
-	private void addDandoriParticles()
+	@Override
+	public void remove(RemovalReason reason)
 	{
-		this.getWorld().addParticle(ParticleTypes.NOTE,
-				this.getX(), this.getEyeY() + 3, this.getZ(),
-				0,1,0);
+		if (this.getDandoriState() && this.getOwner() != null)
+		{
+			((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+		}
+		super.remove(reason);
 	}
 
 	@Override

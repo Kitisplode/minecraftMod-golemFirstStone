@@ -43,4 +43,15 @@ public class ExtraMath
             else return Math.abs(a1 - 360 - a2);
         }
     }
+
+    public static float changeAngle(float from, float to, float max) {
+        float f = MathHelper.wrapDegrees(to - from);
+        if (f > max) {
+            f = max;
+        }
+        if (f < -max) {
+            f = -max;
+        }
+        return from + f;
+    }
 }

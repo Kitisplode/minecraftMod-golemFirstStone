@@ -1,6 +1,7 @@
 package com.kitisplode.golemfirststonemod.util.golem_pattern;
 
-import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.EntityPawn;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
@@ -53,36 +54,44 @@ abstract public class AbstractGolemPattern
         return null;
     }
 
-    public Entity SpawnGolem(World pLevel, BlockPattern.Result pPatternMatch, BlockPos pPos, Entity pPlayer)
+    public ArrayList<Entity> SpawnGolem(World pLevel, BlockPattern.Result pPatternMatch, BlockPos pPos, Entity pPlayer)
     {
         clearPatternBlocks(pLevel, pPatternMatch);
 
-        // Spawn the golem.
-        Entity pGolem = SpawnGolemForReal(pLevel, pPatternMatch, pPos);
-        if (pGolem != null)
+        // Spawn the golems.
+        ArrayList<Entity> pGolems = SpawnGolemForReal(pLevel, pPatternMatch, pPos);
+        // Position the golems.
+        for (Entity pGolem : pGolems)
         {
-            BlockPos spawnPosition = pPatternMatch.translate(spawnPositionOffset.getX(),
-                            spawnPositionOffset.getY(),
-                            spawnPositionOffset.getZ())
-                    .getBlockPos();
-            positionGolem(pLevel,
-                    spawnPosition,
-                    (float)ExtraMath.getYawBetweenPoints(spawnPosition.toCenterPos(), pPlayer.getPos()) * MathHelper.DEGREES_PER_RADIAN,
-                    pGolem);
-
-
-            if (pGolem instanceof IEntityDandoriFollower && pPlayer instanceof LivingEntity)
+            if (pGolem != null)
             {
-                ((IEntityDandoriFollower)pGolem).setOwner((LivingEntity)pPlayer);
+                BlockPos spawnPosition = pPatternMatch.translate(spawnPositionOffset.getX(),
+                                spawnPositionOffset.getY(),
+                                spawnPositionOffset.getZ())
+                        .getBlockPos();
+                positionGolem(pLevel,
+                        spawnPosition,
+                        (float) ExtraMath.getYawBetweenPoints(spawnPosition.toCenterPos(), pPlayer.getPos()) * MathHelper.DEGREES_PER_RADIAN,
+                        pGolem);
+
+
+                if (pGolem instanceof IEntityDandoriFollower && pPlayer instanceof LivingEntity)
+                {
+                    if (pGolem instanceof EntityPawn)
+                    {
+                        ((EntityPawn) pGolem).setOwnerType(EntityPawn.OWNER_TYPES.PLAYER.ordinal());
+                    }
+                    ((IEntityDandoriFollower) pGolem).setOwner((LivingEntity) pPlayer);
+                }
             }
         }
 
         updatePatternBlocks(pLevel, pPatternMatch);
-        return pGolem;
+        return pGolems;
     }
 
     // Intended to be overridden to actually spawn the golem.
-    protected abstract Entity SpawnGolemForReal(World pLevel, BlockPattern.Result pPatternMatch, BlockPos pPos);
+    protected abstract ArrayList<Entity> SpawnGolemForReal(World pLevel, BlockPattern.Result pPatternMatch, BlockPos pPos);
 
     private void positionGolem(World pLevel, BlockPos pPos, float pYaw, Entity pGolem)
     {

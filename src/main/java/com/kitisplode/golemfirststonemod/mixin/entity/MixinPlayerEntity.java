@@ -1,0 +1,155 @@
+package com.kitisplode.golemfirststonemod.mixin.entity;
+
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstBrick;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
+import com.kitisplode.golemfirststonemod.util.DataDandoriCount;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(value = PlayerEntity.class)
+public abstract class MixinPlayerEntity extends LivingEntity implements IEntityWithDandoriCount
+{
+    private static final StatusEffectInstance weaknessEffect = new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 5 * 20, 3);
+
+    private static final TrackedData<Integer> DANDORI_TOTAL = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> DANDORI_PAWN_BLUE = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> DANDORI_PAWN_RED = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> DANDORI_PAWN_YELLOW = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> DANDORI_IRON = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> DANDORI_SNOW = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> DANDORI_FIRST_STONE = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> DANDORI_FIRST_OAK = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> DANDORI_FIRST_BRICK = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> DANDORI_FIRST_DIORITE = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private DataDandoriCount dandoriCount = new DataDandoriCount();
+    private boolean recountDandori = false;
+
+    protected MixinPlayerEntity(EntityType<? extends LivingEntity> entityType, World world)
+    {
+        super(entityType, world);
+    }
+
+    @Inject(method = "", at = @At("tail"))
+    protected void inject_initDataTracker(CallbackInfo ci)
+    {
+        if (!this.dataTracker.containsKey(DANDORI_TOTAL))
+            this.dataTracker.startTracking(DANDORI_TOTAL, 0);
+        if (!this.dataTracker.containsKey(DANDORI_PAWN_BLUE))
+            this.dataTracker.startTracking(DANDORI_PAWN_BLUE, 0);
+        if (!this.dataTracker.containsKey(DANDORI_PAWN_RED))
+            this.dataTracker.startTracking(DANDORI_PAWN_RED, 0);
+        if (!this.dataTracker.containsKey(DANDORI_PAWN_YELLOW))
+            this.dataTracker.startTracking(DANDORI_PAWN_YELLOW, 0);
+        if (!this.dataTracker.containsKey(DANDORI_IRON))
+            this.dataTracker.startTracking(DANDORI_IRON, 0);
+        if (!this.dataTracker.containsKey(DANDORI_SNOW))
+            this.dataTracker.startTracking(DANDORI_SNOW, 0);
+        if (!this.dataTracker.containsKey(DANDORI_FIRST_STONE))
+            this.dataTracker.startTracking(DANDORI_FIRST_STONE, 0);
+        if (!this.dataTracker.containsKey(DANDORI_FIRST_OAK))
+            this.dataTracker.startTracking(DANDORI_FIRST_OAK, 0);
+        if (!this.dataTracker.containsKey(DANDORI_FIRST_BRICK))
+            this.dataTracker.startTracking(DANDORI_FIRST_BRICK, 0);
+        if (!this.dataTracker.containsKey(DANDORI_FIRST_DIORITE))
+            this.dataTracker.startTracking(DANDORI_FIRST_DIORITE, 0);
+    }
+
+    @Override
+    public void pushAwayFrom(Entity entity)
+    {
+        // Don't push away from our followers.
+        if (entity instanceof IEntityDandoriFollower && ((IEntityDandoriFollower) entity).isOwner(this)) return;
+        super.pushAwayFrom(entity);
+    }
+
+    @Inject(method = "tick", at = @At("tail"))
+    protected void inject_tick(CallbackInfo ci)
+    {
+        // Apply weakness effect to players under the bedrock.
+        if (this.getY() < -64)
+        {
+            this.addStatusEffect(new StatusEffectInstance(weaknessEffect));
+        }
+    }
+
+    public void recountDandori()
+    {
+        if (!recountDandori) return;
+        dandoriCount.updateNumberOfFollowers(this);
+        this.setTrackedInt(DANDORI_TOTAL, dandoriCount.getTotalCount());
+        this.setTrackedInt(DANDORI_PAWN_BLUE, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.PAWN_BLUE));
+        this.setTrackedInt(DANDORI_PAWN_RED, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.PAWN_RED));
+        this.setTrackedInt(DANDORI_PAWN_YELLOW, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.PAWN_YELLOW));
+        this.setTrackedInt(DANDORI_IRON, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.IRON));
+        this.setTrackedInt(DANDORI_SNOW, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.SNOW));
+        this.setTrackedInt(DANDORI_FIRST_STONE, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.FIRST_STONE));
+        this.setTrackedInt(DANDORI_FIRST_OAK, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.FIRST_OAK));
+        this.setTrackedInt(DANDORI_FIRST_BRICK, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.FIRST_BRICK));
+        this.setTrackedInt(DANDORI_FIRST_DIORITE, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.FIRST_DIORITE));
+        recountDandori = false;
+    }
+
+    public void setRecountDandori()
+    {
+        recountDandori = true;
+    }
+
+    public int getTotalDandoriCount()
+    {
+        return this.dataTracker.get(DANDORI_TOTAL);
+    }
+    public int getDandoriCountBlue()
+    {
+        return this.dataTracker.get(DANDORI_PAWN_BLUE);
+    }
+    public int getDandoriCountRed()
+    {
+        return this.dataTracker.get(DANDORI_PAWN_RED);
+    }
+    public int getDandoriCountYellow()
+    {
+        return this.dataTracker.get(DANDORI_PAWN_YELLOW);
+    }
+    public int getDandoriCountIron()
+    {
+        return this.dataTracker.get(DANDORI_IRON);
+    }
+    public int getDandoriCountSnow()
+    {
+        return this.dataTracker.get(DANDORI_SNOW);
+    }
+    public int getDandoriCountFirstStone()
+    {
+        return this.dataTracker.get(DANDORI_FIRST_STONE);
+    }
+    public int getDandoriCountFirstOak()
+    {
+        return this.dataTracker.get(DANDORI_FIRST_OAK);
+    }
+    public int getDandoriCountFirstBrick()
+    {
+        return this.dataTracker.get(DANDORI_FIRST_BRICK);
+    }
+    public int getDandoriCountFirstDiorite()
+    {
+        return this.dataTracker.get(DANDORI_FIRST_DIORITE);
+    }
+
+    private void setTrackedInt(TrackedData<Integer> key, int count)
+    {
+        this.dataTracker.set(key, count);
+    }
+}

@@ -1,14 +1,11 @@
 package com.kitisplode.golemfirststonemod.entity.goal.goal;
 
-import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
-import net.minecraft.entity.EntityStatuses;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
@@ -66,7 +63,7 @@ public class DandoriFollowGoal extends Goal
     public void start()
     {
         this.active = true;
-        this.mob.getWorld().sendEntityStatus(this.mob, EntityStatuses.ADD_POSITIVE_PLAYER_REACTION_PARTICLES);
+        this.mob.getWorld().sendEntityStatus(this.mob, IEntityDandoriFollower.ENTITY_EVENT_DANDORI_START);
     }
 
     @Override

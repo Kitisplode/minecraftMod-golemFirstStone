@@ -1,8 +1,6 @@
 package com.kitisplode.golemfirststonemod.mixin.block;
 
-import com.kitisplode.golemfirststonemod.util.golem_pattern.AbstractGolemPattern;
-import com.kitisplode.golemfirststonemod.util.golem_pattern.GolemPatternIron;
-import com.kitisplode.golemfirststonemod.util.golem_pattern.GolemPatternSnow;
+import com.kitisplode.golemfirststonemod.util.golem_pattern.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CarvedPumpkinBlock;
@@ -41,6 +39,10 @@ public abstract class MixinCarvedPumpkinBlock extends HorizontalFacingBlock
                     || blockState.isOf(Blocks.JACK_O_LANTERN));
             patternList.add(new GolemPatternIron(spawnBlocKPredicate));
             patternList.add(new GolemPatternSnow(spawnBlocKPredicate));
+            patternList.add(new GolemPatternTerracotta(spawnBlocKPredicate));
+            patternList.add(new GolemPatternTerracottaBlue(spawnBlocKPredicate));
+            patternList.add(new GolemPatternTerracottaPink(spawnBlocKPredicate));
+            patternList.add(new GolemPatternTerracottaYellow(spawnBlocKPredicate));
         }
         trySpawnGolem(pWorld, pPos, pPlayer);
     }
@@ -65,7 +67,7 @@ public abstract class MixinCarvedPumpkinBlock extends HorizontalFacingBlock
             // If there is no match, go to the next pattern.
             if (match == null) continue;
             // Otherwise, try to create the golem there.
-            Entity golem = currentPattern.SpawnGolem(pLevel, match, pPos, pPlayer);
+            currentPattern.SpawnGolem(pLevel, match, pPos, pPlayer);
             return true;
         }
         return false;

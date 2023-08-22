@@ -1,8 +1,5 @@
 package com.kitisplode.golemfirststonemod.util.golem_pattern;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.block.ModBlocks;
-import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.BlockPattern;
@@ -15,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.function.Predicate;
 
 public class GolemPatternIron extends AbstractGolemPattern
@@ -45,13 +43,15 @@ public class GolemPatternIron extends AbstractGolemPattern
 	}
 
 	@Override
-	protected Entity SpawnGolemForReal(World pLevel, BlockPattern.Result pPatternMatch, BlockPos pPos)
+	protected ArrayList<Entity> SpawnGolemForReal(World pLevel, BlockPattern.Result pPatternMatch, BlockPos pPos)
 	{
+		ArrayList<Entity> golems = new ArrayList<>();
 		IronGolemEntity golem = EntityType.IRON_GOLEM.create(pLevel);
 		if (golem != null)
 		{
 			golem.setPlayerCreated(true);
+			golems.add(golem);
 		}
-		return golem;
+		return golems;
 	}
 }

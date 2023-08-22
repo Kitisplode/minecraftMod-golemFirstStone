@@ -1,10 +1,10 @@
 package com.kitisplode.golemfirststonemod.mixin.entity;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.EntityPawn;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
-import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -14,7 +14,6 @@ import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.ServerConfigHandler;
 import net.minecraft.world.World;
@@ -118,6 +117,10 @@ public abstract class MixinIronGolemEntity extends GolemEntity implements Angera
 
     public void setDandoriState(boolean pDandoriState)
     {
+        if (!pDandoriState)
+        {
+            if (this.getOwner() != null && this.getDandoriState()) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        }
         this.dataTracker.set(DANDORI_STATE, pDandoriState);
     }
 
@@ -130,15 +133,18 @@ public abstract class MixinIronGolemEntity extends GolemEntity implements Angera
     @ModifyVariable(method = ("handleStatus"), at = @At("HEAD"), ordinal = 0)
     protected byte handleStatus_dandori(byte status)
     {
-        if (status == EntityStatuses.ADD_POSITIVE_PLAYER_REACTION_PARTICLES)
+        if (status == IEntityDandoriFollower.ENTITY_EVENT_DANDORI_START)
             addDandoriParticles();
         return status;
     }
 
-    private void addDandoriParticles()
+    @Override
+    public void remove(RemovalReason reason)
     {
-        this.getWorld().addParticle(ParticleTypes.NOTE,
-                this.getX(), this.getEyeY() + 1, this.getZ(),
-                0,1,0);
+        if (this.getDandoriState() && this.getOwner() != null)
+        {
+            ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        }
+        super.remove(reason);
     }
 }
