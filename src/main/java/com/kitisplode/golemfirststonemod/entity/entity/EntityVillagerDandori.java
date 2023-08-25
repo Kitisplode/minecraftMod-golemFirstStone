@@ -2,6 +2,7 @@ package com.kitisplode.golemfirststonemod.entity.entity;
 
 import com.google.common.collect.ImmutableMap;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;

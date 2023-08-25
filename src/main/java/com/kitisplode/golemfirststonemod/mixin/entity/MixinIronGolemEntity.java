@@ -1,6 +1,5 @@
 package com.kitisplode.golemfirststonemod.mixin.entity;
 
-import com.kitisplode.golemfirststonemod.entity.entity.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;

@@ -1,6 +1,6 @@
 package com.kitisplode.golemfirststonemod.entity.client.model;
 
-import com.kitisplode.golemfirststonemod.entity.entity.EntityPawn;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.model.GeoModel;
 

@@ -1,5 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.entity.interfaces;
 
+import com.kitisplode.golemfirststonemod.util.DataDandoriCount;
+
 public interface IEntityWithDandoriCount
 {
     void recountDandori();
@@ -15,4 +17,7 @@ public interface IEntityWithDandoriCount
     int getDandoriCountFirstOak();
     int getDandoriCountFirstBrick();
     int getDandoriCountFirstDiorite();
+
+    void nextDandoriCurrentType();
+    DataDandoriCount.FOLLOWER_TYPE getDandoriCurrentType();
 }

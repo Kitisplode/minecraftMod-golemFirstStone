@@ -3,6 +3,7 @@
   "item.golemfirststonemod.item_spawn_villager_dandori": "Dandori Acolyte Spawn Egg",
   "item.golemfirststonemod.item_dandori_call": "Golem Dandori Call",
   "item.golemfirststonemod.item_dandori_attack": "Golem Dandori Attack",
+  "item.golemfirststonemod.item_dandori_dig": "Golem Dandori Dig",
 
   "block.golemfirststonemod.block_head_stone": "Chiseled Stone Head",
   "block.golemfirststonemod.block_core_stone": "Chiseled Stone Core",
@@ -34,9 +35,11 @@
 
   "item.golemfirststonemod.item_description.item_dandori_call_1": "Use to call your idle golems to follow you.",
   "item.golemfirststonemod.item_description.item_dandori_call_2": " Hold a little longer to call golems that are busy, too.",
+  "item.golemfirststonemod.item_description.item_dandori_call_3": " Use while sneaking to dismiss your followers.",
 
   "item.golemfirststonemod.item_description.item_dandori_attack_1": "Use and release to have your golem followers",
-  "item.golemfirststonemod.item_description.item_dandori_attack_2": " attack a target you're looking near.",
+  "item.golemfirststonemod.item_description.item_dandori_attack_2": " attack a target you're looking near. Use while sneaking",
+  "item.golemfirststonemod.item_description.item_dandori_attack_3": " to cycle between types of golems to command.",
 
   "sound.golemfirststonemod.item_dandori_call": "Golem Dandori Call",
   "sound.golemfirststonemod.item_dandori_attack_fail": "Golem Dandori Attack - Failed",

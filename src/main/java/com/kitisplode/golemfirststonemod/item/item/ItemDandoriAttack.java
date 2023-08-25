@@ -1,10 +1,13 @@
 package com.kitisplode.golemfirststonemod.item.item;
 
+import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
+import com.kitisplode.golemfirststonemod.util.DataDandoriCount;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.LivingEntity;
@@ -14,14 +17,19 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.MerchantEntity;
+import net.minecraft.entity.passive.SnowGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
@@ -32,7 +40,7 @@ import java.util.List;
 
 public class ItemDandoriAttack extends Item
 {
-    static private final double dandoriRange = 10;
+    static private final double dandoriRange = 16;
     static private final int maxUseTime = 72000;
     static private final int cooldownTime = 20;
     static private final int dandoriForceTime = 10;
@@ -50,85 +58,62 @@ public class ItemDandoriAttack extends Item
     {
         tooltip.add(Text.translatable("item.golemfirststonemod.item_description.item_dandori_attack_1"));
         tooltip.add(Text.translatable("item.golemfirststonemod.item_description.item_dandori_attack_2"));
-    }
-
-    @Override
-    public int getMaxUseTime(ItemStack stack) {
-        return maxUseTime;
-    }
-
-    @Override
-    public UseAction getUseAction(ItemStack stack) {
-        return UseAction.SPEAR;
+        tooltip.add(Text.translatable("item.golemfirststonemod.item_description.item_dandori_attack_3"));
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand)
     {
-        user.setCurrentHand(hand);
-        ItemStack itemStack = user.getStackInHand(hand);
-        return TypedActionResult.pass(itemStack);
-    }
-
-    @Override
-    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks)
-    {
-        super.usageTick(world,user,stack,remainingUseTicks);
-        // Highlight the block and/or enemy the player is looking at.
-//        BlockHitResult ray = Item.raycast(world, (PlayerEntity) user, RaycastContext.FluidHandling.ANY);
-//        Vec3d pos = ray.getPos();
-////        BlockPos blockPos = ray.getBlockPos();
-//        if (user.squaredDistanceTo(pos) <= maxAttackRange)
-//        {
-//
-//        }
-    }
-
-    @Override
-    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
-    {
-        RaycastContext.FluidHandling fh = RaycastContext.FluidHandling.ANY;
-        if (user.isSubmergedInWater()) fh = RaycastContext.FluidHandling.NONE;
-        BlockHitResult ray = ItemDandoriAttack.raycast(world, (PlayerEntity) user, fh, maxAttackRange);
-        Vec3d pos = ray.getPos();
-        if (user.squaredDistanceTo(pos) <= MathHelper.square(maxAttackRange))
+        if (user.isSneaking())
         {
-            int actualDandoriForceTime = maxUseTime - dandoriForceTime;
-            boolean actualDandoriForce = remainingUseTicks < actualDandoriForceTime;
-            int attackers = dandoriAttack(world, user, pos, true);
-            if (attackers == 0) user.playSound(ModSounds.ITEM_DANDORI_ATTACK_FAIL, 1.0f, 0.9f);
-            else
-            {
-                user.playSound(ModSounds.ITEM_DANDORI_ATTACK_WIN, 1.0f, 1.0f);
-                ((IEntityWithDandoriCount) user).setRecountDandori();
-            }
-            effectRing(world, 20, attackRingDiameter, pos);
-
+            if (user instanceof IEntityWithDandoriCount player) player.nextDandoriCurrentType();
         }
         else
         {
-            user.playSound(ModSounds.ITEM_DANDORI_ATTACK_FAIL, 1.0f, 0.9f);
+            DataDandoriCount.FOLLOWER_TYPE currentType = ((IEntityWithDandoriCount) user).getDandoriCurrentType();
+            RaycastContext.FluidHandling fh = RaycastContext.FluidHandling.ANY;
+            if (user.isSubmergedInWater()) fh = RaycastContext.FluidHandling.NONE;
+            BlockHitResult ray = ItemDandoriAttack.raycast(world, user, fh, maxAttackRange);
+            Vec3d pos = ray.getPos();
+            if (user.squaredDistanceTo(pos) <= MathHelper.square(maxAttackRange))
+            {
+                int attackers = dandoriAttack(world, user, pos, true, currentType);
+                if (attackers == 0) user.playSound(ModSounds.ITEM_DANDORI_ATTACK_FAIL, 1.0f, 0.9f);
+                else user.playSound(ModSounds.ITEM_DANDORI_ATTACK_WIN, 1.0f, 1.0f);
+                effectRing(world, 20, attackRingDiameter, pos);
+
+            }
+            else user.playSound(ModSounds.ITEM_DANDORI_ATTACK_FAIL, 1.0f, 0.9f);
+            setCooldown(cooldownTime, user);
         }
-        setCooldown(cooldownTime, user);
+
+        user.setCurrentHand(hand);
+        ItemStack itemStack = user.getStackInHand(hand);
+        return TypedActionResult.success(itemStack);
     }
 
-    private int dandoriAttack(World world, LivingEntity user, Vec3d position, boolean forceDandori)
+    private int dandoriAttack(World world, LivingEntity user, Vec3d position, boolean forceDandori, DataDandoriCount.FOLLOWER_TYPE currentType)
     {
         // Find the target nearest the given position.
-        TargetPredicate tp = TargetPredicate.createAttackable().setBaseMaxDistance(attackRingDiameter).setPredicate(entity ->
+        TargetPredicate tp = TargetPredicate.createNonAttackable().setBaseMaxDistance(attackRingDiameter).setPredicate(entity ->
             {
+                if (entity == user) return false;
                 if (entity instanceof Monster) return true;
-                if (entity instanceof IEntityDandoriFollower) return !((IEntityDandoriFollower) entity).isOwner(user);
+                if (entity instanceof IEntityDandoriFollower)
+                {
+                    LivingEntity followerOwner = ((IEntityDandoriFollower) entity).getOwner();
+                    if (followerOwner instanceof IEntityDandoriFollower)
+                        return !((IEntityDandoriFollower) followerOwner).isOwner(user);
+                    return !((IEntityDandoriFollower) entity).isOwner(user);
+                }
                 if (entity instanceof Tameable) return ((Tameable) entity).getOwner() != user;
                 if (entity instanceof MerchantEntity) return false;
                 return true;
             }
         );
-        LivingEntity enemy = world.getClosestEntity(LivingEntity.class, tp, user, position.getX(), position.getY(), position.getZ(), entityDimensions.getBoxAt(position).expand(attackRingDiameter));
-        if (enemy == null)
-        {
-            return 0;
-        }
+        Box box = entityDimensions.getBoxAt(position).expand(attackRingDiameter);
+        LivingEntity enemy = world.getClosestEntity(LivingEntity.class, tp, null, position.getX(), position.getY(), position.getZ(), box);
+        if (enemy == null) return 0;
 
         int targetCount = 0;
         List<MobEntity> targetList = world.getNonSpectatingEntities(MobEntity.class, user.getBoundingBox().expand(dandoriRange));
@@ -149,15 +134,12 @@ public class ItemDandoriAttack extends Item
             // Skip iron golems that are not player-made
             if (target instanceof IronGolemEntity)
             {
-                if (!((IronGolemEntity) target).isPlayerCreated()) continue;
-                    // If the golem is player made but has no owner, just update their owner to us now /shrug
-                else if (!targetHasOwner)
-                {
-                    ((IEntityDandoriFollower) target).setOwner(user);
-                }
+                if (!((IronGolemEntity) target).isPlayerCreated() || ((IEntityDandoriFollower) target).getOwner() != user) continue;
             }
             // Skip anything that can't target the enemy.
             if (!target.canTarget(enemy)) continue;
+            // SKip anything that isn't of the player's currently selected type.
+            if (!DataDandoriCount.entityIsOfType(currentType, target)) continue;
 
             targetCount++;
             // Make the pik target the enemy we got earlier.
@@ -190,7 +172,6 @@ public class ItemDandoriAttack extends Item
         float l = i * j;
         float m = k;
         float n = h * j;
-        double d = 5.0;
         Vec3d vec3d2 = vec3d.add((double)l * range, (double)m * range, (double)n * range);
         return world.raycast(new RaycastContext(vec3d, vec3d2, RaycastContext.ShapeType.OUTLINE, fluidHandling, player));
     }

@@ -1,6 +1,6 @@
 package com.kitisplode.golemfirststonemod.util.golem_pattern;
 
-import com.kitisplode.golemfirststonemod.entity.entity.EntityPawn;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.advancement.criterion.Criteria;

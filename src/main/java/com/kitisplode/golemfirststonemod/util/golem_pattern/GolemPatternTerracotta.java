@@ -1,15 +1,13 @@
 package com.kitisplode.golemfirststonemod.util.golem_pattern;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.entity.EntityPawn;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.BlockPattern;
 import net.minecraft.block.pattern.BlockPatternBuilder;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.SnowGolemEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;

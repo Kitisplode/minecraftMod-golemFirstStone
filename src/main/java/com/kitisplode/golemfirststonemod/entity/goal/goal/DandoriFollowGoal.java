@@ -24,7 +24,6 @@ public class DandoriFollowGoal extends Goal
     private boolean active;
     private final Ingredient food;
     private final double moveRange;
-    private final double seeRange;
 
     public DandoriFollowGoal(IEntityDandoriFollower entity, double pSpeed, Ingredient food, double pRange, double pSeeRange)
     {
@@ -34,8 +33,7 @@ public class DandoriFollowGoal extends Goal
         this.food = food;
         this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
         this.moveRange = MathHelper.square(pRange);
-        this.seeRange = pSeeRange;
-        this.predicate = TEMPTING_ENTITY_PREDICATE.copy().setPredicate(this::isTemptedBy).setBaseMaxDistance(Math.max(10.0, this.seeRange));
+        this.predicate = TEMPTING_ENTITY_PREDICATE.copy().setPredicate(this::isTemptedBy).setBaseMaxDistance(Math.max(10.0, pSeeRange));
     }
 
     @Override
@@ -44,13 +42,14 @@ public class DandoriFollowGoal extends Goal
         // Dandori only things that are in dandori mode.
         if (!pik.getDandoriState()) return false;
         // Get the nearest player that we should follow.
-        this.closestPlayer = this.mob.getWorld().getClosestPlayer(this.predicate, this.mob);
+        this.closestPlayer = (PlayerEntity)this.pik.getOwner();//this.mob.getWorld().getClosestPlayer(this.predicate, this.mob);
         return this.closestPlayer != null;
     }
 
     private boolean isTemptedBy(LivingEntity entity)
     {
-        return this.food.test(entity.getMainHandStack()) || this.food.test(entity.getOffHandStack());
+        return entity == this.pik.getOwner();
+//        return this.food.test(entity.getMainHandStack()) || this.food.test(entity.getOffHandStack());
     }
 
     @Override

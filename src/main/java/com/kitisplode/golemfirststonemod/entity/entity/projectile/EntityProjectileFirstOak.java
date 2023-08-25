@@ -1,6 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.entity.projectile;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -24,7 +25,7 @@ public class EntityProjectileFirstOak extends ArrowEntity
 {
     private float attackAOERange;
     private float attackDamage;
-    private IronGolemEntity golemOwner;
+    private EntityGolemFirstOak golemOwner;
     private final float attackVerticalRange = 3.0f;
 
     public EntityProjectileFirstOak(EntityType<? extends ArrowEntity> entityType, World world) {
@@ -39,13 +40,13 @@ public class EntityProjectileFirstOak extends ArrowEntity
         this.setPos(x,y,z);
     }
 
-    public EntityProjectileFirstOak(World world, @NotNull IronGolemEntity owner) {
+    public EntityProjectileFirstOak(World world, @NotNull EntityGolemFirstOak owner) {
         this(ModEntities.ENTITY_PROJECTILE_FIRST_OAK, world);
         golemOwner = owner;
         this.setPosition(owner.getEyePos());
     }
 
-    public EntityProjectileFirstOak(World world, @NotNull IronGolemEntity owner, float pAoERange, float pDamage)
+    public EntityProjectileFirstOak(World world, @NotNull EntityGolemFirstOak owner, float pAoERange, float pDamage)
     {
         this(world, owner);
         attackAOERange = pAoERange;
@@ -60,12 +61,13 @@ public class EntityProjectileFirstOak extends ArrowEntity
         // Skip some targets.
         if (target != null)
         {
-            // Do not hit targets that are not monsters. Or players, if we're not player made.
-            if (!(target instanceof Monster || target instanceof PlayerEntity))
-                return;
+            if (golemOwner != null && golemOwner.getTarget() != target) return;
+//            // Do not hit targets that are not monsters. Or players, if we're not player made.
+//            if (!(target instanceof Monster || target instanceof PlayerEntity))
+//                return;
             if (target instanceof PlayerEntity)
             {
-                if (golemOwner != null && golemOwner.isPlayerCreated()) return;
+                if (golemOwner != null && golemOwner.getOwner() == target) return;
             }
         }
         // Then perform the damage.

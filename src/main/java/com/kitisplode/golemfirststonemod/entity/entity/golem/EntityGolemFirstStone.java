@@ -218,8 +218,10 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 			if (target == this) continue;
 			// Do not damage targets that are not monsters. Or players, if we're not player made.
 			if (!(target instanceof Monster
-			    || (target instanceof PlayerEntity && !isPlayerCreated())))
+			    || target instanceof PlayerEntity
+				||	target != this.getTarget()))
 				continue;
+			if (target instanceof PlayerEntity && this.getOwner() == target) continue;
 			// Do not damage targets that are too far on the y axis.
 			if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
 

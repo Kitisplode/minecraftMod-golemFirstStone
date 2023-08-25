@@ -1,7 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.client.renderer;
 
 import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelPawnFirstDiorite;
-import com.kitisplode.golemfirststonemod.entity.entity.EntityPawn;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;

@@ -4,7 +4,6 @@ import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
-import com.kitisplode.golemfirststonemod.entity.entity.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.item.ModItems;

@@ -9,7 +9,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstBri
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstDiorite;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstStone;
-import com.kitisplode.golemfirststonemod.entity.entity.EntityPawn;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileFirstOak;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;

@@ -41,6 +41,7 @@ public class ItemDandoriCall extends Item
     {
         tooltip.add(Text.translatable("item.golemfirststonemod.item_description.item_dandori_call_1"));
         tooltip.add(Text.translatable("item.golemfirststonemod.item_description.item_dandori_call_2"));
+        tooltip.add(Text.translatable("item.golemfirststonemod.item_description.item_dandori_call_3"));
     }
 
     @Override
@@ -70,8 +71,8 @@ public class ItemDandoriCall extends Item
             effectWhistle(world, user, dandoriForceTime);
         }
 
+        user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.8f);
         user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.9f);
-        user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 1.1f);
         user.setCurrentHand(hand);
         ItemStack itemStack = user.getStackInHand(hand);
         return TypedActionResult.pass(itemStack);
@@ -102,8 +103,8 @@ public class ItemDandoriCall extends Item
             {
                 spawnParticles(world, user);
             }
-            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.9f);
-            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 1.2f);
+            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.8f);
+            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.95f);
         }
     }
 
