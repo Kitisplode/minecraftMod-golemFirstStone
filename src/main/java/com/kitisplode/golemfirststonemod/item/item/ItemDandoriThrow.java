@@ -100,7 +100,7 @@ public class ItemDandoriThrow extends Item
             {
                 pawn.setPos(user.getX(), user.getEyeY(), user.getZ());
                 Vec3d newVelocity = getUserLookAngle(user).normalize().multiply(speed);
-                pawn.setVelocity(newVelocity);
+                pawn.setVelocity(user.getVelocity().add(newVelocity));
                 pawn.setThrown(true);
             }
             pawn.setDandoriState(false);

@@ -21,7 +21,7 @@ public class EntityModelGolemFirstOak extends GeoModel<EntityGolemFirstOak>
 	@Override
 	public Identifier getTextureResource(EntityGolemFirstOak animatable)
 	{
-		return new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/first_oak.png");
+		return new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/first/first_oak.png");
 	}
 
 	@Override

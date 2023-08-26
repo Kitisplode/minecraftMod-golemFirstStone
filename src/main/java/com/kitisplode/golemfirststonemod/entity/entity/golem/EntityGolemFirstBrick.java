@@ -204,9 +204,9 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 			// Skip itself.
 			if (entity == this) return false;
 			// Check other golems, villagers, and players
-			if (entity instanceof GolemEntity
-					|| entity instanceof MerchantEntity
-					|| (entity instanceof PlayerEntity && isPlayerCreated()))
+			if ((entity instanceof IEntityDandoriFollower && ((IEntityDandoriFollower)entity).getOwner() == this.getOwner())
+					|| (entity instanceof PlayerEntity && entity == this.getOwner())
+					|| entity instanceof MerchantEntity)
 			{
 				// For entities currently being attacked:
 				LivingEntity targetCurrentAttacker = entity.getAttacker();
@@ -232,12 +232,15 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 	private boolean golemTarget_checkTargetAttacker(LivingEntity targetAttacker)
 	{
 		// If the golem was player made, skip potential targets that were attacked by the player.
-		if (targetAttacker instanceof PlayerEntity && this.isPlayerCreated())
+		if (targetAttacker instanceof PlayerEntity && this.getOwner() == targetAttacker)
 		{
 			return false;
 		}
 		// Skip other potential targets that are being attacked by golems (only happens accidentally or by other cleric golems)
-		if (targetAttacker instanceof GolemEntity) return false;
+		if (targetAttacker instanceof IEntityDandoriFollower dandoriFollower)
+		{
+			if (dandoriFollower.getOwner() == this.getOwner()) return false;
+		}
 		// Otherwise, this is a good target.
 		return true;
 	}

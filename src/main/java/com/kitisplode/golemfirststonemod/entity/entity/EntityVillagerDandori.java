@@ -188,7 +188,7 @@ public class EntityVillagerDandori
     {
         this.playSound(ModSounds.ENTITY_VILLAGER_DANDORI_PLUCK, 0.2f, this.random.nextFloat() * 0.4f + 0.3f);
 
-        EntityPawn pawn = ModEntities.ENTITY_PAWN_FIRST_DIORITE.create(getWorld());
+        EntityPawn pawn = ModEntities.ENTITY_PAWN_TERRACOTTA.create(getWorld());
         if (pawn == null) return null;
         pawn.setOwnerType(EntityPawn.OWNER_TYPES.VILLAGER_DANDORI.ordinal());
         pawn.setOwner(this);

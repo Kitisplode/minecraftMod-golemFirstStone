@@ -20,7 +20,7 @@ public class EntityRendererGolemFirstOak extends GeoEntityRenderer<EntityGolemFi
 	@Override
 	public Identifier getTextureLocation(EntityGolemFirstOak animatable)
 	{
-		return new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/first_oak.png");
+		return new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/first/first_oak.png");
 	}
 
 	@Override

@@ -608,26 +608,35 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
     public Identifier getTextureLocation()
     {
         int pawnType = this.getPawnType();
-        if (this.getOwner() == null)
+        if (this.getOwner() == null && pawnType < 3)
+        {
             return switch (pawnType)
             {
-                case 0 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/diorite_action.png");
-                case 1 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/diorite_foresight.png");
-                case 2 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/diorite_knowledge.png");
-                case 3 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/pik/pawn_pik_yellow.png");
-                case 4 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/pik/pawn_pik_pink.png");
-                default -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/pik/pawn_pik_blue.png");
+                case 0 ->
+                        new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_action.png");
+                case 1 ->
+                        new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_foresight.png");
+                default ->
+                        new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_knowledge.png");
             };
+        }
         else
+        {
             return switch (pawnType)
             {
-                case 0 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/diorite_action_active.png");
-                case 1 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/diorite_foresight_active.png");
-                case 2 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/diorite_knowledge_active.png");
-                case 3 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/pik/pawn_pik_yellow.png");
-                case 4 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/pik/pawn_pik_pink.png");
-                default -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/pik/pawn_pik_blue.png");
+                case 0 ->
+                        new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_action_active.png");
+                case 1 ->
+                        new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_foresight_active.png");
+                case 2 ->
+                        new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_knowledge_active.png");
+                case 3 ->
+                        new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/pik/pawn_pik_yellow.png");
+                case 4 -> new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/pik/pawn_pik_pink.png");
+                default ->
+                        new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/pik/pawn_pik_blue.png");
             };
+        }
     }
 
 

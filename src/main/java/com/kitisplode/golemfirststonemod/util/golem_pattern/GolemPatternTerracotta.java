@@ -40,7 +40,7 @@ public class GolemPatternTerracotta extends AbstractGolemPattern
 		ArrayList<Entity> golems = new ArrayList<>();
 		for (int i = 0; i < 3; i++)
 		{
-			EntityPawn golem = ModEntities.ENTITY_PAWN_FIRST_DIORITE.create(pLevel);
+			EntityPawn golem = ModEntities.ENTITY_PAWN_TERRACOTTA.create(pLevel);
 			if (golem != null)
 			{
 				golem.setPlayerCreated(true);

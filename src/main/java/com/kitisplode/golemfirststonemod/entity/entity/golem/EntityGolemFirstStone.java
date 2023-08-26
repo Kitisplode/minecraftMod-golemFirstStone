@@ -18,6 +18,8 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
+import net.minecraft.entity.passive.MerchantEntity;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -216,12 +218,18 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 		{
 			// Do not damage ourselves.
 			if (target == this) continue;
-			// Do not damage targets that are not monsters. Or players, if we're not player made.
-			if (!(target instanceof Monster
-			    || target instanceof PlayerEntity
-				||	target != this.getTarget()))
-				continue;
-			if (target instanceof PlayerEntity && this.getOwner() == target) continue;
+			// Do not damage targets that are our owner or are owned by our owner.
+			if (this.getOwner() == target) continue;
+			if (target instanceof TameableEntity && ((TameableEntity)target).getOwner() == this.getOwner()) continue;
+			if (target instanceof IEntityDandoriFollower && ((IEntityDandoriFollower)target).getOwner() == this.getOwner()) continue;
+			// Do not damage targets that are pawns owned by a first of diorite that is owned by our owner lol
+			if (target instanceof EntityPawn pawn && ((EntityPawn)target).getOwnerType() == EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
+			{
+				EntityGolemFirstDiorite pawnOwner = (EntityGolemFirstDiorite) pawn.getOwner();
+				if (pawnOwner.getOwner() == this.getOwner()) continue;
+			}
+			// Do not damage villagers.
+			if (target instanceof MerchantEntity) continue;
 			// Do not damage targets that are too far on the y axis.
 			if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
 
