@@ -495,7 +495,7 @@
 				}
 			}
 		},
-		"animation.golem_cobble_attack_right": {
+		"animation.golem_cobble.attack_right": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 0.5,
 			"bones": {
@@ -631,7 +631,7 @@
 				}
 			}
 		},
-		"animation.golem_cobble_attack_left": {
+		"animation.golem_cobble.attack_left": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 0.5,
 			"bones": {

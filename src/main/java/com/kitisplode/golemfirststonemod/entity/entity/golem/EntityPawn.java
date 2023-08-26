@@ -196,7 +196,6 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
     }
     private void setOwnerUuid(@Nullable UUID uuid)
     {
-        if (uuid != null) GolemFirstStoneMod.LOGGER.info("" + uuid);
         this.dataTracker.set(OWNER_UUID, Optional.ofNullable(uuid));
     }
 

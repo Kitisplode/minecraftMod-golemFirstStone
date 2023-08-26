@@ -72,7 +72,6 @@ public class ItemDandoriCall extends Item
             effectWhistle(world, user, dandoriForceTime);
         }
 
-        GolemFirstStoneMod.LOGGER.info("player uuid: " + user.getUuid());
         user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.5f, 0.8f);
         user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.5f, 0.9f);
         user.setCurrentHand(hand);

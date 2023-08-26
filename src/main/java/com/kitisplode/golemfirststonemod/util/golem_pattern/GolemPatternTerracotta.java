@@ -23,10 +23,11 @@ public class GolemPatternTerracotta extends AbstractGolemPattern
 	public GolemPatternTerracotta(Predicate<BlockState> pPredicate)
 	{
 		super(pPredicate);
-		spawnPositionOffset = new Vec3i(0,1,0);
+		spawnPositionOffset = new Vec3i(0,2,0);
 		patternList.add(BlockPatternBuilder.start()
 			.aisle(
 				"^",
+				"#",
 				"#"
 			)
 			.where('^', CachedBlockPosition.matchesBlockState(spawnBlockPredicate))

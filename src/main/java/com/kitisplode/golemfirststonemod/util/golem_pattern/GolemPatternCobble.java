@@ -1,6 +1,7 @@
 package com.kitisplode.golemfirststonemod.util.golem_pattern;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemCobble;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -15,12 +16,12 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
-public class GolemPatternTerracottaYellow extends AbstractGolemPattern
+public class GolemPatternCobble extends AbstractGolemPattern
 {
 	private static final Predicate<BlockState> buildingBlockPredicate = state -> state != null
-		&& (state.isOf(Blocks.YELLOW_TERRACOTTA));
+		&& (state.isOf(Blocks.COBBLESTONE));
 
-	public GolemPatternTerracottaYellow(Predicate<BlockState> pPredicate)
+	public GolemPatternCobble(Predicate<BlockState> pPredicate)
 	{
 		super(pPredicate);
 		spawnPositionOffset = new Vec3i(0,2,0);
@@ -39,15 +40,11 @@ public class GolemPatternTerracottaYellow extends AbstractGolemPattern
 	protected ArrayList<Entity> SpawnGolemForReal(World pLevel, BlockPattern.Result pPatternMatch, BlockPos pPos)
 	{
 		ArrayList<Entity> golems = new ArrayList<>();
-		for (int i = 0; i < 3; i++)
+		EntityGolemCobble golem = ModEntities.ENTITY_GOLEM_COBBLE.create(pLevel);
+		if (golem != null)
 		{
-			EntityPawn golem = ModEntities.ENTITY_PAWN_TERRACOTTA.create(pLevel);
-			if (golem != null)
-			{
-				golem.setPlayerCreated(true);
-				golem.setPawnType(EntityPawn.PAWN_TYPES.PIK_YELLOW.ordinal());
-				golems.add(golem);
-			}
+			golem.setPlayerCreated(true);
+			golems.add(golem);
 		}
 		return golems;
 	}

@@ -5,11 +5,7 @@ import com.kitisplode.golemfirststonemod.entity.client.renderer.*;
 import com.kitisplode.golemfirststonemod.entity.entity.EntityVillagerDandori;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstBrick;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstDiorite;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstStone;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.*;
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileFirstOak;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -75,6 +71,13 @@ public class ModEntities
                     .build()
     );
 
+    public static final EntityType<EntityGolemCobble> ENTITY_GOLEM_COBBLE = Registry.register(
+            Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_golem_cobble"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityGolemCobble::new)
+                    .dimensions(EntityDimensions.fixed(1.0f, 1.0f))
+                    .build()
+    );
+
     public static final EntityType<EntityPawn> ENTITY_PAWN_TERRACOTTA = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_pawn_terracotta"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityPawn::new)
@@ -97,6 +100,7 @@ public class ModEntities
         FabricDefaultAttributeRegistry.register(ENTITY_PAWN_FIRST_DIORITE, EntityPawn.setAttributes());
         FabricDefaultAttributeRegistry.register(ENTITY_PAWN_TERRACOTTA, EntityPawn.setAttributes());
         FabricDefaultAttributeRegistry.register(ENTITY_VILLAGER_DANDORI, EntityVillagerDandori.setAttributes());
+        FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_COBBLE, EntityGolemCobble.setAttributes());
     }
 
     public static void registerModEntitiesRenderers()
@@ -111,5 +115,6 @@ public class ModEntities
         EntityRendererRegistry.register(ENTITY_PAWN_TERRACOTTA, EntityRendererPawnFirstDiorite::new);
         EntityRendererRegistry.register(ENTITY_EFFECT_CUBE_DANDORI_WHISTLE, EntityRendererShieldFirstBrick::new);
         EntityRendererRegistry.register(ENTITY_VILLAGER_DANDORI, EntityRendererVillagerDandori::new);
+        EntityRendererRegistry.register(ENTITY_GOLEM_COBBLE, EntityRendererGolemCobble::new);
     }
 }
