@@ -1,5 +1,6 @@
 package com.kitisplode.golemfirststonemod.item.item;
 
+import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
@@ -71,8 +72,9 @@ public class ItemDandoriCall extends Item
             effectWhistle(world, user, dandoriForceTime);
         }
 
-        user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.8f);
-        user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.9f);
+        GolemFirstStoneMod.LOGGER.info("player uuid: " + user.getUuid());
+        user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.5f, 0.8f);
+        user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.5f, 0.9f);
         user.setCurrentHand(hand);
         ItemStack itemStack = user.getStackInHand(hand);
         return TypedActionResult.pass(itemStack);
@@ -103,8 +105,8 @@ public class ItemDandoriCall extends Item
             {
                 spawnParticles(world, user);
             }
-            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.8f);
-            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.8f, 0.95f);
+            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.5f, 0.8f);
+            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.5f, 0.95f);
         }
     }
 
@@ -139,19 +141,18 @@ public class ItemDandoriCall extends Item
             boolean targetHasOwner = ((IEntityDandoriFollower) target).getOwner() != null;
             if (targetHasOwner)
             {
-                if (!((IEntityDandoriFollower) target).isOwner(user)) continue;
+                if (((IEntityDandoriFollower) target).getOwner() != user) continue;
             }
             // Skip iron golems that are not player-made
             if (target instanceof IronGolemEntity)
             {
                 if (!((IronGolemEntity) target).isPlayerCreated()) continue;
                 // If the golem is player made but has no owner, just update their owner to us now /shrug
-                else if (!targetHasOwner)
-                {
-                    ((IEntityDandoriFollower) target).setOwner(user);
-                }
+//                else if (!targetHasOwner)
+//                {
+//                    ((IEntityDandoriFollower) target).setOwner(user);
+//                }
             }
-//            GolemFirstStoneMod.LOGGER.info("Dandori'd! " + target.getUuid().toString());
             targetCount++;
             // If the pik doesn't have a target, or if we're forcing dandori, activate the pik's dandori mode.
             if (target.getTarget() == null || forceDandori)

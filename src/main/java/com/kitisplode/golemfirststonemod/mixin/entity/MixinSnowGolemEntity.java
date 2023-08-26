@@ -14,6 +14,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.SnowGolemEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.ServerConfigHandler;
 import net.minecraft.world.World;
@@ -140,6 +141,13 @@ public abstract class MixinSnowGolemEntity
         if (status == IEntityDandoriFollower.ENTITY_EVENT_DANDORI_START)
             addDandoriParticles();
         else super.handleStatus(status);
+    }
+
+    private void addDandoriParticles()
+    {
+        getWorld().addParticle(ParticleTypes.NOTE,
+                getX(), getY() + getHeight() / 2.0f, getZ(),
+                0,1,0);
     }
 
     @Override

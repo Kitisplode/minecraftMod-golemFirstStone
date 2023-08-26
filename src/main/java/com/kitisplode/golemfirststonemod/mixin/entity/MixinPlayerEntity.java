@@ -76,7 +76,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IEntityW
     public void pushAwayFrom(Entity entity)
     {
         // Don't push away from our followers.
-        if (entity instanceof IEntityDandoriFollower && ((IEntityDandoriFollower) entity).isOwner(this)) return;
+        if (entity instanceof IEntityDandoriFollower && ((IEntityDandoriFollower) entity).getOwner() == this) return;
         super.pushAwayFrom(entity);
     }
 

@@ -13,6 +13,7 @@ import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.ServerConfigHandler;
 import net.minecraft.world.World;
@@ -135,6 +136,13 @@ public abstract class MixinIronGolemEntity extends GolemEntity implements Angera
         if (status == IEntityDandoriFollower.ENTITY_EVENT_DANDORI_START)
             addDandoriParticles();
         return status;
+    }
+
+    private void addDandoriParticles()
+    {
+        getWorld().addParticle(ParticleTypes.NOTE,
+                getX(), getY() + getHeight() / 2.0f, getZ(),
+                0,1,0);
     }
 
     @Override

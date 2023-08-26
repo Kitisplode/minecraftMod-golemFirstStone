@@ -25,6 +25,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.ServerConfigHandler;
 import net.minecraft.sound.SoundEvents;
@@ -262,6 +263,13 @@ public class EntityGolemFirstOak extends IronGolemEntity implements GeoEntity, I
 				super.handleStatus(status);
 				break;
 		}
+	}
+
+	private void addDandoriParticles()
+	{
+		getWorld().addParticle(ParticleTypes.NOTE,
+				getX(), getY() + getHeight() / 2.0f, getZ(),
+				0,1,0);
 	}
 
 	@Override

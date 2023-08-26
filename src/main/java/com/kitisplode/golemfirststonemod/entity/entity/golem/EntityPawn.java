@@ -62,6 +62,7 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
     protected static final TrackedData<Integer> OWNER_TYPE = DataTracker.registerData(EntityPawn.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> PAWN_TYPE = DataTracker.registerData(EntityPawn.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> DANDORI_STATE = DataTracker.registerData(EntityPawn.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> THROWN = DataTracker.registerData(EntityPawn.class, TrackedDataHandlerRegistry.BOOLEAN);
     protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(EntityPawn.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 
     private int pawnType = 0;
@@ -74,6 +75,7 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
     private static final int timeWithoutParentMax = 100;
     private int timeWithoutTarget = 0;
     private static final int timeWithoutTargetMax = 30 * 20;
+    public float thrownAngle = 0.0f;
     public BlockPos blockTarget = null;
     private int blockBreakProgress = 0;
     protected Predicate<BlockState> bsPredicate = blockState -> blockState != null
@@ -118,6 +120,8 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
         this.dataTracker.startTracking(OWNER_TYPE, 0);
         if (!this.dataTracker.containsKey(DANDORI_STATE))
             this.dataTracker.startTracking(DANDORI_STATE, false);
+        if (!this.dataTracker.containsKey(THROWN))
+            this.dataTracker.startTracking(THROWN, false);
         if (!this.dataTracker.containsKey(OWNER_UUID))
             this.dataTracker.startTracking(OWNER_UUID, Optional.empty());
     }
@@ -164,7 +168,7 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
         {
             UUID uUID = this.getOwnerUuid();
             if (uUID == null)
-                return owner;
+                return null;
             return this.getWorld().getPlayerByUuid(uUID);
         }
         else return owner;
@@ -190,7 +194,9 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
     private UUID getOwnerUuid() {
         return this.dataTracker.get(OWNER_UUID).orElse(null);
     }
-    private void setOwnerUuid(@Nullable UUID uuid) {
+    private void setOwnerUuid(@Nullable UUID uuid)
+    {
+        if (uuid != null) GolemFirstStoneMod.LOGGER.info("" + uuid);
         this.dataTracker.set(OWNER_UUID, Optional.ofNullable(uuid));
     }
 
@@ -258,6 +264,15 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
         return this.dataTracker.get(OWNER_TYPE);
     }
 
+    public void setThrown(boolean pThrown)
+    {
+        this.dataTracker.set(THROWN, pThrown);
+    }
+    public boolean getThrown()
+    {
+        return this.dataTracker.get(THROWN);
+    }
+
     private float getAttackDamage() {
         float multiplier = 1.0f;
         if (getPawnType() == PAWN_TYPES.PIK_PINK.ordinal()) multiplier = 2.0f;
@@ -301,9 +316,9 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
     public void tick()
     {
         super.tick();
-        this.onGroundLastTick = this.isOnGround();
         if (this.isOnGround() && !this.onGroundLastTick)
         {
+            if (this.getThrown()) this.setThrown(false);
             int i = 1;
             for (int j = 0; j < i * 8; ++j)
             {
@@ -315,100 +330,113 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
             }
             this.playSound(this.getSquishSound(), 1, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2f + 1.0f) / 0.8f);
         }
-        if (this.getOwnerType() != 0)
+        this.onGroundLastTick = this.isOnGround();
+        if (!getWorld().isClient)
         {
-            if (this.getOwner() == null)
+            if (this.getOwnerType() != 0 && this.getOwnerType() != 2)
             {
-                if (timeWithoutParent++ % 5 == 0)
+                if (this.getOwner() == null)
                 {
-                    TargetPredicate tp = TargetPredicate.createNonAttackable().setBaseMaxDistance(ownerSearchRange * 2);
-                    LivingEntity newParent = null;
-                    if (this.getOwnerType() == 1)
+                    if (timeWithoutParent++ % 5 == 0)
                     {
-                        newParent = getWorld().getClosestEntity(EntityGolemFirstDiorite.class, tp, this, getX(), getY(), getZ(), getBoundingBox().expand(ownerSearchRange * 2));
+                        TargetPredicate tp = TargetPredicate.createNonAttackable().setBaseMaxDistance(ownerSearchRange * 2);
+                        LivingEntity newParent = null;
+                        if (this.getOwnerType() == 1)
+                        {
+                            newParent = getWorld().getClosestEntity(EntityGolemFirstDiorite.class, tp, this, getX(), getY(), getZ(), getBoundingBox().expand(ownerSearchRange * 2));
+                        }
+                        else if (this.getOwnerType() == 3)
+                        {
+                            newParent = getWorld().getClosestEntity(EntityVillagerDandori.class, tp, this, getX(), getY(), getZ(), getBoundingBox().expand(ownerSearchRange * 2));
+                        }
+                        if (newParent != null) this.setOwner(newParent);
                     }
-                    else if (this.getOwnerType() == 2)
-                    {
-                        newParent = getWorld().getClosestPlayer(tp, this);
-                    }
-                    else if (this.getOwnerType() == 3)
-                    {
-                        newParent = getWorld().getClosestEntity(EntityVillagerDandori.class, tp, this, getX(), getY(), getZ(), getBoundingBox().expand(ownerSearchRange * 2));
-                    }
-                    if (newParent != null) this.setOwner(newParent);
-                }
-            }
-            else
-            {
-                timeWithoutParent = 0;
-                if (this.getOwnerType() == 1)
-                {
-                    if (this.getTarget() == null && ((EntityGolemFirstDiorite)this.getOwner()).getTarget() != null)
-                        this.setTarget(((EntityGolemFirstDiorite)this.getOwner()).getTarget());
-                }
-            }
-            if (this.getTarget() == null) timeWithoutTarget++;
-            else timeWithoutTarget = 0;
-
-            if (this.getOwnerType() == OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
-            {
-                if (timeWithoutParent > timeWithoutParentMax || timeWithoutTarget > timeWithoutTargetMax)
-                {
-                    if (this.age % 20 == 0) this.damage(this.getDamageSources().starve(), 1);
-                }
-            }
-        }
-        // Drop a block target if we've been ordered to do other things.
-        if ((this.getTarget() != null || this.getDandoriState()) && this.blockTarget != null)
-        {
-            getWorld().setBlockBreakingInfo(getId(), this.blockTarget, -1);
-            this.blockTarget = null;
-            this.blockBreakProgress = 0;
-        }
-        // If we have a block target, damage / destroy it if we get close enough.
-        else if (this.blockTarget != null)
-        {
-            if (squaredDistanceTo(this.blockTarget.toCenterPos()) < MathHelper.square(1.25))
-            {
-                Vec3d newVelocity = this.getPos().subtract(this.blockTarget.toCenterPos()).normalize().multiply(0.25);
-                this.setVelocity(new Vec3d(newVelocity.x, 0.25, newVelocity.z));
-                this.blockBreakProgress += 16;
-                if (this.getPawnType() == PAWN_TYPES.PIK_YELLOW.ordinal())
-                    this.blockBreakProgress += 16;
-                BlockState bs = getWorld().getBlockState(this.blockTarget);
-                if (this.blockBreakProgress >= 100 || bs.isOf(Blocks.FIRE))
-                {
-                    this.playSound(SoundEvents.BLOCK_ROOTED_DIRT_BREAK, 1.0f, (this.random.nextFloat() - this.random.nextFloat()) * 0.2f + 1.0f);
-                    bs.getBlock().onBreak(getWorld(), this.blockTarget, bs, null);
-                    getWorld().removeBlock(this.blockTarget, false);
-                    getWorld().syncWorldEvent(WorldEvents.BLOCK_BROKEN, this.blockTarget, Block.getRawIdFromState(getWorld().getBlockState(this.blockTarget)));
-                    findNewTargetBlock();
                 }
                 else
                 {
-                    this.playSound(SoundEvents.BLOCK_ROOTED_DIRT_HIT, 1.0f, (this.random.nextFloat() - this.random.nextFloat()) * 0.2f + 1.0f);
-                    getWorld().setBlockBreakingInfo(getId(), this.blockTarget, this.blockBreakProgress);
+                    timeWithoutParent = 0;
+                    if (this.getOwnerType() == 1)
+                    {
+                        if (this.getTarget() == null && ((EntityGolemFirstDiorite)this.getOwner()).getTarget() != null)
+                            this.setTarget(((EntityGolemFirstDiorite)this.getOwner()).getTarget());
+                    }
+                }
+                if (this.getTarget() == null) timeWithoutTarget++;
+                else timeWithoutTarget = 0;
+
+                if (this.getOwnerType() == OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
+                {
+                    if (timeWithoutParent > timeWithoutParentMax || timeWithoutTarget > timeWithoutTargetMax)
+                    {
+                        if (this.age % 20 == 0) this.damage(this.getDamageSources().starve(), 1);
+                    }
                 }
             }
-        }
-        // If we're not in dandori and the player owner is near, and we're not doing anything anyways, just dandori.
-        if (this.getOwnerType() == OWNER_TYPES.PLAYER.ordinal() && this.getOwner() != null && !this.getDandoriState())
-        {
-            if (this.getTarget() == null && this.blockTarget == null && this.squaredDistanceTo(this.getOwner()) < MathHelper.square(safeRange) && noDandoriTimer == 0)
+            // Drop a block target if we've been ordered to do other things.
+            if ((this.getTarget() != null || this.getDandoriState()) && this.blockTarget != null)
             {
-                ((IEntityWithDandoriCount)this.getOwner()).setRecountDandori();
-                this.setDandoriState(true);
+                getWorld().setBlockBreakingInfo(getId(), this.blockTarget, -1);
+                this.blockTarget = null;
+                this.blockBreakProgress = 0;
             }
+            // If we have a block target, damage / destroy it if we get close enough.
+            else if (this.blockTarget != null)
+            {
+                if (squaredDistanceTo(this.blockTarget.toCenterPos()) < MathHelper.square(1.25))
+                {
+                    Vec3d newVelocity = this.getPos().subtract(this.blockTarget.toCenterPos()).normalize().multiply(0.25);
+                    this.setVelocity(new Vec3d(newVelocity.x, 0.25, newVelocity.z));
+                    this.blockBreakProgress += 16;
+                    if (this.getPawnType() == PAWN_TYPES.PIK_YELLOW.ordinal())
+                        this.blockBreakProgress += 16;
+                    BlockState bs = getWorld().getBlockState(this.blockTarget);
+                    if (this.blockBreakProgress >= 100 || bs.isOf(Blocks.FIRE))
+                    {
+                        this.playSound(SoundEvents.BLOCK_ROOTED_DIRT_BREAK, 1.0f, (this.random.nextFloat() - this.random.nextFloat()) * 0.2f + 1.0f);
+                        bs.getBlock().onBreak(getWorld(), this.blockTarget, bs, null);
+                        getWorld().removeBlock(this.blockTarget, false);
+                        getWorld().syncWorldEvent(WorldEvents.BLOCK_BROKEN, this.blockTarget, Block.getRawIdFromState(getWorld().getBlockState(this.blockTarget)));
+                        findNewTargetBlock();
+                    } else
+                    {
+                        this.playSound(SoundEvents.BLOCK_ROOTED_DIRT_HIT, 1.0f, (this.random.nextFloat() - this.random.nextFloat()) * 0.2f + 1.0f);
+                        getWorld().setBlockBreakingInfo(getId(), this.blockTarget, this.blockBreakProgress);
+                    }
+                }
+            }
+            // If we're not in dandori and the player owner is near, and we're not doing anything anyways, just dandori.
+            if (this.getOwnerType() == OWNER_TYPES.PLAYER.ordinal() && this.getOwner() != null && !this.getDandoriState())
+            {
+                if (this.getTarget() == null && this.blockTarget == null && this.squaredDistanceTo(this.getOwner()) < MathHelper.square(safeRange + 1) && noDandoriTimer == 0)
+                {
+                    ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+                    this.setDandoriState(true);
+                }
+            }
+            if (noDandoriTimer > 0) noDandoriTimer--;
         }
-        if (noDandoriTimer > 0) noDandoriTimer--;
+        else
+        {
+            if (getThrown())
+            {
+                thrownAngle -= 30.0f;
+            }
+            else thrownAngle = 0.0f;
+        }
     }
 
     @Override
     public void pushAwayFrom(Entity entity) {
         if (entity == this.getOwner()) return;
         super.pushAwayFrom(entity);
-        if (this.getTarget() == entity && !this.isAiDisabled() && this.getVelocity().lengthSquared() > 0) {
+        if (this.getTarget() == entity && !this.isAiDisabled() && (this.getVelocity().lengthSquared() > 0 || entity.getPassengerList().contains(this)))
+        {
             this.damage((LivingEntity) entity);
+            if (getThrown())
+            {
+                setThrown(false);
+                this.startRiding(entity);
+            }
         }
     }
 
@@ -530,6 +558,27 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
     public boolean canTargetBlock(BlockPos bp)
     {
         return bsPredicate.test(getWorld().getBlockState(bp));
+    }
+
+    @Override
+    public void handleStatus(byte status)
+    {
+        switch(status)
+        {
+            case IEntityDandoriFollower.ENTITY_EVENT_DANDORI_START:
+                addDandoriParticles();
+                break;
+            default:
+                super.handleStatus(status);
+                break;
+        }
+    }
+
+    private void addDandoriParticles()
+    {
+        getWorld().addParticle(ParticleTypes.NOTE,
+                getX(), getY() + getHeight() / 2.0f, getZ(),
+                0,1,0);
     }
 
     @Override

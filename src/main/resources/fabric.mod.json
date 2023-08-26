@@ -28,7 +28,6 @@
 	"mixins": [
 		"golemfirststonemod.mixins.json"
 	],
-	"accessWidener": "golemfirststonemod.accesswidener",
 	"depends": {
 		"fabricloader": ">=0.14.21",
 		"minecraft": "~1.20.1",

@@ -26,5 +26,12 @@
     "sounds": [
       "golemfirststonemod:entity_villager_dandori_pluck"
     ]
+  },
+  "item_dandori_throw":
+  {
+    "subtitle": "sound.golemfirststonemod.item_dandori_throw",
+    "sounds": [
+      "golemfirststonemod:item_dandori_throw"
+    ]
   }
 }

@@ -1,5 +1,6 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
+import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
@@ -148,7 +149,9 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 	private UUID getOwnerUuid() {
 		return this.dataTracker.get(OWNER_UUID).orElse(null);
 	}
-	private void setOwnerUuid(@Nullable UUID uuid) {
+	private void setOwnerUuid(@Nullable UUID uuid)
+	{
+		if (uuid != null) GolemFirstStoneMod.LOGGER.info("" + uuid);
 		this.dataTracker.set(OWNER_UUID, Optional.ofNullable(uuid));
 	}
 
@@ -347,6 +350,13 @@ public class EntityGolemFirstBrick extends IronGolemEntity implements GeoEntity,
 				super.handleStatus(status);
 				break;
 		}
+	}
+
+	private void addDandoriParticles()
+	{
+		getWorld().addParticle(ParticleTypes.NOTE,
+				getX(), getY() + getHeight() / 2.0f, getZ(),
+				0,1,0);
 	}
 
 	@Override

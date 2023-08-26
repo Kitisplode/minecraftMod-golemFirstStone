@@ -28,7 +28,7 @@ public class DataDandoriCount
         {
             if (!(entity instanceof IEntityDandoriFollower)) return false;
             if (!((IEntityDandoriFollower) entity).getDandoriState()) return false;
-            return ((IEntityDandoriFollower) entity).isOwner(player);
+            return ((IEntityDandoriFollower) entity).getOwner() == player;
         });
         // Clear the current follower map.
         followerCounts.clear();

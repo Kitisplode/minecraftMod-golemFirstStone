@@ -270,6 +270,12 @@ public class EntityGolemFirstStone extends IronGolemEntity implements GeoEntity,
 				break;
 		}
 	}
+	private void addDandoriParticles()
+	{
+		getWorld().addParticle(ParticleTypes.NOTE,
+				getX(), getY() + getHeight() / 2.0f, getZ(),
+				0,1,0);
+	}
 
 	@Override
 	public void remove(RemovalReason reason)

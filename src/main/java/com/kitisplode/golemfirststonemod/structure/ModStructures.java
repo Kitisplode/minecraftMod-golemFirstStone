@@ -35,19 +35,19 @@ public class ModStructures
 
     public static void increaseJigsawSize()
     {
-        JigsawStructure.CODEC = Codecs.validate(
-                RecordCodecBuilder.mapCodec(
-                        instance -> instance.group(
-                                JigsawStructure.configCodecBuilder(instance),
-                                RecordCodecBuilder.of(structure -> structure.startPool, StructurePool.REGISTRY_CODEC.fieldOf("start_pool")),
-                                RecordCodecBuilder.of(structure -> structure.startJigsawName, Identifier.CODEC.optionalFieldOf("start_jigsaw_name")),
-                                RecordCodecBuilder.of(structure -> structure.size, Codec.intRange(0, 8).fieldOf("size")),
-                                RecordCodecBuilder.of(structure -> structure.startHeight, HeightProvider.CODEC.fieldOf("start_height")),
-                                RecordCodecBuilder.of(structure -> structure.useExpansionHack, Codec.BOOL.fieldOf("use_expansion_hack")),
-                                RecordCodecBuilder.of(structure -> structure.projectStartToHeightmap, Heightmap.Type.CODEC.optionalFieldOf("project_start_to_heightmap")),
-                                RecordCodecBuilder.of(structure -> structure.maxDistanceFromCenter, Codec.intRange(1, 128).fieldOf("max_distance_from_center"))
-                        ).apply(instance, JigsawStructure::new)),
-                JigsawStructure::validate).codec();
+//        JigsawStructure.CODEC = Codecs.validate(
+//                RecordCodecBuilder.mapCodec(
+//                        instance -> instance.group(
+//                                JigsawStructure.configCodecBuilder(instance),
+//                                RecordCodecBuilder.of(structure -> structure.startPool, StructurePool.REGISTRY_CODEC.fieldOf("start_pool")),
+//                                RecordCodecBuilder.of(structure -> structure.startJigsawName, Identifier.CODEC.optionalFieldOf("start_jigsaw_name")),
+//                                RecordCodecBuilder.of(structure -> structure.size, Codec.intRange(0, 8).fieldOf("size")),
+//                                RecordCodecBuilder.of(structure -> structure.startHeight, HeightProvider.CODEC.fieldOf("start_height")),
+//                                RecordCodecBuilder.of(structure -> structure.useExpansionHack, Codec.BOOL.fieldOf("use_expansion_hack")),
+//                                RecordCodecBuilder.of(structure -> structure.projectStartToHeightmap, Heightmap.Type.CODEC.optionalFieldOf("project_start_to_heightmap")),
+//                                RecordCodecBuilder.of(structure -> structure.maxDistanceFromCenter, Codec.intRange(1, 128).fieldOf("max_distance_from_center"))
+//                        ).apply(instance, JigsawStructure::new)),
+//                JigsawStructure::validate).codec();
 
 //        StructureType.JIGSAW = StructureType.register("jigsaw", JigsawStructure.CODEC);
     }

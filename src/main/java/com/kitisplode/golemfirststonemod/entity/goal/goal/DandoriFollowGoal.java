@@ -25,10 +25,10 @@ public class DandoriFollowGoal extends Goal
     private final Ingredient food;
     private final double moveRange;
 
-    public DandoriFollowGoal(IEntityDandoriFollower entity, double pSpeed, Ingredient food, double pRange, double pSeeRange)
+    public DandoriFollowGoal(PathAwareEntity entity, double pSpeed, Ingredient food, double pRange, double pSeeRange)
     {
-        this.mob = (PathAwareEntity) entity;
-        pik = entity;
+        this.mob = entity;
+        pik = (IEntityDandoriFollower) entity;
         this.speed = pSpeed;
         this.food = food;
         this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
