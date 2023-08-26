@@ -48,11 +48,10 @@ public class EntityVillagerDandori
     private static final Int2ObjectMap<TradeOffers.Factory[]> DANDORI_TRADES = EntityVillagerDandori.copyToFastUtilMap(ImmutableMap.of(
             1, new TradeOffers.Factory[]
             {
-                    new TradeOffers.SellItemFactory(ModItems.ITEM_DANDORI_CALL, 32, 1, 1, 25)
-            },
-            2, new TradeOffers.Factory[]
-            {
-                    new TradeOffers.SellItemFactory(ModItems.ITEM_DANDORI_ATTACK,32, 1, 1, 25)
+                    new TradeOffers.SellItemFactory(ModItems.ITEM_DANDORI_CALL, 32, 1, 1, 25),
+                    new TradeOffers.SellItemFactory(ModItems.ITEM_DANDORI_DIG, 32, 1, 1, 25),
+                    new TradeOffers.SellItemFactory(ModItems.ITEM_DANDORI_ATTACK,32, 1, 1, 25),
+                    new TradeOffers.SellItemFactory(ModItems.ITEM_DANDORI_THROW, 32, 1, 1, 25)
             }));
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private static final int piksCountMax = 6;
@@ -110,18 +109,11 @@ public class EntityVillagerDandori
     @Override
     protected void fillRecipes() {
         TradeOffers.Factory[] factorys = (TradeOffers.Factory[])EntityVillagerDandori.DANDORI_TRADES.get(1);
-        TradeOffers.Factory[] factorys2 = (TradeOffers.Factory[])EntityVillagerDandori.DANDORI_TRADES.get(2);
-        if (factorys == null || factorys2 == null) {
+        if (factorys == null) {
             return;
         }
         TradeOfferList tradeOfferList = this.getOffers();
-        this.fillRecipesFromPool(tradeOfferList, factorys, 2);
-        int i = this.random.nextInt(factorys2.length);
-        TradeOffers.Factory factory = factorys2[i];
-        TradeOffer tradeOffer = factory.create(this, this.random);
-        if (tradeOffer != null) {
-            tradeOfferList.add(tradeOffer);
-        }
+        this.fillRecipesFromPool(tradeOfferList, factorys, 4);
     }
 
     @Nullable
@@ -229,7 +221,7 @@ public class EntityVillagerDandori
             this.pikSearchRange = pPikSearchRange;
             this.pikCountMax = pikCountMax;
             this.time = time;
-            this.timer = time - 10;
+            this.timer = 0;
         }
 
         @Override
