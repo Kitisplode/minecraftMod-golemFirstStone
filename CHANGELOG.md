@@ -35,3 +35,11 @@
     + Balance - Made Diorite Pawns die off if they don't have a target for 30 seconds
     + Balance - Reduced number of Diorite Pawns spawned to 3 at a time
     + Dandori???
+
+## 0.0.6
+    + added Golem Dandori Dig item
+    + added Golem Dandori Throw item
+    + added Dandori information to the HUD
+    + added Terracotta Golems
+    + added Cobblestone Golems
+    + some refinements in golem targetting

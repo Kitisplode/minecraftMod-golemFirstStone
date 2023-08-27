@@ -3,7 +3,7 @@
 	"id": "golemfirststonemod",
 	"version": "${version}",
 	"name": "Golem Dandori: Firsts of Legend",
-	"description": "Adds First of Stone, First of Oak, First of Brick, and First of Diorite golems from Minecraft Legends to Minecraft.",
+	"description": "Adds some golems from Minecraft Legends to Minecraft, including the Firsts.",
 	"authors": [
 		"Kitisplode"
 	],
