@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.level.block.state.pattern.BlockPattern;
 import net.minecraft.world.level.block.state.pattern.BlockPatternBuilder;
 
+import java.util.ArrayList;
 import java.util.function.Predicate;
 
 public class GolemPatternIron extends AbstractGolemPattern
@@ -45,13 +46,15 @@ public class GolemPatternIron extends AbstractGolemPattern
 	}
 
 	@Override
-	protected Entity SpawnGolemForReal(Level pLevel, BlockPattern.BlockPatternMatch pPatternMatch, BlockPos pPos)
+	protected ArrayList<Entity> SpawnGolemForReal(Level pLevel, BlockPattern.BlockPatternMatch pPatternMatch, BlockPos pPos)
 	{
+		ArrayList<Entity> golems = new ArrayList<>();
 		IronGolem golem = EntityType.IRON_GOLEM.create(pLevel);
 		if (golem != null)
 		{
 			golem.setPlayerCreated(true);
+			golems.add(golem);
 		}
-		return golem;
+		return golems;
 	}
 }

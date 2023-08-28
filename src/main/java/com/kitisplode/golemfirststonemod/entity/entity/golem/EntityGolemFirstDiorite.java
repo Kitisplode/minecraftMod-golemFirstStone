@@ -1,19 +1,16 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.entity.EntityPawn;
-import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
-import com.kitisplode.golemfirststonemod.entity.entity.IEntityWithDelayedMeleeAttack;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -42,16 +39,10 @@ import software.bernie.geckolib.core.animation.Animation;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
-import javax.annotation.Nullable;
-import java.util.Optional;
-import java.util.UUID;
 
-
-public class EntityGolemFirstDiorite extends IronGolem implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
+public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
 {
     private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemFirstDiorite.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Boolean> DANDORI_STATE = SynchedEntityData.defineId(EntityGolemFirstDiorite.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(EntityGolemFirstDiorite.class, EntityDataSerializers.OPTIONAL_UUID);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private static final float attackRange = 20.0f;
     private static final int pawnsToSpawn = 3;
@@ -63,15 +54,19 @@ public class EntityGolemFirstDiorite extends IronGolem implements GeoEntity, IEn
         super(pEntityType, pLevel);
     }
 
-    public static AttributeSupplier setAttributes()
+    public static AttributeSupplier.Builder createAttributes()
     {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 1000.0D)
+                .add(Attributes.MAX_HEALTH, 500.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.25f)
                 .add(Attributes.ATTACK_DAMAGE, 30.0f)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0f)
-                .add(Attributes.FOLLOW_RANGE, 24)
-                .build();
+                .add(Attributes.FOLLOW_RANGE, 24);
+    }
+
+    public static AttributeSupplier setAttributes()
+    {
+        return createAttributes().build();
     }
 
     @Override
@@ -79,52 +74,7 @@ public class EntityGolemFirstDiorite extends IronGolem implements GeoEntity, IEn
     {
         super.defineSynchedData();
         if (!this.entityData.hasItem(ATTACK_STATE)) this.entityData.define(ATTACK_STATE, 0);
-        if (!this.entityData.hasItem(DANDORI_STATE)) this.entityData.define(DANDORI_STATE, false);
-        if (!this.entityData.hasItem(DATA_OWNERUUID_ID)) this.entityData.define(DATA_OWNERUUID_ID, Optional.empty());
     }
-    public void addAdditionalSaveData(CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-        if (this.getOwnerUUID() != null) {
-            pCompound.putUUID("Owner", this.getOwnerUUID());
-        }
-    }
-    public void readAdditionalSaveData(CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-        UUID uuid;
-        if (pCompound.hasUUID("Owner")) {
-            uuid = pCompound.getUUID("Owner");
-        } else {
-            String s = pCompound.getString("Owner");
-            uuid = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), s);
-        }
-        if (uuid != null) {
-            try {
-                this.setOwnerUUID(uuid);
-            } catch (Throwable throwable) {}
-        }
-    }
-    @Nullable
-    public UUID getOwnerUUID() {
-        return this.entityData.get(DATA_OWNERUUID_ID).orElse((UUID)null);
-    }
-
-    public void setOwnerUUID(@Nullable UUID pUuid) {
-        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(pUuid));
-    }
-    public LivingEntity getOwner()
-    {
-        UUID uUID = this.getOwnerUUID();
-        if (uUID == null) return null;
-        return this.level().getPlayerByUUID(uUID);
-    }
-    public void setOwner(LivingEntity pOwner)
-    {
-        if (pOwner != null) setOwnerUUID(pOwner.getUUID());
-    }
-    public boolean isOwner(LivingEntity pEntity) {
-        return pEntity == this.getOwner();
-    }
-
     public int getAttackState()
     {
         return this.entityData.get(ATTACK_STATE);
@@ -132,15 +82,6 @@ public class EntityGolemFirstDiorite extends IronGolem implements GeoEntity, IEn
     public void setAttackState(int pInt)
     {
         this.entityData.set(ATTACK_STATE, pInt);
-    }
-
-    public boolean getDandoriState()
-    {
-        return this.entityData.get(DANDORI_STATE);
-    }
-    public void setDandoriState(boolean pDandoriState)
-    {
-        this.entityData.set(DANDORI_STATE, pDandoriState);
     }
 
     private float getAttackDamage() {
@@ -207,8 +148,8 @@ public class EntityGolemFirstDiorite extends IronGolem implements GeoEntity, IEn
 
             EntityPawn pawn = ModEntities.ENTITY_PAWN_FIRST_DIORITE.get().create(level());
             if (pawn == null) continue;
-            pawn.setOwner(this);
             pawn.setOwnerType(EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal());
+            pawn.setOwner(this);
             pawn.setPlayerCreated(isPlayerCreated());
             pawn.setPawnTypeDiorite();
             pawn.moveTo(getX() + spawnOffset.x(), getY() + spawnOffset.y(), getZ() + spawnOffset.z(), 0.0f, 0.0F);
@@ -242,12 +183,6 @@ public class EntityGolemFirstDiorite extends IronGolem implements GeoEntity, IEn
                 return InteractionResult.sidedSuccess(this.level().isClientSide);
             }
         }
-    }
-
-    public void handleEntityEvent(byte pId)
-    {
-        if (pId == IEntityDandoriFollower.ENTITY_EVENT_DANDORI_START) addDandoriParticles();
-        else super.handleEntityEvent(pId);
     }
 
     @Override

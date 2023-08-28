@@ -1,33 +1,41 @@
 package com.kitisplode.golemfirststonemod.item.item;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
+import com.kitisplode.golemfirststonemod.util.DataDandoriCount;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemDandoriAttack extends Item
 {
-    static private final double dandoriRange = 10;
+    static private final double dandoriRange = 16;
     static private final int maxUseTime = 72000;
     static private final int cooldownTime = 20;
     static private final int dandoriForceTime = 10;
@@ -41,56 +49,68 @@ public class ItemDandoriAttack extends Item
     }
 
     @Override
-    public int getUseDuration(@NotNull ItemStack pStack) {
-        return maxUseTime;
-    }
-
-    @Override
-    @NotNull
-    public UseAnim getUseAnimation(@NotNull ItemStack pStack) {
-        return UseAnim.SPEAR;
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced)
+    {
+        pTooltipComponents.add(Component.translatable("item.golemfirststonemod.item_description.item_dandori_attack_1"));
+        pTooltipComponents.add(Component.translatable("item.golemfirststonemod.item_description.item_dandori_attack_2"));
+        pTooltipComponents.add(Component.translatable("item.golemfirststonemod.item_description.item_dandori_attack_3"));
     }
 
     @Override
     @NotNull
     public InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pUsedHand)
     {
-        pPlayer.startUsingItem(pUsedHand);
-        ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
-        return InteractionResultHolder.pass(itemStack);
-    }
-
-    @Override
-    public void releaseUsing(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving, int pTimeLeft)
-    {
-        BlockHitResult ray = ItemDandoriAttack.raycast(pLevel, (Player) pEntityLiving, ClipContext.Fluid.ANY, maxAttackRange);
-        Vec3 pos = ray.getLocation();
-        if (pEntityLiving.distanceToSqr(pos) <= Mth.square(maxAttackRange))
+        if (pPlayer.isCrouching())
         {
-            int actualDandoriForceTime = maxUseTime - dandoriForceTime;
-            boolean actualDandoriForce = pTimeLeft < actualDandoriForceTime;
-            int attackers = dandoriAttack(pLevel, pEntityLiving, pos, true);
-            if (attackers == 0) pEntityLiving.playSound(ModSounds.ITEM_DANDORI_ATTACK_FAIL.get(), 1.0f, 0.9f);
-            else pEntityLiving.playSound(ModSounds.ITEM_DANDORI_ATTACK_WIN.get(), 1.0f, 1.0f);
-            effectRing(pLevel, 20, attackRingDiameter, pos);
-
+            if (pPlayer instanceof IEntityWithDandoriCount player) player.nextDandoriCurrentType();
         }
         else
         {
-            pEntityLiving.playSound(ModSounds.ITEM_DANDORI_ATTACK_FAIL.get(), 1.0f, 0.9f);
+            DataDandoriCount.FOLLOWER_TYPE currentType = ((IEntityWithDandoriCount) pPlayer).getDandoriCurrentType();
+            ClipContext.Fluid fh = ClipContext.Fluid.ANY;
+            if (pPlayer.isUnderWater()) fh = ClipContext.Fluid.NONE;
+            BlockHitResult ray = ItemDandoriAttack.raycast(pLevel, pPlayer, fh, maxAttackRange);
+            Vec3 pos = ray.getLocation();
+            if (pPlayer.distanceToSqr(pos) <= Mth.square(maxAttackRange))
+            {
+                int attackers = dandoriAttack(pLevel, pPlayer, pos, true, currentType);
+                if (attackers == 0) pPlayer.playSound(ModSounds.ITEM_DANDORI_ATTACK_FAIL.get(), 1.0f, 0.9f);
+                else pPlayer.playSound(ModSounds.ITEM_DANDORI_ATTACK_WIN.get(), 1.0f, 1.0f);
+                effectRing(pLevel, 20, attackRingDiameter, pos);
+
+            } else
+            {
+                pPlayer.playSound(ModSounds.ITEM_DANDORI_ATTACK_FAIL.get(), 1.0f, 0.9f);
+            }
         }
-        setCooldown(cooldownTime, pEntityLiving);
+        setCooldown(cooldownTime, pPlayer);
+        pPlayer.startUsingItem(pUsedHand);
+        ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
+        return InteractionResultHolder.success(itemStack);
     }
 
-    private int dandoriAttack(Level world, LivingEntity user, Vec3 position, boolean forceDandori)
+    private int dandoriAttack(Level world, LivingEntity user, Vec3 position, boolean forceDandori, DataDandoriCount.FOLLOWER_TYPE currentType)
     {
         // Find the target nearest the given position.
-        TargetingConditions tp = TargetingConditions.forCombat().range(attackRingDiameter).selector(entity -> entity instanceof Enemy);
-        LivingEntity enemy = world.getNearestEntity(LivingEntity.class, tp, null, position.x(), position.y(), position.z(), entityDimensions.makeBoundingBox(position));
-        if (enemy == null)
-        {
-            return 0;
-        }
+        TargetingConditions tp = TargetingConditions.forNonCombat().range(attackRingDiameter).selector(entity ->
+                {
+                    if (entity == user) return false;
+                    if (entity instanceof Enemy) return true;
+                    if (entity instanceof IEntityDandoriFollower)
+                    {
+                        LivingEntity followerOwner = ((IEntityDandoriFollower) entity).getOwner();
+                        if (followerOwner instanceof IEntityDandoriFollower)
+                            return ((IEntityDandoriFollower) followerOwner).getOwner() != user;
+                        return ((IEntityDandoriFollower) entity).getOwner() != user;
+                    }
+                    if (entity instanceof TamableAnimal) return ((TamableAnimal) entity).getOwner() != user;
+                    if (entity instanceof Merchant) return false;
+                    return true;
+                }
+        );
+        AABB box = entityDimensions.makeBoundingBox(position).inflate(attackRingDiameter);
+        LivingEntity enemy = world.getNearestEntity(LivingEntity.class, tp, null, position.x(), position.y(), position.z(), box);
+        if (enemy == null) return 0;
 
         int targetCount = 0;
         List<Mob> targetList = world.getEntitiesOfClass(Mob.class, user.getBoundingBox().inflate(dandoriRange));
@@ -106,20 +126,17 @@ public class ItemDandoriAttack extends Item
             boolean targetHasOwner = ((IEntityDandoriFollower) target).getOwner() != null;
             if (targetHasOwner)
             {
-                if (!((IEntityDandoriFollower) target).isOwner(user)) continue;
+                if (((IEntityDandoriFollower) target).getOwner() != user) continue;
             }
             // Skip iron golems that are not player-made
             if (target instanceof IronGolem)
             {
-                if (!((IronGolem) target).isPlayerCreated()) continue;
-                    // If the golem is player made but has no owner, just update their owner to us now /shrug
-                else if (!targetHasOwner)
-                {
-                    ((IEntityDandoriFollower) target).setOwner(user);
-                }
+                if (!((IronGolem) target).isPlayerCreated() || ((IEntityDandoriFollower) target).getOwner() != user) continue;
             }
             // Skip anything that can't target the enemy.
             if (!target.canAttack(enemy)) continue;
+            // SKip anything that isn't of the player's currently selected type.
+            if (!DataDandoriCount.entityIsOfType(currentType, target)) continue;
 //            GolemFirstStoneMod.LOGGER.info("Attacking! " + target.getUuid().toString());
             targetCount++;
             // Make the pik target the enemy we got earlier.
@@ -152,7 +169,6 @@ public class ItemDandoriAttack extends Item
         float l = i * j;
         float m = k;
         float n = h * j;
-        double d = 5.0;
         Vec3 vec3d2 = vec3d.add((double)l * range, (double)m * range, (double)n * range);
         return world.clip(new ClipContext(vec3d, vec3d2, ClipContext.Block.OUTLINE, fluidHandling, player));
     }

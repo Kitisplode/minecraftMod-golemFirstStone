@@ -1,6 +1,7 @@
 package com.kitisplode.golemfirststonemod.util.golempatterns;
 
-import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -9,7 +10,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -53,13 +53,13 @@ public abstract class AbstractGolemPattern
         return null;
     }
 
-    public Entity SpawnGolem(Level pLevel, BlockPattern.BlockPatternMatch pPatternMatch, BlockPos pPos, Entity pPlayer)
+    public ArrayList<Entity> SpawnGolem(Level pLevel, BlockPattern.BlockPatternMatch pPatternMatch, BlockPos pPos, Entity pPlayer)
     {
         clearPatternBlocks(pLevel, pPatternMatch);
 
-        // Spawn the golem.
-        Entity pGolem = SpawnGolemForReal(pLevel, pPatternMatch, pPos);
-        if (pGolem != null)
+        // Spawn the golems.
+        ArrayList<Entity> pGolems = SpawnGolemForReal(pLevel, pPatternMatch, pPos);
+        for (Entity pGolem : pGolems)
         {
             BlockPos spawnPosition = pPatternMatch.getBlock(spawnPositionOffset.getX(),
                             spawnPositionOffset.getY(),
@@ -70,18 +70,19 @@ public abstract class AbstractGolemPattern
                     (float) ExtraMath.getYawBetweenPoints(spawnPosition.getCenter(), pPlayer.position()) * Mth.DEG_TO_RAD,
                     pGolem);
 
-            if (pGolem instanceof IEntityDandoriFollower && pPlayer instanceof LivingEntity)
+            if (pGolem instanceof IEntityDandoriFollower dandoriFollower && pPlayer instanceof LivingEntity player)
             {
-                ((IEntityDandoriFollower) pGolem).setOwner((LivingEntity) pPlayer);
+                if (pGolem instanceof EntityPawn pawn) pawn.setOwnerType(EntityPawn.OWNER_TYPES.PLAYER.ordinal());
+                dandoriFollower.setOwner(player);
             }
         }
 
         updatePatternBlocks(pLevel, pPatternMatch);
-        return pGolem;
+        return pGolems;
     }
 
     // Intended to be overridden to actually spawn the golem.
-    protected abstract Entity SpawnGolemForReal(Level pLevel, BlockPattern.BlockPatternMatch pPatternMatch, BlockPos pPos);
+    protected abstract ArrayList<Entity> SpawnGolemForReal(Level pLevel, BlockPattern.BlockPatternMatch pPatternMatch, BlockPos pPos);
 
     protected void positionGolem(Level pLevel, BlockPos pPos, float pYaw, Entity pGolem)
     {

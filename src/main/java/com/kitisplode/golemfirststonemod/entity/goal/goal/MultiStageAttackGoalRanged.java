@@ -1,6 +1,6 @@
 package com.kitisplode.golemfirststonemod.entity.goal.goal;
 
-import com.kitisplode.golemfirststonemod.entity.entity.IEntityWithDelayedMeleeAttack;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;

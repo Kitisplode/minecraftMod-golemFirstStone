@@ -1,8 +1,6 @@
 package com.kitisplode.golemfirststonemod.mixin.block;
 
-import com.kitisplode.golemfirststonemod.util.golempatterns.AbstractGolemPattern;
-import com.kitisplode.golemfirststonemod.util.golempatterns.GolemPatternIron;
-import com.kitisplode.golemfirststonemod.util.golempatterns.GolemPatternSnow;
+import com.kitisplode.golemfirststonemod.util.golempatterns.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -43,6 +41,11 @@ public abstract class MixinCarvedPumpkinBlock extends HorizontalDirectionalBlock
                     || blockState.is(Blocks.JACK_O_LANTERN));
             patternList.add(new GolemPatternIron(spawnBlocKPredicate));
             patternList.add(new GolemPatternSnow(spawnBlocKPredicate));
+            patternList.add(new GolemPatternCobble(spawnBlocKPredicate));
+            patternList.add(new GolemPatternTerracotta(spawnBlocKPredicate));
+            patternList.add(new GolemPatternTerracottaBlue(spawnBlocKPredicate));
+            patternList.add(new GolemPatternTerracottaPink(spawnBlocKPredicate));
+            patternList.add(new GolemPatternTerracottaYellow(spawnBlocKPredicate));
         }
         trySpawnGolem(pLevel, pPos, pPlacer);
     }
@@ -67,7 +70,7 @@ public abstract class MixinCarvedPumpkinBlock extends HorizontalDirectionalBlock
             // If there is no match, go to the next pattern.
             if (match == null) continue;
             // Otherwise, try to create the golem there.
-            Entity golem = currentPattern.SpawnGolem(pLevel, match, pPos, pPlayer);
+            currentPattern.SpawnGolem(pLevel, match, pPos, pPlayer);
             return true;
         }
         return false;

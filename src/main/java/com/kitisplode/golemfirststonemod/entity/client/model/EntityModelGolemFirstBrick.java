@@ -21,7 +21,7 @@ public class EntityModelGolemFirstBrick extends GeoModel<EntityGolemFirstBrick>
 	@Override
 	public ResourceLocation getTextureResource(EntityGolemFirstBrick animatable)
 	{
-		return new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/first_brick.png");
+		return new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/first/first_brick.png");
 	}
 
 	@Override

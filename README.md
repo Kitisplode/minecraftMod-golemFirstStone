@@ -1,10 +1,11 @@
-# Minecraft Mod - Golem: Firsts of Legend 0.0.5 (Forge)
+# Minecraft Mod - Golem: Firsts of Legend 0.0.6 (Forge)
 
 ---
 
 **A simple mod to add the Golem Firsts from Minecraft Legends into Minecraft Java Edition.**
 
 Currently contains all the Firsts, including the First of Stone, the First of Oak, the First of Brick, and the first of Diorite.
+Also now includes Cobblestone Golems.
 
 ---
 
@@ -18,9 +19,11 @@ Craft a *Sculpted Gold Head* with a Lodestone and Gold blocks, then place it in 
 
 You can alternatively obtain the First Heads from associated villagers in some villages.
 
+Cobblestone Golems can be created by stacking a couple blocks of cobblestone and putting a carved pumpkin on top.
+
 ---
 
-Each First has 1000 HP and special attacks.
+Each First has 500 HP and special attacks. (Previously 1000 but that seemed a little much)
 
 First of Stone has an AoE melee attack that deals massive damage and knocks back many enemies at once.
 
@@ -36,12 +39,15 @@ Features currently planned for future updates:
 + Add the flame inside of First of Diorite's head lol
 + Add some interactions between the Firsts and the villagers, similar to the Iron Golem.
 + Maybe some of the other golems from other Minecraft spinoffs?
-+ Dandori???
++ Some refinement in how to spawn golems to make it more... interesting?
++ More Dandori???
 
 ---
 
 Compatibility notes:
 + There are mixins for Snow Golems, Iron Golems, and Carved Pumpkin Blocks, so this mod may be incompatible with other mods that affect those, too.
++ There are some player mixins, but i don't think they'd cause issues probably?
++ The Overworld dimension is modified to have more space beneath the void. I don't know if this will definitely break things, but it might?
 
 
 

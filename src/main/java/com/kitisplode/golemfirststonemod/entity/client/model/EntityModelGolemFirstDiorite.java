@@ -22,7 +22,7 @@ public class EntityModelGolemFirstDiorite extends GeoModel<EntityGolemFirstDiori
 	@Override
 	public ResourceLocation getTextureResource(EntityGolemFirstDiorite animatable)
 	{
-		return new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/first_diorite.png");
+		return new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/first/first_diorite.png");
 	}
 
 	@Override

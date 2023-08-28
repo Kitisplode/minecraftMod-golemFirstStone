@@ -1,7 +1,9 @@
 package com.kitisplode.golemfirststonemod;
 
 import com.kitisplode.golemfirststonemod.block.ModBlocks;
+import com.kitisplode.golemfirststonemod.client.HudDandoriCount;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.item.ModCreativeModTabs;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
@@ -10,13 +12,17 @@ import com.kitisplode.golemfirststonemod.villager.ModPOIs;
 import com.kitisplode.golemfirststonemod.villager.ModProfessions;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -32,7 +38,7 @@ public class GolemFirstStoneMod
     // Define mod id in a common place for everything to reference
     public static final String MOD_ID = "golemfirststonemod";
     // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public GolemFirstStoneMod()
     {
@@ -61,10 +67,6 @@ public class GolemFirstStoneMod
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
-        // Some common setup code
-        LOGGER.info("HELLO FROM COMMON SETUP");
-        LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber);
-
     }
 
     // Add the example block item to the building blocks tab
@@ -76,8 +78,6 @@ public class GolemFirstStoneMod
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
     {
-        // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
     }
 
     @SubscribeEvent
@@ -99,6 +99,12 @@ public class GolemFirstStoneMod
             ModItems.registerModelPredicates();
             ModBlocks.registerRenderLayers();
             ModEntities.registerRenderers();
+        }
+
+        @SubscribeEvent
+        public static void registerGuiOverlays(RegisterGuiOverlaysEvent event)
+        {
+            event.registerAboveAll("dandori", HudDandoriCount.HUD_DANDORI);
         }
     }
 }

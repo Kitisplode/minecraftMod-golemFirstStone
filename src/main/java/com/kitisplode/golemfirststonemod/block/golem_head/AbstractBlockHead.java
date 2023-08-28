@@ -56,7 +56,7 @@ abstract public class AbstractBlockHead extends EquipableCarvedPumpkinBlock
             // If there is no match, go to the next pattern.
             if (match == null) continue;
             // Otherwise, try to create the golem there.
-            Entity golem = currentPattern.SpawnGolem(pLevel, match, pPos, pPlayer);
+            currentPattern.SpawnGolem(pLevel, match, pPos, pPlayer);
             return true;
         }
         return false;

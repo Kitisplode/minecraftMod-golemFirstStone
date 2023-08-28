@@ -1,10 +1,16 @@
 package com.kitisplode.golemfirststonemod.entity.entity.projectile;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstDiorite;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Enemy;
@@ -25,8 +31,8 @@ public class EntityProjectileFirstOak extends Arrow
 {
     private float attackAOERange;
     private float attackDamage;
-    private IronGolem golemOwner;
-    private final float attackVerticalRange = 3.0f;
+    private AbstractGolemDandoriFollower golemOwner;
+    private static final float attackVerticalRange = 3.0f;
 
     public EntityProjectileFirstOak(EntityType<? extends Arrow> entityType, Level world) {
         super(entityType, world);
@@ -40,13 +46,13 @@ public class EntityProjectileFirstOak extends Arrow
         this.setPos(x,y,z);
     }
 
-    public EntityProjectileFirstOak(Level world, @NotNull IronGolem owner) {
+    public EntityProjectileFirstOak(Level world, @NotNull AbstractGolemDandoriFollower owner) {
         this(ModEntities.ENTITY_PROJECTILE_FIRST_OAK.get(), world);
         golemOwner = owner;
         this.setPos(owner.getEyePosition());
     }
 
-    public EntityProjectileFirstOak(Level world, @NotNull IronGolem owner, float pAoERange, float pDamage)
+    public EntityProjectileFirstOak(Level world, @NotNull AbstractGolemDandoriFollower owner, float pAoERange, float pDamage)
     {
         this(world, owner);
         attackAOERange = pAoERange;
@@ -60,13 +66,22 @@ public class EntityProjectileFirstOak extends Arrow
         // Skip some targets.
         if (target != null)
         {
-            // Do not hit targets that are not monsters. Or players, if we're not player made.
-            if (!(target instanceof Enemy || target instanceof Player))
-                return;
-            if (target instanceof Player)
+            LivingEntity owner = null;
+            if (golemOwner != null) owner = golemOwner.getOwner();
+            // Do not damage the golem that shot this arrow.
+            if (target == golemOwner) return;
+            // Do not damage the golem's owner.
+            if (target == owner) return;
+            if (target instanceof TamableAnimal && ((TamableAnimal)target).getOwner() == owner) return;
+            if (target instanceof IEntityDandoriFollower && ((IEntityDandoriFollower)target).getOwner() == owner) return;
+            // Do not damage targets that are pawns owned by a first of diorite that is owned by our owner lol
+            if (target instanceof EntityPawn pawn && ((EntityPawn)target).getOwnerType() == EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
             {
-                if (golemOwner != null && golemOwner.isPlayerCreated()) return;
+                EntityGolemFirstDiorite pawnOwner = (EntityGolemFirstDiorite) pawn.getOwner();
+                if (pawnOwner.getOwner() == owner) return;
             }
+            // Do not damage villagers.
+            if (target instanceof Merchant) return;
         }
         // Then perform the damage.
         super.onHitEntity(pResult);
@@ -93,15 +108,22 @@ public class EntityProjectileFirstOak extends Arrow
         List<LivingEntity> targetList = level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(attackAOERange));
         for (LivingEntity target : targetList)
         {
-            // Do not damage targets that are villagers or golems.
-            // Skip targets that are not monsters or players.
-            if (!(target instanceof Enemy || target instanceof Player))
-                continue;
-            // Skip players only if we are player created.
-            if (target instanceof Player)
+            LivingEntity owner = null;
+            if (golemOwner != null) owner = golemOwner.getOwner();
+            // Do not damage the golem that shot this arrow.
+            if (target == golemOwner) continue;
+            // Do not damage the golem's owner.
+            if (target == owner) continue;
+            if (target instanceof TamableAnimal && ((TamableAnimal)target).getOwner() == owner) continue;
+            if (target instanceof IEntityDandoriFollower && ((IEntityDandoriFollower)target).getOwner() == owner) continue;
+            // Do not damage targets that are pawns owned by a first of diorite that is owned by our owner lol
+            if (target instanceof EntityPawn pawn && ((EntityPawn)target).getOwnerType() == EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
             {
-                if (golemOwner != null && golemOwner.isPlayerCreated()) return;
+                EntityGolemFirstDiorite pawnOwner = (EntityGolemFirstDiorite) pawn.getOwner();
+                if (pawnOwner.getOwner() == owner) continue;
             }
+            // Do not damage villagers.
+            if (target instanceof Merchant) continue;
             // Do not damage targets that are too far on the y axis.
             if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
 

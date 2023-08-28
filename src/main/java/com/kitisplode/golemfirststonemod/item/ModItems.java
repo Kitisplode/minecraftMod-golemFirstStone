@@ -4,6 +4,8 @@ import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.item.item.ItemDandoriAttack;
 import com.kitisplode.golemfirststonemod.item.item.ItemDandoriCall;
+import com.kitisplode.golemfirststonemod.item.item.ItemDandoriDig;
+import com.kitisplode.golemfirststonemod.item.item.ItemDandoriThrow;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -29,6 +31,10 @@ public class ModItems
             () -> new ItemDandoriCall(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ITEM_DANDORI_ATTACK = ITEMS.register("item_dandori_attack",
             () -> new ItemDandoriAttack(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ITEM_DANDORI_DIG = ITEMS.register("item_dandori_dig",
+            () -> new ItemDandoriDig(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ITEM_DANDORI_THROW = ITEMS.register("item_dandori_throw",
+            () -> new ItemDandoriThrow(new Item.Properties().stacksTo(1)));
 
 
     // Called to actually register the items list.

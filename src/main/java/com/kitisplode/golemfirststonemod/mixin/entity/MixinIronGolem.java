@@ -1,14 +1,16 @@
 package com.kitisplode.golemfirststonemod.mixin.entity;
 
-import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstStone;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.players.OldUsersConverter;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.NeutralMob;
@@ -41,7 +43,7 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     }
 
     @Inject(method = ("defineSynchedData"), at = @At("TAIL"))
-    protected void defineSynchedData(CallbackInfo ci)
+    protected void inject_defineSynchedData(CallbackInfo ci)
     {
         if (!this.entityData.hasItem(DANDORI_STATE)) this.entityData.define(DANDORI_STATE, false);
         if (!this.entityData.hasItem(DATA_OWNERUUID_ID)) this.entityData.define(DATA_OWNERUUID_ID, Optional.empty());
@@ -98,6 +100,10 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     }
     public void setDandoriState(boolean pDandoriState)
     {
+        if (!pDandoriState)
+        {
+            if (this.getOwner() != null && this.getDandoriState()) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        }
         this.entityData.set(DANDORI_STATE, pDandoriState);
     }
 
@@ -116,7 +122,22 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
         return status;
     }
 
+    protected void addDandoriParticles()
+    {
+        level().addParticle(ParticleTypes.NOTE,
+                getX(), getY() + getBbHeight() * 1.5, getZ(),
+                0,1,0);
+    }
 
+    @Override
+    public void remove(Entity.RemovalReason pReason)
+    {
+        if (this.getDandoriState() && this.getOwner() != null)
+        {
+            ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        }
+        super.remove(pReason);
+    }
 
     @Override
     public int getRemainingPersistentAngerTime()
@@ -127,7 +148,6 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     @Override
     public void setRemainingPersistentAngerTime(int pRemainingPersistentAngerTime)
     {
-
     }
 
     @Nullable

@@ -5,11 +5,7 @@ import com.kitisplode.golemfirststonemod.entity.client.renderer.*;
 import com.kitisplode.golemfirststonemod.entity.entity.EntityVillagerDandori;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstBrick;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstDiorite;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstStone;
-import com.kitisplode.golemfirststonemod.entity.entity.EntityPawn;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.*;
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileFirstOak;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.TippableArrowRenderer;
@@ -76,6 +72,18 @@ public class ModEntities
                             .sized(0.5f, 0.5f)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_effect_cube_dandori_whistle").toString()));
 
+    public static final RegistryObject<EntityType<EntityGolemCobble>> ENTITY_GOLEM_COBBLE =
+            ENTITY_TYPES.register("entity_golem_cobble",
+                    () -> EntityType.Builder.of(EntityGolemCobble::new, MobCategory.MISC)
+                            .sized(1.0f, 1.0f)
+                            .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_golem_cobble").toString()));
+
+
+    public static final RegistryObject<EntityType<EntityPawn>> ENTITY_PAWN_TERRACOTTA =
+            ENTITY_TYPES.register("entity_pawn_terracotta",
+                    () -> EntityType.Builder.of(EntityPawn::new, MobCategory.MISC)
+                            .sized(0.8f, 1.0f)
+                            .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_pawn_terracotta").toString()));
     public static final RegistryObject<EntityType<EntityVillagerDandori>> ENTITY_VILLAGER_DANDORI =
             ENTITY_TYPES.register("entity_villager_dandori",
                     () -> EntityType.Builder.of(EntityVillagerDandori::new, MobCategory.MISC)
@@ -93,8 +101,10 @@ public class ModEntities
         event.put(ModEntities.ENTITY_GOLEM_FIRST_OAK.get(), EntityGolemFirstOak.setAttributes());
         event.put(ModEntities.ENTITY_GOLEM_FIRST_BRICK.get(), EntityGolemFirstBrick.setAttributes());
         event.put(ModEntities.ENTITY_GOLEM_FIRST_DIORITE.get(), EntityGolemFirstDiorite.setAttributes());
+        event.put(ModEntities.ENTITY_GOLEM_COBBLE.get(), EntityGolemCobble.setAttributes());
         event.put(ModEntities.ENTITY_PAWN_FIRST_DIORITE.get(), EntityPawn.setAttributes());
         event.put(ModEntities.ENTITY_VILLAGER_DANDORI.get(), EntityVillagerDandori.setAttributes());
+        event.put(ModEntities.ENTITY_PAWN_TERRACOTTA.get(), EntityPawn.setAttributes());
     }
 
     public static void registerRenderers()
@@ -105,8 +115,10 @@ public class ModEntities
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_BRICK.get(), EntityRendererGolemFirstBrick::new);
         EntityRenderers.register(ModEntities.ENTITY_SHIELD_FIRST_BRICK.get(), EntityRendererShieldFirstBrick::new);
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_DIORITE.get(), EntityRendererGolemFirstDiorite::new);
+        EntityRenderers.register(ModEntities.ENTITY_GOLEM_COBBLE.get(), EntityRendererGolemCobble::new);
         EntityRenderers.register(ModEntities.ENTITY_PAWN_FIRST_DIORITE.get(), EntityRendererPawn::new);
         EntityRenderers.register(ModEntities.ENTITY_EFFECT_CUBE_DANDORI_WHISTLE.get(), EntityRendererShieldFirstBrick::new);
+        EntityRenderers.register(ModEntities.ENTITY_PAWN_TERRACOTTA.get(), EntityRendererPawn::new);
         EntityRenderers.register(ModEntities.ENTITY_VILLAGER_DANDORI.get(), EntityRendererVillagerDandori::new);
     }
 }

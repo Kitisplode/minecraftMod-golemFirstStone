@@ -14,12 +14,13 @@ public class EntityRendererGolemFirstStone extends GeoEntityRenderer<EntityGolem
 	public EntityRendererGolemFirstStone(EntityRendererProvider.Context renderManager)
 	{
 		super(renderManager, new EntityModelGolemFirstStone());
+		this.shadowRadius = 1.25f;
 	}
 
 	@Override
 	public ResourceLocation getTextureLocation(EntityGolemFirstStone animatable)
 	{
-		return new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/first_stone_2.png");
+		return new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/first/first_stone_2.png");
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package com.kitisplode.golemfirststonemod.entity.goal.goal;
 
-import com.kitisplode.golemfirststonemod.entity.entity.IEntityDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -26,10 +26,10 @@ public class DandoriFollowGoal extends Goal
     private final double moveRange;
     private final double seeRange;
 
-    public DandoriFollowGoal(IEntityDandoriFollower entity, double pSpeed, Ingredient items, double pRange, double pSeeRange)
+    public DandoriFollowGoal(PathfinderMob entity, double pSpeed, Ingredient items, double pRange, double pSeeRange)
     {
-        this.mob = (PathfinderMob) entity;
-        pik = entity;
+        this.mob = entity;
+        pik = (IEntityDandoriFollower) entity;
         this.speedModifier = pSpeed;
         this.items = items;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
@@ -44,12 +44,12 @@ public class DandoriFollowGoal extends Goal
         // Dandori only things that are in dandori mode.
         if (!pik.getDandoriState()) return false;
         // Get the nearest player that we should follow.
-        this.closestPlayer = this.mob.level().getNearestPlayer(this.targetingConditions, this.mob);
+        this.closestPlayer = (Player)this.pik.getOwner();
         return this.closestPlayer != null;
     }
 
     private boolean shouldFollow(LivingEntity targetEntity) {
-        return this.items.test(targetEntity.getMainHandItem()) || this.items.test(targetEntity.getOffhandItem());
+        return targetEntity == this.pik.getOwner();
     }
 
     public void start()
@@ -67,6 +67,7 @@ public class DandoriFollowGoal extends Goal
     }
 
     public void tick() {
+        if (this.closestPlayer == null) return;
         this.mob.getLookControl().setLookAt(this.closestPlayer, (float)(this.mob.getMaxHeadYRot() + 20), (float)this.mob.getMaxHeadXRot());
         if (this.mob.distanceToSqr(this.closestPlayer) < moveRange) {
             this.mob.getNavigation().stop();

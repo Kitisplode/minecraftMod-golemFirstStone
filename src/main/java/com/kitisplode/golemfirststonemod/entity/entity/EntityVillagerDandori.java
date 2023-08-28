@@ -2,6 +2,8 @@ package com.kitisplode.golemfirststonemod.entity.entity;
 
 import com.google.common.collect.ImmutableMap;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
+import com.kitisplode.golemfirststonemod.item.ModItems;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
 import com.kitisplode.golemfirststonemod.util.HelperItemsForEmeralds;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -41,11 +43,10 @@ public class EntityVillagerDandori extends AbstractVillager implements GeoEntity
     public static final Int2ObjectMap<VillagerTrades.ItemListing[]> DANDORI_TRADES = toIntMap(ImmutableMap.of(
             1, new VillagerTrades.ItemListing[]
                 {
-                        new HelperItemsForEmeralds(Items.SEA_PICKLE, 2, 1, 5, 1)
-                },
-            2, new VillagerTrades.ItemListing[]
-                {
-                        new HelperItemsForEmeralds(Items.SEA_PICKLE, 2, 1, 5, 1)
+                        new HelperItemsForEmeralds(ModItems.ITEM_DANDORI_CALL.get(), 32, 1, 1, 25),
+                        new HelperItemsForEmeralds(ModItems.ITEM_DANDORI_DIG.get(), 32, 1, 1, 25),
+                        new HelperItemsForEmeralds(ModItems.ITEM_DANDORI_ATTACK.get(), 32, 1, 1, 25),
+                        new HelperItemsForEmeralds(ModItems.ITEM_DANDORI_THROW.get(), 32, 1, 1, 25)
                 }));
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private static final int piksCountMax = 6;
@@ -114,16 +115,9 @@ public class EntityVillagerDandori extends AbstractVillager implements GeoEntity
     protected void updateTrades()
     {
         VillagerTrades.ItemListing[] avillagertrades$itemlisting = DANDORI_TRADES.get(1);
-        VillagerTrades.ItemListing[] avillagertrades$itemlisting1 = DANDORI_TRADES.get(2);
-        if (avillagertrades$itemlisting != null && avillagertrades$itemlisting1 != null) {
+        if (avillagertrades$itemlisting != null) {
             MerchantOffers merchantoffers = this.getOffers();
-            this.addOffersFromItemListings(merchantoffers, avillagertrades$itemlisting, 2);
-            int i = this.random.nextInt(avillagertrades$itemlisting1.length);
-            VillagerTrades.ItemListing villagertrades$itemlisting = avillagertrades$itemlisting1[i];
-            MerchantOffer merchantoffer = villagertrades$itemlisting.getOffer(this, this.random);
-            if (merchantoffer != null) {
-                merchantoffers.add(merchantoffer);
-            }
+            this.addOffersFromItemListings(merchantoffers, avillagertrades$itemlisting, 4);
         }
     }
 
@@ -159,6 +153,14 @@ public class EntityVillagerDandori extends AbstractVillager implements GeoEntity
     }
 
     @Override
+    public void push(@NotNull Entity entity)
+    {
+        if (entity instanceof EntityPawn && ((EntityPawn) entity).getOwner() == this)
+            return;
+        super.push(entity);
+    }
+
+    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar)
     {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 0, event ->
@@ -180,10 +182,10 @@ public class EntityVillagerDandori extends AbstractVillager implements GeoEntity
     {
         this.playSound(ModSounds.ENTITY_VILLAGER_DANDORI_PLUCK.get(), 0.2F, this.random.nextFloat() * 0.4f + 0.3F);
 
-        EntityPawn pawn = ModEntities.ENTITY_PAWN_FIRST_DIORITE.get().create(level());
+        EntityPawn pawn = ModEntities.ENTITY_PAWN_TERRACOTTA.get().create(level());
         if (pawn == null) return null;
-        pawn.setOwner(this);
         pawn.setOwnerType(EntityPawn.OWNER_TYPES.VILLAGER_DANDORI.ordinal());
+        pawn.setOwner(this);
         pawn.setPawnTypePik();
         pawn.setDeltaMovement(0,0.5,0);
         pawn.moveTo(getX(), getY(), getZ(), 0.0f, 0.0F);
@@ -213,7 +215,7 @@ public class EntityVillagerDandori extends AbstractVillager implements GeoEntity
             this.pikSearchRange = pPikSearchRange;
             this.pikCountMax = pikCountMax;
             this.time = time;
-            this.timer = time - 10;
+            this.timer = 0;
         }
 
         @Override
