@@ -31,7 +31,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.server.ServerConfigHandler;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -119,7 +118,8 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
 			// Skip itself.
 			if (entity == this) return false;
 			// Check other golems, villagers, and players
-			if ((entity instanceof IEntityDandoriFollower && ((IEntityDandoriFollower)entity).getOwner() == this.getOwner())
+			if ((entity instanceof IEntityDandoriFollower dandoriFollower && dandoriFollower.getOwner() == this.getOwner())
+					|| (entity instanceof EntityPawn pawn && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite && firstDiorite.getOwner() == this.getOwner())
 					|| (entity instanceof PlayerEntity && entity == this.getOwner())
 					|| entity instanceof MerchantEntity)
 			{
@@ -222,7 +222,19 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
 			// Do not shield targets that are monsters.
 			if (target instanceof Monster) continue;
 			// Do not shield targets that are players if we are not player created.
-			if (target instanceof PlayerEntity && !isPlayerCreated()) continue;
+			if (target instanceof PlayerEntity && target != this.getOwner()) continue;
+			// Do not shield dandori followers that are not owned by our owner.
+			if (target instanceof IEntityDandoriFollower dandoriFollower)
+			{
+				if (dandoriFollower.getOwner() != this.getOwner()) continue;
+				if (dandoriFollower instanceof EntityPawn pawn)
+				{
+					if (pawn.getOwnerType() == EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
+					{
+						if (pawn.getOwner() != this.getOwner()) continue;
+					}
+				}
+			}
 			// Do not shield targets that are too far on the y axis.
 			if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
 

@@ -5,7 +5,9 @@
 **A simple mod to add the Golem Firsts from Minecraft Legends into Minecraft Java Edition.**
 
 Currently contains all the Firsts, including the First of Stone, the First of Oak, the First of Brick, and the first of Diorite.
-Also now includes Cobblestone Golems.
+Also now includes Cobblestone Golems, Plank Golems, and Mossy Golems.
+
+Note that all specifics (e.g. stats, materials, etc.) are subject to change as the mod further develops.
 
 ---
 
@@ -20,6 +22,10 @@ Craft a *Sculpted Gold Head* with a Lodestone and Gold blocks, then place it in 
 You can alternatively obtain the First Heads from associated villagers in some villages.
 
 Cobblestone Golems can be created by stacking a couple blocks of cobblestone and putting a carved pumpkin on top.
+
+Plank Golems can be created by stacking a couple blocks of oak planks and putting a carved pumpkin on top.
+
+Mossy Golems can be created by stacking a mossy cobblestone block, a moss block, and then a carved pumpkin on top.
 
 ---
 

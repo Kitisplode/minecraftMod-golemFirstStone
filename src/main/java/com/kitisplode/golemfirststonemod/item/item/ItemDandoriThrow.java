@@ -80,8 +80,7 @@ public class ItemDandoriThrow extends Item
         int thrown = dandoriThrow(world, user, strength, false, currentType);
         if (thrown > 0)
         {
-            user.playSound(SoundEvents.ENTITY_SNOWBALL_THROW, 0.5f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
-            user.playSound(ModSounds.ITEM_DANDORI_THROW, 0.4f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.4f));
+            user.playSound(SoundEvents.ENTITY_SNOWBALL_THROW, 1.0f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
         }
         user.swingHand(user.getActiveHand());
     }
@@ -107,6 +106,8 @@ public class ItemDandoriThrow extends Item
                 throwableGolem.setVelocity(user.getVelocity().add(newVelocity));
                 follower.setThrown(true);
             }
+            if (follower instanceof EntityPawn)
+                user.playSound(ModSounds.ITEM_DANDORI_THROW, 0.6f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.4f));
             follower.setDandoriState(false);
         }
         return targetCount;

@@ -47,11 +47,11 @@ public class EntityGolemPlank extends AbstractGolemDandoriFollower implements Ge
     public static DefaultAttributeContainer.Builder setAttributes()
     {
         return GolemEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 50.0f)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 35.0f)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35f)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.5f)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0f)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.5f)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16);
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 20);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class EntityGolemPlank extends AbstractGolemDandoriFollower implements Ge
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new DandoriFollowGoal(this, 1.0, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
-        this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(16), new int[]{20, 10}, 0));
+        this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(20), new int[]{20, 10}, 0));
         this.goalSelector.add(3, new WanderNearTargetGoal(this, 0.8, 32.0F));
         this.goalSelector.add(5, new IronGolemWanderAroundGoal(this, 0.8));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
@@ -127,6 +127,7 @@ public class EntityGolemPlank extends AbstractGolemDandoriFollower implements Ge
             arrow.setVelocity(shootingVelocity);
             arrow.age = 35;
             arrow.setDamage(getAttackDamage());
+            arrow.setNoGravity(true);
             arrow.setHasAoE(false);
             this.getWorld().spawnEntity(arrow);
         }
