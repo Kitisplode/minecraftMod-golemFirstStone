@@ -6,7 +6,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.EntityVillagerDandori;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.*;
-import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileFirstOak;
+import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileAoEOwnerAware;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -33,9 +33,9 @@ public class ModEntities
                     .trackRangeChunks(10)
                     .build()
     );
-    public static final EntityType<EntityProjectileFirstOak> ENTITY_PROJECTILE_FIRST_OAK = Registry.register(
+    public static final EntityType<EntityProjectileAoEOwnerAware> ENTITY_PROJECTILE_FIRST_OAK = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_projectile_first_oak"),
-            FabricEntityTypeBuilder.<EntityProjectileFirstOak>create(SpawnGroup.MISC, EntityProjectileFirstOak::new)
+            FabricEntityTypeBuilder.<EntityProjectileAoEOwnerAware>create(SpawnGroup.MISC, EntityProjectileAoEOwnerAware::new)
                     .dimensions(EntityDimensions.fixed(0.5f, 0.5f))
                     .trackRangeBlocks(4).trackedUpdateRate(10)
                     .build()
@@ -77,6 +77,12 @@ public class ModEntities
                     .dimensions(EntityDimensions.fixed(1.0f, 1.0f))
                     .build()
     );
+    public static final EntityType<EntityGolemPlank> ENTITY_GOLEM_PLANK = Registry.register(
+            Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_golem_plank"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityGolemPlank::new)
+                    .dimensions(EntityDimensions.fixed(1.0f, 1.0f))
+                    .build()
+    );
 
     public static final EntityType<EntityPawn> ENTITY_PAWN_TERRACOTTA = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_pawn_terracotta"),
@@ -101,6 +107,7 @@ public class ModEntities
         FabricDefaultAttributeRegistry.register(ENTITY_PAWN_TERRACOTTA, EntityPawn.setAttributes());
         FabricDefaultAttributeRegistry.register(ENTITY_VILLAGER_DANDORI, EntityVillagerDandori.setAttributes());
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_COBBLE, EntityGolemCobble.setAttributes());
+        FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_PLANK, EntityGolemPlank.setAttributes());
     }
 
     public static void registerModEntitiesRenderers()
@@ -116,5 +123,6 @@ public class ModEntities
         EntityRendererRegistry.register(ENTITY_EFFECT_CUBE_DANDORI_WHISTLE, EntityRendererShieldFirstBrick::new);
         EntityRendererRegistry.register(ENTITY_VILLAGER_DANDORI, EntityRendererVillagerDandori::new);
         EntityRendererRegistry.register(ENTITY_GOLEM_COBBLE, EntityRendererGolemCobble::new);
+        EntityRendererRegistry.register(ENTITY_GOLEM_PLANK, EntityRendererGolemPlank::new);
     }
 }

@@ -4,12 +4,14 @@ import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandori
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.ServerConfigHandler;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -19,11 +21,13 @@ import java.util.UUID;
 
 abstract public class AbstractGolemDandoriFollower extends IronGolemEntity implements IEntityDandoriFollower
 {
-    protected static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemCobble.class, TrackedDataHandlerRegistry.INTEGER);
-    protected static final TrackedData<Boolean> DANDORI_STATE = DataTracker.registerData(EntityGolemCobble.class, TrackedDataHandlerRegistry.BOOLEAN);
-    protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(EntityGolemCobble.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+    protected static final TrackedData<Boolean> DANDORI_STATE = DataTracker.registerData(AbstractGolemDandoriFollower.class, TrackedDataHandlerRegistry.BOOLEAN);
+    protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(AbstractGolemDandoriFollower.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+    private static final TrackedData<Boolean> THROWN = DataTracker.registerData(AbstractGolemDandoriFollower.class, TrackedDataHandlerRegistry.BOOLEAN);
     protected static final double dandoriMoveRange = 6;
     protected static final double dandoriSeeRange = 36;
+    private boolean lastOnGround = false;
+    private float throwAngle = 0.0f;
 
     public AbstractGolemDandoriFollower(EntityType<? extends IronGolemEntity> entityType, World world)
     {
@@ -34,12 +38,12 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
     protected void initDataTracker()
     {
         super.initDataTracker();
-        if (!this.dataTracker.containsKey(ATTACK_STATE))
-            this.dataTracker.startTracking(ATTACK_STATE, 0);
         if (!this.dataTracker.containsKey(DANDORI_STATE))
             this.dataTracker.startTracking(DANDORI_STATE, false);
         if (!this.dataTracker.containsKey(OWNER_UUID))
             this.dataTracker.startTracking(OWNER_UUID, Optional.empty());
+        if (!this.dataTracker.containsKey(THROWN))
+            this.dataTracker.startTracking(THROWN, false);
     }
 
     @Override
@@ -110,6 +114,22 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
         this.dataTracker.set(DANDORI_STATE, pDandoriState);
     }
 
+    public boolean getThrown()
+    {
+        return this.dataTracker.get(THROWN);
+    }
+    public void setThrown(boolean pThrown)
+    {
+        this.dataTracker.set(THROWN, pThrown);
+    }
+    @Override
+    public boolean damage(DamageSource source, float amount)
+    {
+        if (!isThrowable()) return super.damage(source, amount);
+        if (source.isIn(DamageTypeTags.IS_FALL)) return false;
+        return super.damage(source, amount);
+    }
+
     @Override
     public void handleStatus(byte status)
     {
@@ -129,6 +149,33 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
         getWorld().addParticle(ParticleTypes.NOTE,
                 getX(), getY() + getHeight() / 2.0f, getZ(),
                 0,1,0);
+    }
+
+    @Override
+    public void tick()
+    {
+        super.tick();
+        if (this.isThrowable())
+        {
+            if (this.isOnGround() && !lastOnGround)
+            {
+                if (this.getThrown()) this.setThrown(false);
+            }
+            lastOnGround = this.isOnGround();
+            if (this.getThrown())
+            {
+                throwAngle -= 30.0f;
+            } else
+            {
+                throwAngle = 0.0f;
+            }
+        }
+    }
+
+    @Override
+    public float getThrowAngle()
+    {
+        return throwAngle;
     }
 
     @Override

@@ -103,8 +103,8 @@ public class ItemDandoriAttack extends Item
                 {
                     LivingEntity followerOwner = ((IEntityDandoriFollower) entity).getOwner();
                     if (followerOwner instanceof IEntityDandoriFollower)
-                        return !((IEntityDandoriFollower) followerOwner).isOwner(user);
-                    return !((IEntityDandoriFollower) entity).isOwner(user);
+                        return ((IEntityDandoriFollower) followerOwner).getOwner() != user;
+                    return ((IEntityDandoriFollower) entity).getOwner() != user;
                 }
                 if (entity instanceof Tameable) return ((Tameable) entity).getOwner() != user;
                 if (entity instanceof MerchantEntity) return false;
@@ -129,7 +129,7 @@ public class ItemDandoriAttack extends Item
             boolean targetHasOwner = ((IEntityDandoriFollower) target).getOwner() != null;
             if (targetHasOwner)
             {
-                if (!((IEntityDandoriFollower) target).isOwner(user)) continue;
+                if (((IEntityDandoriFollower) target).getOwner() != user) continue;
             }
             // Skip iron golems that are not player-made
             if (target instanceof IronGolemEntity)

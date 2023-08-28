@@ -19,6 +19,7 @@ public class HudDandoriCount implements HudRenderCallback
     private static final Identifier GOLEM_IRON = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_iron.png");
     private static final Identifier GOLEM_SNOW = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_snow.png");
     private static final Identifier GOLEM_COBBLE = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_cobble.png");
+    private static final Identifier GOLEM_PLANK = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_plank.png");
     private static final Identifier FIRST_STONE = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_stone.png");
     private static final Identifier FIRST_OAK = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_oak.png");
     private static final Identifier FIRST_BRICK = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_brick.png");
@@ -44,11 +45,12 @@ public class HudDandoriCount implements HudRenderCallback
         int iron = player.getDandoriCountIron();
         int snow = player.getDandoriCountSnow();
         int cobble = player.getDandoriCountCobble();
+        int plank = player.getDandoriCountPlank();
         int firstStone = player.getDandoriCountFirstStone();
         int firstOak = player.getDandoriCountFirstOak();
         int firstBrick = player.getDandoriCountFirstBrick();
         int firstDiorite = player.getDandoriCountFirstDiorite();
-        int golemTotal = iron + snow;
+        int golemTotal = iron + snow + cobble;
         int firstTotal = firstStone + firstOak + firstBrick + firstDiorite;
 
         DataDandoriCount.FOLLOWER_TYPE currentType = player.getDandoriCurrentType();
@@ -125,6 +127,15 @@ public class HudDandoriCount implements HudRenderCallback
                 drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
             draw_x += 12;
             drawContext.drawText(tr, "x " + cobble, draw_x, draw_y, color, true);
+            draw_x += 20;
+        }
+        if (plank > 0)
+        {
+            drawContext.drawTexture(GOLEM_PLANK, draw_x, draw_y, 0, 0, 8, 8, 8, 8);
+            if (currentType == DataDandoriCount.FOLLOWER_TYPE.PLANK)
+                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
+            draw_x += 12;
+            drawContext.drawText(tr, "x " + plank, draw_x, draw_y, color, true);
             draw_x += 20;
         }
 

@@ -14,6 +14,7 @@ public interface IEntityWithDandoriCount
     int getDandoriCountIron();
     int getDandoriCountSnow();
     int getDandoriCountCobble();
+    int getDandoriCountPlank();
     int getDandoriCountFirstStone();
     int getDandoriCountFirstOak();
     int getDandoriCountFirstBrick();

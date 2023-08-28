@@ -48,8 +48,6 @@ import java.util.UUID;
 public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
 {
 	private static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstStone.class, TrackedDataHandlerRegistry.INTEGER);
-	private static final TrackedData<Boolean> DANDORI_STATE = DataTracker.registerData(EntityGolemFirstStone.class, TrackedDataHandlerRegistry.BOOLEAN);
-	protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(EntityGolemFirstStone.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 	private static final float attackAOERange = 4.0f;
 	private static final float attackKnockbackAmount = 2.0f;
@@ -71,6 +69,14 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
 			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 30.0f)
 			.add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0f)
 			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16);
+	}
+
+	@Override
+	protected void initDataTracker()
+	{
+		super.initDataTracker();
+		if (!this.dataTracker.containsKey(ATTACK_STATE))
+			this.dataTracker.startTracking(ATTACK_STATE, 0);
 	}
 
 	public int getAttackState()
@@ -147,7 +153,7 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
 			if (target instanceof EntityPawn pawn && ((EntityPawn)target).getOwnerType() == EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
 			{
 				EntityGolemFirstDiorite pawnOwner = (EntityGolemFirstDiorite) pawn.getOwner();
-				if (pawnOwner.getOwner() == this.getOwner()) continue;
+				if (pawnOwner != null && pawnOwner.getOwner() == this.getOwner()) continue;
 			}
 			// Do not damage villagers.
 			if (target instanceof MerchantEntity) continue;

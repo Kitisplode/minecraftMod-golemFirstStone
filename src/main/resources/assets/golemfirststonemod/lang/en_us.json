@@ -1,7 +1,8 @@
 {
   "item.golemfirststonemod.item_spawn_pawn_first_diorite": "Diorite Pawn Spawn Egg",
   "item.golemfirststonemod.item_spawn_villager_dandori": "Dandori Acolyte Spawn Egg",
-  "item.golemfirststonemod.item_spawn_golem_cobble": "Cobble Golem Spawn Egg",
+  "item.golemfirststonemod.item_spawn_golem_cobble": "Cobblestone Golem Spawn Egg",
+  "item.golemfirststonemod.item_spawn_golem_plank": "Plank Golem Spawn Egg",
   "item.golemfirststonemod.item_dandori_call": "Golem Dandori Call",
   "item.golemfirststonemod.item_dandori_attack": "Golem Dandori Attack",
   "item.golemfirststonemod.item_dandori_dig": "Golem Dandori Dig",
@@ -26,6 +27,8 @@
   "entity.golemfirststonemod.entity_golem_first_brick": "First of Brick",
   "entity.golemfirststonemod.entity_golem_first_diorite": "First of Diorite",
   "entity.golemfirststonemod.entity_pawn_first_diorite": "Diorite Pawn",
+  "entity.golemfirststonemod.entity_golem_cobble": "Cobblestone Golem",
+  "entity.golemfirststonemod.entity_golem_plank": "Plank Golem",
   "entity.golemfirststonemod.entity_pawn_terracotta": "Terracota Pawn",
   "entity.golemfirststonemod.entity_villager_dandori": "Dandori Acolyte",
 

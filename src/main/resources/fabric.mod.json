@@ -2,8 +2,8 @@
 	"schemaVersion": 1,
 	"id": "golemfirststonemod",
 	"version": "${version}",
-	"name": "Golem Dandori: Firsts of Legend",
-	"description": "Adds some golems from Minecraft Legends to Minecraft, including the Firsts.",
+	"name": "Golem Dandori: Legends",
+	"description": "Adds some golems from Minecraft spinoffs to Java Minecraft.",
 	"authors": [
 		"Kitisplode"
 	],

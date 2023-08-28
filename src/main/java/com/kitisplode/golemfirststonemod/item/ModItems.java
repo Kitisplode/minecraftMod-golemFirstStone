@@ -25,6 +25,9 @@ public class ModItems
     public static final Item ITEM_SPAWN_GOLEM_COBBLE = registerItem("item_spawn_golem_cobble",
             new SpawnEggItem(ModEntities.ENTITY_GOLEM_COBBLE, 0xDFDFDF, 0xAAAAAA,
                     new FabricItemSettings()));
+    public static final Item ITEM_SPAWN_GOLEM_PLANK = registerItem("item_spawn_golem_plank",
+            new SpawnEggItem(ModEntities.ENTITY_GOLEM_PLANK, 0xDFDFDF, 0xA86836,
+                    new FabricItemSettings()));
     public static final Item ITEM_DANDORI_CALL = registerItem("item_dandori_call",
             new ItemDandoriCall(new FabricItemSettings().maxCount(1)));
     public static final Item ITEM_DANDORI_ATTACK = registerItem("item_dandori_attack",

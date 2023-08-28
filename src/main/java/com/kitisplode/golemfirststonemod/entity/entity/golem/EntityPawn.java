@@ -113,6 +113,12 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
     }
 
     @Override
+    public boolean isThrowable()
+    {
+        return true;
+    }
+
+    @Override
     protected void initDataTracker()
     {
         super.initDataTracker();
@@ -422,6 +428,12 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
             }
             else thrownAngle = 0.0f;
         }
+    }
+
+    @Override
+    public float getThrowAngle()
+    {
+        return thrownAngle;
     }
 
     @Override

@@ -1,8 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
-import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
-import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileFirstOak;
+import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileAoEOwnerAware;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.target.ActiveTargetGoalBiggerY;
@@ -24,16 +23,12 @@ import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.server.ServerConfigHandler;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
@@ -42,16 +37,12 @@ import software.bernie.geckolib.core.animation.Animation;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
-import java.util.Optional;
-import java.util.UUID;
-
 public class EntityGolemFirstOak extends AbstractGolemDandoriFollower implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
 {
+	protected static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstOak.class, TrackedDataHandlerRegistry.INTEGER);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 	private static final float attackAOERange = 4.0f;
 	private static final float projectileSpeed = 2.0f;
-	private static final double dandoriMoveRange = 6;
-	private static final double dandoriSeeRange = 36;
 
 	private boolean printTargetMessage = false;
 
@@ -68,6 +59,14 @@ public class EntityGolemFirstOak extends AbstractGolemDandoriFollower implements
 			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 10.0f)
 			.add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0f)
 			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32);
+	}
+
+	@Override
+	protected void initDataTracker()
+	{
+		super.initDataTracker();
+		if (!this.dataTracker.containsKey(ATTACK_STATE))
+			this.dataTracker.startTracking(ATTACK_STATE, 0);
 	}
 
 	public int getAttackState()
@@ -139,7 +138,7 @@ public class EntityGolemFirstOak extends AbstractGolemDandoriFollower implements
 		// Spawn the projectile
 		if (!this.getWorld().isClient())
 		{
-			EntityProjectileFirstOak arrow = new EntityProjectileFirstOak(this.getWorld(), this, attackAOERange, getAttackDamage());
+			EntityProjectileAoEOwnerAware arrow = new EntityProjectileAoEOwnerAware(this.getWorld(), this, attackAOERange, getAttackDamage());
 
 			Vec3d shootingVelocity = target.getEyePos().subtract(this.getEyePos()).normalize().multiply(projectileSpeed);
 			arrow.setVelocity(shootingVelocity);

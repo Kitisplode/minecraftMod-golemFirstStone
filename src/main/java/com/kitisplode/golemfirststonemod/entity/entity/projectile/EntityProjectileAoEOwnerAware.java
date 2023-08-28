@@ -2,16 +2,13 @@ package com.kitisplode.golemfirststonemod.entity.entity.projectile;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstDiorite;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.*;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.BlockHitResult;
@@ -21,36 +18,43 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class EntityProjectileFirstOak extends ArrowEntity
+public class EntityProjectileAoEOwnerAware extends ArrowEntity
 {
     private float attackAOERange;
     private float attackDamage;
-    private EntityGolemFirstOak golemOwner;
-    private final float attackVerticalRange = 3.0f;
+    private LivingEntity golemOwner;
+    private static final float attackVerticalRange = 3.0f;
+    private boolean hasAoE = true;
 
-    public EntityProjectileFirstOak(EntityType<? extends ArrowEntity> entityType, World world) {
+    public EntityProjectileAoEOwnerAware(EntityType<? extends ArrowEntity> entityType, World world) {
         super(entityType, world);
         attackAOERange = 1;
         attackDamage = 1;
         golemOwner = null;
     }
 
-    public EntityProjectileFirstOak(World world, double x, double y, double z) {
+    public EntityProjectileAoEOwnerAware(World world, double x, double y, double z) {
         this(ModEntities.ENTITY_PROJECTILE_FIRST_OAK, world);
         this.setPos(x,y,z);
     }
 
-    public EntityProjectileFirstOak(World world, @NotNull EntityGolemFirstOak owner) {
+    public EntityProjectileAoEOwnerAware(World world, @NotNull LivingEntity owner) {
         this(ModEntities.ENTITY_PROJECTILE_FIRST_OAK, world);
         golemOwner = owner;
+        super.setOwner(owner);
         this.setPosition(owner.getEyePos());
     }
 
-    public EntityProjectileFirstOak(World world, @NotNull EntityGolemFirstOak owner, float pAoERange, float pDamage)
+    public EntityProjectileAoEOwnerAware(World world, @NotNull LivingEntity owner, float pAoERange, float pDamage)
     {
         this(world, owner);
         attackAOERange = pAoERange;
         attackDamage = pDamage;
+    }
+
+    public void setHasAoE(boolean p)
+    {
+        this.hasAoE = p;
     }
 
 
@@ -62,7 +66,7 @@ public class EntityProjectileFirstOak extends ArrowEntity
         if (target != null)
         {
             LivingEntity owner = null;
-            if (golemOwner != null) owner = golemOwner.getOwner();
+            if (golemOwner != null && golemOwner instanceof IEntityDandoriFollower dandoriFollower) owner = dandoriFollower.getOwner();
             // Do not damage the golem that shot this arrow.
             if (target == golemOwner) return;
             // Do not damage the golem's owner.
@@ -73,14 +77,15 @@ public class EntityProjectileFirstOak extends ArrowEntity
             if (target instanceof EntityPawn pawn && ((EntityPawn)target).getOwnerType() == EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
             {
                 EntityGolemFirstDiorite pawnOwner = (EntityGolemFirstDiorite) pawn.getOwner();
-                if (pawnOwner.getOwner() == owner) return;
+                if (pawnOwner != null && pawnOwner.getOwner() == owner) return;
             }
             // Do not damage villagers.
             if (target instanceof MerchantEntity) return;
         }
         // Then perform the damage.
         super.onEntityHit(entityHitResult);
-        attackAOE();
+        if (this.hasAoE)
+            attackAOE();
         this.setNoGravity(false);
     }
 
@@ -104,7 +109,7 @@ public class EntityProjectileFirstOak extends ArrowEntity
         for (LivingEntity target : targetList)
         {
             LivingEntity owner = null;
-            if (golemOwner != null) owner = golemOwner.getOwner();
+            if (golemOwner != null && golemOwner instanceof IEntityDandoriFollower dandoriFollower) owner = dandoriFollower.getOwner();
             // Do not damage targets that are our owner or are owned by our owner.
             if (owner == target) continue;
             if (target instanceof TameableEntity && ((TameableEntity)target).getOwner() == owner) continue;
@@ -113,7 +118,7 @@ public class EntityProjectileFirstOak extends ArrowEntity
             if (target instanceof EntityPawn pawn && ((EntityPawn)target).getOwnerType() == EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
             {
                 EntityGolemFirstDiorite pawnOwner = (EntityGolemFirstDiorite) pawn.getOwner();
-                if (pawnOwner.getOwner() == owner) continue;
+                if (pawnOwner != null && pawnOwner.getOwner() == owner) continue;
             }
             // Do not damage villagers.
             if (target instanceof MerchantEntity) continue;

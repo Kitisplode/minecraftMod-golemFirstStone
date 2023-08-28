@@ -2,6 +2,7 @@ package com.kitisplode.golemfirststonemod.item.item;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
 import com.kitisplode.golemfirststonemod.util.DataDandoriCount;
@@ -89,21 +90,24 @@ public class ItemDandoriThrow extends Item
     {
         TargetPredicate tp = TargetPredicate.createNonAttackable().setPredicate(
                 entity -> DataDandoriCount.entityIsOfType(currentType, entity)
-                        && ((EntityPawn)entity).getOwner() == user
-                        && (((EntityPawn)entity).getDandoriState() || forceDandori));
-        EntityPawn pawn = world.getClosestEntity(EntityPawn.class, tp, null, user.getX(),user.getY(),user.getZ(), user.getBoundingBox().expand(dandoriRange));
+                        && entity instanceof IEntityDandoriFollower
+                        && ((IEntityDandoriFollower)entity).getOwner() == user
+                        && ((IEntityDandoriFollower)entity).isThrowable()
+                        && (((IEntityDandoriFollower)entity).getDandoriState() || forceDandori));
+        LivingEntity throwableGolem = world.getClosestEntity(LivingEntity.class, tp, null, user.getX(),user.getY(),user.getZ(), user.getBoundingBox().expand(dandoriRange));
         int targetCount = 0;
-        if (pawn != null)
+        if (throwableGolem != null)
         {
+            IEntityDandoriFollower follower = (IEntityDandoriFollower) throwableGolem;
             targetCount++;
             if (!world.isClient())
             {
-                pawn.setPos(user.getX(), user.getEyeY(), user.getZ());
+                throwableGolem.setPos(user.getX(), user.getEyeY(), user.getZ());
                 Vec3d newVelocity = getUserLookAngle(user).normalize().multiply(speed);
-                pawn.setVelocity(user.getVelocity().add(newVelocity));
-                pawn.setThrown(true);
+                throwableGolem.setVelocity(user.getVelocity().add(newVelocity));
+                follower.setThrown(true);
             }
-            pawn.setDandoriState(false);
+            follower.setDandoriState(false);
         }
         return targetCount;
     }

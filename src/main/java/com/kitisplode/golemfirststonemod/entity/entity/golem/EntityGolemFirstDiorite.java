@@ -51,6 +51,7 @@ import java.util.UUID;
 
 public class EntityGolemFirstDiorite extends EntityGolemCobble implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
 {
+	private static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstDiorite.class, TrackedDataHandlerRegistry.INTEGER);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 	private static final float attackRange = 20.0f;
 	private static final int pawnsToSpawn = 3;
@@ -70,6 +71,14 @@ public class EntityGolemFirstDiorite extends EntityGolemCobble implements GeoEnt
 			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 30.0f)
 			.add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0f)
 			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 24);
+	}
+
+	@Override
+	protected void initDataTracker()
+	{
+		super.initDataTracker();
+		if (!this.dataTracker.containsKey(ATTACK_STATE))
+			this.dataTracker.startTracking(ATTACK_STATE, 0);
 	}
 
 	public int getAttackState()

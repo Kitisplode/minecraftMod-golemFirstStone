@@ -1,9 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
-import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
@@ -31,7 +29,6 @@ import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.ServerConfigHandler;
@@ -40,7 +37,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
@@ -51,12 +47,11 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Predicate;
 
 public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
 {
+	private static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstBrick.class, TrackedDataHandlerRegistry.INTEGER);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 	private static final int shieldHurtTime = 30;
 	private static final int shieldAbsorptionTime = 20 * 5;
@@ -79,6 +74,13 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
 			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 30.0f)
 			.add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0f)
 			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32);
+	}
+	@Override
+	protected void initDataTracker()
+	{
+		super.initDataTracker();
+		if (!this.dataTracker.containsKey(ATTACK_STATE))
+			this.dataTracker.startTracking(ATTACK_STATE, 0);
 	}
 
 	public int getAttackState()

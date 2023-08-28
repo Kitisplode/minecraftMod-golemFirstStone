@@ -33,8 +33,12 @@ public class ModItemGroups
 //                        entries.add(ModBlocks.BLOCK_DANDORI);
 //                        entries.add(ModItems.ITEM_SPAWN_PAWN_FIRST_DIORITE);
 //                        entries.add(ModItems.ITEM_SPAWN_VILLAGER_DANDORI);
-//                        entries.add(ModItems.ITEM_DANDORI_CALL);
-//                        entries.add(ModItems.ITEM_DANDORI_ATTACK);
+                        entries.add(ModItems.ITEM_SPAWN_GOLEM_COBBLE);
+                        entries.add(ModItems.ITEM_SPAWN_GOLEM_PLANK);
+                        entries.add(ModItems.ITEM_DANDORI_CALL);
+                        entries.add(ModItems.ITEM_DANDORI_ATTACK);
+                        entries.add(ModItems.ITEM_DANDORI_DIG);
+                        entries.add(ModItems.ITEM_DANDORI_THROW);
                     }).build());
 
     public static void registerItemGroups()

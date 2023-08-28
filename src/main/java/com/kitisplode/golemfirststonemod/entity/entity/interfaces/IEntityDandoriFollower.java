@@ -17,4 +17,24 @@ public interface IEntityDandoriFollower
     public void setOwner(LivingEntity newOwner);
 
     public boolean isOwner(LivingEntity entity);
+
+    default boolean isThrowable()
+    {
+        return false;
+    }
+
+    default boolean getThrown()
+    {
+        return false;
+    }
+
+    default void setThrown(boolean pThrown)
+    {
+        return;
+    }
+
+    default float getThrowAngle()
+    {
+        return 0.0f;
+    }
 }
