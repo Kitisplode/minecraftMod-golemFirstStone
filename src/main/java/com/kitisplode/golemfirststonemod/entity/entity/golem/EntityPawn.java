@@ -2,6 +2,8 @@ package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.EntityVillagerDandori;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityCanAttackBlocks;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
@@ -37,7 +39,6 @@ import net.minecraft.server.ServerConfigHandler;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -56,7 +57,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDandoriFollower
+public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDandoriFollower, IEntityCanAttackBlocks
 {
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     protected static final TrackedData<Integer> OWNER_TYPE = DataTracker.registerData(EntityPawn.class, TrackedDataHandlerRegistry.INTEGER);
@@ -284,6 +285,19 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
         return (float)this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) * multiplier;
     }
 
+    public void setBlockTarget(BlockPos pBlockPos)
+    {
+        blockTarget = pBlockPos;
+    }
+    public BlockPos getBlockTarget()
+    {
+        return blockTarget;
+    }
+    public boolean canTargetBlock(BlockPos bp)
+    {
+        return bsPredicate.test(getWorld().getBlockState(bp));
+    }
+
     @Override
     protected void initGoals()
     {
@@ -402,6 +416,7 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
                         getWorld().removeBlock(this.blockTarget, false);
                         getWorld().syncWorldEvent(WorldEvents.BLOCK_BROKEN, this.blockTarget, Block.getRawIdFromState(getWorld().getBlockState(this.blockTarget)));
                         findNewTargetBlock();
+                        this.blockBreakProgress = 0;
                     } else
                     {
                         this.playSound(SoundEvents.BLOCK_ROOTED_DIRT_HIT, 1.0f, (this.random.nextFloat() - this.random.nextFloat()) * 0.2f + 1.0f);
@@ -541,34 +556,6 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
         float i = (float)(-(MathHelper.atan2(f, g) * 57.2957763671875));
         this.setPitch(ExtraMath.changeAngle(this.getPitch(), i, maxPitchChange));
         this.setYaw(ExtraMath.changeAngle(this.getYaw(), h, maxYawChange));
-    }
-
-    private void findNewTargetBlock()
-    {
-        this.blockBreakProgress = 0;
-        BlockPos tempBp = this.blockTarget;
-        this.blockTarget = null;
-        for (int i = 0; i < 6; i++)
-        {
-            BlockPos bp = null;
-            if (i == 0) bp = tempBp.add(1,0,0);
-            else if (i == 1) bp = tempBp.add(-1,0,0);
-            else if (i == 2) bp = tempBp.add(0,0,1);
-            else if (i == 3) bp = tempBp.add(0,0,-1);
-            else if (i == 4) bp = tempBp.add(0,1, 0);
-            else             bp = tempBp.add(0,-1,0);
-            if (bp == null) continue;
-            if (bsPredicate.test(getWorld().getBlockState(bp)))
-            {
-                if (this.blockTarget == null) this.blockTarget = bp;
-                else if (this.random.nextInt(100) < 75) this.blockTarget = bp;
-            }
-        }
-    }
-
-    public boolean canTargetBlock(BlockPos bp)
-    {
-        return bsPredicate.test(getWorld().getBlockState(bp));
     }
 
     @Override

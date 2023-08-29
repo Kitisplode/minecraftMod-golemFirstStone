@@ -49,7 +49,7 @@ public class EntityGolemPlank extends AbstractGolemDandoriFollower implements Ge
         return GolemEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 35.0f)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35f)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0f)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0f)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.5f)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 24);
     }

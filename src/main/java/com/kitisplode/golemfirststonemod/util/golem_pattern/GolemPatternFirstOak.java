@@ -2,7 +2,7 @@ package com.kitisplode.golemfirststonemod.util.golem_pattern;
 
 import com.kitisplode.golemfirststonemod.block.ModBlocks;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstOak;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstOak;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.BlockPattern;

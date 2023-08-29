@@ -1,15 +1,13 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.item.ModItems;
-import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.JumpingMount;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -30,7 +28,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -50,6 +47,14 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
     private boolean movingBackwards = false;
     private MultiStageAttackGoalRanged attackGoal;
 
+//    private int steeringAngle = 0;
+//    private int steeringVelocity = 0;
+//    private static final int steeringAccel = 1;
+//    private static final int steeringVelocityMax = 10;
+//    private double turningVelocity = 0;
+//    private static final double turningAccel = 1;
+//    private static final double turningVelocityMax = 10;
+
     public EntityGolemGrindstone(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
     {
         super(pEntityType, pLevel);
@@ -60,7 +65,7 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
         return GolemEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 65.0f)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35f)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.5f)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0f)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.75f);
     }
 
@@ -192,9 +197,8 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
     @Override
     public void travel(Vec3d movementInput) {
         movingBackwards = movementInput.z < 0;
-        movementInput = movementInput.multiply(0,0,1);
         if (getAttackState() != 0) movementInput = Vec3d.ZERO;
-        super.travel(movementInput);
+        super.travel(new Vec3d(0,0, movementInput.z));
     }
 
     @Override
@@ -206,7 +210,6 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
             this.setRotation((float)newRotation, 0.0f);
             this.bodyYaw = this.headYaw = this.getYaw();
             this.prevYaw = this.headYaw;
-//            controllingPlayer.setHeadYaw(controllingPlayer.headYaw - controllingPlayer.sidewaysSpeed * 10);
         }
     }
 

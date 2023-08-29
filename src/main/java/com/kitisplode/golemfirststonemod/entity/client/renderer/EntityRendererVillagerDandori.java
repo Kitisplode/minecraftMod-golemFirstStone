@@ -1,10 +1,8 @@
 package com.kitisplode.golemfirststonemod.entity.client.renderer;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelGolemFirstStone;
 import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelVillagerDandori;
 import com.kitisplode.golemfirststonemod.entity.entity.EntityVillagerDandori;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstStone;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;

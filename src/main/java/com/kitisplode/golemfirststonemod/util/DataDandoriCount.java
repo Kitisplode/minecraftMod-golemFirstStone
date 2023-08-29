@@ -1,6 +1,10 @@
 package com.kitisplode.golemfirststonemod.util;
 
 import com.kitisplode.golemfirststonemod.entity.entity.golem.*;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstBrick;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstOak;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstStone;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.IronGolemEntity;

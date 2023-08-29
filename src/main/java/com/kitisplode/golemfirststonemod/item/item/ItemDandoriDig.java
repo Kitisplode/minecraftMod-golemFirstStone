@@ -1,10 +1,12 @@
 package com.kitisplode.golemfirststonemod.item.item;
 
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityCanAttackBlocks;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
 import com.kitisplode.golemfirststonemod.util.DataDandoriCount;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -75,16 +77,19 @@ public class ItemDandoriDig extends Item
     {
         TargetPredicate tp = TargetPredicate.createNonAttackable().setPredicate(
                 entity -> DataDandoriCount.entityIsOfType(currentType, entity)
-                        && ((EntityPawn)entity).getOwner() == user
-                        && (((EntityPawn)entity).getDandoriState() || forceDandori)
-                        && ((EntityPawn)entity).canTargetBlock(blockPos));
-        EntityPawn pawn = world.getClosestEntity(EntityPawn.class, tp, null, user.getX(),user.getY(),user.getZ(), user.getBoundingBox().expand(dandoriRange));
+                        && entity instanceof IEntityDandoriFollower dandoriFollower
+                        && dandoriFollower.getOwner() == user
+                        && (dandoriFollower.getDandoriState() || forceDandori)
+                        && entity instanceof IEntityCanAttackBlocks attackBlockser
+                        && attackBlockser.canTargetBlock(blockPos));
+        LivingEntity golem = world.getClosestEntity(LivingEntity.class, tp, null, user.getX(),user.getY(),user.getZ(), user.getBoundingBox().expand(dandoriRange));
         int targetCount = 0;
-        if (pawn != null)
+        if (golem != null)
         {
+            IEntityCanAttackBlocks attackBlockser = (IEntityCanAttackBlocks) golem;
             targetCount++;
-            pawn.blockTarget = blockPos;
-            pawn.setDandoriState(false);
+            attackBlockser.setBlockTarget(blockPos);
+            ((IEntityDandoriFollower)golem).setDandoriState(false);
         }
         return targetCount;
     }

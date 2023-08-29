@@ -31,12 +31,6 @@ public class MultiStageAttackGoal extends MeleeAttackGoal
     }
 
     @Override
-    public boolean canStart()
-    {
-        return super.canStart();
-    }
-
-    @Override
     public boolean shouldContinue()
     {
         if (attackState > 0) return true;
