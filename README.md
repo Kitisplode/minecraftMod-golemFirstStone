@@ -1,11 +1,11 @@
-# Minecraft Mod - Golem Dandori: Firsts of Legend Version 0.0.6 (Fabric)
+# Minecraft Mod - Golem Dandori: Legends Version 0.0.7 (Fabric)
 
 ---
 
-**A simple mod to add the Golem Firsts from Minecraft Legends into Minecraft Java Edition.**
+**A simple mod to add the Golems from Minecraft Legends into Minecraft Java Edition.**
 
 Currently contains all the Firsts, including the First of Stone, the First of Oak, the First of Brick, and the first of Diorite.
-Also now includes Cobblestone Golems, Plank Golems, and Mossy Golems.
+Also now includes Cobblestone Golems, Plank Golems, Mossy Golems, and Grindstone Golems!
 
 Note that all specifics (e.g. stats, materials, etc.) are subject to change as the mod further develops.
 
@@ -26,6 +26,8 @@ Cobblestone Golems can be created by stacking a couple blocks of cobblestone and
 Plank Golems can be created by stacking a couple blocks of oak planks and putting a carved pumpkin on top.
 
 Mossy Golems can be created by stacking a mossy cobblestone block, a moss block, and then a carved pumpkin on top.
+
+Mossy Golems can be created by putting a carved pumpkin on top of a grindstone.
 
 ---
 

@@ -101,7 +101,7 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
 
 	@Override
 	protected void initGoals() {
-		this.goalSelector.add(1, new DandoriFollowGoal(this, 1.0, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
+		this.goalSelector.add(1, new DandoriFollowGoal(this, 1.4, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
 		this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, 6.5D, new int[]{70, 30, 25}));
 		this.goalSelector.add(3, new WanderNearTargetGoal(this, 0.8, 32.0F));
 		this.goalSelector.add(5, new IronGolemWanderAroundGoal(this, 0.8));
@@ -158,10 +158,9 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
 			if (target instanceof TameableEntity && ((TameableEntity)target).getOwner() == this.getOwner()) continue;
 			if (target instanceof IEntityDandoriFollower && ((IEntityDandoriFollower)target).getOwner() == this.getOwner()) continue;
 			// Do not damage targets that are pawns owned by a first of diorite that is owned by our owner lol
-			if (target instanceof EntityPawn pawn && ((EntityPawn)target).getOwnerType() == EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
+			if (target instanceof EntityPawn pawn && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite)
 			{
-				EntityGolemFirstDiorite pawnOwner = (EntityGolemFirstDiorite) pawn.getOwner();
-				if (pawnOwner != null && pawnOwner.getOwner() == this.getOwner()) continue;
+				if (firstDiorite.getOwner() == this.getOwner()) continue;
 			}
 			// Do not damage villagers.
 			if (target instanceof MerchantEntity) continue;

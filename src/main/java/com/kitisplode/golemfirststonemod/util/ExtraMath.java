@@ -34,13 +34,13 @@ public class ExtraMath
     {
         if (a1 < 180)
         {
-            if (a2 < a1 + 180) return Math.abs(a1 - a2);
-            else return Math.abs(a1 + 360 - a2);
+            if (a2 < a1 + 180) return a2 - a1;
+            else return a2 - a1 - 360;
         }
         else
         {
-            if (a2 > a1 - 180) return Math.abs(a1 - a2);
-            else return Math.abs(a1 - 360 - a2);
+            if (a2 > a1 - 180) return a2 - a1;
+            else return a2 - a1 + 360;
         }
     }
 

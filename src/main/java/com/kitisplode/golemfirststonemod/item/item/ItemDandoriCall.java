@@ -72,8 +72,8 @@ public class ItemDandoriCall extends Item
             effectWhistle(world, user, dandoriForceTime);
         }
 
-        user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.5f, 0.8f);
-        user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.5f, 0.9f);
+        user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.4f, 0.8f);
+        user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.4f, 0.9f);
         user.setCurrentHand(hand);
         ItemStack itemStack = user.getStackInHand(hand);
         return TypedActionResult.pass(itemStack);
@@ -104,8 +104,8 @@ public class ItemDandoriCall extends Item
             {
                 spawnParticles(world, user);
             }
-            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.5f, 0.8f);
-            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.5f, 0.95f);
+            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.4f, 0.8f);
+            user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.4f, 0.95f);
         }
     }
 
@@ -132,6 +132,8 @@ public class ItemDandoriCall extends Item
         {
             // Skip the item user.
             if (target == user) continue;
+            // Skip anything the user is currently riding.
+            if (target.hasPassenger(user)) continue;
             // Skip anything that doesn't follow dandori rules
             if (!(target instanceof IEntityDandoriFollower)) continue;
             // Skip things that already have dandori active?

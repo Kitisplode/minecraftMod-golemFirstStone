@@ -7,6 +7,7 @@
 		"entity/MixinIronGolemEntity",
 		"entity/MixinSnowGolemEntity",
 		"entity/MixinPlayerEntity",
+		"entity/MixinClientPlayerEntity",
 		"MixinStructurePoolAccessor"
 	],
 	"injectors": {

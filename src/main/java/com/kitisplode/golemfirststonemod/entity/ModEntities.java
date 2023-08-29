@@ -89,6 +89,12 @@ public class ModEntities
                     .dimensions(EntityDimensions.fixed(1.0f, 1.0f))
                     .build()
     );
+    public static final EntityType<EntityGolemGrindstone> ENTITY_GOLEM_GRINDSTONE = Registry.register(
+            Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_golem_grindstone"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityGolemGrindstone::new)
+                    .dimensions(EntityDimensions.fixed(1.0f, 1.0f))
+                    .build()
+    );
 
     public static final EntityType<EntityPawn> ENTITY_PAWN_TERRACOTTA = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_pawn_terracotta"),
@@ -115,6 +121,7 @@ public class ModEntities
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_COBBLE, EntityGolemCobble.setAttributes());
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_PLANK, EntityGolemPlank.setAttributes());
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_MOSSY, EntityGolemMossy.setAttributes());
+        FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_GRINDSTONE, EntityGolemGrindstone.setAttributes());
     }
 
     public static void registerModEntitiesRenderers()
@@ -132,5 +139,6 @@ public class ModEntities
         EntityRendererRegistry.register(ENTITY_GOLEM_COBBLE, EntityRendererGolemCobble::new);
         EntityRendererRegistry.register(ENTITY_GOLEM_PLANK, EntityRendererGolemPlank::new);
         EntityRendererRegistry.register(ENTITY_GOLEM_MOSSY, EntityRendererGolemMossy::new);
+        EntityRendererRegistry.register(ENTITY_GOLEM_GRINDSTONE, EntityRendererGolemGrindstone::new);
     }
 }

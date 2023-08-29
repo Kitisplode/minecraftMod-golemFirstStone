@@ -49,3 +49,4 @@
     + some golems (mostly just ones that are smaller than the player) can now be thrown with the Dandori Throw item)
     + added Plank Golems
     + added Mossy Golems
+    + added rideable Grindstone Golems

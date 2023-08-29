@@ -5,6 +5,7 @@ import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.event.EventDandoriCount;
 import com.kitisplode.golemfirststonemod.item.ModItemGroups;
 import com.kitisplode.golemfirststonemod.item.ModItems;
+import com.kitisplode.golemfirststonemod.networking.ModMessages;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
 import com.kitisplode.golemfirststonemod.structure.ModStructures;
 import com.kitisplode.golemfirststonemod.villager.ModVillagers;
@@ -33,6 +34,8 @@ public class GolemFirstStoneMod implements ModInitializer {
 		ModVillagers.registerModTrades();
 
 		ModStructures.increaseJigsawSize();
+
+		ModMessages.registerC2SPackets();
 
 		ServerTickEvents.START_SERVER_TICK.register(new EventDandoriCount());
 		ServerLifecycleEvents.SERVER_STARTING.register(ModStructures::registerJigsaws);

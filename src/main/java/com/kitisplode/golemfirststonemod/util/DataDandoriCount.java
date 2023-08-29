@@ -13,7 +13,9 @@ import java.util.Map;
 public class DataDandoriCount
 {
     private static final double dandoriSeeRange = 36;
-    public enum FOLLOWER_TYPE {FIRST_STONE, FIRST_OAK, FIRST_BRICK, FIRST_DIORITE, SNOW, IRON, COBBLE, PLANK, MOSSY, PAWN_RED, PAWN_YELLOW, PAWN_BLUE};
+    public enum FOLLOWER_TYPE {FIRST_STONE, FIRST_OAK, FIRST_BRICK, FIRST_DIORITE,
+        SNOW, IRON, COBBLE, PLANK, MOSSY, GRINDSTONE,
+        PAWN_RED, PAWN_YELLOW, PAWN_BLUE};
     private Map<FOLLOWER_TYPE, Integer> followerCounts = new HashMap<>();
     private int totalCount = 0;
 
@@ -37,6 +39,7 @@ public class DataDandoriCount
             if (entity instanceof EntityGolemCobble) key = FOLLOWER_TYPE.COBBLE;
             if (entity instanceof EntityGolemPlank) key = FOLLOWER_TYPE.PLANK;
             if (entity instanceof EntityGolemMossy) key = FOLLOWER_TYPE.MOSSY;
+            if (entity instanceof EntityGolemGrindstone) key = FOLLOWER_TYPE.GRINDSTONE;
             if (entity instanceof EntityGolemFirstStone) key = FOLLOWER_TYPE.FIRST_STONE;
             if (entity instanceof EntityGolemFirstOak) key = FOLLOWER_TYPE.FIRST_OAK;
             if (entity instanceof EntityGolemFirstBrick) key = FOLLOWER_TYPE.FIRST_BRICK;
@@ -104,6 +107,7 @@ public class DataDandoriCount
         if (type == FOLLOWER_TYPE.COBBLE && entity instanceof EntityGolemCobble) return true;
         if (type == FOLLOWER_TYPE.PLANK && entity instanceof EntityGolemPlank) return true;
         if (type == FOLLOWER_TYPE.MOSSY && entity instanceof EntityGolemMossy) return true;
+        if (type == FOLLOWER_TYPE.GRINDSTONE && entity instanceof EntityGolemGrindstone) return true;
         if (type == FOLLOWER_TYPE.FIRST_STONE && entity instanceof EntityGolemFirstStone) return true;
         if (type == FOLLOWER_TYPE.FIRST_OAK && entity instanceof EntityGolemFirstOak) return true;
         if (type == FOLLOWER_TYPE.FIRST_BRICK && entity instanceof EntityGolemFirstBrick) return true;

@@ -1,5 +1,6 @@
 package com.kitisplode.golemfirststonemod.entity.goal.goal;
 
+import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.entity.LivingEntity;
@@ -28,6 +29,8 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
     private final int[] attackStages;
     private final int turnDuringState;
 
+    private boolean forced = false;
+
     public MultiStageAttackGoalRanged(IEntityWithDelayedMeleeAttack pMob, double pSpeed, boolean pauseWhenMobIdle, double pAttackRange, int[] pAttackStages, int pTurnDuringState)
     {
         super((PathAwareEntity) pMob,pSpeed, pauseWhenMobIdle);
@@ -48,6 +51,9 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
     @Override
     public boolean canStart()
     {
+        if (forced) return true;
+        if (this.mob.hasPassengers()) return false;
+
         long l = this.mob.getWorld().getTime();
         if (l - this.lastUpdateTime < 20L) {
             return false;
@@ -73,6 +79,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
     @Override
     public boolean shouldContinue()
     {
+        if (forced) return true;
         if (attackState > 0) return true;
         if (targetOutVisionTimer >= targetOutVisionTime) return false;
         return super.shouldContinue();
@@ -84,6 +91,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         super.start();
         targetOutVisionTimer = 0;
         attackTimer = 0;
+        if (forced) attackTimer = getTickCount(attackStages[0]);
         actor.setAttackState(0);
         targetX = null;
         targetY = null;
@@ -100,6 +108,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         targetX = null;
         targetY = null;
         targetZ = null;
+        forced = false;
     }
 
     @Override
@@ -114,6 +123,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         // If we're not attacking, try to attack if we can.
         if (attackTimer <= 0)
         {
+            if (forced) forced = false;
             if (target == null)
             {
                 return;
@@ -198,5 +208,12 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         if (attackRange <= 9)
             return this.mob.getWidth() * 2.0f * (this.mob.getWidth() * 2.0f) + entity.getWidth();
         return attackRange;
+    }
+
+    // Call this if we want to force the unit to attack right away (e.g. if it's being controlled by something else)
+    public void forceAttack()
+    {
+        GolemFirstStoneMod.LOGGER.info("blah 3");
+        forced = true;
     }
 }

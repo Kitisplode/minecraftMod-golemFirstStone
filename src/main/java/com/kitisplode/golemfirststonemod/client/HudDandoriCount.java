@@ -21,6 +21,7 @@ public class HudDandoriCount implements HudRenderCallback
     private static final Identifier GOLEM_COBBLE = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_cobble.png");
     private static final Identifier GOLEM_PLANK = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_plank.png");
     private static final Identifier GOLEM_MOSSY = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_mossy.png");
+    private static final Identifier GOLEM_GRINDSTONE = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_grindstone.png");
     private static final Identifier FIRST_STONE = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_stone.png");
     private static final Identifier FIRST_OAK = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_oak.png");
     private static final Identifier FIRST_BRICK = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_brick.png");
@@ -51,6 +52,7 @@ public class HudDandoriCount implements HudRenderCallback
         int cobble = player.getDandoriCountCobble();
         int plank = player.getDandoriCountPlank();
         int mossy = player.getDandoriCountMossy();
+        int grindstone = player.getDandoriCountGrindstone();
         int firstStone = player.getDandoriCountFirstStone();
         int firstOak = player.getDandoriCountFirstOak();
         int firstBrick = player.getDandoriCountFirstBrick();
@@ -152,6 +154,15 @@ public class HudDandoriCount implements HudRenderCallback
                 drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
             draw_x += 12;
             drawContext.drawText(tr, "x " + mossy, draw_x, draw_y, color, true);
+            draw_x += 20;
+        }
+        if (grindstone > 0)
+        {
+            drawContext.drawTexture(GOLEM_GRINDSTONE, draw_x-4, draw_y, 0, 0, 16, 8, 16, 8);
+            if (currentType == DataDandoriCount.FOLLOWER_TYPE.GRINDSTONE)
+                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
+            draw_x += 12;
+            drawContext.drawText(tr, "x " + grindstone, draw_x, draw_y, color, true);
             draw_x += 20;
         }
 

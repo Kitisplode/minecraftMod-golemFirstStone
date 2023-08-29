@@ -51,7 +51,7 @@ public class EntityGolemPlank extends AbstractGolemDandoriFollower implements Ge
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35f)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0f)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.5f)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 20);
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 24);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class EntityGolemPlank extends AbstractGolemDandoriFollower implements Ge
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(1, new DandoriFollowGoal(this, 1.0, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(1, new DandoriFollowGoal(this, 1.2, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
         this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(20), new int[]{20, 10}, 0));
         this.goalSelector.add(3, new WanderNearTargetGoal(this, 0.8, 32.0F));
         this.goalSelector.add(5, new IronGolemWanderAroundGoal(this, 0.8));
