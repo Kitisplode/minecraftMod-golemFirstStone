@@ -119,10 +119,7 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
     @Override
     public void remove(Entity.RemovalReason pReason)
     {
-        if (this.getDandoriState() && this.getOwner() != null)
-        {
-            ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
-        }
+        if (this.getDandoriState() && this.getOwner() != null) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         super.remove(pReason);
     }
 

@@ -100,10 +100,7 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     }
     public void setDandoriState(boolean pDandoriState)
     {
-        if (!pDandoriState)
-        {
-            if (this.getOwner() != null && this.getDandoriState()) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
-        }
+        if (this.getOwner() != null && this.getDandoriState()) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         this.entityData.set(DANDORI_STATE, pDandoriState);
     }
 
