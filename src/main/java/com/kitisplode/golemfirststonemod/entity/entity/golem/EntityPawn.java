@@ -575,7 +575,7 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
     private void addDandoriParticles()
     {
         getWorld().addParticle(ParticleTypes.NOTE,
-                getX(), getY() + getHeight() / 2.0f, getZ(),
+                getX(), getY() + getHeight() * 1.5, getZ(),
                 0,1,0);
     }
 

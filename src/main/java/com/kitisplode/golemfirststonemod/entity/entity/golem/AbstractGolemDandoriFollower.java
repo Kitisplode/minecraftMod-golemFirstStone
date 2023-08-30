@@ -147,7 +147,7 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
     protected void addDandoriParticles()
     {
         getWorld().addParticle(ParticleTypes.NOTE,
-                getX(), getY() + getHeight() / 2.0f, getZ(),
+                getX(), getY() + getHeight() * 1.5, getZ(),
                 0,1,0);
     }
 

@@ -127,7 +127,7 @@ public abstract class MixinIronGolemEntity extends GolemEntity implements Angera
     @Inject(method = ("initGoals"), at = @At("HEAD"))
     protected void initGoals(CallbackInfo ci)
     {
-        this.goalSelector.add(0, new DandoriFollowGoal(this, 1.2, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(0, new DandoriFollowGoal(this, 1.4, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
     }
 
     @ModifyVariable(method = ("handleStatus"), at = @At("HEAD"), ordinal = 0)
@@ -141,7 +141,7 @@ public abstract class MixinIronGolemEntity extends GolemEntity implements Angera
     private void addDandoriParticles()
     {
         getWorld().addParticle(ParticleTypes.NOTE,
-                getX(), getY() + getHeight() / 2.0f, getZ(),
+                getX(), getY() + getHeight() * 1.5, getZ(),
                 0,1,0);
     }
 
