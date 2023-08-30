@@ -1,9 +1,12 @@
-package com.kitisplode.golemfirststonemod.entity.entity.golem;
+package com.kitisplode.golemfirststonemod.entity.entity.golem.first;
 
+import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -98,8 +101,8 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
     @Override
     protected void registerGoals()
     {
-        this.goalSelector.addGoal(1, new DandoriFollowGoal(this, 1.0, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
-        this.goalSelector.addGoal(2, new MultiStageAttackGoal(this, 1.0, true, 6.5D, new int[]{70, 30, 25}));
+        this.goalSelector.addGoal(1, new DandoriFollowGoal(this, 1.4, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(2, new MultiStageAttackGoalRanged(this, 1.0, true, 6.5D, new int[]{70, 30, 25}));
         this.goalSelector.addGoal(3, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
         this.goalSelector.addGoal(4, new GolemRandomStrollInVillageGoal(this, 0.8D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
@@ -142,10 +145,9 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
             if (target instanceof TamableAnimal && ((TamableAnimal)target).getOwner() == this.getOwner()) continue;
             if (target instanceof IEntityDandoriFollower && ((IEntityDandoriFollower)target).getOwner() == this.getOwner()) continue;
             // Do not damage targets that are pawns owned by a first of diorite that is owned by our owner lol
-            if (target instanceof EntityPawn pawn && ((EntityPawn)target).getOwnerType() == EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
+            if (target instanceof EntityPawn pawn && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite)
             {
-                EntityGolemFirstDiorite pawnOwner = (EntityGolemFirstDiorite) pawn.getOwner();
-                if (pawnOwner != null && pawnOwner.getOwner() == this.getOwner()) continue;
+                if (firstDiorite.getOwner() == this.getOwner()) continue;
             }
             // Do not damage villagers.
             if (target instanceof Merchant) continue;

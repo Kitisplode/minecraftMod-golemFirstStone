@@ -9,6 +9,7 @@
     "entity/MixinIronGolem",
     "entity/MixinSnowGolem",
     "entity/MixinPlayer",
+    "entity/MixinLocalPlayer",
     "MixinStructurePoolAccessor"
   ],
   "client": [

@@ -72,8 +72,8 @@ public class ItemDandoriCall extends Item
             }
         }
 
-        pPlayer.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.5f, 0.8f);
-        pPlayer.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.5f, 0.9f);
+        pPlayer.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.4f, 0.8f);
+        pPlayer.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.4f, 0.9f);
         pPlayer.startUsingItem(pUsedHand);
         ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
         return InteractionResultHolder.pass(itemStack);
@@ -103,8 +103,8 @@ public class ItemDandoriCall extends Item
             {
                 spawnParticles(pLevel, pLivingEntity);
             }
-            pLivingEntity.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.5f, 0.8f);
-            pLivingEntity.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.5f, 0.95f);
+            pLivingEntity.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.4f, 0.8f);
+            pLivingEntity.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.4f, 0.95f);
         }
     }
 
@@ -132,6 +132,8 @@ public class ItemDandoriCall extends Item
         {
             // Skip the item user.
             if (target == user) continue;
+            // Skip anything the user is currently riding.
+            if (target.hasPassenger(user)) continue;
             // Skip anything that doesn't follow dandori rules
             if (!(target instanceof IEntityDandoriFollower)) continue;
             // Skip things that already have dandori active?

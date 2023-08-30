@@ -19,4 +19,18 @@ public class ExtraMath
         }
         return from + f;
     }
+
+    public static double getAngleDiff(double a1, double a2)
+    {
+        if (a1 < 180)
+        {
+            if (a2 < a1 + 180) return a2 - a1;
+            else return a2 - a1 - 360;
+        }
+        else
+        {
+            if (a2 > a1 - 180) return a2 - a1;
+            else return a2 - a1 + 360;
+        }
+    }
 }

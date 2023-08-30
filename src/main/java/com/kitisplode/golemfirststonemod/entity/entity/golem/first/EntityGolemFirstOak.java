@@ -1,7 +1,8 @@
-package com.kitisplode.golemfirststonemod.entity.entity.golem;
+package com.kitisplode.golemfirststonemod.entity.entity.golem.first;
 
+import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
-import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileFirstOak;
+import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileAoEOwnerAware;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.target.ActiveTargetGoalBiggerY;
@@ -94,7 +95,7 @@ public class EntityGolemFirstOak extends AbstractGolemDandoriFollower implements
     @Override
     protected void registerGoals()
     {
-        this.goalSelector.addGoal(1, new DandoriFollowGoal(this, 1.0, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(1, new DandoriFollowGoal(this, 1.4, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
         this.goalSelector.addGoal(2, new MultiStageAttackGoalRanged(this, 1.0, true, 1024.0, new int[]{40, 18, 13}, 0));
         this.goalSelector.addGoal(3, new MoveTowardsTargetGoal(this, 0.8D, 48.0F));
         this.goalSelector.addGoal(4, new GolemRandomStrollInVillageGoal(this, 0.8D));
@@ -138,7 +139,7 @@ public class EntityGolemFirstOak extends AbstractGolemDandoriFollower implements
         // Spawn the projectile.
         if (!this.level().isClientSide())
         {
-            EntityProjectileFirstOak arrow = new EntityProjectileFirstOak(this.level(), this, attackAOERange, getAttackDamage());
+            EntityProjectileAoEOwnerAware arrow = new EntityProjectileAoEOwnerAware(this.level(), this, attackAOERange, getAttackDamage());
             Vec3 shootingVelocity = target.getEyePosition().subtract(this.getEyePosition()).normalize().scale(projectileSpeed);
             arrow.setDeltaMovement(shootingVelocity);
             arrow.tickCount = 35;

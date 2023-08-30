@@ -1,15 +1,19 @@
-package com.kitisplode.golemfirststonemod.entity.entity.golem;
+package com.kitisplode.golemfirststonemod.entity.entity.golem.legends;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityCanAttackBlocks;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
-import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackBlockGoalRanged;
+import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.item.ModItems;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -26,6 +30,8 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
@@ -34,10 +40,21 @@ import software.bernie.geckolib.core.animation.Animation;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
-public class EntityGolemCobble extends AbstractGolemDandoriFollower implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
+import java.util.function.Predicate;
+
+public class EntityGolemCobble extends AbstractGolemDandoriFollower implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower, IEntityCanAttackBlocks
 {
     private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemCobble.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> LEFT_ARM = SynchedEntityData.defineId(EntityGolemCobble.class, EntityDataSerializers.BOOLEAN);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
+
+    private BlockPos blockTarget;
+    private final Predicate<BlockState> bsPredicate = blockState -> blockState != null
+            && ((blockState.is(BlockTags.MINEABLE_WITH_PICKAXE)
+            || blockState.is(BlockTags.MINEABLE_WITH_SHOVEL))
+            && !blockState.is(BlockTags.NEEDS_IRON_TOOL)
+            && !blockState.is(BlockTags.NEEDS_DIAMOND_TOOL));
+    private int blockBreakProgress = 0;
 
     public EntityGolemCobble(EntityType<? extends IronGolem> pEntityType, Level pLevel)
     {
@@ -47,10 +64,10 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
     public static AttributeSupplier.Builder createAttributes()
     {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 50.0f)
+                .add(Attributes.MAX_HEALTH, 75.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.35f)
-                .add(Attributes.ATTACK_DAMAGE, 3.5f)
-                .add(Attributes.KNOCKBACK_RESISTANCE, 0.5f);
+                .add(Attributes.ATTACK_DAMAGE, 1.5f)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.75f);
     }
 
     public static AttributeSupplier setAttributes()
@@ -59,10 +76,17 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
     }
 
     @Override
+    public boolean isThrowable()
+    {
+        return true;
+    }
+
+    @Override
     protected void defineSynchedData()
     {
         super.defineSynchedData();
         if (!this.entityData.hasItem(ATTACK_STATE)) this.entityData.define(ATTACK_STATE, 0);
+        if (!this.entityData.hasItem(LEFT_ARM)) this.entityData.define(LEFT_ARM, false);
     }
     public int getAttackState()
     {
@@ -71,6 +95,14 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
     public void setAttackState(int pInt)
     {
         this.entityData.set(ATTACK_STATE, pInt);
+    }
+    public boolean getLeftArm()
+    {
+        return this.entityData.get(LEFT_ARM);
+    }
+    public void setLeftArm(boolean pBoolean)
+    {
+        this.entityData.set(LEFT_ARM, pBoolean);
     }
 
     private float getAttackDamage() {
@@ -86,8 +118,9 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
     @Override
     protected void registerGoals()
     {
-        this.goalSelector.addGoal(1, new DandoriFollowGoal(this, 1.0, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
-        this.goalSelector.addGoal(2, new MultiStageAttackGoal(this, 1.0, true, 2.0D, new int[]{20, 10}));
+        this.goalSelector.addGoal(1, new DandoriFollowGoal(this, 1.2, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(2, new MultiStageAttackGoalRanged(this, 1.0, true, 6.0D, new int[]{10, 5}));
+        this.goalSelector.addGoal(2, new MultiStageAttackBlockGoalRanged(this, 1.0, true, 8.0D, new int[]{10, 5}));
         this.goalSelector.addGoal(3, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
         this.goalSelector.addGoal(4, new GolemRandomStrollInVillageGoal(this, 0.8D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
@@ -99,6 +132,7 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
     @Override
     public boolean tryAttack()
     {
+        if (getAttackState() == 1) this.setLeftArm(!this.getLeftArm());
         if (getAttackState() != 2) return false;
 
         if (getTarget() != null)
@@ -117,6 +151,62 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
     }
 
     @Override
+    public void tick()
+    {
+        super.tick();
+        // Drop a block target if we've been ordered to do other things.
+        if ((this.getTarget() != null || this.getDandoriState()) && getBlockTarget() != null)
+        {
+            level().destroyBlockProgress(getId(), this.blockTarget, -1);
+            setBlockTarget(null);
+            this.blockBreakProgress = 0;
+        }
+        if (!canTargetBlock(getBlockTarget())) setBlockTarget(null);
+    }
+    @Override
+    public void setBlockTarget(BlockPos pBlockPos)
+    {
+        blockTarget = pBlockPos;
+    }
+    @Override
+    public BlockPos getBlockTarget()
+    {
+        return blockTarget;
+    }
+    @Override
+    public boolean canTargetBlock(BlockPos pBlockPos)
+    {
+        if (pBlockPos == null) return false;
+        return bsPredicate.test(level().getBlockState(pBlockPos));
+    }
+    @Override
+    public boolean tryAttackBlock()
+    {
+        if (getAttackState() == 1) this.setLeftArm(!this.getLeftArm());
+        if (getAttackState() != 2) return false;
+        if (!canTargetBlock(getBlockTarget())) return false;
+
+        this.blockBreakProgress += 16;
+        BlockState bs = level().getBlockState(this.blockTarget);
+        if (this.blockBreakProgress >= 100)
+        {
+            this.playSound(SoundEvents.ROOTED_DIRT_BREAK, 1.0f, (this.random.nextFloat() - this.random.nextFloat()) * 0.2f + 1.0f);
+            bs.getBlock().onBlockStateChange(level(), this.blockTarget, bs, null);
+            Block.dropResources(bs, level(), this.blockTarget);
+            level().removeBlock(this.blockTarget, false);
+            level().levelEvent(2001, this.blockTarget, Block.getId(level().getBlockState(this.blockTarget)));
+            findNewTargetBlock();
+            this.blockBreakProgress = 0;
+        } else
+        {
+            this.playSound(SoundEvents.ROOTED_DIRT_HIT, 1.0f, (this.random.nextFloat() - this.random.nextFloat()) * 0.2f + 1.0f);
+            level().destroyBlockProgress(getId(), this.blockTarget, this.blockBreakProgress);
+        }
+
+        return true;
+    }
+
+    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar)
     {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 0, event ->
@@ -126,11 +216,13 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
             {
                 if (pGolem.getAttackState() == 1)
                 {
-                    event.getController().setAnimationSpeed(2.00);
-                    return event.setAndContinue(RawAnimation.begin().then("animation.golem_cobble.attack_windup_right", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                    event.getController().setAnimationSpeed(4.00);
+                    if (!this.getLeftArm()) return event.setAndContinue(RawAnimation.begin().then("animation.golem_cobble.attack_windup_right", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                    return event.setAndContinue(RawAnimation.begin().then("animation.golem_cobble.attack_windup_left", Animation.LoopType.HOLD_ON_LAST_FRAME));
                 }
-                event.getController().setAnimationSpeed(2.00);
-                return event.setAndContinue(RawAnimation.begin().then("animation.golem_cobble.attack_right", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                event.getController().setAnimationSpeed(4.00);
+                if (!this.getLeftArm()) return event.setAndContinue(RawAnimation.begin().then("animation.golem_cobble.attack_right", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                return event.setAndContinue(RawAnimation.begin().then("animation.golem_cobble.attack_left", Animation.LoopType.HOLD_ON_LAST_FRAME));
             }
             else
             {

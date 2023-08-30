@@ -6,6 +6,7 @@ import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.item.ModCreativeModTabs;
 import com.kitisplode.golemfirststonemod.item.ModItems;
+import com.kitisplode.golemfirststonemod.networking.ModMessages;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
 import com.kitisplode.golemfirststonemod.structure.ModStructures;
 import com.kitisplode.golemfirststonemod.villager.ModPOIs;
@@ -67,6 +68,7 @@ public class GolemFirstStoneMod
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
+        ModMessages.register();
     }
 
     // Add the example block item to the building blocks tab

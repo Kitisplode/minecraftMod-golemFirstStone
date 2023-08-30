@@ -47,3 +47,9 @@
     + added Cobblestone Golems
     + some refinements in golem targetting
     + More Dandori????
+
+## 0.0.7
+    + some golems (mostly just ones that are smaller than the player) can now be thrown with the Dandori Throw item)
+    + added Plank Golems
+    + added Mossy Golems
+    + added rideable Grindstone Golems

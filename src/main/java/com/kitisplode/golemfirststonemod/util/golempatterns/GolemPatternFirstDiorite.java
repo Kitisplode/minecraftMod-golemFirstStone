@@ -2,8 +2,7 @@ package com.kitisplode.golemfirststonemod.util.golempatterns;
 
 import com.kitisplode.golemfirststonemod.block.ModBlocks;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstDiorite;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstStone;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.Entity;

@@ -8,12 +8,15 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.players.OldUsersConverter;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -24,8 +27,11 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
 
     private static final EntityDataAccessor<Boolean> DANDORI_STATE = SynchedEntityData.defineId(AbstractGolemDandoriFollower.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(AbstractGolemDandoriFollower.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Boolean> THROWN = SynchedEntityData.defineId(AbstractGolemDandoriFollower.class, EntityDataSerializers.BOOLEAN);
     protected static final double dandoriMoveRange = 6;
     protected static final double dandoriSeeRange = 36;
+    private boolean lastOnGround = false;
+    private float throwAngle = 0.0f;
 
     public AbstractGolemDandoriFollower(EntityType<? extends IronGolem> pEntityType, Level pLevel)
     {
@@ -43,6 +49,7 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
         super.defineSynchedData();
         if (!this.entityData.hasItem(DANDORI_STATE)) this.entityData.define(DANDORI_STATE, false);
         if (!this.entityData.hasItem(OWNER_UUID)) this.entityData.define(OWNER_UUID, Optional.empty());
+        if (!this.entityData.hasItem(THROWN)) this.entityData.define(THROWN, false);
     }
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
@@ -117,5 +124,45 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
             ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         }
         super.remove(pReason);
+    }
+
+    public boolean getThrown()
+    {
+        return this.entityData.get(THROWN);
+    }
+    public void setThrown(boolean pThrown)
+    {
+        this.entityData.set(THROWN, pThrown);
+    }
+    public float getThrowAngle()
+    {
+        return throwAngle;
+    }
+    @Override
+    public boolean hurt(@NotNull DamageSource source, float amount)
+    {
+        if (!isThrowable()) return super.hurt(source, amount);
+        if (source.is(DamageTypeTags.IS_FALL)) return false;
+        return super.hurt(source, amount);
+    }
+    @Override
+    public void tick()
+    {
+        super.tick();
+        if (this.isThrowable())
+        {
+            if (this.onGround() && !lastOnGround)
+            {
+                if (this.getThrown()) this.setThrown(false);
+            }
+            lastOnGround = this.onGround();
+            if (this.getThrown())
+            {
+                throwAngle -= 30.0f;
+            } else
+            {
+                throwAngle = 0.0f;
+            }
+        }
     }
 }

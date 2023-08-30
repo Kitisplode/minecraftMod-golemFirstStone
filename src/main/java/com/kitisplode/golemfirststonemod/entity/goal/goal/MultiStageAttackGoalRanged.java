@@ -28,6 +28,8 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
     private final int[] attackStages;
     private final int turnDuringState;
 
+    private boolean forced = false;
+
     public MultiStageAttackGoalRanged(IEntityWithDelayedMeleeAttack pMob, double pSpeed, boolean pauseWhenMobIdle, double pAttackRange, int[] pAttackStages, int pTurnDuringState)
     {
         super((PathfinderMob) pMob,pSpeed, pauseWhenMobIdle);
@@ -46,6 +48,10 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
     }
 
     public boolean canUse() {
+
+        if (forced) return true;
+        if (!this.mob.getPassengers().isEmpty()) return false;
+
         long i = this.mob.level().getGameTime();
         if (i - this.lastUpdateTime < 20L) {
             return false;
@@ -72,6 +78,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
     @Override
     public boolean canContinueToUse()
     {
+        if (forced) return true;
         if (attackState > 0) return true;
         if (targetOutVisionTimer >= targetOutVisionTime) return false;
         return super.canContinueToUse();
@@ -84,6 +91,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         targetOutVisionTimer = 0;
         attackTimer = 0;
         actor.setAttackState(0);
+        if (forced) attackTimer = adjustedTickDelay(attackStages[0]);
         targetX = null;
         targetY = null;
         targetZ = null;
@@ -99,6 +107,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         targetX = null;
         targetY = null;
         targetZ = null;
+        forced = false;
     }
 
     public boolean requiresUpdateEveryTick() {
@@ -112,6 +121,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         // If we're not attacking, try to attack if we can.
         if (attackTimer <= 0)
         {
+            if (forced) forced = false;
             if (target == null)
             {
                 return;
@@ -195,5 +205,11 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         if (attackRange <= 9)
             return (this.mob.getBbWidth() * 2.0F * this.mob.getBbWidth() * 2.0F + pAttackTarget.getBbWidth());
         return attackRange;
+    }
+
+    // Call this if we want to force the unit to attack right away (e.g. if it's being controlled by something else)
+    public void forceAttack()
+    {
+        forced = true;
     }
 }

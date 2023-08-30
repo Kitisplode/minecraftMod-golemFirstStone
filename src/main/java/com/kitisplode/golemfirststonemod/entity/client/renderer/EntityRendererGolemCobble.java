@@ -2,9 +2,7 @@ package com.kitisplode.golemfirststonemod.entity.client.renderer;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelGolemCobble;
-import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelGolemFirstStone;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemCobble;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemFirstStone;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemCobble;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

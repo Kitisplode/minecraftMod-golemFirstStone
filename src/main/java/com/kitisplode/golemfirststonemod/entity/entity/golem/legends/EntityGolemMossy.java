@@ -1,36 +1,35 @@
-package com.kitisplode.golemfirststonemod.entity.entity.golem;
+package com.kitisplode.golemfirststonemod.entity.entity.golem.legends;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
+import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
-import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.entity.goal.target.PassiveTargetGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.GolemRandomStrollInVillageGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MoveTowardsTargetGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.level.Level;
@@ -46,39 +45,40 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-
-public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
+public class EntityGolemMossy extends AbstractGolemDandoriFollower implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
 {
-    private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemFirstBrick.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemMossy.class, EntityDataSerializers.INT);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-    private static final int shieldHurtTime = 30;
-    private static final int shieldAbsorptionTime = 20 * 5;
-    private static final int shieldAbsorptionAmount = 0;
-    private static final float attackAOERange = 10.0f;
+    private static final int healRegenTime = 20 * 2;
+    private static final int healRegenAmount = 3;
+    private static final float attackAOERange = 4.0f;
     private static final float attackVerticalRange = 5.0f;
     private static final ArrayList<MobEffectInstance> shieldStatusEffects = new ArrayList<>();
-    private static final double dandoriMoveRange = 6;
-    private static final double dandoriSeeRange = 36;
 
-    public EntityGolemFirstBrick(EntityType<? extends IronGolem> pEntityType, Level pLevel)
+    public EntityGolemMossy(EntityType<? extends IronGolem> pEntityType, Level pLevel)
     {
         super(pEntityType, pLevel);
-        shieldStatusEffects.add(new MobEffectInstance(MobEffects.ABSORPTION, shieldAbsorptionTime, shieldAbsorptionAmount, false, true));
+        shieldStatusEffects.add(new MobEffectInstance(MobEffects.REGENERATION, healRegenTime, healRegenAmount, false, true));
     }
 
     public static AttributeSupplier.Builder createAttributes()
     {
         return Mob.createMobAttributes()
-            .add(Attributes.MAX_HEALTH, 500.0f)
-            .add(Attributes.MOVEMENT_SPEED, 0.25f)
-            .add(Attributes.ATTACK_DAMAGE, 30.0f)
-            .add(Attributes.KNOCKBACK_RESISTANCE, 1.0f)
-            .add(Attributes.FOLLOW_RANGE, 32.0f);
+                .add(Attributes.MAX_HEALTH, 50.0f)
+                .add(Attributes.MOVEMENT_SPEED, 0.35f)
+                .add(Attributes.ATTACK_DAMAGE, 5.0f)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.75f);
     }
 
     public static AttributeSupplier setAttributes()
     {
         return createAttributes().build();
+    }
+
+    @Override
+    public boolean isThrowable()
+    {
+        return true;
     }
 
     @Override
@@ -103,14 +103,14 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
     @Override
     public double getEyeY()
     {
-        return getY() + 2.2d;
+        return getY() + 0.5f;
     }
 
     @Override
     protected void registerGoals()
     {
-        this.goalSelector.addGoal(1, new DandoriFollowGoal(this, 1.0, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
-        this.goalSelector.addGoal(2, new MultiStageAttackGoalRanged(this, 1.0, true, Mth.square(attackAOERange), new int[]{70, 30, 25}));
+        this.goalSelector.addGoal(1, new DandoriFollowGoal(this, 1.2, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(2, new MultiStageAttackGoalRanged(this, 1.0, true, 4.0D, new int[]{60, 20}));
         this.goalSelector.addGoal(3, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
         this.goalSelector.addGoal(4, new GolemRandomStrollInVillageGoal(this, 0.8D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
@@ -127,45 +127,15 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
             if (entity == this) return false;
             // Check other golems, villagers, and players
             if ((entity instanceof IEntityDandoriFollower && ((IEntityDandoriFollower)entity).getOwner() == this.getOwner())
+                    || (entity instanceof EntityPawn pawn && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite && firstDiorite.getOwner() == this.getOwner())
                     || (entity instanceof Player && entity == this.getOwner())
                     || entity instanceof Merchant)
             {
-                // For entities currently being attacked:
-                LivingEntity targetCurrentAttacker = entity.getLastHurtByMob();
-                if (targetCurrentAttacker != null && targetCurrentAttacker.isAlive())
-                {
-                    return golemTarget_checkTargetAttacker(targetCurrentAttacker);
-                }
-
-                // For entities not currently being attacked but attacked recently.
-                LivingEntity targetLastAttacker = entity.getLastAttacker();
-                if (targetLastAttacker != null)
-                {
-                    entity.tick();
-                    if (Mth.abs(entity.getLastHurtByMobTimestamp() - entity.tickCount) < shieldHurtTime)
-                    {
-                        return golemTarget_checkTargetAttacker(targetLastAttacker);
-                    }
-                }
+                // See if the entity has less than its max HP.
+                return entity.getHealth() < entity.getMaxHealth();
             }
             return false;
         };
-    }
-
-    private boolean golemTarget_checkTargetAttacker(LivingEntity targetAttacker)
-    {
-        // If the golem was player made, skip potential targets that were attacked by the player.
-        if (targetAttacker instanceof Player && targetAttacker == this.getOwner())
-        {
-            return false;
-        }
-        // Skip other potential targets that are being attacked by golems (only happens accidentally or by other cleric golems)
-        if (targetAttacker instanceof IEntityDandoriFollower dandoriFollower)
-        {
-            if (dandoriFollower.getOwner() == this.getOwner()) return false;
-        }
-        // Otherwise, this is a good target.
-        return true;
     }
 
     public boolean canAttack(LivingEntity entity) {
@@ -175,13 +145,12 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
     @Override
     public boolean tryAttack()
     {
-        if (getAttackState() != 3) return false;
+        if (getAttackState() != 2) return false;
 
-        this.level().broadcastEntityEvent(this, (byte)4);
-        this.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 1.0F);
-        this.playSound(SoundEvents.BEACON_POWER_SELECT, 1.0F, 1.0F);
-        attackDust();
+        this.playSound(SoundEvents.WATER_AMBIENT, 1.0F, 1.0F);
+        this.playSound(SoundEvents.BOAT_PADDLE_LAND, 2.0F, 1.0F);
         attackAOE();
+        effectWhistle(level(), this, 10);
 
         // Check to see if the target is still viable.
         LivingEntity target = this.getTarget();
@@ -195,26 +164,6 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
         return true;
     }
 
-    private void attackDust()
-    {
-        float range = attackAOERange + 1;
-        AreaEffectCloud dust = new AreaEffectCloud(level(), getX(),getY(),getZ());
-        dust.setParticle(ParticleTypes.HAPPY_VILLAGER);
-        dust.setRadius(range);
-        dust.setDuration(1);
-        dust.setPos(getX(),getY(),getZ());
-        level().addFreshEntity(dust);
-
-        EntityEffectShieldFirstBrick shield = ModEntities.ENTITY_SHIELD_FIRST_BRICK.get().create(level());
-        if (shield != null)
-        {
-            shield.setPos(this.position());
-            shield.setLifeTime(20);
-            shield.setFullScale(range * 2.0f);
-            level().addFreshEntity(shield);
-        }
-    }
-
     private void attackAOE()
     {
         List<LivingEntity> targetList = level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(attackAOERange));
@@ -224,8 +173,19 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
             if (target == this) continue;
             // Do not shield targets that are monsters.
             if (target instanceof Enemy) continue;
-            // Do not shield targets that are players if we are not player created.
-            if (target instanceof Player && !isPlayerCreated()) continue;
+            if (target instanceof Player && target != this.getOwner()) continue;
+            // Do not shield dandori followers that are not owned by our owner.
+            if (target instanceof IEntityDandoriFollower dandoriFollower)
+            {
+                if (dandoriFollower.getOwner() != this.getOwner()) continue;
+                if (dandoriFollower instanceof EntityPawn pawn)
+                {
+                    if (pawn.getOwnerType() == EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
+                    {
+                        if (pawn.getOwner() != this.getOwner()) continue;
+                    }
+                }
+            }
             // Do not damage targets that are too far on the y axis.
             if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
 
@@ -240,25 +200,23 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
         }
     }
 
-    @Override
-    protected InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
-        ItemStack itemstack = pPlayer.getItemInHand(pHand);
-        if (!itemstack.is(Items.BRICKS)) {
-            return InteractionResult.PASS;
-        } else {
-            float f = this.getHealth();
-            this.heal(25.0F);
-            if (this.getHealth() == f) {
-                return InteractionResult.PASS;
-            } else {
-                float f1 = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
-                this.playSound(SoundEvents.IRON_GOLEM_REPAIR, 1.0F, f1);
-                if (!pPlayer.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-                return InteractionResult.sidedSuccess(this.level().isClientSide);
-            }
+    private void effectWhistle(Level world, LivingEntity user, int time)
+    {
+        EntityEffectCubeDandoriWhistle whistleEffect = ModEntities.ENTITY_EFFECT_CUBE_DANDORI_WHISTLE.get().create(world);
+        if (whistleEffect != null)
+        {
+            whistleEffect.setPos(user.position());
+            whistleEffect.setLifeTime(time);
+            whistleEffect.setFullScale(attackAOERange * 2.0f);
+            whistleEffect.setOwner(user);
+            world.addFreshEntity(whistleEffect);
         }
+    }
+
+    @Override
+    public boolean isPushable()
+    {
+        return getAttackState() == 0;
     }
 
     @Override
@@ -266,34 +224,30 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
     {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 0, event ->
         {
-            EntityGolemFirstBrick pGolem = event.getAnimatable();
+            EntityGolemMossy pGolem = event.getAnimatable();
             if (pGolem.getAttackState() > 0)
             {
-                switch (pGolem.getAttackState())
+                if (pGolem.getAttackState() == 1)
                 {
-                    case 1:
-                        event.getController().setAnimationSpeed(0.5);
-                        return event.setAndContinue(RawAnimation.begin().then("animation.first_brick.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
-                    case 2:
-                        event.getController().setAnimationSpeed(1.00);
-                        return event.setAndContinue(RawAnimation.begin().then("animation.first_brick.attack", Animation.LoopType.HOLD_ON_LAST_FRAME));
-                    default:
-                        event.getController().setAnimationSpeed(1.00);
-                        return event.setAndContinue(RawAnimation.begin().then("animation.first_brick.attack_end", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                    event.getController().setAnimationSpeed(1.00);
+                    return event.setAndContinue(RawAnimation.begin().then("animation.golem_mossy.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
                 }
+                event.getController().setAnimationSpeed(1.00);
+                return event.setAndContinue(RawAnimation.begin().then("animation.golem_mossy.attack", Animation.LoopType.HOLD_ON_LAST_FRAME));
             }
             else
             {
                 event.getController().setAnimationSpeed(1.00);
                 pGolem.setAttackState(0);
                 if (getDeltaMovement().horizontalDistanceSqr() > 0.001D || event.isMoving())
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.first_brick.walk"));
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_mossy.walk"));
             }
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.first_brick.idle"));
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_mossy.idle"));
         }));
     }
 
-    @Override public AnimatableInstanceCache getAnimatableInstanceCache()
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache()
     {
         return cache;
     }

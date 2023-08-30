@@ -2,6 +2,8 @@ package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.EntityVillagerDandori;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityCanAttackBlocks;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
@@ -54,7 +56,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public class EntityPawn extends IronGolem implements GeoEntity, IEntityDandoriFollower
+public class EntityPawn extends IronGolem implements GeoEntity, IEntityDandoriFollower, IEntityCanAttackBlocks
 {
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private static final EntityDataAccessor<Integer> OWNER_TYPE = SynchedEntityData.defineId(EntityPawn.class, EntityDataSerializers.INT);
@@ -110,6 +112,13 @@ public class EntityPawn extends IronGolem implements GeoEntity, IEntityDandoriFo
         if (this.getPawnType() == PAWN_TYPES.PIK_BLUE.ordinal()) return pAir;
         return pAir - 1;
     }
+
+    @Override
+    public boolean isThrowable()
+    {
+        return true;
+    }
+
 
     @Override
     protected void defineSynchedData()
@@ -261,6 +270,19 @@ public class EntityPawn extends IronGolem implements GeoEntity, IEntityDandoriFo
         return (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE) * multiplier;
     }
 
+    public void setBlockTarget(BlockPos pBlockPos)
+    {
+        blockTarget = pBlockPos;
+    }
+    public BlockPos getBlockTarget()
+    {
+        return blockTarget;
+    }
+    public boolean canTargetBlock(BlockPos bp)
+    {
+        return bsPredicate.test(level().getBlockState(bp));
+    }
+
     @Override
     protected void registerGoals()
     {
@@ -362,6 +384,8 @@ public class EntityPawn extends IronGolem implements GeoEntity, IEntityDandoriFo
                         bs.getBlock().onBlockStateChange(level(), this.blockTarget, bs, null);
                         level().removeBlock(this.blockTarget, false);
                         level().levelEvent(2001, this.blockTarget, Block.getId(level().getBlockState(this.blockTarget)));
+                        this.findNewTargetBlock();
+                        this.blockBreakProgress = 0;
                     }
                     else
                     {
@@ -389,6 +413,12 @@ public class EntityPawn extends IronGolem implements GeoEntity, IEntityDandoriFo
             }
             else thrownAngle = 0.0f;
         }
+    }
+
+    @Override
+    public float getThrowAngle()
+    {
+        return thrownAngle;
     }
 
     @Override
@@ -495,34 +525,6 @@ public class EntityPawn extends IronGolem implements GeoEntity, IEntityDandoriFo
         this.setYRot(ExtraMath.changeAngle(this.getYRot(), h, maxYawChange));
     }
 
-    private void findNewTargetBlock()
-    {
-        this.blockBreakProgress = 0;
-        BlockPos tempBp = this.blockTarget;
-        this.blockTarget = null;
-        for (int i = 0; i < 6; i++)
-        {
-            BlockPos bp = null;
-            if (i == 0) bp = tempBp.offset(1,0,0);
-            else if (i == 1) bp = tempBp.offset(-1,0,0);
-            else if (i == 2) bp = tempBp.offset(0,0,1);
-            else if (i == 3) bp = tempBp.offset(0,0,-1);
-            else if (i == 4) bp = tempBp.offset(0,1, 0);
-            else             bp = tempBp.offset(0,-1,0);
-            if (bp == null) continue;
-            if (bsPredicate.test(level().getBlockState(bp)))
-            {
-                if (this.blockTarget == null) this.blockTarget = bp;
-                else if (this.random.nextInt(100) < 75) this.blockTarget = bp;
-            }
-        }
-    }
-
-    public boolean canTargetBlock(BlockPos bp)
-    {
-        return bsPredicate.test(level().getBlockState(bp));
-    }
-
     public void handleEntityEvent(byte pId)
     {
         if (pId == IEntityDandoriFollower.ENTITY_EVENT_DANDORI_START) addDandoriParticles();
@@ -531,7 +533,7 @@ public class EntityPawn extends IronGolem implements GeoEntity, IEntityDandoriFo
     protected void addDandoriParticles()
     {
         level().addParticle(ParticleTypes.NOTE,
-                getX(), getY() + getBbHeight() / 2.0f, getZ(),
+                getX(), getY() + getBbHeight() * 1.5, getZ(),
                 0,1,0);
     }
 

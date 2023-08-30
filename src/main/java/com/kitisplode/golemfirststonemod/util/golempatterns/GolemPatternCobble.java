@@ -1,12 +1,10 @@
 package com.kitisplode.golemfirststonemod.util.golempatterns;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemCobble;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemCobble;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.SnowGolem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;

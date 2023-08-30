@@ -111,7 +111,7 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     @Inject(method = ("registerGoals"), at = @At("HEAD"))
     protected void registerGoals(CallbackInfo ci)
     {
-        this.goalSelector.addGoal(0, new DandoriFollowGoal(this, 1.0, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(0, new DandoriFollowGoal(this, 1.4, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
     }
 
     @ModifyVariable(method = ("handleEntityEvent"), at = @At("HEAD"), ordinal = 0)

@@ -1,6 +1,7 @@
 package com.kitisplode.golemfirststonemod.item.item;
 
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
 import com.kitisplode.golemfirststonemod.util.DataDandoriCount;
@@ -80,8 +81,7 @@ public class ItemDandoriThrow extends Item
         int thrown = dandoriThrow(world, user, strength, false, currentType);
         if (thrown > 0)
         {
-            user.playSound(SoundEvents.SNOWBALL_THROW, 0.5f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
-            user.playSound(ModSounds.ITEM_DANDORI_THROW.get(), 0.4f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.4f));
+            user.playSound(SoundEvents.SNOWBALL_THROW, 1.0f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
         }
         user.swing(user.getUsedItemHand());
     }
@@ -90,21 +90,26 @@ public class ItemDandoriThrow extends Item
     {
         TargetingConditions tp = TargetingConditions.forNonCombat().selector(
                 entity -> DataDandoriCount.entityIsOfType(currentType, entity)
-                        && ((EntityPawn)entity).getOwner() == user
-                        && (((EntityPawn)entity).getDandoriState() || forceDandori));
-        EntityPawn pawn = world.getNearestEntity(EntityPawn.class, tp, null, user.getX(),user.getY(),user.getZ(), user.getBoundingBox().inflate(dandoriRange));
+                        && entity instanceof IEntityDandoriFollower
+                        && ((IEntityDandoriFollower)entity).getOwner() == user
+                        && ((IEntityDandoriFollower)entity).isThrowable()
+                        && (((IEntityDandoriFollower)entity).getDandoriState() || forceDandori));
+        LivingEntity throwableGolem = world.getNearestEntity(LivingEntity.class, tp, null, user.getX(),user.getY(),user.getZ(), user.getBoundingBox().inflate(dandoriRange));
         int targetCount = 0;
-        if (pawn != null)
+        if (throwableGolem != null)
         {
+            IEntityDandoriFollower follower = (IEntityDandoriFollower) throwableGolem;
             targetCount++;
             if (!world.isClientSide())
             {
-                pawn.setPos(user.getX(), user.getEyeY(), user.getZ());
+                throwableGolem.setPos(user.getX(), user.getEyeY(), user.getZ());
                 Vec3 newVelocity = getUserLookAngle(user).normalize().scale(speed);
-                pawn.setDeltaMovement(user.getDeltaMovement().add(newVelocity));
-                pawn.setThrown(true);
+                throwableGolem.setDeltaMovement(user.getDeltaMovement().add(newVelocity));
+                follower.setThrown(true);
             }
-            pawn.setDandoriState(false);
+            if (follower instanceof EntityPawn)
+                user.playSound(ModSounds.ITEM_DANDORI_THROW.get(), 0.6f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.4f));
+            follower.setDandoriState(false);
         }
         return targetCount;
     }

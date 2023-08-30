@@ -33,8 +33,7 @@ public class EntityModelPawn extends GeoModel<EntityPawn>
 		CoreGeoBone whole = getAnimationProcessor().getBone("whole");
 		if (whole != null)
 		{
-//			EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
-			whole.setRotX(animatable.thrownAngle * Mth.DEG_TO_RAD);
+			whole.setRotX(animatable.getThrowAngle() * Mth.DEG_TO_RAD);
 		}
 	}
 }

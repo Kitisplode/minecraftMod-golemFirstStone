@@ -1,6 +1,8 @@
 package com.kitisplode.golemfirststonemod.item.item;
 
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityCanAttackBlocks;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
 import com.kitisplode.golemfirststonemod.util.DataDandoriCount;
@@ -9,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -72,16 +75,19 @@ public class ItemDandoriDig extends Item
     {
         TargetingConditions tp = TargetingConditions.forNonCombat().selector(
                 entity -> DataDandoriCount.entityIsOfType(currentType, entity)
-                        && ((EntityPawn)entity).getOwner() == user
-                        && (((EntityPawn)entity).getDandoriState() || forceDandori)
-                        && ((EntityPawn)entity).canTargetBlock(blockPos));
-        EntityPawn pawn = world.getNearestEntity(EntityPawn.class, tp, null, user.getX(),user.getY(),user.getZ(), user.getBoundingBox().inflate(dandoriRange));
+                        && entity instanceof IEntityDandoriFollower dandoriFollower
+                        && dandoriFollower.getOwner() == user
+                        && (dandoriFollower.getDandoriState() || forceDandori)
+                        && entity instanceof IEntityCanAttackBlocks blockAttacker
+                        && blockAttacker.canTargetBlock(blockPos));
+        LivingEntity golem = world.getNearestEntity(LivingEntity.class, tp, null, user.getX(),user.getY(),user.getZ(), user.getBoundingBox().inflate(dandoriRange));
         int targetCount = 0;
-        if (pawn != null)
+        if (golem != null)
         {
+            IEntityCanAttackBlocks blockAttacker = (IEntityCanAttackBlocks) golem;
             targetCount++;
-            pawn.blockTarget = blockPos;
-            pawn.setDandoriState(false);
+            blockAttacker.setBlockTarget(blockPos);
+            ((IEntityDandoriFollower)golem).setDandoriState(false);
         }
         return targetCount;
     }

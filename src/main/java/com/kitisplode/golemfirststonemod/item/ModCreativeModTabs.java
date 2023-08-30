@@ -35,8 +35,10 @@ public class ModCreativeModTabs
                         // Items
 //                        pOutput.accept(ModItems.ITEM_SPAWN_PAWN_FIRST_DIORITE.get());
 //                        pOutput.accept(ModItems.ITEM_SPAWN_VILLAGER_DANDORI.get());
-//                        pOutput.accept(ModItems.ITEM_DANDORI_CALL.get());
-//                        pOutput.accept(ModItems.ITEM_DANDORI_ATTACK.get());
+                        pOutput.accept(ModItems.ITEM_DANDORI_CALL.get());
+                        pOutput.accept(ModItems.ITEM_DANDORI_ATTACK.get());
+                        pOutput.accept(ModItems.ITEM_DANDORI_DIG.get());
+                        pOutput.accept(ModItems.ITEM_DANDORI_THROW.get());
 
                     })
                     .build());

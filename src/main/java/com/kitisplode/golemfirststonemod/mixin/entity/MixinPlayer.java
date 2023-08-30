@@ -33,6 +33,9 @@ public abstract class MixinPlayer extends LivingEntity implements IEntityWithDan
     private static final EntityDataAccessor<Integer> DANDORI_IRON = SynchedEntityData.defineId(MixinPlayer.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DANDORI_SNOW = SynchedEntityData.defineId(MixinPlayer.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DANDORI_COBBLE = SynchedEntityData.defineId(MixinPlayer.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DANDORI_PLANK = SynchedEntityData.defineId(MixinPlayer.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DANDORI_MOSSY = SynchedEntityData.defineId(MixinPlayer.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DANDORI_GRINDSTONE = SynchedEntityData.defineId(MixinPlayer.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DANDORI_FIRST_STONE = SynchedEntityData.defineId(MixinPlayer.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DANDORI_FIRST_OAK = SynchedEntityData.defineId(MixinPlayer.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DANDORI_FIRST_BRICK = SynchedEntityData.defineId(MixinPlayer.class, EntityDataSerializers.INT);
@@ -59,6 +62,9 @@ public abstract class MixinPlayer extends LivingEntity implements IEntityWithDan
         if (!this.entityData.hasItem(DANDORI_IRON)) this.entityData.define(DANDORI_IRON, 0);
         if (!this.entityData.hasItem(DANDORI_SNOW)) this.entityData.define(DANDORI_SNOW, 0);
         if (!this.entityData.hasItem(DANDORI_COBBLE)) this.entityData.define(DANDORI_COBBLE, 0);
+        if (!this.entityData.hasItem(DANDORI_PLANK)) this.entityData.define(DANDORI_PLANK, 0);
+        if (!this.entityData.hasItem(DANDORI_MOSSY)) this.entityData.define(DANDORI_MOSSY, 0);
+        if (!this.entityData.hasItem(DANDORI_GRINDSTONE)) this.entityData.define(DANDORI_GRINDSTONE, 0);
         if (!this.entityData.hasItem(DANDORI_FIRST_STONE)) this.entityData.define(DANDORI_FIRST_STONE, 0);
         if (!this.entityData.hasItem(DANDORI_FIRST_OAK)) this.entityData.define(DANDORI_FIRST_OAK, 0);
         if (!this.entityData.hasItem(DANDORI_FIRST_BRICK)) this.entityData.define(DANDORI_FIRST_BRICK, 0);
@@ -95,6 +101,9 @@ public abstract class MixinPlayer extends LivingEntity implements IEntityWithDan
         this.setTrackedInt(DANDORI_IRON, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.IRON));
         this.setTrackedInt(DANDORI_SNOW, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.SNOW));
         this.setTrackedInt(DANDORI_COBBLE, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.COBBLE));
+        this.setTrackedInt(DANDORI_PLANK, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.PLANK));
+        this.setTrackedInt(DANDORI_MOSSY, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.MOSSY));
+        this.setTrackedInt(DANDORI_GRINDSTONE, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.GRINDSTONE));
         this.setTrackedInt(DANDORI_FIRST_STONE, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.FIRST_STONE));
         this.setTrackedInt(DANDORI_FIRST_OAK, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.FIRST_OAK));
         this.setTrackedInt(DANDORI_FIRST_BRICK, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.FIRST_BRICK));
@@ -142,6 +151,18 @@ public abstract class MixinPlayer extends LivingEntity implements IEntityWithDan
     public int getDandoriCountCobble()
     {
         return this.entityData.get(DANDORI_COBBLE);
+    }
+    public int getDandoriCountPlank()
+    {
+        return this.entityData.get(DANDORI_PLANK);
+    }
+    public int getDandoriCountMossy()
+    {
+        return this.entityData.get(DANDORI_MOSSY);
+    }
+    public int getDandoriCountGrindstone()
+    {
+        return this.entityData.get(DANDORI_GRINDSTONE);
     }
     public int getDandoriCountFirstStone()
     {
