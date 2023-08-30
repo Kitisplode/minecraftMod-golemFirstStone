@@ -1,5 +1,6 @@
-package com.kitisplode.golemfirststonemod.entity.entity.golem;
+package com.kitisplode.golemfirststonemod.entity.entity.golem.legends;
 
+import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileAoEOwnerAware;

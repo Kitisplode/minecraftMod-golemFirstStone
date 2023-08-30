@@ -93,7 +93,7 @@ public class EntityProjectileAoEOwnerAware extends ArrowEntity
     protected void onBlockHit(BlockHitResult blockHitResult)
     {
         super.onBlockHit(blockHitResult);
-        attackAOE();
+        if (this.hasAoE) attackAOE();
         this.setNoGravity(false);
     }
 

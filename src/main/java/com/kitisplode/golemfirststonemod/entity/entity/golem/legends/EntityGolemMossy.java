@@ -1,7 +1,9 @@
-package com.kitisplode.golemfirststonemod.entity.entity.golem;
+package com.kitisplode.golemfirststonemod.entity.entity.golem.legends;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
@@ -126,7 +128,7 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
                     || entity instanceof MerchantEntity)
             {
                 // See if the entity has less than its max HP.
-                if (entity.getHealth() < entity.getMaxHealth()) return true;
+                return entity.getHealth() < entity.getMaxHealth();
             }
             return false;
         };
@@ -137,15 +139,11 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
     {
         if (getAttackState() != 2) return false;
 
-        if (getTarget() != null)
-        {
-            attackAOE();
-            effectAttack(getWorld(), this, 10);
+        attackAOE();
+        effectAttack(getWorld(), this, 10);
 
-            this.playSound(SoundEvents.BLOCK_WATER_AMBIENT, 1.0f, 1.0f);
-            this.playSound(SoundEvents.ENTITY_BOAT_PADDLE_WATER, 2.0f, 1.0f);
-            applyDamageEffects(this, getTarget());
-        }
+        this.playSound(SoundEvents.BLOCK_WATER_AMBIENT, 1.0f, 1.0f);
+        this.playSound(SoundEvents.ENTITY_BOAT_PADDLE_WATER, 2.0f, 1.0f);
 
         // Check to see if the target is still viable...
         LivingEntity target = this.getTarget();

@@ -1,21 +1,15 @@
 package com.kitisplode.golemfirststonemod.mixin.entity;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemGrindstone;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemGrindstone;
 import com.kitisplode.golemfirststonemod.networking.ModMessages;
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.input.Input;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.JumpingMount;
-import net.minecraft.stat.StatHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

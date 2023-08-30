@@ -10,6 +10,10 @@ import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFi
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstOak;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstStone;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemCobble;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemGrindstone;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemMossy;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemPlank;
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileAoEOwnerAware;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;

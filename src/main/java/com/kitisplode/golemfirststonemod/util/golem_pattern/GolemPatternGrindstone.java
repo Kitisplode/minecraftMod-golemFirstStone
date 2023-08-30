@@ -1,8 +1,7 @@
 package com.kitisplode.golemfirststonemod.util.golem_pattern;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemGrindstone;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemPlank;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemGrindstone;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.BlockPattern;

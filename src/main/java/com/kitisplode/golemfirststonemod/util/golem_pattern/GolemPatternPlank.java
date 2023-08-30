@@ -1,13 +1,14 @@
 package com.kitisplode.golemfirststonemod.util.golem_pattern;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemPlank;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemPlank;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.BlockPattern;
 import net.minecraft.block.pattern.BlockPatternBuilder;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.entity.Entity;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
@@ -18,7 +19,7 @@ import java.util.function.Predicate;
 public class GolemPatternPlank extends AbstractGolemPattern
 {
 	private static final Predicate<BlockState> buildingBlockPredicate = state -> state != null
-		&& (state.isOf(Blocks.OAK_PLANKS));
+		&& (state.isIn(BlockTags.PLANKS));
 
 	public GolemPatternPlank(Predicate<BlockState> pPredicate)
 	{

@@ -72,8 +72,7 @@ public class MultiStageAttackBlockGoalRanged extends MeleeAttackGoal
     public boolean shouldContinue()
     {
         if (attackState > 0) return true;
-        if (!this.attackBlockser.canTargetBlock(this.attackBlockser.getBlockTarget())) return false;
-        return true;
+        return this.attackBlockser.canTargetBlock(this.attackBlockser.getBlockTarget());
     }
 
     @Override
@@ -111,7 +110,7 @@ public class MultiStageAttackBlockGoalRanged extends MeleeAttackGoal
             }
             Vec3d targetCenter = targetPos.toCenterPos();
             double distanceToTarget = this.mob.squaredDistanceTo(targetCenter);
-            BlockHitResult ray = this.mob.getWorld().raycast(new RaycastContext(this.mob.getEyePos(), targetPos.toCenterPos(), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.ANY, this.mob));
+            BlockHitResult ray = this.mob.getWorld().raycast(new RaycastContext(this.mob.getEyePos(), targetCenter, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.ANY, this.mob));
             boolean canSeeTarget = !ray.getBlockPos().isWithinDistance(this.mob.getEyePos(), distanceToTarget - 1);
 //             Approach the target if we're not in attack range (can't beat them up without getting closer)
             if (distanceToTarget > attackRange || !canSeeTarget)

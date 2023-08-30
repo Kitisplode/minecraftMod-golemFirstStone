@@ -1,10 +1,8 @@
 package com.kitisplode.golemfirststonemod.entity.client.renderer;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelGolemCobble;
 import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelGolemMossy;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemCobble;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemMossy;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemMossy;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;

@@ -1,7 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem.first;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemCobble;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemCobble;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;

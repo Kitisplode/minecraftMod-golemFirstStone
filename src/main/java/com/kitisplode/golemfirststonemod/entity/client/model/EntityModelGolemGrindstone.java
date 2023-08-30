@@ -1,8 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.client.model;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemGrindstone;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemMossy;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemGrindstone;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import software.bernie.geckolib.constant.DataTickets;

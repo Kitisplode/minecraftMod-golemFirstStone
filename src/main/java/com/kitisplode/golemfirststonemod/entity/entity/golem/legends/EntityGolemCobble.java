@@ -1,16 +1,15 @@
-package com.kitisplode.golemfirststonemod.entity.entity.golem;
+package com.kitisplode.golemfirststonemod.entity.entity.golem.legends;
 
+import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityCanAttackBlocks;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackBlockGoalRanged;
-import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;

@@ -57,7 +57,7 @@ public class HudDandoriCount implements HudRenderCallback
         int firstOak = player.getDandoriCountFirstOak();
         int firstBrick = player.getDandoriCountFirstBrick();
         int firstDiorite = player.getDandoriCountFirstDiorite();
-        int golemTotal = iron + snow + cobble;
+        int golemTotal = iron + snow + cobble + plank + mossy + grindstone;
         int firstTotal = firstStone + firstOak + firstBrick + firstDiorite;
 
         DataDandoriCount.FOLLOWER_TYPE currentType = player.getDandoriCurrentType();

@@ -1,6 +1,6 @@
 package com.kitisplode.golemfirststonemod.networking.packet;
 
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityGolemGrindstone;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemGrindstone;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;

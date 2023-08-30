@@ -1,5 +1,7 @@
-package com.kitisplode.golemfirststonemod.entity.entity.golem;
+package com.kitisplode.golemfirststonemod.entity.entity.golem.legends;
 
+import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
@@ -79,10 +81,8 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
     protected void initDataTracker()
     {
         super.initDataTracker();
-        if (!this.dataTracker.containsKey(ATTACK_STATE))
-            this.dataTracker.startTracking(ATTACK_STATE, 0);
+        if (!this.dataTracker.containsKey(ATTACK_STATE)) this.dataTracker.startTracking(ATTACK_STATE, 0);
     }
-
     public int getAttackState()
     {
         return this.dataTracker.get(ATTACK_STATE);
@@ -103,7 +103,8 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
     }
 
     @Override
-    protected void initGoals() {
+    protected void initGoals()
+    {
         this.attackGoal = new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(16.0d), new int[]{65, 35, 20});
         this.goalSelector.add(1, new DandoriFollowGoal(this, 1.2, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
         this.goalSelector.add(2, this.attackGoal);
@@ -112,15 +113,13 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(8, new LookAroundGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this, new Class[0]));
-        this.targetSelector
-                .add(3, new ActiveTargetGoal(this, MobEntity.class, 5, false, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
+        this.targetSelector.add(3, new ActiveTargetGoal(this, MobEntity.class, 5, false, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
     }
 
     @Override
     public boolean tryAttack()
     {
         if (getAttackState() != 2) return false;
-
         return true;
     }
 
@@ -170,17 +169,11 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
         return getAttackState() == 0 || getAttackState() == 2;
     }
 
-
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand)
     {
-        if (this.hasPassengers()) {
-            return super.interactMob(player, hand);
-        }
-        if (this.getOwner() != player)
-        {
-            return super.interactMob(player, hand);
-        }
+        if (this.hasPassengers()) return super.interactMob(player, hand);
+        if (this.getOwner() != player) return super.interactMob(player, hand);
         this.putPlayerOnBack(player);
         return ActionResult.success(this.getWorld().isClient);
     }
@@ -202,7 +195,8 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
     }
 
     @Override
-    protected void tickControlled(PlayerEntity controllingPlayer, Vec3d movementInput) {
+    protected void tickControlled(PlayerEntity controllingPlayer, Vec3d movementInput)
+    {
         super.tickControlled(controllingPlayer, movementInput);
         if (this.isLogicalSideForUpdatingMovement())
         {
@@ -236,20 +230,19 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
     }
 
     @Override
-    protected Vec3d getControlledMovementInput(PlayerEntity controllingPlayer, Vec3d movementInput) {
+    protected Vec3d getControlledMovementInput(PlayerEntity controllingPlayer, Vec3d movementInput)
+    {
         float f = controllingPlayer.sidewaysSpeed;
         float g = controllingPlayer.forwardSpeed * 0.5f;
         return new Vec3d(f, 0.0f, g);
     }
 
     @Override
-    protected void updatePassengerPosition(Entity passenger, Entity.PositionUpdater positionUpdater) {
+    protected void updatePassengerPosition(Entity passenger, Entity.PositionUpdater positionUpdater)
+    {
         super.updatePassengerPosition(passenger, positionUpdater);
-            positionUpdater.accept(passenger, this.getX(), this.getY() + this.getMountedHeightOffset() + passenger.getHeightOffset(), this.getZ());
-            if (passenger instanceof LivingEntity livingPassenger)
-            {
-                livingPassenger.bodyYaw = this.bodyYaw;
-            }
+        positionUpdater.accept(passenger, this.getX(), this.getY() + this.getMountedHeightOffset() + passenger.getHeightOffset(), this.getZ());
+        if (passenger instanceof LivingEntity livingPassenger) livingPassenger.bodyYaw = this.bodyYaw;
     }
 
     @Override
