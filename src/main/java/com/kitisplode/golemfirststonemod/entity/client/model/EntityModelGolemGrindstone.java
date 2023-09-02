@@ -45,10 +45,13 @@ public class EntityModelGolemGrindstone extends GeoModel<EntityGolemGrindstone>
 			}
 		}
 
-		CoreGeoBone whole = getAnimationProcessor().getBone("whole");
-		if (whole != null)
+		if (animatable.getThrown())
 		{
-			whole.setRotX(animatable.getThrowAngle() * Mth.DEG_TO_RAD);
+			CoreGeoBone whole = getAnimationProcessor().getBone("whole");
+			if (whole != null)
+			{
+				whole.setRotX(animatable.getThrowAngle() * Mth.DEG_TO_RAD);
+			}
 		}
 	}
 }

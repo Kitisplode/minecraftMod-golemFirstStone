@@ -41,10 +41,13 @@ public class EntityModelGolemCobble extends GeoModel<EntityGolemCobble>
 			head.setRotY(Mth.clamp(entityData.netHeadYaw(), -20.0f, 20.0f) * Mth.DEG_TO_RAD);
 		}
 
-		CoreGeoBone whole = getAnimationProcessor().getBone("whole");
-		if (whole != null)
+		if (animatable.getThrown())
 		{
-			whole.setRotX(animatable.getThrowAngle() * Mth.DEG_TO_RAD);
+			CoreGeoBone whole = getAnimationProcessor().getBone("whole");
+			if (whole != null)
+			{
+				whole.setRotX(animatable.getThrowAngle() * Mth.DEG_TO_RAD);
+			}
 		}
 	}
 }

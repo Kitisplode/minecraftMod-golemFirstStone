@@ -21,6 +21,7 @@ public class HudDandoriCount implements IGuiOverlay
     private static final ResourceLocation GOLEM_PLANK = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_plank.png");
     private static final ResourceLocation GOLEM_MOSSY = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_mossy.png");
     private static final ResourceLocation GOLEM_GRINDSTONE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_grindstone.png");
+    private static final ResourceLocation GOLEM_TUFF = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_tuff.png");
     private static final ResourceLocation FIRST_STONE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_stone.png");
     private static final ResourceLocation FIRST_OAK = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_oak.png");
     private static final ResourceLocation FIRST_BRICK = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_brick.png");
@@ -53,16 +54,20 @@ public class HudDandoriCount implements IGuiOverlay
         int plank = player.getDandoriCountPlank();
         int mossy = player.getDandoriCountMossy();
         int grindstone = player.getDandoriCountGrindstone();
+        int tuff = player.getDandoriCountTuff();
         int firstStone = player.getDandoriCountFirstStone();
         int firstOak = player.getDandoriCountFirstOak();
         int firstBrick = player.getDandoriCountFirstBrick();
         int firstDiorite = player.getDandoriCountFirstDiorite();
-        int golemTotal = iron + snow + cobble + plank + mossy + grindstone;
+        int golemTotalMelee = iron + cobble + grindstone;
+        int golemTotalRanged = snow + plank;
+        int golemTotalMisc = mossy + tuff;
         int firstTotal = firstStone + firstOak + firstBrick + firstDiorite;
 
         DataDandoriCount.FOLLOWER_TYPE currentType = player.getDandoriCurrentType();
 
-        int draw_x = width / 2 - 90;
+        final int start_x = width / 2 - 90;
+        int draw_x = start_x;
         int draw_y = (int)((float)height * 0.85f);
         int color = 0xff_ffffff;
 
@@ -107,17 +112,9 @@ public class HudDandoriCount implements IGuiOverlay
         }
 
         if (firstTotal > 0) draw_y -= 18;
-        draw_x = width / 2 - 90;
-        // Golems
-        if (snow > 0)
-        {
-            guiGraphics.blit(GOLEM_SNOW, draw_x,draw_y, 0,0, 8,8, 8,8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.SNOW)
-                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            guiGraphics.drawString(mc.font, "x " + snow, draw_x,draw_y, color, true);
-            draw_x += 20;
-        }
+        draw_x = start_x;
+
+        // Melee Golems
         if (iron > 0)
         {
             guiGraphics.blit(GOLEM_IRON, draw_x,draw_y, 0,0, 8,8, 8,8);
@@ -136,24 +133,6 @@ public class HudDandoriCount implements IGuiOverlay
             guiGraphics.drawString(mc.font, "x " + cobble, draw_x,draw_y, color, true);
             draw_x += 20;
         }
-        if (plank > 0)
-        {
-            guiGraphics.blit(GOLEM_PLANK, draw_x,draw_y, 0,0, 8,8, 8,8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.PLANK)
-                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            guiGraphics.drawString(mc.font, "x " + plank, draw_x,draw_y, color, true);
-            draw_x += 20;
-        }
-        if (mossy > 0)
-        {
-            guiGraphics.blit(GOLEM_MOSSY, draw_x-4,draw_y, 0,0, 16,8, 16,8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.MOSSY)
-                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            guiGraphics.drawString(mc.font, "x " + mossy, draw_x,draw_y, color, true);
-            draw_x += 20;
-        }
         if (grindstone > 0)
         {
             guiGraphics.blit(GOLEM_GRINDSTONE, draw_x-4,draw_y, 0,0, 16,8, 16,8);
@@ -164,8 +143,55 @@ public class HudDandoriCount implements IGuiOverlay
             draw_x += 20;
         }
 
-        if (golemTotal > 0) draw_y -= 12;
-        draw_x = width / 2 - 90;
+        if (golemTotalMelee > 0) draw_y -= 18;
+        draw_x = start_x;
+
+        // Ranged Golems
+        if (snow > 0)
+        {
+            guiGraphics.blit(GOLEM_SNOW, draw_x,draw_y, 0,0, 8,8, 8,8);
+            if (currentType == DataDandoriCount.FOLLOWER_TYPE.SNOW)
+                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
+            draw_x += 12;
+            guiGraphics.drawString(mc.font, "x " + snow, draw_x,draw_y, color, true);
+            draw_x += 20;
+        }
+        if (plank > 0)
+        {
+            guiGraphics.blit(GOLEM_PLANK, draw_x,draw_y, 0,0, 8,8, 8,8);
+            if (currentType == DataDandoriCount.FOLLOWER_TYPE.PLANK)
+                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
+            draw_x += 12;
+            guiGraphics.drawString(mc.font, "x " + plank, draw_x,draw_y, color, true);
+            draw_x += 20;
+        }
+
+        if (golemTotalRanged > 0) draw_y -= 18;
+        draw_x = start_x;
+
+        // Misc Golems
+        if (mossy > 0)
+        {
+            guiGraphics.blit(GOLEM_MOSSY, draw_x-4,draw_y, 0,0, 16,8, 16,8);
+            if (currentType == DataDandoriCount.FOLLOWER_TYPE.MOSSY)
+                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
+            draw_x += 12;
+            guiGraphics.drawString(mc.font, "x " + mossy, draw_x,draw_y, color, true);
+            draw_x += 20;
+        }
+        if (mossy > 0)
+        {
+            guiGraphics.blit(GOLEM_TUFF, draw_x,draw_y, 0,0, 8,8, 8,8);
+            if (currentType == DataDandoriCount.FOLLOWER_TYPE.TUFF)
+                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
+            draw_x += 12;
+            guiGraphics.drawString(mc.font, "x " + tuff, draw_x,draw_y, color, true);
+            draw_x += 20;
+        }
+
+        if (golemTotalMisc > 0) draw_y -= 18;
+        draw_x = start_x;
+
         // Pawns
         if (red > 0)
         {

@@ -45,10 +45,13 @@ public class EntityModelGolemMossy extends GeoModel<EntityGolemMossy>
 			}
 		}
 
-		CoreGeoBone whole = getAnimationProcessor().getBone("whole");
-		if (whole != null)
+		if (animatable.getThrown())
 		{
-			whole.setRotX(animatable.getThrowAngle() * Mth.DEG_TO_RAD);
+			CoreGeoBone whole = getAnimationProcessor().getBone("whole");
+			if (whole != null)
+			{
+				whole.setRotX(animatable.getThrowAngle() * Mth.DEG_TO_RAD);
+			}
 		}
 	}
 }

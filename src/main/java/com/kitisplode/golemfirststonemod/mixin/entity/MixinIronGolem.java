@@ -2,7 +2,7 @@ package com.kitisplode.golemfirststonemod.mixin.entity;
 
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
-import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -108,7 +108,7 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     @Inject(method = ("registerGoals"), at = @At("HEAD"))
     protected void registerGoals(CallbackInfo ci)
     {
-        this.goalSelector.addGoal(0, new DandoriFollowGoal(this, 1.4, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(0, new DandoriFollowHardGoal(this, 1.4, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
     }
 
     @ModifyVariable(method = ("handleEntityEvent"), at = @At("HEAD"), ordinal = 0)

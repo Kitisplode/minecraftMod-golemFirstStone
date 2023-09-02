@@ -31,6 +31,7 @@
   "entity.golemfirststonemod.entity_golem_plank": "Plank Golem",
   "entity.golemfirststonemod.entity_golem_mossy": "Mossy Golem",
   "entity.golemfirststonemod.entity_golem_grindstone": "Grindstone Golem",
+  "entity.golemfirststonemod.entity_golem_tuff": "Tuff Golem",
   "entity.golemfirststonemod.entity_pawn_terracotta": "Terracota Pawn",
   "entity.golemfirststonemod.entity_villager_dandori": "Dandori Acolyte",
 
@@ -61,5 +62,5 @@
   "sound.golemfirststonemod.item_dandori_throw": "Golem pawn thrown",
   "sound.golemfirststonemod.entity_villager_dandori_pluck": "Golem pawn attention",
 
-  "creativetab.golemfirststonemod": "Golem Dandori: Legends"
+  "creativetab.golemfirststonemod": "Golem Dandori"
 }
