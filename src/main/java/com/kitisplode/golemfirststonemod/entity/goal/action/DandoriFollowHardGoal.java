@@ -1,4 +1,4 @@
-package com.kitisplode.golemfirststonemod.entity.goal.goal;
+package com.kitisplode.golemfirststonemod.entity.goal.action;
 
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import net.minecraft.entity.LivingEntity;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
-public class DandoriFollowGoal extends Goal
+public class DandoriFollowHardGoal extends Goal
 {
     private static final TargetPredicate TEMPTING_ENTITY_PREDICATE = TargetPredicate.createNonAttackable().setBaseMaxDistance(10.0);
     private final TargetPredicate predicate;
@@ -25,7 +25,7 @@ public class DandoriFollowGoal extends Goal
     private final Ingredient food;
     private final double moveRange;
 
-    public DandoriFollowGoal(PathAwareEntity entity, double pSpeed, Ingredient food, double pRange, double pSeeRange)
+    public DandoriFollowHardGoal(PathAwareEntity entity, double pSpeed, Ingredient food, double pRange, double pSeeRange)
     {
         this.mob = entity;
         pik = (IEntityDandoriFollower) entity;
@@ -39,6 +39,7 @@ public class DandoriFollowGoal extends Goal
     @Override
     public boolean canStart()
     {
+        if (this.mob.isSleeping()) return false;
         // Dandori only things that are in dandori mode.
         if (!pik.getDandoriState()) return false;
         // Get the nearest player that we should follow.

@@ -6,8 +6,8 @@ import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
-import com.kitisplode.golemfirststonemod.entity.goal.goal.DandoriFollowGoal;
-import com.kitisplode.golemfirststonemod.entity.goal.goal.MultiStageAttackGoalRanged;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.entity.goal.target.PassiveTargetGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.entity.AreaEffectCloudEntity;
@@ -101,7 +101,7 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
 
 	@Override
 	protected void initGoals() {
-		this.goalSelector.add(1, new DandoriFollowGoal(this, 1.4, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
+		this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.4, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
 		this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(attackAOERange), new int[]{70, 30, 25}, 0));
 		this.goalSelector.add(3, new WanderNearTargetGoal(this, 0.8, 32.0F));
 		this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.8));

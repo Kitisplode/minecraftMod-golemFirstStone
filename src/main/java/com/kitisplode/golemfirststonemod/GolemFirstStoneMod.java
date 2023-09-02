@@ -8,6 +8,7 @@ import com.kitisplode.golemfirststonemod.item.ModItems;
 import com.kitisplode.golemfirststonemod.networking.ModMessages;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
 import com.kitisplode.golemfirststonemod.structure.ModStructures;
+import com.kitisplode.golemfirststonemod.villager.ModPOIs;
 import com.kitisplode.golemfirststonemod.villager.ModVillagers;
 import net.fabricmc.api.ModInitializer;
 
@@ -30,6 +31,7 @@ public class GolemFirstStoneMod implements ModInitializer {
 		ModEntities.registerModEntities();
 		ModSounds.registerModSounds();
 
+		ModPOIs.registerModPOIs();
 		ModVillagers.registerModVillagers();
 		ModVillagers.registerModTrades();
 

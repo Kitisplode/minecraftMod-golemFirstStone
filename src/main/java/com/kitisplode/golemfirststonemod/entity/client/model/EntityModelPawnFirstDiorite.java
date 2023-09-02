@@ -30,10 +30,13 @@ public class EntityModelPawnFirstDiorite extends GeoModel<EntityPawn>
 	@Override
 	public void setCustomAnimations(EntityPawn animatable, long instanceId, AnimationState<EntityPawn> animationState)
 	{
-		CoreGeoBone whole = getAnimationProcessor().getBone("whole");
-		if (whole != null)
+		if (animatable.getThrown())
 		{
-			whole.setRotX(animatable.getThrowAngle() * MathHelper.RADIANS_PER_DEGREE);
+			CoreGeoBone whole = getAnimationProcessor().getBone("whole");
+			if (whole != null)
+			{
+				whole.setRotX(animatable.getThrowAngle() * MathHelper.RADIANS_PER_DEGREE);
+			}
 		}
 	}
 }

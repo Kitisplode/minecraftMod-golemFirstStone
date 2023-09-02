@@ -43,10 +43,14 @@ public class EntityModelGolemGrindstone extends GeoModel<EntityGolemGrindstone>
 				head.setRotY(MathHelper.clamp(entityData.netHeadYaw(), -20.0f, 20.0f) * MathHelper.RADIANS_PER_DEGREE);
 			}
 		}
-		CoreGeoBone whole = getAnimationProcessor().getBone("whole");
-		if (whole != null)
+
+		if (animatable.getThrown())
 		{
-			whole.setRotX(animatable.getThrowAngle() * MathHelper.RADIANS_PER_DEGREE);
+			CoreGeoBone whole = getAnimationProcessor().getBone("whole");
+			if (whole != null)
+			{
+				whole.setRotX(animatable.getThrowAngle() * MathHelper.RADIANS_PER_DEGREE);
+			}
 		}
 	}
 }

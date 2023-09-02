@@ -47,6 +47,7 @@ public abstract class MixinCarvedPumpkinBlock extends HorizontalFacingBlock
             patternList.add(new GolemPatternPlank(spawnBlocKPredicate));
             patternList.add(new GolemPatternMossy(spawnBlocKPredicate));
             patternList.add(new GolemPatternGrindstone(spawnBlocKPredicate));
+            patternList.add(new GolemPatternTuff(spawnBlocKPredicate));
         }
         trySpawnGolem(pWorld, pPos, pPlayer);
     }

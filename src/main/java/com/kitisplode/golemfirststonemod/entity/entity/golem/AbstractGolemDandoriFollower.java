@@ -2,6 +2,7 @@ package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
+import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -13,6 +14,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.ServerConfigHandler;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -186,5 +189,17 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
             ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         }
         super.remove(reason);
+    }
+
+    protected void lookAtPos(Vec3d position, float maxYawChange, float maxPitchChange)
+    {
+        double f = position.getY() - this.getEyeY();
+        double d = position.getX() - this.getX();
+        double e = position.getZ() - this.getZ();
+        double g = Math.sqrt(d * d + e * e);
+        float h = (float)(MathHelper.atan2(e, d) * 57.2957763671875) - 90.0f;
+        float i = (float)(-(MathHelper.atan2(f, g) * 57.2957763671875));
+        this.setPitch(ExtraMath.changeAngle(this.getPitch(), i, maxPitchChange));
+        this.setYaw(ExtraMath.changeAngle(this.getYaw(), h, maxYawChange));
     }
 }

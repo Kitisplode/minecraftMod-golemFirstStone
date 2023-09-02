@@ -22,6 +22,7 @@ public class HudDandoriCount implements HudRenderCallback
     private static final Identifier GOLEM_PLANK = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_plank.png");
     private static final Identifier GOLEM_MOSSY = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_mossy.png");
     private static final Identifier GOLEM_GRINDSTONE = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_grindstone.png");
+    private static final Identifier GOLEM_TUFF = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_tuff.png");
     private static final Identifier FIRST_STONE = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_stone.png");
     private static final Identifier FIRST_OAK = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_oak.png");
     private static final Identifier FIRST_BRICK = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_brick.png");
@@ -53,18 +54,22 @@ public class HudDandoriCount implements HudRenderCallback
         int plank = player.getDandoriCountPlank();
         int mossy = player.getDandoriCountMossy();
         int grindstone = player.getDandoriCountGrindstone();
+        int tuff = player.getDandoriCountTuff();
         int firstStone = player.getDandoriCountFirstStone();
         int firstOak = player.getDandoriCountFirstOak();
         int firstBrick = player.getDandoriCountFirstBrick();
         int firstDiorite = player.getDandoriCountFirstDiorite();
-        int golemTotal = iron + snow + cobble + plank + mossy + grindstone;
+        int golemTotalMelee = iron + cobble + grindstone;
+        int golemTotalRanged = snow + plank;
+        int golemTotalMisc = mossy + tuff;
         int firstTotal = firstStone + firstOak + firstBrick + firstDiorite;
 
         DataDandoriCount.FOLLOWER_TYPE currentType = player.getDandoriCurrentType();
 
         TextRenderer tr = client.textRenderer;
 
-        int draw_x = width / 2 - 90;
+        final int start_x = width / 2 - 90;
+        int draw_x = start_x;
         int draw_y = (int)((float)height * 0.85f);
         int color = 0xffffffff;
 
@@ -109,17 +114,10 @@ public class HudDandoriCount implements HudRenderCallback
         }
 
         if (firstTotal > 0) draw_y -= 18;
-        draw_x = width / 2 - 90;
-        // Golems
-        if (snow > 0)
-        {
-            drawContext.drawTexture(GOLEM_SNOW, draw_x, draw_y, 0, 0, 8, 8, 8, 8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.SNOW)
-                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            drawContext.drawText(tr, "x " + snow, draw_x, draw_y, color, true);
-            draw_x += 20;
-        }
+        draw_x = start_x;
+        // Melee golems
+
+
         if (iron > 0)
         {
             drawContext.drawTexture(GOLEM_IRON, draw_x, draw_y, 0, 0, 8, 8, 8, 8);
@@ -138,24 +136,6 @@ public class HudDandoriCount implements HudRenderCallback
             drawContext.drawText(tr, "x " + cobble, draw_x, draw_y, color, true);
             draw_x += 20;
         }
-        if (plank > 0)
-        {
-            drawContext.drawTexture(GOLEM_PLANK, draw_x, draw_y, 0, 0, 8, 8, 8, 8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.PLANK)
-                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            drawContext.drawText(tr, "x " + plank, draw_x, draw_y, color, true);
-            draw_x += 20;
-        }
-        if (mossy > 0)
-        {
-            drawContext.drawTexture(GOLEM_MOSSY, draw_x-4, draw_y, 0, 0, 16, 8, 16, 8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.MOSSY)
-                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            drawContext.drawText(tr, "x " + mossy, draw_x, draw_y, color, true);
-            draw_x += 20;
-        }
         if (grindstone > 0)
         {
             drawContext.drawTexture(GOLEM_GRINDSTONE, draw_x-4, draw_y, 0, 0, 16, 8, 16, 8);
@@ -166,8 +146,54 @@ public class HudDandoriCount implements HudRenderCallback
             draw_x += 20;
         }
 
-        if (golemTotal > 0) draw_y -= 12;
-        draw_x = width / 2 - 90;
+        if (golemTotalMelee > 0) draw_y -= 12;
+        draw_x = start_x;
+
+        // Ranged golems
+        if (snow > 0)
+        {
+            drawContext.drawTexture(GOLEM_SNOW, draw_x, draw_y, 0, 0, 8, 8, 8, 8);
+            if (currentType == DataDandoriCount.FOLLOWER_TYPE.SNOW)
+                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
+            draw_x += 12;
+            drawContext.drawText(tr, "x " + snow, draw_x, draw_y, color, true);
+            draw_x += 20;
+        }
+        if (plank > 0)
+        {
+            drawContext.drawTexture(GOLEM_PLANK, draw_x, draw_y, 0, 0, 8, 8, 8, 8);
+            if (currentType == DataDandoriCount.FOLLOWER_TYPE.PLANK)
+                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
+            draw_x += 12;
+            drawContext.drawText(tr, "x " + plank, draw_x, draw_y, color, true);
+            draw_x += 20;
+        }
+
+        if (golemTotalRanged > 0) draw_y -= 12;
+        draw_x = start_x;
+
+        // Misc golems
+        if (mossy > 0)
+        {
+            drawContext.drawTexture(GOLEM_MOSSY, draw_x-4, draw_y, 0, 0, 16, 8, 16, 8);
+            if (currentType == DataDandoriCount.FOLLOWER_TYPE.MOSSY)
+                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
+            draw_x += 12;
+            drawContext.drawText(tr, "x " + mossy, draw_x, draw_y, color, true);
+            draw_x += 20;
+        }
+        if (tuff > 0)
+        {
+            drawContext.drawTexture(GOLEM_TUFF, draw_x, draw_y, 0, 0, 8, 8, 8, 8);
+            if (currentType == DataDandoriCount.FOLLOWER_TYPE.TUFF)
+                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
+            draw_x += 12;
+            drawContext.drawText(tr, "x " + tuff, draw_x, draw_y, color, true);
+            draw_x += 20;
+        }
+
+        if (golemTotalMisc > 0) draw_y -= 12;
+        draw_x = start_x;
         // Piks
         if (red > 0)
         {

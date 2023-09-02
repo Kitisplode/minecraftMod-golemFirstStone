@@ -14,6 +14,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolem
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemGrindstone;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemMossy;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemPlank;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.vote.EntityGolemTuff;
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileAoEOwnerAware;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -103,6 +104,12 @@ public class ModEntities
                     .dimensions(EntityDimensions.fixed(1.0f, 1.0f))
                     .build()
     );
+    public static final EntityType<EntityGolemTuff> ENTITY_GOLEM_TUFF = Registry.register(
+            Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_golem_tuff"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityGolemTuff::new)
+                    .dimensions(EntityDimensions.fixed(1.0f, 1.0f))
+                    .build()
+    );
 
     public static final EntityType<EntityPawn> ENTITY_PAWN_TERRACOTTA = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_pawn_terracotta"),
@@ -130,6 +137,7 @@ public class ModEntities
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_PLANK, EntityGolemPlank.setAttributes());
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_MOSSY, EntityGolemMossy.setAttributes());
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_GRINDSTONE, EntityGolemGrindstone.setAttributes());
+        FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_TUFF, EntityGolemTuff.setAttributes());
     }
 
     public static void registerModEntitiesRenderers()
@@ -148,5 +156,6 @@ public class ModEntities
         EntityRendererRegistry.register(ENTITY_GOLEM_PLANK, EntityRendererGolemPlank::new);
         EntityRendererRegistry.register(ENTITY_GOLEM_MOSSY, EntityRendererGolemMossy::new);
         EntityRendererRegistry.register(ENTITY_GOLEM_GRINDSTONE, EntityRendererGolemGrindstone::new);
+        EntityRendererRegistry.register(ENTITY_GOLEM_TUFF, EntityRendererGolemTuff::new);
     }
 }
