@@ -5,6 +5,7 @@ import com.kitisplode.golemfirststonemod.entity.client.renderer.*;
 import com.kitisplode.golemfirststonemod.entity.entity.EntityVillagerDandori;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
+import com.kitisplode.golemfirststonemod.entity.entity.effect.EntitySoundRepeated;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.*;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
@@ -55,12 +56,6 @@ public class ModEntities
                     .dimensions(EntityDimensions.fixed(2.5f, 4.0f))
                     .build()
     );
-    public static final EntityType<EntityEffectShieldFirstBrick> ENTITY_SHIELD_FIRST_BRICK = Registry.register(
-            Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_shield_first_brick"),
-            FabricEntityTypeBuilder.<EntityEffectShieldFirstBrick>create(SpawnGroup.MISC, EntityEffectShieldFirstBrick::new)
-                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f))
-                    .build()
-    );
     public static final EntityType<EntityGolemFirstDiorite> ENTITY_GOLEM_FIRST_DIORITE = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_golem_first_diorite"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityGolemFirstDiorite::new)
@@ -71,12 +66,6 @@ public class ModEntities
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_pawn_first_diorite"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityPawn::new)
                     .dimensions(EntityDimensions.fixed(0.8f, 1.0f))
-                    .build()
-    );
-    public static final EntityType<EntityEffectCubeDandoriWhistle> ENTITY_EFFECT_CUBE_DANDORI_WHISTLE = Registry.register(
-            Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_effect_cube_dandori_whistle"),
-            FabricEntityTypeBuilder.<EntityEffectCubeDandoriWhistle>create(SpawnGroup.MISC, EntityEffectCubeDandoriWhistle::new)
-                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f))
                     .build()
     );
 
@@ -124,6 +113,26 @@ public class ModEntities
                     .build()
     );
 
+
+    public static final EntityType<EntitySoundRepeated> ENTITY_SOUND_REPEATED = Registry.register(
+            Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_sound_repeated"),
+            FabricEntityTypeBuilder.<EntitySoundRepeated>create(SpawnGroup.MISC, EntitySoundRepeated::new)
+                    .build()
+    );
+
+    public static final EntityType<EntityEffectShieldFirstBrick> ENTITY_SHIELD_FIRST_BRICK = Registry.register(
+            Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_shield_first_brick"),
+            FabricEntityTypeBuilder.<EntityEffectShieldFirstBrick>create(SpawnGroup.MISC, EntityEffectShieldFirstBrick::new)
+                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f))
+                    .build()
+    );
+    public static final EntityType<EntityEffectCubeDandoriWhistle> ENTITY_EFFECT_CUBE_DANDORI_WHISTLE = Registry.register(
+            Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_effect_cube_dandori_whistle"),
+            FabricEntityTypeBuilder.<EntityEffectCubeDandoriWhistle>create(SpawnGroup.MISC, EntityEffectCubeDandoriWhistle::new)
+                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f))
+                    .build()
+    );
+
     public static void registerModEntities()
     {
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_FIRST_STONE, EntityGolemFirstStone.setAttributes());
@@ -157,5 +166,7 @@ public class ModEntities
         EntityRendererRegistry.register(ENTITY_GOLEM_MOSSY, EntityRendererGolemMossy::new);
         EntityRendererRegistry.register(ENTITY_GOLEM_GRINDSTONE, EntityRendererGolemGrindstone::new);
         EntityRendererRegistry.register(ENTITY_GOLEM_TUFF, EntityRendererGolemTuff::new);
+
+        EntityRendererRegistry.register(ENTITY_SOUND_REPEATED, EntityRendererSoundRepeated::new);
     }
 }

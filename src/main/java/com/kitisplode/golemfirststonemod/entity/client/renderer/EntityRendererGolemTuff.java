@@ -26,7 +26,7 @@ public class EntityRendererGolemTuff extends GeoEntityRenderer<EntityGolemTuff>
 	public EntityRendererGolemTuff(EntityRendererFactory.Context renderManager)
 	{
 		super(renderManager, new EntityModelGolemTuff());
-		this.shadowRadius = 0.8f;
+		this.shadowRadius = 0.4f;
 		this.heldItemRenderer = renderManager.getHeldItemRenderer();
 	}
 

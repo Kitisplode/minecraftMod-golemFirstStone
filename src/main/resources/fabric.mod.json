@@ -2,8 +2,8 @@
 	"schemaVersion": 1,
 	"id": "golemfirststonemod",
 	"version": "${version}",
-	"name": "Golem Dandori: Legends",
-	"description": "Adds some golems from Minecraft spinoffs to Java Minecraft.",
+	"name": "Golem Dandori",
+	"description": "Adds some golems from Minecraft Spinoffs and Mob Votes to Java Minecraft.",
 	"authors": [
 		"Kitisplode"
 	],

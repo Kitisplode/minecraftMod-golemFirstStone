@@ -14,7 +14,7 @@ public class EntityRendererGolemMossy extends GeoEntityRenderer<EntityGolemMossy
 	public EntityRendererGolemMossy(EntityRendererFactory.Context renderManager)
 	{
 		super(renderManager, new EntityModelGolemMossy());
-		this.shadowRadius = 0.8f;
+		this.shadowRadius = 0.4f;
 	}
 
 	@Override

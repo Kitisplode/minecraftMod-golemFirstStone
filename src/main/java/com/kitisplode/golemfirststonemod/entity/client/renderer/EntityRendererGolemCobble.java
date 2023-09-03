@@ -14,7 +14,7 @@ public class EntityRendererGolemCobble extends GeoEntityRenderer<EntityGolemCobb
 	public EntityRendererGolemCobble(EntityRendererFactory.Context renderManager)
 	{
 		super(renderManager, new EntityModelGolemCobble());
-		this.shadowRadius = 0.8f;
+		this.shadowRadius = 0.4f;
 	}
 
 	@Override

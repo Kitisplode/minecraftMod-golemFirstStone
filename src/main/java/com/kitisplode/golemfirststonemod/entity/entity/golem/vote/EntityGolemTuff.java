@@ -1,6 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem.vote;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
+import com.kitisplode.golemfirststonemod.entity.entity.effect.EntitySoundRepeated;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
@@ -64,15 +65,15 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
     {
         super(pEntityType, pLevel);
         this.setCanPickUpLoot(true);
+        this.setStepHeight(0.9f);
     }
 
     public static DefaultAttributeContainer.Builder setAttributes()
     {
         return GolemEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 35.0f)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25f)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.5f)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.5f)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.20f)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.25f)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 24);
     }
 
@@ -105,11 +106,31 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
     {
         this.sleepAnimationTimer = sleepStartTime;
         this.setSleepStatus(1);
+        EntitySoundRepeated sound = new EntitySoundRepeated(this.getWorld(), this.getSoundCategory());
+        sound.setPosition(this.getPos());
+        sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 0, 0.25f, 3.6f);
+        sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 3, 0.25f, 3.0f);
+        sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 7, 0.25f, 2.6f);
+        sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 12, 0.25f, 2.2f);
+        sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 18, 0.25f, 1.8f);
+        sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 24, 0.25f, 1.4f);
+        sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 30, 0.25f, 1.0f);
+        this.getWorld().spawnEntity(sound);
     }
     public void endSleep()
     {
         this.sleepAnimationTimer = sleepEndTime;
         this.setSleepStatus(3);
+        EntitySoundRepeated sound = new EntitySoundRepeated(this.getWorld(), this.getSoundCategory());
+        sound.setPosition(this.getPos());
+        sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 0, 0.25f, 1.0f);
+        sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 3, 0.25f, 1.4f);
+        sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 7, 0.25f, 1.8f);
+        sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 12, 0.25f, 2.2f);
+        sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 18, 0.25f, 2.6f);
+        sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 24, 0.25f, 3.0f);
+        sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 30, 0.25f, 3.6f);
+        this.getWorld().spawnEntity(sound);
     }
 
     @Override
@@ -132,7 +153,7 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new PickupItemGoal(this, 1.0));
-        this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.2, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.4, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
         this.goalSelector.add(2, new FleeEntityGoal<HostileEntity>(this, HostileEntity.class, 16.0f, 0.5, 1.0));
         this.goalSelector.add(2, new EscapeDangerGoal(this, 1.0));
         this.goalSelector.add(3, new DelayedCalmDownGoal(this, 200, 60 * 5));
@@ -214,6 +235,8 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
             this.updateDropChances(EquipmentSlot.MAINHAND);
             this.sendPickup(item, itemStack.getCount());
             item.discard();
+
+            soundPickup();
         }
     }
 
@@ -225,33 +248,50 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
             return ActionResult.SUCCESS;
         }
         if (isSleeping()) return ActionResult.PASS;
-        ItemStack itemStack = player.getStackInHand(hand);
-        ItemStack itemStack2 = this.getStackInHand(Hand.MAIN_HAND);
-        if (!itemStack2.isEmpty() && hand == Hand.MAIN_HAND && itemStack.isEmpty())
+        ItemStack golemItem = player.getStackInHand(hand);
+        ItemStack playerItem = this.getStackInHand(Hand.MAIN_HAND);
+        if (!playerItem.isEmpty() && hand == Hand.MAIN_HAND && golemItem.isEmpty())
         {
+            soundPickup();
+
             this.playSound(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 1.0f, 1.5f);
             this.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
-            player.giveItemStack(itemStack2);
+            player.giveItemStack(playerItem);
             return ActionResult.SUCCESS;
         }
-        else if (itemStack2.isEmpty() && hand == Hand.MAIN_HAND && !itemStack.isEmpty())
+        else if (playerItem.isEmpty() && hand == Hand.MAIN_HAND && !golemItem.isEmpty())
         {
-            this.playSound(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 1.0f, 1.5f);
-            this.equipStack(EquipmentSlot.MAINHAND, itemStack.copyWithCount(1));
+            EntitySoundRepeated sound = new EntitySoundRepeated(this.getWorld(), this.getSoundCategory());
+            sound.setPosition(this.getPos());
+            sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 0, 0.25f, 3.0f);
+            sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 3, 0.25f, 1.5f);
+            this.getWorld().spawnEntity(sound);
+
+            this.equipStack(EquipmentSlot.MAINHAND, golemItem.copyWithCount(1));
             this.updateDropChances(EquipmentSlot.MAINHAND);
-            this.decrementStackUnlessInCreative(player, itemStack);
+            this.decrementStackUnlessInCreative(player, golemItem);
             return ActionResult.SUCCESS;
         }
-        else if (!itemStack2.isEmpty() && hand == Hand.MAIN_HAND && !itemStack.isEmpty())
+        else if (!playerItem.isEmpty() && hand == Hand.MAIN_HAND && !golemItem.isEmpty())
         {
-            this.playSound(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 1.0f, 1.5f);
-            player.giveItemStack(itemStack2);
-            this.equipStack(EquipmentSlot.MAINHAND, itemStack.copyWithCount(1));
+            soundPickup();
+
+            player.giveItemStack(playerItem);
+            this.equipStack(EquipmentSlot.MAINHAND, golemItem.copyWithCount(1));
             this.updateDropChances(EquipmentSlot.MAINHAND);
-            this.decrementStackUnlessInCreative(player, itemStack);
+            this.decrementStackUnlessInCreative(player, golemItem);
             return ActionResult.SUCCESS;
         }
         return super.interactMob(player, hand);
+    }
+
+    private void soundPickup()
+    {
+        EntitySoundRepeated sound = new EntitySoundRepeated(this.getWorld(), this.getSoundCategory());
+        sound.setPosition(this.getPos());
+        sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 0, 0.25f, 2.0f);
+        sound.addSoundNode(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 3, 0.25f, 3.0f);
+        this.getWorld().spawnEntity(sound);
     }
 
     private void decrementStackUnlessInCreative(PlayerEntity player, ItemStack stack) {
@@ -493,12 +533,11 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
             this.mob.getNavigation().stop();
             this.mob.getMoveControl().moveTo(this.mob.getX(), this.mob.getY(), this.mob.getZ(), 0.0);
             this.turnAwayFromWalls();
-            this.sleepTimer = this.mob.random.nextBetween(this.maxCalmDownTime, this.maxCalmDownTime * 10);
+            this.sleepTimer = this.mob.random.nextBetween(this.maxSleepTime, this.maxSleepTime * 10);
         }
 
         @Override
         public void stop() {
-            GolemFirstStoneMod.LOGGER.info("stop sleeping");
             this.timer = this.mob.random.nextBetween(this.maxCalmDownTime, this.maxCalmDownTime * 2);
             if (this.mob.getSleepStatus() != 3) this.mob.endSleep();
             this.mob.wantsToSleep = false;

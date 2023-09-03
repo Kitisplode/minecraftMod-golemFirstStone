@@ -14,7 +14,7 @@ public class EntityRendererGolemPlank extends GeoEntityRenderer<EntityGolemPlank
 	public EntityRendererGolemPlank(EntityRendererFactory.Context renderManager)
 	{
 		super(renderManager, new EntityModelGolemPlank());
-		this.shadowRadius = 0.8f;
+		this.shadowRadius = 0.4f;
 	}
 
 	@Override

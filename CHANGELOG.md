@@ -51,3 +51,6 @@
     + added Mossy Golems
     + added rideable Grindstone Golems
     + removed dandori secret caves (they might have been causing issues with world generation sometimes). they'll return some day...
+
+## 0.0.8
+    + added Tuff Golems

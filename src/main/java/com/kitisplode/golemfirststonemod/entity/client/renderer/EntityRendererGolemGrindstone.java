@@ -14,7 +14,7 @@ public class EntityRendererGolemGrindstone extends GeoEntityRenderer<EntityGolem
 	public EntityRendererGolemGrindstone(EntityRendererFactory.Context renderManager)
 	{
 		super(renderManager, new EntityModelGolemGrindstone());
-		this.shadowRadius = 0.8f;
+		this.shadowRadius = 0.4f;
 	}
 
 	@Override

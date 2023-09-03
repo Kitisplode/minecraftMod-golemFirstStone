@@ -190,16 +190,4 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
         }
         super.remove(reason);
     }
-
-    protected void lookAtPos(Vec3d position, float maxYawChange, float maxPitchChange)
-    {
-        double f = position.getY() - this.getEyeY();
-        double d = position.getX() - this.getX();
-        double e = position.getZ() - this.getZ();
-        double g = Math.sqrt(d * d + e * e);
-        float h = (float)(MathHelper.atan2(e, d) * 57.2957763671875) - 90.0f;
-        float i = (float)(-(MathHelper.atan2(f, g) * 57.2957763671875));
-        this.setPitch(ExtraMath.changeAngle(this.getPitch(), i, maxPitchChange));
-        this.setYaw(ExtraMath.changeAngle(this.getYaw(), h, maxYawChange));
-    }
 }
