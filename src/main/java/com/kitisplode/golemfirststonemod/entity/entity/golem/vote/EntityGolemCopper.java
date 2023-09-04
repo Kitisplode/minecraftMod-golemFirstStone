@@ -333,6 +333,12 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         controllerRegistrar.add(new AnimationController<>(this, "controller", 0, event ->
         {
             EntityGolemCopper pGolem = event.getAnimatable();
+            int oxidation = pGolem.getOxidation();
+            if (oxidation == 3)
+            {
+                event.getController().setAnimationSpeed(0.00);
+                return null;
+            }
             if (pGolem.getAttackState() > 0)
             {
                 if (pGolem.getAttackState() == 1)
@@ -353,7 +359,6 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
                 pGolem.setAttackState(0);
                 if (getVelocity().horizontalLengthSquared() > 0.001D || event.isMoving())
                 {
-                    int oxidation = pGolem.getOxidation();
                     if (oxidation == 0)
                     {
                         event.getController().setAnimationSpeed(1.00);
