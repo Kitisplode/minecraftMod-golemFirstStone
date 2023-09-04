@@ -91,11 +91,6 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
             setOwnerUuid(newOwner.getUuid());
         }
     }
-    @Override
-    public boolean isOwner(LivingEntity entity)
-    {
-        return entity.getUuid() == this.getOwnerUuid();
-    }
     @Nullable
     protected UUID getOwnerUuid() {
         return this.dataTracker.get(OWNER_UUID).orElse(null);
@@ -189,5 +184,10 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
             ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         }
         super.remove(reason);
+    }
+
+    public boolean isImmobile()
+    {
+        return super.isImmobile();
     }
 }

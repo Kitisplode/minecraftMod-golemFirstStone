@@ -39,7 +39,7 @@ public class DandoriFollowHardGoal extends Goal
     @Override
     public boolean canStart()
     {
-        if (this.mob.isSleeping()) return false;
+        if (this.mob.isSleeping() || this.pik.isImmobile()) return false;
         // Dandori only things that are in dandori mode.
         if (!pik.getDandoriState()) return false;
         // Get the nearest player that we should follow.

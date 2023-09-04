@@ -160,6 +160,7 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
     @Override
     public void setBlockTarget(BlockPos pBlockPos)
     {
+        if (pBlockPos != null && pBlockPos.getY() <= this.getWorld().getBottomY()) return;
         blockTarget = pBlockPos;
     }
     @Override

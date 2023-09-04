@@ -16,7 +16,7 @@ public interface IEntityDandoriFollower
 
     public void setOwner(LivingEntity newOwner);
 
-    public boolean isOwner(LivingEntity entity);
+    public boolean isImmobile();
 
     default boolean isThrowable()
     {
@@ -37,4 +37,6 @@ public interface IEntityDandoriFollower
     {
         return 0.0f;
     }
+
+
 }

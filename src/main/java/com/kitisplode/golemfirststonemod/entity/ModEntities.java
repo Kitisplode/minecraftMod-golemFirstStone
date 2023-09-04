@@ -15,6 +15,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolem
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemGrindstone;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemMossy;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemPlank;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.vote.EntityGolemCopper;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.vote.EntityGolemTuff;
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileAoEOwnerAware;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -93,9 +94,16 @@ public class ModEntities
                     .dimensions(EntityDimensions.fixed(1.0f, 1.0f))
                     .build()
     );
+
     public static final EntityType<EntityGolemTuff> ENTITY_GOLEM_TUFF = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_golem_tuff"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityGolemTuff::new)
+                    .dimensions(EntityDimensions.fixed(1.0f, 1.0f))
+                    .build()
+    );
+    public static final EntityType<EntityGolemCopper> ENTITY_GOLEM_COPPER = Registry.register(
+            Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_golem_copper"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityGolemCopper::new)
                     .dimensions(EntityDimensions.fixed(1.0f, 1.0f))
                     .build()
     );
@@ -147,6 +155,7 @@ public class ModEntities
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_MOSSY, EntityGolemMossy.setAttributes());
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_GRINDSTONE, EntityGolemGrindstone.setAttributes());
         FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_TUFF, EntityGolemTuff.setAttributes());
+        FabricDefaultAttributeRegistry.register(ENTITY_GOLEM_COPPER, EntityGolemCopper.setAttributes());
     }
 
     public static void registerModEntitiesRenderers()
@@ -166,6 +175,7 @@ public class ModEntities
         EntityRendererRegistry.register(ENTITY_GOLEM_MOSSY, EntityRendererGolemMossy::new);
         EntityRendererRegistry.register(ENTITY_GOLEM_GRINDSTONE, EntityRendererGolemGrindstone::new);
         EntityRendererRegistry.register(ENTITY_GOLEM_TUFF, EntityRendererGolemTuff::new);
+        EntityRendererRegistry.register(ENTITY_GOLEM_COPPER, EntityRendererGolemCopper::new);
 
         EntityRendererRegistry.register(ENTITY_SOUND_REPEATED, EntityRendererSoundRepeated::new);
     }

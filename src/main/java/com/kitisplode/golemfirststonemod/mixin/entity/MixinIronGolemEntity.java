@@ -96,9 +96,9 @@ public abstract class MixinIronGolemEntity extends GolemEntity implements Angera
     }
 
     @Override
-    public boolean isOwner(LivingEntity entity)
+    public boolean isImmobile()
     {
-        return entity.getUuid() == this.getOwnerUuid();
+        return super.isImmobile();
     }
 
     @Nullable

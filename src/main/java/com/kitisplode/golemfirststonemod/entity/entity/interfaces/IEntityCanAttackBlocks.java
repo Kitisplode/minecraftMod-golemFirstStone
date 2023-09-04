@@ -1,5 +1,6 @@
 package com.kitisplode.golemfirststonemod.entity.entity.interfaces;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 
@@ -31,5 +32,10 @@ public interface IEntityCanAttackBlocks
                 if (this.getBlockTarget() == null || this.getRandom().nextInt(100) < 75) this.setBlockTarget(bp);
             }
         }
+    }
+
+    default int blockPreference(BlockState bs)
+    {
+        return 100;
     }
 }

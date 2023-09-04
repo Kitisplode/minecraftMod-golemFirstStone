@@ -11,8 +11,10 @@ import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.util.ParticleUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.control.MoveControl;
@@ -36,12 +38,14 @@ import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.ServerConfigHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 import org.jetbrains.annotations.Nullable;
@@ -192,10 +196,11 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
         }
         owner = newOwner;
     }
+
     @Override
-    public boolean isOwner(LivingEntity entity)
+    public boolean isImmobile()
     {
-        return entity.getUuid() == this.getOwnerUuid();
+        return super.isImmobile();
     }
     @Nullable
     private UUID getOwnerUuid() {
@@ -471,6 +476,16 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
     {
         if (this.getPawnType() == PAWN_TYPES.PIK_PINK.ordinal()) return false;
         return super.doesRenderOnFire();
+    }
+
+    public void onStruckByLightning(ServerWorld world, LightningEntity lightning)
+    {
+        if (this.getPawnType() == PAWN_TYPES.PIK_YELLOW.ordinal())
+        {
+            lightning.setCosmetic(true);
+            return;
+        }
+        super.onStruckByLightning(world, lightning);
     }
 
     @Override

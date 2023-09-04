@@ -8,14 +8,14 @@ import com.kitisplode.golemfirststonemod.block.golem_head.BlockHeadStone;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ExperienceDroppingBlock;
+import net.minecraft.block.*;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.resource.featuretoggle.FeatureFlag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.intprovider.ConstantIntProvider;
 
@@ -34,6 +34,12 @@ public class ModBlocks
     public static final Block BLOCK_VILLAGER_OAK = registerBlock("block_villager_oak", new Block(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS)));
     public static final Block BLOCK_VILLAGER_BRICK = registerBlock("block_villager_brick", new Block(FabricBlockSettings.copyOf(Blocks.MUD_BRICKS)));
     public static final Block BLOCK_VILLAGER_DIORITE = registerBlock("block_villager_diorite", new Block(FabricBlockSettings.copyOf(Blocks.DIORITE)));
+
+    public static final Block BLOCK_BUTTON_COPPER = registerBlock("block_button_copper", createCopperButtonBlock());
+
+    public static ButtonBlock createCopperButtonBlock() {
+        return new ButtonBlock(AbstractBlock.Settings.create().noCollision().strength(0.5f).pistonBehavior(PistonBehavior.DESTROY), BlockSetType.STONE, 10, false);
+    }
 
     private static Block registerBlock(String pName, Block pBlock)
     {
