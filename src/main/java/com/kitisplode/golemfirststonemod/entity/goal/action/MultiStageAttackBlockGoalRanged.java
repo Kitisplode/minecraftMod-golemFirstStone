@@ -66,7 +66,6 @@ public class MultiStageAttackBlockGoalRanged extends MeleeAttackGoal
         }
         this.path = this.mob.getNavigation().createPath(targetPos, 0);
         return this.path != null;
-
     }
 
     @Override
@@ -118,7 +117,7 @@ public class MultiStageAttackBlockGoalRanged extends MeleeAttackGoal
             {
                 if (path == null)
                 {
-                    mob.getNavigation().createPath(targetPos, 1);
+                    path = this.mob.getNavigation().createPath(targetPos, 1);
                     if (path != null) mob.getNavigation().moveTo(path, speed);
                 }
             }

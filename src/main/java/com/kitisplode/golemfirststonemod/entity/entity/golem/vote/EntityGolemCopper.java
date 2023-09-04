@@ -202,13 +202,12 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         if (oxidation < 3 && !this.getWaxed())
         {
             if (this.random.nextInt(100) < oxidationChance)
-            {
                 this.nextOxidationCounter++;
-                if (this.nextOxidationCounter >= nextOxidationCount)
-                {
-                    this.nextOxidationCounter = 0;
-                    this.setOxidation(oxidation + 1);
-                }
+            if (this.isInWaterOrRain()) this.nextOxidationCounter++;
+            if (this.nextOxidationCounter >= nextOxidationCount)
+            {
+                this.nextOxidationCounter = 0;
+                this.setOxidation(oxidation + 1);
             }
         }
 
@@ -315,13 +314,13 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
     }
     public void thunderHit(ServerLevel pLevel, LightningBolt pLightning)
     {
+        pLightning.setVisualOnly(true);
         if (!this.getWaxed())
         {
             if (this.getOxidation() == 0) return;
             this.setOxidation(0);
             ParticleUtils.spawnParticlesOnBlockFaces(this.level(), this.getOnPos(), ParticleTypes.SCRAPE, UniformInt.of(3, 5));
         }
-        pLightning.setVisualOnly(true);
     }
 
     public ResourceLocation getTexture()
