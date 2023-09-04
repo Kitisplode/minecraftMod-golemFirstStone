@@ -16,17 +16,17 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.ParticleUtils;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
@@ -189,11 +189,6 @@ public class EntityPawn extends IronGolem implements GeoEntity, IEntityDandoriFo
         }
         owner = entity;
     }
-    @Override
-    public boolean isOwner(LivingEntity entity)
-    {
-        return entity.getUUID() == this.getOwnerUUID();
-    }
     public boolean getDandoriState()
     {
         return this.entityData.get(DANDORI_STATE);
@@ -281,6 +276,12 @@ public class EntityPawn extends IronGolem implements GeoEntity, IEntityDandoriFo
     public boolean canTargetBlock(BlockPos bp)
     {
         return bsPredicate.test(level().getBlockState(bp));
+    }
+
+    @Override
+    public boolean isImmobile()
+    {
+        return super.isImmobile();
     }
 
     @Override
@@ -450,6 +451,15 @@ public class EntityPawn extends IronGolem implements GeoEntity, IEntityDandoriFo
         if (source.is(DamageTypeTags.IS_FIRE) && this.getPawnType() == PAWN_TYPES.PIK_PINK.ordinal()) return false;
         if (source.is(DamageTypeTags.IS_LIGHTNING) && this.getPawnType() == PAWN_TYPES.PIK_YELLOW.ordinal()) return false;
         return super.hurt(source, amount);
+    }
+    public void thunderHit(@NotNull ServerLevel pLevel, @NotNull LightningBolt pLightning)
+    {
+        if (this.getPawnType() == PAWN_TYPES.PIK_YELLOW.ordinal())
+        {
+            pLightning.setVisualOnly(true);
+            return;
+        }
+        super.thunderHit(pLevel, pLightning);
     }
 
     protected void dealDamage(LivingEntity pLivingEntity)

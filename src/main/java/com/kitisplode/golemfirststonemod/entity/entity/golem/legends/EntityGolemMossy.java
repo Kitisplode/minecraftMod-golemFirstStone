@@ -23,10 +23,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.GolemRandomStrollInVillageGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.MoveTowardsTargetGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
@@ -111,8 +108,9 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
     {
         this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.2, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
         this.goalSelector.addGoal(2, new MultiStageAttackGoalRanged(this, 1.0, true, 4.0D, new int[]{60, 20}));
-        this.goalSelector.addGoal(3, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
-        this.goalSelector.addGoal(4, new GolemRandomStrollInVillageGoal(this, 0.8D));
+        this.goalSelector.addGoal(3, new PanicGoal(this, 1.0D));
+        this.goalSelector.addGoal(4, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
+        this.goalSelector.addGoal(5, new GolemRandomStrollInVillageGoal(this, 0.8D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new PassiveTargetGoal<>(this, Player.class, 5, false, false, golemTarget()));

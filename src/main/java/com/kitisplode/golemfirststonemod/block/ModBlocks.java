@@ -13,8 +13,11 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -52,7 +55,13 @@ public class ModBlocks
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.MUD_BRICKS)));
     public static final RegistryObject<Block> BLOCK_VILLAGER_DIORITE = registerBlock("block_villager_diorite",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.DIORITE)));
+    public static final RegistryObject<Block> BLOCK_BUTTON_COPPER = registerBlock("block_button_copper",
+            ModBlocks::copperButton);
 
+
+    private static ButtonBlock copperButton() {
+        return new ButtonBlock(BlockBehaviour.Properties.of().noCollission().strength(0.5F).pushReaction(PushReaction.DESTROY), BlockSetType.STONE, 10, false);
+    }
 
     // Private helper method to register each of the blocks' corresponding block items.
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block)

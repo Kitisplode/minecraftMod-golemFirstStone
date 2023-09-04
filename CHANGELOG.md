@@ -57,3 +57,5 @@
 
 # 0.0.8
     + added Tuff Golems
+    + added Copper Golems
+    + added Copper Buttons (for Copper Golems to press!)

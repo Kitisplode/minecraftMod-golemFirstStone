@@ -1,6 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem.vote;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
+import com.kitisplode.golemfirststonemod.entity.entity.effect.EntitySoundRepeated;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemMossy;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
@@ -11,10 +12,12 @@ import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoal
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -53,6 +56,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 public class EntityGolemTuff extends AbstractGolemDandoriFollower implements GeoEntity, IEntityDandoriFollower
@@ -69,8 +73,8 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
 
     static final Predicate<ItemEntity> ALLOWED_ITEMS = itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive();
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/golem_tuff.png");
-    private static final ResourceLocation TEXTURE_SLEEPING = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/golem_tuff_sleep.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/tuff/golem_tuff.png");
+    private static final ResourceLocation TEXTURE_SLEEPING = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/tuff/golem_tuff_sleep.png");
 
     public EntityGolemTuff(EntityType<? extends IronGolem> pEntityType, Level pLevel)
     {
@@ -105,6 +109,16 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
         super.defineSynchedData();
         if (!this.entityData.hasItem(SLEEP_STATUS)) this.entityData.define(SLEEP_STATUS, 0);
     }
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        int sleepStatus = this.getSleepStatus();
+        if (sleepStatus == 0 || sleepStatus == 3) pCompound.putInt("SleepStatus", 0);
+        if (sleepStatus == 1 || sleepStatus == 2) pCompound.putInt("SleepStatus", 2);
+    }
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);;
+        if (pCompound.contains("SleepStatus")) this.setSleepStatus(pCompound.getInt("SleepStatus"));
+    }
     public int getSleepStatus()
     {
         return this.entityData.get(SLEEP_STATUS);
@@ -122,11 +136,31 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
     {
         this.sleepAnimationTimer = sleepStartTime;
         this.setSleepStatus(1);
+        EntitySoundRepeated sound = new EntitySoundRepeated(this.level(), this.getSoundSource());
+        sound.setPos(this.position());
+        sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 0, 0.1f, 3.6f);
+        sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 3, 0.1f, 3.0f);
+        sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 7, 0.1f, 2.6f);
+        sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 12, 0.1f, 2.2f);
+        sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 18, 0.1f, 1.8f);
+        sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 24, 0.1f, 1.4f);
+        sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 30, 0.1f, 1.0f);
+        this.level().addFreshEntity(sound);
     }
     public void endSleep()
     {
         this.sleepAnimationTimer = sleepEndTime;
         this.setSleepStatus(3);
+        EntitySoundRepeated sound = new EntitySoundRepeated(this.level(), this.getSoundSource());
+        sound.setPos(this.position());
+        sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 0, 0.1f, 1.0f);
+        sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 3, 0.1f, 1.4f);
+        sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 7, 0.1f, 1.8f);
+        sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 12, 0.1f, 2.2f);
+        sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 18, 0.1f, 2.6f);
+        sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 24, 0.1f, 3.0f);
+        sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 30, 0.1f, 3.6f);
+        this.level().addFreshEntity(sound);
     }
 
     @Override
@@ -135,7 +169,7 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
         return getY() + 0.6f;
     }
     @Override
-    public int getHeadRotSpeed()
+    public int getMaxHeadYRot()
     {
         return 20;
     }
@@ -145,7 +179,7 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
     {
         this.goalSelector.addGoal(0, new PickupItemGoal(this, 1.0));
         this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.4, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
-        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Monster.class, 16, 0.5D, 1));
+        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Monster.class, 16, 0.9D, 1));
         this.goalSelector.addGoal(2, new PanicGoal(this, 1.0D));
         this.goalSelector.addGoal(3, new DelayedCalmDownGoal(this, 200, 60 * 5));
         this.goalSelector.addGoal(4, new MoveToFavoredPosition(this, 0.8D, 12));
@@ -231,14 +265,19 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
         ItemStack itemStack2 = this.getItemInHand(InteractionHand.MAIN_HAND);
         if (!itemStack2.isEmpty() && pHand == InteractionHand.MAIN_HAND && itemStack.isEmpty())
         {
-            this.playSound(SoundEvents.IRON_GOLEM_REPAIR, 1.0f, 1.5f);
+            soundPickup();
             this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             pPlayer.addItem(itemStack2);
             return InteractionResult.SUCCESS;
         }
         else if (itemStack2.isEmpty() && pHand == InteractionHand.MAIN_HAND && !itemStack.isEmpty())
         {
-            this.playSound(SoundEvents.IRON_GOLEM_REPAIR, 1.0f, 1.5f);
+            EntitySoundRepeated sound = new EntitySoundRepeated(this.level(), this.getSoundSource());
+            sound.setPos(this.position());
+            sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 0, 0.25f, 3.0f);
+            sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 3, 0.25f, 1.5f);
+            this.level().addFreshEntity(sound);
+
             this.setItemInHand(InteractionHand.MAIN_HAND, itemStack.copyWithCount(1));
             this.setGuaranteedDrop(EquipmentSlot.MAINHAND);
             this.removeInteractionItem(pPlayer, itemStack);
@@ -246,7 +285,7 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
         }
         else if (!itemStack2.isEmpty() && pHand == InteractionHand.MAIN_HAND && !itemStack.isEmpty())
         {
-            this.playSound(SoundEvents.IRON_GOLEM_REPAIR, 1.0f, 1.5f);
+            soundPickup();
             pPlayer.addItem(itemStack2);
             this.setItemInHand(InteractionHand.MAIN_HAND, itemStack.copyWithCount(1));
             this.setGuaranteedDrop(EquipmentSlot.MAINHAND);
@@ -259,6 +298,15 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
         if (!pPlayer.getAbilities().instabuild) {
             pStack.shrink(1);
         }
+    }
+
+    private void soundPickup()
+    {
+        EntitySoundRepeated sound = new EntitySoundRepeated(this.level(), this.getSoundSource());
+        sound.setPos(this.position());
+        sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 0, 0.25f, 2.0f);
+        sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 3, 0.25f, 3.0f);
+        this.level().addFreshEntity(sound);
     }
 
     public ResourceLocation getTexture()

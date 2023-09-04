@@ -32,6 +32,7 @@ public class ModCreativeModTabs
                         pOutput.accept(ModBlocks.BLOCK_VILLAGER_OAK.get());
                         pOutput.accept(ModBlocks.BLOCK_VILLAGER_BRICK.get());
                         pOutput.accept(ModBlocks.BLOCK_VILLAGER_DIORITE.get());
+                        pOutput.accept(ModBlocks.BLOCK_BUTTON_COPPER.get());
                         // Items
 //                        pOutput.accept(ModItems.ITEM_SPAWN_PAWN_FIRST_DIORITE.get());
 //                        pOutput.accept(ModItems.ITEM_SPAWN_VILLAGER_DANDORI.get());

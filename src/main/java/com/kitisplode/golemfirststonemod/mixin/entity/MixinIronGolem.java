@@ -90,9 +90,6 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     {
         if (pOwner != null) setOwnerUUID(pOwner.getUUID());
     }
-    public boolean isOwner(LivingEntity pEntity) {
-        return pEntity == this.getOwner();
-    }
 
     public boolean getDandoriState()
     {
@@ -134,6 +131,12 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
             ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         }
         super.remove(pReason);
+    }
+
+    @Override
+    public boolean isImmobile()
+    {
+        return super.isImmobile();
     }
 
     @Override

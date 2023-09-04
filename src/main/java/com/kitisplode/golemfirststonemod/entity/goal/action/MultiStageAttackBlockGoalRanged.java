@@ -1,6 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.goal.action;
 
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityCanAttackBlocks;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.core.BlockPos;
@@ -48,6 +49,7 @@ public class MultiStageAttackBlockGoalRanged extends MeleeAttackGoal
 
     public boolean canUse()
     {
+        if (((IEntityDandoriFollower)this.mob).isImmobile()) return false;
         if (!this.mob.getPassengers().isEmpty()) return false;
 
         long i = this.mob.level().getGameTime();
@@ -71,6 +73,7 @@ public class MultiStageAttackBlockGoalRanged extends MeleeAttackGoal
     public boolean canContinueToUse()
     {
         if (attackState > 0) return true;
+        if (((IEntityDandoriFollower)this.mob).isImmobile()) return false;
         return this.blockAttacker.canTargetBlock(this.blockAttacker.getBlockTarget());
     }
 
@@ -109,9 +112,9 @@ public class MultiStageAttackBlockGoalRanged extends MeleeAttackGoal
             Vec3 targetCenter = targetPos.getCenter();
             double distanceToTarget = this.mob.distanceToSqr(targetCenter);
             BlockHitResult ray = this.mob.level().clip(new ClipContext(this.mob.getEyePosition(), targetCenter, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, this.mob));
-            boolean canSeeTarget = !ray.getBlockPos().closerToCenterThan(this.mob.getEyePosition(), distanceToTarget - 1);
+            boolean canSeeTarget = !ray.getBlockPos().closerToCenterThan(this.mob.getEyePosition(), Math.max(distanceToTarget - 1.0d, 0.5d));
             // Approach the target if we're not in attack range (can't beat them up without getting closer)
-            if (distanceToTarget > attackRange || !canSeeTarget)
+            if (distanceToTarget > attackRange ||  (distanceToTarget > 3.0d && !canSeeTarget))
             {
                 if (path == null)
                 {
@@ -167,7 +170,7 @@ public class MultiStageAttackBlockGoalRanged extends MeleeAttackGoal
     }
 
     private void attack() {
-        actor.tryAttack();
+        blockAttacker.tryAttackBlock();
     }
 
     @Override

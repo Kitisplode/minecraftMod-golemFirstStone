@@ -10,7 +10,8 @@
     "entity/MixinSnowGolem",
     "entity/MixinPlayer",
     "entity/MixinLocalPlayer",
-    "MixinStructurePoolAccessor"
+    "MixinStructurePoolAccessor",
+    "MixinServerLevel"
   ],
   "client": [
   ]

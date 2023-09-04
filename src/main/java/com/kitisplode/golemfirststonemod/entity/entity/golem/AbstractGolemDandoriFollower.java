@@ -90,9 +90,6 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
     {
         if (pOwner != null) setOwnerUUID(pOwner.getUUID());
     }
-    public boolean isOwner(LivingEntity pEntity) {
-        return pEntity == this.getOwner();
-    }
 
     public boolean getDandoriState()
     {
@@ -121,6 +118,12 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
     {
         if (this.getDandoriState() && this.getOwner() != null) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         super.remove(pReason);
+    }
+
+    @Override
+    public boolean isImmobile()
+    {
+        return super.isImmobile();
     }
 
     public boolean getThrown()

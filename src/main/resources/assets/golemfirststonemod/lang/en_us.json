@@ -21,6 +21,7 @@
   "block.golemfirststonemod.block_villager_oak": "Golem Woodcarver Workstation",
   "block.golemfirststonemod.block_villager_brick": "Golem Lapidarist Workstation",
   "block.golemfirststonemod.block_villager_diorite": "Golem Goldsmith Workstation",
+  "block.golemfirststonemod.block_button_copper": "Copper Button",
 
   "entity.golemfirststonemod.entity_golem_first_stone": "First of Stone",
   "entity.golemfirststonemod.entity_golem_first_oak": "First of Oak",
@@ -32,6 +33,7 @@
   "entity.golemfirststonemod.entity_golem_mossy": "Mossy Golem",
   "entity.golemfirststonemod.entity_golem_grindstone": "Grindstone Golem",
   "entity.golemfirststonemod.entity_golem_tuff": "Tuff Golem",
+  "entity.golemfirststonemod.entity_golem_copper": "Copper Golem",
   "entity.golemfirststonemod.entity_pawn_terracotta": "Terracota Pawn",
   "entity.golemfirststonemod.entity_villager_dandori": "Dandori Acolyte",
 

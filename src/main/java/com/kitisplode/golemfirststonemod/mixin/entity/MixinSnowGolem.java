@@ -91,9 +91,6 @@ public abstract class MixinSnowGolem extends AbstractGolem implements Shearable,
     {
         if (pOwner != null) setOwnerUUID(pOwner.getUUID());
     }
-    public boolean isOwner(LivingEntity pEntity) {
-        return pEntity == this.getOwner();
-    }
 
     public boolean getDandoriState()
     {
@@ -135,5 +132,11 @@ public abstract class MixinSnowGolem extends AbstractGolem implements Shearable,
             ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         }
         super.remove(pReason);
+    }
+
+    @Override
+    public boolean isImmobile()
+    {
+        return super.isImmobile();
     }
 }
