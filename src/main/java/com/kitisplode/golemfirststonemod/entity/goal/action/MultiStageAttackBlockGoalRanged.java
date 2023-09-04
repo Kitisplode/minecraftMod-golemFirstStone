@@ -119,10 +119,7 @@ public class MultiStageAttackBlockGoalRanged extends MeleeAttackGoal
                 if (path == null)
                 {
                     path = this.mob.getNavigation().findPathTo(targetPos, 1);
-                    if (path != null)
-                    {
-                        this.mob.getNavigation().startMovingAlong(path, speed);
-                    }
+                    if (path != null) this.mob.getNavigation().startMovingAlong(path, speed);
                 }
             }
             // Otherwise, start the attack!
@@ -140,7 +137,6 @@ public class MultiStageAttackBlockGoalRanged extends MeleeAttackGoal
         // Turn towards the target.
         if (attackState <= turnDuringState && targetPos != null)
         {
-//            this.mob.getLookControl().lookAt(target, 30.0f, 30.0f);
             turnTowardsTarget(targetPos.toCenterPos());
         }
         int previousAttackState = attackState;

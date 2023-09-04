@@ -21,7 +21,9 @@ public class GolemPatternCopper extends AbstractGolemPattern
 {
 	private static final Predicate<BlockState> buildingBlockPredicate = state -> state != null
 		&& (state.isOf(Blocks.COPPER_BLOCK)
-		|| state.isOf(Blocks.CUT_COPPER));
+		|| state.isOf(Blocks.CUT_COPPER)
+		|| state.isOf(Blocks.WAXED_COPPER_BLOCK)
+		|| state.isOf(Blocks.WAXED_CUT_COPPER));
 
 	public GolemPatternCopper(Predicate<BlockState> pPredicate)
 	{

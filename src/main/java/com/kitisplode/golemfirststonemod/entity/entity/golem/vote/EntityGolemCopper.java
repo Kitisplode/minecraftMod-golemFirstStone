@@ -10,7 +10,9 @@ import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoa
 import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackBlockGoalRanged;
 import com.kitisplode.golemfirststonemod.entity.goal.target.BlockTargetGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ButtonBlock;
 import net.minecraft.client.util.ParticleUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
@@ -201,13 +203,12 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         if (oxidation < 3 && !this.getWaxed())
         {
             if (this.random.nextInt(100) < oxidationChance)
-            {
                 this.nextOxidationCounter++;
-                if (this.nextOxidationCounter >= nextOxidationCount)
-                {
-                    this.nextOxidationCounter = 0;
-                    this.setOxidation(oxidation + 1);
-                }
+            if (this.isTouchingWaterOrRain()) this.nextOxidationCounter++;
+            if (this.nextOxidationCounter >= nextOxidationCount)
+            {
+                this.nextOxidationCounter = 0;
+                this.setOxidation(oxidation + 1);
             }
         }
     }
@@ -225,7 +226,8 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         if (bt != null)
         {
             BlockState bs = this.getWorld().getBlockState(bt);
-            bs.getBlock().onUse(bs, this.getWorld(), bt, null, null, null);
+            Block block = bs.getBlock();
+            if (block instanceof ButtonBlock button) button.powerOn(bs, this.getWorld(), bt);
             setBlockTarget(null);
         }
         return true;
@@ -307,13 +309,13 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
 
     public void onStruckByLightning(ServerWorld world, LightningEntity lightning)
     {
+        lightning.setCosmetic(true);
         if (!this.getWaxed())
         {
             if (this.getOxidation() == 0) return;
             this.setOxidation(0);
             ParticleUtil.spawnParticle(this.getWorld(), this.getBlockPos(), ParticleTypes.SCRAPE, UniformIntProvider.create(3, 5));
         }
-        lightning.setCosmetic(true);
     }
 
     public Identifier getTexture()
