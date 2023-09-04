@@ -23,6 +23,7 @@ public class HudDandoriCount implements HudRenderCallback
     private static final Identifier GOLEM_MOSSY = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_mossy.png");
     private static final Identifier GOLEM_GRINDSTONE = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_grindstone.png");
     private static final Identifier GOLEM_TUFF = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_tuff.png");
+    private static final Identifier GOLEM_COPPER = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_copper.png");
     private static final Identifier FIRST_STONE = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_stone.png");
     private static final Identifier FIRST_OAK = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_oak.png");
     private static final Identifier FIRST_BRICK = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_brick.png");
@@ -55,22 +56,23 @@ public class HudDandoriCount implements HudRenderCallback
         int mossy = player.getDandoriCountMossy();
         int grindstone = player.getDandoriCountGrindstone();
         int tuff = player.getDandoriCountTuff();
+        int copper = player.getDandoriCountCopper();
         int firstStone = player.getDandoriCountFirstStone();
         int firstOak = player.getDandoriCountFirstOak();
         int firstBrick = player.getDandoriCountFirstBrick();
         int firstDiorite = player.getDandoriCountFirstDiorite();
         int golemTotalMelee = iron + cobble + grindstone;
         int golemTotalRanged = snow + plank;
-        int golemTotalMisc = mossy + tuff;
+        int golemTotalMisc = mossy + tuff + copper;
         int firstTotal = firstStone + firstOak + firstBrick + firstDiorite;
 
         DataDandoriCount.FOLLOWER_TYPE currentType = player.getDandoriCurrentType();
 
         TextRenderer tr = client.textRenderer;
 
-        final int start_x = width / 2 - 90;
+        final int start_x = 12;//width / 2 - 90;
         int draw_x = start_x;
-        int draw_y = (int)((float)height * 0.85f);
+        int draw_y = (int)((float)height * 0.95f);
         int color = 0xffffffff;
 
         if (!client.player.isCreative()) draw_y -= 32;
@@ -180,6 +182,15 @@ public class HudDandoriCount implements HudRenderCallback
                 drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
             draw_x += 12;
             drawContext.drawText(tr, "x " + mossy, draw_x, draw_y, color, true);
+            draw_x += 20;
+        }
+        if (copper > 0)
+        {
+            drawContext.drawTexture(GOLEM_COPPER, draw_x-4, draw_y, 0, 0, 16, 16, 16, 16);
+            if (currentType == DataDandoriCount.FOLLOWER_TYPE.COPPER)
+                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
+            draw_x += 12;
+            drawContext.drawText(tr, "x " + copper, draw_x, draw_y, color, true);
             draw_x += 20;
         }
         if (tuff > 0)

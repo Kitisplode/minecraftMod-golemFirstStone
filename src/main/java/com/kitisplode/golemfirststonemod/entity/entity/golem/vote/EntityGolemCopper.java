@@ -60,6 +60,7 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
     private static final TrackedData<Integer> OXIDATION = DataTracker.registerData(EntityGolemCopper.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> WAXED = DataTracker.registerData(EntityGolemCopper.class, TrackedDataHandlerRegistry.BOOLEAN);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
+    protected static final double dandoriMoveRange = 3;
 
     private int nextOxidationCounter = 0;
     private static final int nextOxidationCount = 100;
@@ -125,7 +126,6 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
     {
         this.dataTracker.set(ATTACK_STATE, pInt);
     }
-
     public int getOxidation()
     {
         return this.dataTracker.get(OXIDATION);
@@ -141,10 +141,6 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
     public void setWaxed(boolean pBoolean)
     {
         this.dataTracker.set(WAXED, pBoolean);
-    }
-
-    private float getAttackDamage() {
-        return (float)this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
     }
 
     @Override
@@ -176,6 +172,7 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         if (oxidation == 2) return speed * 0.5f;
         return 0.0f;
     }
+    @Override
     public boolean isImmobile()
     {
         int oxidation = this.getOxidation();
@@ -298,13 +295,6 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
             ParticleUtil.spawnParticle(this.getWorld(), this.getBlockPos(), ParticleTypes.WAX_ON, UniformIntProvider.create(3, 5));
 
             return ActionResult.SUCCESS;
-        }
-        // TODO: remove, this is just temporary lol
-        if (playerItem.isOf(Items.WATER_BUCKET) && hand == Hand.MAIN_HAND)
-        {
-            int oxidation = this.getOxidation();
-            if (oxidation == 3) return ActionResult.PASS;
-            this.setOxidation(oxidation + 1);
         }
         return super.interactMob(player, hand);
     }

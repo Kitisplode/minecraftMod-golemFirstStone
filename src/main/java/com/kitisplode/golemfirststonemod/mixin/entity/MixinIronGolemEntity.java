@@ -117,10 +117,7 @@ public abstract class MixinIronGolemEntity extends GolemEntity implements Angera
 
     public void setDandoriState(boolean pDandoriState)
     {
-        if (!pDandoriState)
-        {
-            if (this.getOwner() != null && this.getDandoriState()) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
-        }
+        if (this.getOwner() != null && this.getDandoriState()) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         this.dataTracker.set(DANDORI_STATE, pDandoriState);
     }
 

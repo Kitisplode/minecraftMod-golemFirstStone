@@ -137,7 +137,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
                 targetOutVisionTimer = 0;
             double distanceToTarget = this.mob.getSquaredDistanceToAttackPosOf(target);
             // Approach the target if we're not in attack range (can't beat them up without getting closer)
-            if (distanceToTarget > attackRange || !canSeeTarget)
+            if (distanceToTarget > attackRange || (distanceToTarget > 3.0d && !canSeeTarget))
             {
                 if (targetX == null || targetY == null || targetZ == null || target.squaredDistanceTo(targetX, targetY, targetZ) >= 1.0)
                 {
