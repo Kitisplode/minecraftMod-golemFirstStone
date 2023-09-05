@@ -54,7 +54,7 @@ It attacks with an AoE melee attack that deals massive damage and knocks back ma
 
 Craft a Carved Oak Head with a Lodestone and Oak Wood blocks, and place it in a First of Oak structure in the world.
 
-When it spots an enemy from far away, it can shoot arrows from a huge range that deal AoE damage around the impact point.
+When it spots an enemy from far away, it can shoot arrows from a huge range that can pierce through up to 4 enemies.
 
 
 

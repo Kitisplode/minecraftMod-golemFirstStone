@@ -47,7 +47,7 @@ public class ModEntities
     public static final EntityType<EntityProjectileAoEOwnerAware> ENTITY_PROJECTILE_FIRST_OAK = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_projectile_first_oak"),
             FabricEntityTypeBuilder.<EntityProjectileAoEOwnerAware>create(SpawnGroup.MISC, EntityProjectileAoEOwnerAware::new)
-                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f))
+                    .dimensions(EntityDimensions.fixed(0.75f, 0.75f))
                     .trackRangeBlocks(4).trackedUpdateRate(10)
                     .build()
     );

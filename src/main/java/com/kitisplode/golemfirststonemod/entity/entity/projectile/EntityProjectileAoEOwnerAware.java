@@ -1,21 +1,33 @@
 package com.kitisplode.golemfirststonemod.entity.entity.projectile;
 
+import com.google.common.collect.Lists;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import net.minecraft.advancement.criterion.Criteria;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.s2c.play.GameStateChangeS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class EntityProjectileAoEOwnerAware extends ArrowEntity
@@ -25,6 +37,8 @@ public class EntityProjectileAoEOwnerAware extends ArrowEntity
     private LivingEntity golemOwner;
     private static final float attackVerticalRange = 3.0f;
     private boolean hasAoE = true;
+    private int piercingCount = 0;
+    private ArrayList<Entity> piercedEntities = null;
 
     public EntityProjectileAoEOwnerAware(EntityType<? extends ArrowEntity> entityType, World world) {
         super(entityType, world);
@@ -56,36 +70,41 @@ public class EntityProjectileAoEOwnerAware extends ArrowEntity
     {
         this.hasAoE = p;
     }
-
+    public void setPiercingCount(int p)
+    {
+        this.piercingCount = p;
+    }
 
     @Override
-    protected void onEntityHit(EntityHitResult entityHitResult)
+    protected boolean canHit(Entity target)
     {
-        Entity target = entityHitResult.getEntity();
-        // Skip some targets.
         if (target != null)
         {
             LivingEntity owner = null;
             if (golemOwner != null && golemOwner instanceof IEntityDandoriFollower dandoriFollower) owner = dandoriFollower.getOwner();
             // Do not damage the golem that shot this arrow.
-            if (target == golemOwner) return;
+            if (target == golemOwner) return false;
             // Do not damage the golem's owner.
-            if (target == owner) return;
-            if (target instanceof TameableEntity && ((TameableEntity)target).getOwner() == owner) return;
-            if (target instanceof IEntityDandoriFollower && ((IEntityDandoriFollower)target).getOwner() == owner) return;
+            if (target == owner) return false;
+            if (target instanceof TameableEntity && ((TameableEntity)target).getOwner() == owner) return false;
+            if (target instanceof IEntityDandoriFollower && ((IEntityDandoriFollower)target).getOwner() == owner) return false;
             // Do not damage targets that are pawns owned by a first of diorite that is owned by our owner lol
             if (target instanceof EntityPawn pawn && ((EntityPawn)target).getOwnerType() == EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
             {
                 EntityGolemFirstDiorite pawnOwner = (EntityGolemFirstDiorite) pawn.getOwner();
-                if (pawnOwner != null && pawnOwner.getOwner() == owner) return;
+                if (pawnOwner != null && pawnOwner.getOwner() == owner) return false;
             }
             // Do not damage villagers.
-            if (target instanceof MerchantEntity) return;
+            if (target instanceof MerchantEntity) return false;
         }
-        // Then perform the damage.
+        return super.canHit(target);
+    }
+
+    @Override
+    protected void onEntityHit(EntityHitResult entityHitResult)
+    {
         super.onEntityHit(entityHitResult);
-        if (this.hasAoE)
-            attackAOE();
+        if (this.hasAoE) attackAOE();
         this.setNoGravity(false);
     }
 
@@ -100,7 +119,7 @@ public class EntityProjectileAoEOwnerAware extends ArrowEntity
     @Override
     protected ItemStack asItemStack()
     {
-        return null;
+        return ItemStack.EMPTY;
     }
 
     private void attackAOE()

@@ -43,7 +43,7 @@ public class EntityGolemFirstOak extends AbstractGolemDandoriFollower implements
 	protected static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstOak.class, TrackedDataHandlerRegistry.INTEGER);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 	private static final float attackAOERange = 4.0f;
-	private static final float projectileSpeed = 2.0f;
+	private static final float projectileSpeed = 4.0f;
 
 	private boolean printTargetMessage = false;
 
@@ -57,7 +57,7 @@ public class EntityGolemFirstOak extends AbstractGolemDandoriFollower implements
 		return GolemEntity.createMobAttributes()
 			.add(EntityAttributes.GENERIC_MAX_HEALTH, 500.0f)
 			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25f)
-			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 10.0f)
+			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.5f)
 			.add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0f)
 			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32);
 	}
@@ -143,9 +143,10 @@ public class EntityGolemFirstOak extends AbstractGolemDandoriFollower implements
 
 			Vec3d shootingVelocity = target.getEyePos().subtract(this.getEyePos()).normalize().multiply(projectileSpeed);
 			arrow.setVelocity(shootingVelocity);
-			arrow.age = 35;
 			arrow.setDamage(getAttackDamage());
 			arrow.setNoGravity(true);
+			arrow.setPierceLevel((byte)4);
+			arrow.setHasAoE(false);
 			this.getWorld().spawnEntity(arrow);
 		}
 	}

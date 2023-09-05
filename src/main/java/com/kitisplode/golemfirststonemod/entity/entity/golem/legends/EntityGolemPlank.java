@@ -126,7 +126,6 @@ public class EntityGolemPlank extends AbstractGolemDandoriFollower implements Ge
 
             Vec3d shootingVelocity = target.getEyePos().subtract(this.getEyePos()).normalize().multiply(projectileSpeed);
             arrow.setVelocity(shootingVelocity);
-            arrow.age = 35;
             arrow.setDamage(getAttackDamage());
             arrow.setNoGravity(true);
             arrow.setHasAoE(false);

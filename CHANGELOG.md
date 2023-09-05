@@ -64,3 +64,8 @@
         - resistance effect added while attacking
         - range to start charging attack increased from 2.3 blocks to 5.5 blocks
         - reduced damage drop-off so attack will always deal at least 65% of total damage to a target (30 maximum damage)
+    + Rebalance changes to First of Oak
+        - increase projectile speed from 2 to 4
+        - projectile will now pierce through up to 4 enemies
+        - reduced projectile damage from 10 to 7.5 (with the piercing, it felt like doing 10 to 4 enemies at once was maybe a bit much?)
+        - removed projectile AoE
