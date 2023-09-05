@@ -46,6 +46,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 import org.jetbrains.annotations.Nullable;
@@ -288,6 +289,10 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
         float multiplier = 1.0f;
         if (getPawnType() == PAWN_TYPES.PIK_PINK.ordinal()) multiplier = 2.0f;
         return (float)this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) * multiplier;
+    }
+    public Random getRandom()
+    {
+        return super.getRandom();
     }
 
     public void setBlockTarget(BlockPos pBlockPos)

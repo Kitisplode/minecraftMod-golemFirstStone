@@ -192,7 +192,7 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         this.goalSelector.add(7, new CopperGolemLookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(7, new CopperGolemLookAtEntityGoal(this, MerchantEntity.class, 6.0F));
         this.goalSelector.add(8, new CopperGolemLookAroundGoal(this));
-        this.targetSelector.add(1, new BlockTargetGoal(this, 16, 35, true, true, bsPredicate, true));
+        this.targetSelector.add(1, new BlockTargetGoal(this, 16, 75, true, true, bsPredicate, true));
     }
 
     @Override

@@ -14,6 +14,8 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
@@ -29,6 +31,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -46,11 +49,12 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
 	private static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstStone.class, TrackedDataHandlerRegistry.INTEGER);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 	private static final float attackAOERange = 4.0f;
-	private static final float attackKnockbackAmount = 2.0f;
+	private static final float attackKnockbackAmount = 2.15f;
 	private static final float attackKnockbackAmountVertical = 0.25f;
-	private static final float attackVerticalRange = 2.0f;
+	private static final float attackVerticalRange = 4.0f;
 	private static final double dandoriMoveRange = 6;
 	private static final double dandoriSeeRange = 36;
+	private static final StatusEffectInstance defenseUpDuringWindup = new StatusEffectInstance(StatusEffects.RESISTANCE, 70, 1, false, false);
 
 	public EntityGolemFirstStone(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
 	{
@@ -97,7 +101,7 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
 	@Override
 	protected void initGoals() {
 		this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.4, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
-		this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, 6.5D, new int[]{70, 30, 25}));
+		this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(5.5d), new int[]{70, 30, 25}));
 		this.goalSelector.add(3, new WanderNearTargetGoal(this, 0.8, 32.0F));
 		this.goalSelector.add(5, new IronGolemWanderAroundGoal(this, 0.8));
 		this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
@@ -105,6 +109,11 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
 		this.targetSelector.add(2, new RevengeGoal(this, new Class[0]));
 		this.targetSelector
 			.add(3, new ActiveTargetGoal(this, MobEntity.class, 5, false, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
+	}
+	@Override
+	public boolean isPushable()
+	{
+		return getAttackState() == 0;
 	}
 
 	@Override
@@ -115,6 +124,10 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
 	@Override
 	public boolean tryAttack()
 	{
+		if (getAttackState() == 1)
+		{
+			this.addStatusEffect(new StatusEffectInstance(defenseUpDuringWindup));
+		}
 		if (getAttackState() != 3) return false;
 
 		this.getWorld().sendEntityStatus(this, EntityStatuses.PLAY_ATTACK_SOUND);
@@ -163,7 +176,7 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
 			if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
 
 			// Apply damage.
-			float forceMultiplier = Math.abs((attackAOERange - this.distanceTo(target)) / attackAOERange);
+			float forceMultiplier = Math.max(0.65f, Math.abs((attackAOERange - this.distanceTo(target)) / attackAOERange));
 			float totalDamage = getAttackDamage() * forceMultiplier;
 			target.damage(getDamageSources().mobAttack(this), totalDamage);
 			// Apply knockback.

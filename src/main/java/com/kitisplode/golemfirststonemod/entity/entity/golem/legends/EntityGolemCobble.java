@@ -27,6 +27,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -102,6 +103,11 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
 
     private float getAttackDamage() {
         return (float)this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+    }
+
+    public Random getRandom()
+    {
+        return super.getRandom();
     }
 
     @Override

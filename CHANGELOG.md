@@ -56,3 +56,11 @@
     + added Tuff Golems
     + added Copper Golems
     + added Copper Button (for Copper Golems to press!)
+
+## 0.0.9
+    + Rebalance changes to First of Stone
+        - extended vertical range of AoE from 2 to 4
+        - no longer pushable while attacking
+        - resistance effect added while attacking
+        - range to start charging attack increased from 2.3 blocks to 5.5 blocks
+        - reduced damage drop-off so attack will always deal at least 65% of total damage to a target (30 maximum damage)

@@ -22,16 +22,37 @@
 					"cubes": [
 						{"origin": [-4, 6, -4], "size": [8, 10, 8], "uv": [0, 18]},
 						{"origin": [-1, 5, -6], "size": [2, 4, 2], "uv": [0, 0]},
-						{"origin": [-4, 6.5, -4], "size": [8, 10, 8], "inflate": 0.5, "uv": [0, 0]},
+						{"origin": [-4, 6.5, -4], "size": [8, 10, 8], "inflate": 0.5, "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "head_decoration",
+					"parent": "head",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "flag",
+					"parent": "head_decoration",
+					"pivot": [0, 0, 0],
+					"cubes": [
 						{"origin": [-0.5, 17, 0.5], "size": [1, 6, 1], "uv": [0, 36]}
 					]
 				},
 				{
-					"name": "flag",
-					"parent": "head",
+					"name": "flap",
+					"parent": "flag",
 					"pivot": [0, 0, 0],
 					"cubes": [
 						{"origin": [0, 20, 1.5], "size": [0, 3, 3], "uv": [0, 15]}
+					]
+				},
+				{
+					"name": "mushroom",
+					"parent": "head_decoration",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-4, 16, 0], "size": [8, 7, 0], "pivot": [0, 20.5, 0], "rotation": [0, -45, 0], "uv": [6, 38]},
+						{"origin": [-4, 16, 0], "size": [8, 7, 0], "pivot": [0, 20.5, 0], "rotation": [0, 45, 0], "uv": [6, 38]}
 					]
 				},
 				{
