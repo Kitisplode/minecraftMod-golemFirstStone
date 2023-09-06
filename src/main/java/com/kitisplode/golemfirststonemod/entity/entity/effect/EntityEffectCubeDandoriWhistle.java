@@ -38,7 +38,7 @@ public class EntityEffectCubeDandoriWhistle extends AbstractEntityEffectCube imp
 
     public EntityEffectCubeDandoriWhistle(World pWorld, double pX, double pY, double pZ)
     {
-        super(ModEntities.ENTITY_SHIELD_FIRST_BRICK, pWorld);
+        super(ModEntities.ENTITY_EFFECT_SHIELD_FIRST_BRICK, pWorld);
         setPosition(pX, pY, pZ);
     }
 
@@ -97,7 +97,7 @@ public class EntityEffectCubeDandoriWhistle extends AbstractEntityEffectCube imp
         this.scaleY = MathHelper.lerp(0.12f, this.scaleY, this.finalSize) / 5.0f;
         if (this.age >= this.lifeTime)
         {
-            this.kill();
+            this.discard();
         }
     }
 

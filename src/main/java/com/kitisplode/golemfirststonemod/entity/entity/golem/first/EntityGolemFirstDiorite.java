@@ -171,21 +171,7 @@ public class EntityGolemFirstDiorite extends EntityGolemCobble implements GeoEnt
 
 	@Override
 	protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-		ItemStack itemStack = player.getStackInHand(hand);
-		if (!itemStack.isOf(Items.GOLD_INGOT)) {
-			return ActionResult.PASS;
-		}
-		float f = this.getHealth();
-		this.heal(25.0f);
-		if (this.getHealth() == f) {
-			return ActionResult.PASS;
-		}
-		float g = 1.0f + (this.random.nextFloat() - this.random.nextFloat()) * 0.2f;
-		this.playSound(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 1.0f, g);
-		if (!player.getAbilities().creativeMode) {
-			itemStack.decrement(1);
-		}
-		return ActionResult.success(this.getWorld().isClient);
+		return ActionResult.PASS;
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandor
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
-import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.entity.goal.target.PassiveTargetGoal;
@@ -29,8 +28,6 @@ import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvents;
@@ -55,16 +52,17 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
 	private static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemFirstBrick.class, TrackedDataHandlerRegistry.INTEGER);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 	private static final int shieldHurtTime = 30;
-	private static final int shieldAbsorptionTime = 20 * 5;
-	private static final int shieldAbsorptionAmount = 0;
-	private static final float attackAOERange = 10.0f;
+	private static final int shieldEffectAmount = 1;
+	private static final float attackAOERange = 4.5f;
 	private static final float attackVerticalRange = 5.0f;
+	private static final int shieldTime = 120;
 	private final ArrayList<StatusEffectInstance> shieldStatusEffects = new ArrayList<>();
+	private MultiStageAttackGoalRanged attackGoal;
 
 	public EntityGolemFirstBrick(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
 	{
 		super(pEntityType, pLevel);
-		shieldStatusEffects.add(new StatusEffectInstance(StatusEffects.ABSORPTION, shieldAbsorptionTime, shieldAbsorptionAmount, false, true));
+		shieldStatusEffects.add(new StatusEffectInstance(StatusEffects.RESISTANCE, shieldTime, shieldEffectAmount, false, true));
 	}
 
 	public static DefaultAttributeContainer.Builder setAttributes()
@@ -101,8 +99,10 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
 
 	@Override
 	protected void initGoals() {
+		this.attackGoal = new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(attackAOERange), new int[]{120, 85,80, 25}, 0);
+		this.attackGoal.setCooldownMax(200);
 		this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.4, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
-		this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(attackAOERange), new int[]{70, 30, 25}, 0));
+		this.goalSelector.add(2, this.attackGoal);
 		this.goalSelector.add(3, new WanderNearTargetGoal(this, 0.8, 32.0F));
 		this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.8));
 		this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
@@ -203,19 +203,20 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
 		dust.setDuration(1);
 		dust.setPos(getX(),getY(),getZ());
 		getWorld().spawnEntity(dust);
-
-		EntityEffectShieldFirstBrick shield = ModEntities.ENTITY_SHIELD_FIRST_BRICK.create(getWorld());
-		if (shield != null)
-		{
-			shield.setPosition(getPos());
-			shield.setLifeTime(20);
-			shield.setFullScale(range * 2.0f);
-			getWorld().spawnEntity(shield);
-		}
 	}
 
 	private void attackAOE()
 	{
+		EntityShieldFirstBrick shield = ModEntities.ENTITY_SHIELD_FIRST_BRICK.create(getWorld());
+		if (shield != null)
+		{
+			shield.setPosition(getPos());
+			shield.setLifeTime(shieldTime);
+			shield.setFullScale((attackAOERange + 1) * 2.0f);
+			shield.setOwner(this);
+			getWorld().spawnEntity(shield);
+		}
+
 		List<LivingEntity> targetList = getWorld().getNonSpectatingEntities(LivingEntity.class, getBoundingBox().expand(attackAOERange));
 		for (LivingEntity target : targetList)
 		{
@@ -252,22 +253,28 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
 	}
 
 	@Override
+	public boolean isPushable()
+	{
+		return getAttackState() == 0;
+	}
+
+	@Override
+	public void tick()
+	{
+		super.tick();
+		if (this.getAttackState() == 0 && this.attackGoal != null && this.attackGoal.isCooledDown() && !this.getDandoriState())
+		{
+			List<LivingEntity> list = this.getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(32), entity->entity instanceof Monster && this.canSee(entity));
+			if (!list.isEmpty())
+			{
+				this.attackGoal.forceAttack();
+			}
+		}
+	}
+
+	@Override
 	protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-		ItemStack itemStack = player.getStackInHand(hand);
-		if (!itemStack.isOf(Items.BRICKS)) {
-			return ActionResult.PASS;
-		}
-		float f = this.getHealth();
-		this.heal(25.0f);
-		if (this.getHealth() == f) {
-			return ActionResult.PASS;
-		}
-		float g = 1.0f + (this.random.nextFloat() - this.random.nextFloat()) * 0.2f;
-		this.playSound(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 1.0f, g);
-		if (!player.getAbilities().creativeMode) {
-			itemStack.decrement(1);
-		}
-		return ActionResult.success(this.getWorld().isClient);
+		return ActionResult.PASS;
 	}
 
 	@Override
@@ -283,7 +290,7 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
 					case 1:
 						event.getController().setAnimationSpeed(0.5);
 						return event.setAndContinue(RawAnimation.begin().then("animation.first_brick.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
-					case 2:
+					case 2, 3:
 						event.getController().setAnimationSpeed(1.00);
 						return event.setAndContinue(RawAnimation.begin().then("animation.first_brick.attack", Animation.LoopType.HOLD_ON_LAST_FRAME));
 					default:

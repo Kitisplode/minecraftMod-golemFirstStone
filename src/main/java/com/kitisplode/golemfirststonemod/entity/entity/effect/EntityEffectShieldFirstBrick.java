@@ -7,7 +7,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -36,7 +35,7 @@ public class EntityEffectShieldFirstBrick extends AbstractEntityEffectCube imple
 
     public EntityEffectShieldFirstBrick(World pWorld, double pX, double pY, double pZ)
     {
-        super(ModEntities.ENTITY_SHIELD_FIRST_BRICK, pWorld);
+        super(ModEntities.ENTITY_EFFECT_SHIELD_FIRST_BRICK, pWorld);
         setPosition(pX, pY, pZ);
     }
 
@@ -83,7 +82,7 @@ public class EntityEffectShieldFirstBrick extends AbstractEntityEffectCube imple
         scaleY = ((float)Math.sin(((float)this.age / (float)lifeTime * 180.0f) * MathHelper.RADIANS_PER_DEGREE) * finalSize) / 4.0f;
         if (this.age >= lifeTime)
         {
-            this.kill();
+            this.discard();
         }
     }
 

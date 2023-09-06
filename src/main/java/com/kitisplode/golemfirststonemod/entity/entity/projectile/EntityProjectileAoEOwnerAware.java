@@ -39,6 +39,7 @@ public class EntityProjectileAoEOwnerAware extends ArrowEntity
     private boolean hasAoE = true;
     private int piercingCount = 0;
     private ArrayList<Entity> piercedEntities = null;
+    private static final int maxAge = 1200;
 
     public EntityProjectileAoEOwnerAware(EntityType<? extends ArrowEntity> entityType, World world) {
         super(entityType, world);
@@ -73,6 +74,13 @@ public class EntityProjectileAoEOwnerAware extends ArrowEntity
     public void setPiercingCount(int p)
     {
         this.piercingCount = p;
+    }
+
+    @Override
+    public void tick()
+    {
+        super.tick();
+        if (this.age > maxAge) this.discard();
     }
 
     @Override

@@ -69,3 +69,7 @@
         - projectile will now pierce through up to 4 enemies
         - reduced projectile damage from 10 to 7.5 (with the piercing, it felt like doing 10 to 4 enemies at once was maybe a bit much?)
         - removed projectile AoE
+    + Rebalance changes to First of Brick
+        - shield now reflects enemy arrows fired from outside
+        - golem will now create a shield if an enemy is nearby as well as when allies are attacked
+        - shield now applies 2 stacks of resistance instead of absorption

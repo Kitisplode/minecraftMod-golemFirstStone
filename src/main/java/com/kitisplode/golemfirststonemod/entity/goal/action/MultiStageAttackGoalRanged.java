@@ -29,6 +29,9 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
     private final int turnDuringState;
 
     private boolean forced = false;
+    private boolean running = false;
+    private int cooldown = 0;
+    private int cooldownMax;
 
     public MultiStageAttackGoalRanged(IEntityWithDelayedMeleeAttack pMob, double pSpeed, boolean pauseWhenMobIdle, double pAttackRange, int[] pAttackStages, int pTurnDuringState)
     {
@@ -50,6 +53,8 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
     @Override
     public boolean canStart()
     {
+        if (this.cooldown > 0) this.cooldown--;
+        if (!this.isCooledDown()) return false;
         if (forced) return true;
         if (this.mob.hasPassengers()) return false;
 
@@ -69,7 +74,6 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         if (this.path != null) {
             return true;
         }
-
         Vec3d distanceFlattened = new Vec3d(target.getX() - this.mob.getX(), 0, target.getZ() - this.mob.getZ());
 		double distanceFlatSquared = distanceFlattened.lengthSquared();
         return this.getSquaredMaxAttackDistance(target) >= distanceFlatSquared;//this.mob.squaredDistanceTo(target.getX(), target.getY(), target.getZ());
@@ -95,6 +99,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         targetX = null;
         targetY = null;
         targetZ = null;
+        running = true;
     }
 
     @Override
@@ -108,6 +113,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         targetY = null;
         targetZ = null;
         forced = false;
+        running = false;
     }
 
     @Override
@@ -155,6 +161,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
                 targetY = null;
                 targetZ = null;
                 attackTimer = getTickCount(attackStages[0]);
+                resetCooldown();
             }
         }
         else
@@ -213,5 +220,31 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
     public void forceAttack()
     {
         forced = true;
+    }
+
+    public boolean isRunning()
+    {
+        return running;
+    }
+
+    public void setCooldownMax(int p)
+    {
+        this.cooldownMax = p;
+    }
+
+    protected void resetCooldown() {
+        this.cooldown = this.getTickCount(this.cooldownMax);
+    }
+
+    public boolean isCooledDown() {
+        return this.cooldown <= 0;
+    }
+
+    protected int getCooldown() {
+        return this.cooldown;
+    }
+
+    protected int getMaxCooldown() {
+        return this.getTickCount(20);
     }
 }
