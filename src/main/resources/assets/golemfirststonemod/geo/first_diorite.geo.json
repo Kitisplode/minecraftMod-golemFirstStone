@@ -36,6 +36,11 @@
 					]
 				},
 				{
+					"name": "flame",
+					"parent": "head",
+					"pivot": [0, 43, -8]
+				},
+				{
 					"name": "waist",
 					"parent": "whole",
 					"pivot": [0, 24, 4],

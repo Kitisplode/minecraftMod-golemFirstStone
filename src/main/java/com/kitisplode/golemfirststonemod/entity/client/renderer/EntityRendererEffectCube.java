@@ -1,6 +1,6 @@
 package com.kitisplode.golemfirststonemod.entity.client.renderer;
 
-import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelShieldFirstBrick;
+import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelEffectCube;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.AbstractEntityEffectCube;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -10,11 +10,11 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class EntityRendererShieldFirstBrick extends GeoEntityRenderer<AbstractEntityEffectCube>
+public class EntityRendererEffectCube extends GeoEntityRenderer<AbstractEntityEffectCube>
 {
-	public EntityRendererShieldFirstBrick(EntityRendererFactory.Context renderManager)
+	public EntityRendererEffectCube(EntityRendererFactory.Context renderManager)
 	{
-		super(renderManager, new EntityModelShieldFirstBrick());
+		super(renderManager, new EntityModelEffectCube());
 	}
 
 	@Override

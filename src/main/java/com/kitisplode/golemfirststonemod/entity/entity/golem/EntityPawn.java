@@ -103,7 +103,7 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0f)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5f)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 5.0f)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32);
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 24);
     }
 
     @Override
@@ -392,14 +392,6 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
                 }
                 if (this.getTarget() == null) timeWithoutTarget++;
                 else timeWithoutTarget = 0;
-
-                if (this.getOwnerType() == OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
-                {
-                    if (timeWithoutParent > timeWithoutParentMax || timeWithoutTarget > timeWithoutTargetMax)
-                    {
-                        if (this.age % 20 == 0) this.damage(this.getDamageSources().starve(), 1);
-                    }
-                }
             }
             // Drop a block target if we've been ordered to do other things.
             if ((this.getTarget() != null || this.getDandoriState()) && this.blockTarget != null)
@@ -463,7 +455,7 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
 
     @Override
     public void pushAwayFrom(Entity entity) {
-        if (entity == this.getOwner()) return;
+        if (this.getOwnerType() != OWNER_TYPES.FIRST_OF_DIORITE.ordinal() && entity == this.getOwner()) return;
         super.pushAwayFrom(entity);
         if (this.getTarget() == entity && !this.isAiDisabled() && (this.getVelocity().lengthSquared() > 0 || entity.getPassengerList().contains(this)))
         {

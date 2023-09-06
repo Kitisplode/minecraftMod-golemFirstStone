@@ -73,3 +73,9 @@
         - shield now reflects enemy arrows fired from outside
         - golem will now create a shield if an enemy is nearby as well as when allies are attacked
         - shield now applies 2 stacks of resistance instead of absorption
+    + Rebalance changes to First of Diorite
+        - Diorite Pawns no longer starve without targets
+        - First of Diorite will now spawn only 1 pawn at a time, but with a much shorter cool down, and it can chain spawns together to go even faster
+        - Once the First of Diorite stops spawning, it will have to cooldown a little longer before it can get down and spawn more again
+        - First of Diorite can have only 15 pawns active at a time
+    + First of Diorite now has the flame inside its head like it's supposed to lol

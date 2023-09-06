@@ -5,7 +5,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.effect.AbstractEntityEffe
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.model.GeoModel;
 
-public class EntityModelShieldFirstBrick extends GeoModel<AbstractEntityEffectCube>
+public class EntityModelEffectCube extends GeoModel<AbstractEntityEffectCube>
 {
 	@Override
 	public Identifier getModelResource(AbstractEntityEffectCube animatable)

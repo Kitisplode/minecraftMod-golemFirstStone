@@ -36,6 +36,10 @@ public class ModItems
             new ItemDandoriDig(new FabricItemSettings().maxCount(1)));
     public static final Item ITEM_DANDORI_THROW = registerItem("item_dandori_throw",
             new ItemDandoriThrow(new FabricItemSettings().maxCount(1)));
+    public static final Item ITEM_FLAME_OF_CREATION_BLUE = registerItem("item_flame_of_creation_blue",
+            new Item(new FabricItemSettings().maxCount(16)));
+    public static final Item ITEM_FLAME_OF_CREATION_RED = registerItem("item_flame_of_creation_red",
+            new Item(new FabricItemSettings().maxCount(16)));
 
     private static Item registerItem(String pName, Item pItem)
     {

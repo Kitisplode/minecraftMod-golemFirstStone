@@ -111,7 +111,7 @@ public class EntityShieldFirstBrick extends AbstractEntityEffectCube implements 
         if (!this.getWorld().isClient())
         {
             List<Entity> entitiesColliding = this.getWorld().getOtherEntities(this,
-                    this.getBoundingBox().expand(scaleH / 2.0f, scaleY / 2.0f, scaleH / 2.0f),
+                    this.getBoundingBox().expand((scaleH - 1) / 2.0f, (scaleY - 1) / 2.0f, (scaleH - 1) / 2.0f),
                     entity -> entity instanceof ProjectileEntity);
             for (Entity entity : entitiesColliding)
             {

@@ -167,7 +167,7 @@ public class ModEntities
         EntityRendererRegistry.register(ENTITY_GOLEM_FIRST_OAK, EntityRendererGolemFirstOak::new);
         EntityRendererRegistry.register(ENTITY_PROJECTILE_FIRST_OAK, ArrowEntityRenderer::new);
         EntityRendererRegistry.register(ENTITY_GOLEM_FIRST_BRICK, EntityRendererGolemFirstBrick::new);
-        EntityRendererRegistry.register(ENTITY_SHIELD_FIRST_BRICK, EntityRendererShieldFirstBrick::new);
+        EntityRendererRegistry.register(ENTITY_SHIELD_FIRST_BRICK, EntityRendererEffectCube::new);
         EntityRendererRegistry.register(ENTITY_GOLEM_FIRST_DIORITE, EntityRendererGolemFirstDiorite::new);
         EntityRendererRegistry.register(ENTITY_PAWN_FIRST_DIORITE, EntityRendererPawnFirstDiorite::new);
         EntityRendererRegistry.register(ENTITY_PAWN_TERRACOTTA, EntityRendererPawnFirstDiorite::new);
@@ -180,7 +180,7 @@ public class ModEntities
         EntityRendererRegistry.register(ENTITY_GOLEM_COPPER, EntityRendererGolemCopper::new);
 
         EntityRendererRegistry.register(ENTITY_SOUND_REPEATED, EntityRendererSoundRepeated::new);
-        EntityRendererRegistry.register(ENTITY_EFFECT_SHIELD_FIRST_BRICK, EntityRendererShieldFirstBrick::new);
-        EntityRendererRegistry.register(ENTITY_EFFECT_CUBE_DANDORI_WHISTLE, EntityRendererShieldFirstBrick::new);
+        EntityRendererRegistry.register(ENTITY_EFFECT_SHIELD_FIRST_BRICK, EntityRendererEffectCube::new);
+        EntityRendererRegistry.register(ENTITY_EFFECT_CUBE_DANDORI_WHISTLE, EntityRendererEffectCube::new);
     }
 }
