@@ -28,6 +28,12 @@ public class ModItems
     public static final Item ITEM_SPAWN_GOLEM_PLANK = registerItem("item_spawn_golem_plank",
             new SpawnEggItem(ModEntities.ENTITY_GOLEM_PLANK, 0xDFDFDF, 0xA86836,
                     new FabricItemSettings()));
+    public static final Item ITEM_SPAWN_GOLEM_MOSSY = registerItem("item_spawn_golem_mossy",
+            new SpawnEggItem(ModEntities.ENTITY_GOLEM_MOSSY, 0xDFDFDF, 0x32A852,
+                    new FabricItemSettings()));
+    public static final Item ITEM_SPAWN_GOLEM_GRINDSTONE = registerItem("item_spawn_golem_grindstone",
+            new SpawnEggItem(ModEntities.ENTITY_GOLEM_GRINDSTONE, 0xDFDFDF, 0x333333,
+                    new FabricItemSettings()));
     public static final Item ITEM_DANDORI_CALL = registerItem("item_dandori_call",
             new ItemDandoriCall(new FabricItemSettings().maxCount(1)));
     public static final Item ITEM_DANDORI_ATTACK = registerItem("item_dandori_attack",

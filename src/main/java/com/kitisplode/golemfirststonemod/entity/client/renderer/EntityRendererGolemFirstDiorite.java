@@ -60,7 +60,7 @@ public class EntityRendererGolemFirstDiorite extends GeoEntityRenderer<EntityGol
 		RenderUtils.prepMatrixForBone(matrixStack, body);
 		RenderUtils.prepMatrixForBone(matrixStack, head);
 		RenderUtils.prepMatrixForBone(matrixStack, flame);
-		matrixStack.translate(head.getPivotX()/16, head.getPivotY()/16, head.getPivotZ()/16);
+		matrixStack.translate(head.getPivotX()/16, head.getPivotY()/16.0 - 0.1, head.getPivotZ()/16);
 		matrixStack.multiply(RotationAxis.POSITIVE_X.rotation(-body.getRotX()));
 		matrixStack.multiply(RotationAxis.POSITIVE_X.rotation(-head.getRotX()));
 		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotation(head.getRotZ()));

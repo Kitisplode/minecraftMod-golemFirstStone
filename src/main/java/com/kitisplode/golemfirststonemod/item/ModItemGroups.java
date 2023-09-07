@@ -36,6 +36,8 @@ public class ModItemGroups
 //                        entries.add(ModItems.ITEM_SPAWN_VILLAGER_DANDORI);
                         entries.add(ModItems.ITEM_SPAWN_GOLEM_COBBLE);
                         entries.add(ModItems.ITEM_SPAWN_GOLEM_PLANK);
+                        entries.add(ModItems.ITEM_SPAWN_GOLEM_MOSSY);
+                        entries.add(ModItems.ITEM_SPAWN_GOLEM_GRINDSTONE);
                         entries.add(ModItems.ITEM_DANDORI_CALL);
                         entries.add(ModItems.ITEM_DANDORI_ATTACK);
                         entries.add(ModItems.ITEM_DANDORI_DIG);

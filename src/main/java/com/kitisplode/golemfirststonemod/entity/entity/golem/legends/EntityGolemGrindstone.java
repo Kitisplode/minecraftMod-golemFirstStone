@@ -7,6 +7,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandori
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoalRanged;
+import com.kitisplode.golemfirststonemod.entity.goal.target.SharedTargetGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -17,6 +18,8 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
@@ -48,6 +51,9 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
     private static final float attackSpeed = 0.7f;
     private boolean movingBackwards = false;
     private MultiStageAttackGoalRanged attackGoal;
+
+    private static final StatusEffectInstance stunEffect = new StatusEffectInstance(StatusEffects.SLOWNESS, 60, 2, false, false);
+    private static final StatusEffectInstance armorEffect = new StatusEffectInstance(StatusEffects.RESISTANCE, 15, 3, false, false);
 
 //    private int steeringAngle = 0;
 //    private int steeringVelocity = 0;
@@ -105,21 +111,23 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
     @Override
     protected void initGoals()
     {
-        this.attackGoal = new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(12.0d), new int[]{65, 35, 20});
+        this.attackGoal = new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(12.0d), new int[]{70, 40, 20});
         this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.2, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
         this.goalSelector.add(2, this.attackGoal);
         this.goalSelector.add(3, new WanderNearTargetGoal(this, 0.8, 32.0F));
         this.goalSelector.add(5, new IronGolemWanderAroundGoal(this, 0.8));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(8, new LookAroundGoal(this));
-        this.targetSelector.add(2, new RevengeGoal(this, new Class[0]));
-        this.targetSelector.add(3, new ActiveTargetGoal(this, MobEntity.class, 5, false, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
+        this.targetSelector.add(2, new RevengeGoal(this));
+        this.targetSelector.add(3, new SharedTargetGoal<>(this, GolemEntity.class, MobEntity.class, 5, false, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity), 5));
     }
 
     @Override
     public boolean tryAttack()
     {
         if (getAttackState() != 2) return false;
+
+        this.addStatusEffect(new StatusEffectInstance(armorEffect));
         return true;
     }
 
@@ -158,6 +166,9 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
             target.damage(getDamageSources().mobAttack(this), getAttackDamage());
             applyDamageEffects(this, target);
             target.setVelocity(target.getVelocity().multiply(2));
+
+            if (target instanceof LivingEntity livingTarget)
+                livingTarget.addStatusEffect(new StatusEffectInstance(stunEffect));
             return;
         }
         super.pushAwayFrom(target);

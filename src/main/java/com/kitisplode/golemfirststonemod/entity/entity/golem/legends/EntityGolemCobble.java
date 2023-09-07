@@ -7,6 +7,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDel
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackBlockGoalRanged;
 import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoalRanged;
+import com.kitisplode.golemfirststonemod.entity.goal.target.SharedTargetGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -126,8 +127,7 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(8, new LookAroundGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this, new Class[0]));
-        this.targetSelector
-                .add(3, new ActiveTargetGoal(this, MobEntity.class, 5, false, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
+        this.targetSelector.add(3, new SharedTargetGoal<>(this, GolemEntity.class, MobEntity.class, 5, false, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity), 5));
     }
 
     @Override
@@ -140,6 +140,7 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
         {
             this.playSound(SoundEvents.ENTITY_IRON_GOLEM_ATTACK, 1.0f, 1.0f);
             getTarget().damage(getDamageSources().mobAttack(this), getAttackDamage());
+            getTarget().setVelocity(getTarget().getVelocity().multiply(0.35d));
             applyDamageEffects(this, getTarget());
         }
         return true;

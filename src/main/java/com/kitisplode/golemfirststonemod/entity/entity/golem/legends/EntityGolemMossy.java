@@ -48,15 +48,16 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
     private static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(EntityGolemMossy.class, TrackedDataHandlerRegistry.INTEGER);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private static final int healRegenTime = 20 * 2;
-    private static final int healRegenAmount = 3;
+    private static final int healRegenAmount = 0;
     private static final float attackAOERange = 4.0f;
     private static final float attackVerticalRange = 5.0f;
     private final ArrayList<StatusEffectInstance> shieldStatusEffects = new ArrayList<>();
+    private MultiStageAttackGoalRanged attackGoal;
 
     public EntityGolemMossy(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
     {
         super(pEntityType, pLevel);
-        shieldStatusEffects.add(new StatusEffectInstance(StatusEffects.REGENERATION, healRegenTime, healRegenAmount, false, true));
+        shieldStatusEffects.add(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, healRegenTime, healRegenAmount, false, true));
     }
 
     public static DefaultAttributeContainer.Builder setAttributes()
@@ -103,8 +104,9 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
 
     @Override
     protected void initGoals() {
+        this.attackGoal = new MultiStageAttackGoalRanged(this, 1.0, true, 4.0D, new int[]{80, 20});
         this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.2, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
-        this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, 4.0D, new int[]{60, 20}));
+        this.goalSelector.add(2, this.attackGoal);
         this.goalSelector.add(3, new EscapeDangerGoal(this, 1.0));
         this.goalSelector.add(4, new WanderNearTargetGoal(this, 0.8, 32.0F));
         this.goalSelector.add(5, new IronGolemWanderAroundGoal(this, 0.8));
@@ -227,7 +229,7 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
             {
                 if (pGolem.getAttackState() == 1)
                 {
-                    event.getController().setAnimationSpeed(1.00);
+                    event.getController().setAnimationSpeed(0.50);
                     return event.setAndContinue(RawAnimation.begin().then("animation.golem_mossy.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
                 }
                 event.getController().setAnimationSpeed(1.00);
