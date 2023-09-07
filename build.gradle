@@ -17,14 +17,14 @@ repositories {
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
 
-	maven { url "https://maven.shedaniel.me/" }
-	maven { url "https://maven.terraformersmc.com/releases/" }
-
-	maven {
-		name = "Modrinth"
-		url = "https://api.modrinth.com/maven"
-		content { includeGroup "maven.modrinth" }
-	}
+//	maven { url "https://maven.shedaniel.me/" }
+//	maven { url "https://maven.terraformersmc.com/releases/" }
+//
+//	maven {
+//		name = "Modrinth"
+//		url = "https://api.modrinth.com/maven"
+//		content { includeGroup "maven.modrinth" }
+//	}
 
 	maven {
 		name = "GeckoLib"

@@ -7,9 +7,12 @@
 		"entity/MixinIronGolemEntity",
 		"entity/MixinSnowGolemEntity",
 		"entity/MixinPlayerEntity",
-		"entity/MixinClientPlayerEntity",
 		"MixinServerWorld",
 		"MixinStructurePoolAccessor"
+	],
+	"client": [
+		"entity/MixinClientPlayerEntity",
+		"MixinMinecraftClient"
 	],
 	"injectors": {
 		"defaultRequire": 1

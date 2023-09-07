@@ -2,7 +2,6 @@ package com.kitisplode.golemfirststonemod.item.item;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
@@ -17,18 +16,13 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.MerchantEntity;
-import net.minecraft.entity.passive.SnowGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -38,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ItemDandoriAttack extends Item
+public class ItemDandoriAttack extends Item implements IItemSwingUse
 {
     static private final double dandoriRange = 16;
     static private final int maxUseTime = 72000;
@@ -59,6 +53,17 @@ public class ItemDandoriAttack extends Item
         tooltip.add(Text.translatable("item.golemfirststonemod.item_description.item_dandori_attack_1"));
         tooltip.add(Text.translatable("item.golemfirststonemod.item_description.item_dandori_attack_2"));
         tooltip.add(Text.translatable("item.golemfirststonemod.item_description.item_dandori_attack_3"));
+    }
+
+    @Override
+    public void swing(PlayerEntity player)
+    {
+        GolemFirstStoneMod.LOGGER.info("Dandori Attack!");
+    }
+    @Override
+    public void swingTick(PlayerEntity player)
+    {
+        GolemFirstStoneMod.LOGGER.info("Dandori Attack Tick!");
     }
 
     @Override
