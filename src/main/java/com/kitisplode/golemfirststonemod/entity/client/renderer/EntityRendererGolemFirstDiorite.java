@@ -50,7 +50,7 @@ public class EntityRendererGolemFirstDiorite extends GeoEntityRenderer<EntityGol
 	private void renderHeadFlame(EntityGolemFirstDiorite entity, float partialTick, MatrixStack matrixStack, VertexConsumerProvider bufferSource, int packedLight)
 	{
 		ItemStack itemStack = new ItemStack(ModItems.ITEM_FLAME_OF_CREATION_RED);
-		if (entity.getSummonCooleddown()) itemStack = new ItemStack(ModItems.ITEM_FLAME_OF_CREATION_BLUE);
+		if (entity.getSummonCooleddown() && entity.getSummonState() < 3) itemStack = new ItemStack(ModItems.ITEM_FLAME_OF_CREATION_BLUE);
 		matrixStack.push();
 		CoreGeoBone flame = this.getGeoModel().getAnimationProcessor().getBone("flame");
 		CoreGeoBone head = this.getGeoModel().getAnimationProcessor().getBone("head");
@@ -60,12 +60,13 @@ public class EntityRendererGolemFirstDiorite extends GeoEntityRenderer<EntityGol
 		RenderUtils.prepMatrixForBone(matrixStack, body);
 		RenderUtils.prepMatrixForBone(matrixStack, head);
 		RenderUtils.prepMatrixForBone(matrixStack, flame);
-		matrixStack.translate(head.getPivotX()/16, head.getPivotY()/16.0 - 0.1, head.getPivotZ()/16);
+		matrixStack.translate(head.getPivotX()/16, head.getPivotY()/16.0, head.getPivotZ()/16);
 		matrixStack.multiply(RotationAxis.POSITIVE_X.rotation(-body.getRotX()));
 		matrixStack.multiply(RotationAxis.POSITIVE_X.rotation(-head.getRotX()));
 		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotation(head.getRotZ()));
 		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MathHelper.lerp(partialTick, entity.prevBodyYaw, entity.getBodyYaw()) + 180));
 		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotation(-(float)ExtraMath.getYawBetweenPoints(entity.getEyePos(), MinecraftClient.getInstance().player.getPos()) + (float)(Math.PI)));
+		matrixStack.translate(0,-0.25,0);
 		matrixStack.scale(1.5f, 1.5f, 1.5f);
 		this.heldItemRenderer.renderItem(entity, itemStack, ModelTransformationMode.GROUND, false, matrixStack, bufferSource, packedLight);
 		matrixStack.pop();
