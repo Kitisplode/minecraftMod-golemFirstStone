@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
-public class DandoriFollowHardGoal extends Goal
+public class DandoriFollowSoftGoal extends Goal
 {
     private static final TargetPredicate TEMPTING_ENTITY_PREDICATE = TargetPredicate.createNonAttackable().setBaseMaxDistance(10.0);
     private final TargetPredicate predicate;
@@ -24,12 +24,12 @@ public class DandoriFollowHardGoal extends Goal
     private boolean active;
     private final double moveRange;
 
-    public DandoriFollowHardGoal(PathAwareEntity entity, double pSpeed, double pRange, double pSeeRange)
+    public DandoriFollowSoftGoal(PathAwareEntity entity, double pSpeed, double pRange, double pSeeRange)
     {
         this.mob = entity;
         pik = (IEntityDandoriFollower) entity;
         this.speed = pSpeed;
-        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
+        this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
         this.moveRange = MathHelper.square(pRange);
         this.predicate = TEMPTING_ENTITY_PREDICATE.copy().setPredicate(this::isTemptedBy).setBaseMaxDistance(Math.max(10.0, pSeeRange));
     }
@@ -39,7 +39,7 @@ public class DandoriFollowHardGoal extends Goal
     {
         if (this.mob.isSleeping() || this.pik.isImmobile()) return false;
         // Dandori only things that are in dandori mode.
-        if (!pik.isDandoriHard()) return false;
+        if (pik.isDandoriOff()) return false;
         // Get the nearest player that we should follow.
         this.closestPlayer = (PlayerEntity)this.pik.getOwner();//this.mob.getWorld().getClosestPlayer(this.predicate, this.mob);
         return this.closestPlayer != null;
@@ -54,8 +54,7 @@ public class DandoriFollowHardGoal extends Goal
     @Override
     public boolean shouldContinue()
     {
-        if (!this.canStart()) return false;
-        return this.mob.getTarget() != null;
+        return this.canStart();
     }
 
     @Override
@@ -71,7 +70,6 @@ public class DandoriFollowHardGoal extends Goal
         this.closestPlayer = null;
         this.mob.getNavigation().stop();
         this.active = false;
-        this.pik.setDandoriState(IEntityDandoriFollower.DANDORI_STATES.SOFT.ordinal());
     }
 
     @Override

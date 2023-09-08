@@ -75,19 +75,24 @@ You can alternatively obtain the First Heads from associated villagers in some v
 
 ---
 
-
 Features currently planned for future updates:
-+ Add the flame inside of First of Diorite's head lol
 + Add some interactions between the Firsts and the villagers, similar to the Iron Golem.
 + Maybe some of the other golems from other Minecraft spinoffs?
 + Some refinement in how to spawn golems to make it more... interesting?
 + Additional behaviors for Mob Vote golems to make them... useful... lol
 + More Dandori???
 
+---
 
 Compatibility notes:
 + There are mixins for Snow Golems, Iron Golems, and Carved Pumpkin Blocks, so this mod may be incompatible with other mods that affect those, too.
 + There are some player mixins, but i don't think they'd cause issues probably?
-+ The Overworld dimension is modified to have more space beneath the void. I don't know if this will definitely break things, but it might?
+
+---
+
+Credits:
++ Kaupenjoe for Minecraft Modding tutorials.
++ finallion_13 for villager code, taken from Villagers Plus with permission.
++ Ultimushadow for balancing suggestions.
 
 **Requires Fabric Modloader, Fabric API, and GeckoLib. Supports Minecraft Java Edition 1.20.1 only.**

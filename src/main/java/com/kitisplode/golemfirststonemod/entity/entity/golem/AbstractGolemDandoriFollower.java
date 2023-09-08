@@ -5,6 +5,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDan
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -25,7 +26,7 @@ import java.util.UUID;
 
 abstract public class AbstractGolemDandoriFollower extends IronGolemEntity implements IEntityDandoriFollower
 {
-    protected static final TrackedData<Boolean> DANDORI_STATE = DataTracker.registerData(AbstractGolemDandoriFollower.class, TrackedDataHandlerRegistry.BOOLEAN);
+    protected static final TrackedData<Integer> DANDORI_STATE = DataTracker.registerData(AbstractGolemDandoriFollower.class, TrackedDataHandlerRegistry.INTEGER);
     protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(AbstractGolemDandoriFollower.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     private static final TrackedData<Boolean> THROWN = DataTracker.registerData(AbstractGolemDandoriFollower.class, TrackedDataHandlerRegistry.BOOLEAN);
     protected static final double dandoriMoveRange = 6;
@@ -45,7 +46,7 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
     {
         super.initDataTracker();
         if (!this.dataTracker.containsKey(DANDORI_STATE))
-            this.dataTracker.startTracking(DANDORI_STATE, false);
+            this.dataTracker.startTracking(DANDORI_STATE, 0);
         if (!this.dataTracker.containsKey(OWNER_UUID))
             this.dataTracker.startTracking(OWNER_UUID, Optional.empty());
         if (!this.dataTracker.containsKey(THROWN))
@@ -102,14 +103,14 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
         this.dataTracker.set(OWNER_UUID, Optional.ofNullable(uuid));
     }
 
-    public boolean getDandoriState()
+    public int getDandoriState()
     {
         return this.dataTracker.get(DANDORI_STATE);
     }
-    public void setDandoriState(boolean pDandoriState)
+    public void setDandoriState(int pDandoriState)
     {
-        if (this.getOwner() != null && this.getDandoriState()) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
-        if (pDandoriState)
+        if (this.getOwner() != null) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        if (pDandoriState > 0)
         {
             this.setDeployPosition(null);
         }
@@ -183,7 +184,7 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
     @Override
     public void remove(RemovalReason reason)
     {
-        if (this.getDandoriState() && this.getOwner() != null)
+        if (this.isDandoriOn() && this.getOwner() != null)
         {
             ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         }
@@ -199,6 +200,12 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
     public BlockPos getDeployPosition()
     {
         return this.deployPosition;
+    }
+    @Override
+    public double getTargetRange()
+    {
+        if (this.isDandoriOn()) return 6.0d;
+        return this.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE);
     }
 
     public boolean isImmobile()

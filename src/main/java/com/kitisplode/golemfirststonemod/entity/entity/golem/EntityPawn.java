@@ -11,7 +11,6 @@ import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.util.ParticleUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
@@ -67,7 +66,7 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     protected static final TrackedData<Integer> OWNER_TYPE = DataTracker.registerData(EntityPawn.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> PAWN_TYPE = DataTracker.registerData(EntityPawn.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> DANDORI_STATE = DataTracker.registerData(EntityPawn.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Integer> DANDORI_STATE = DataTracker.registerData(EntityPawn.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> THROWN = DataTracker.registerData(EntityPawn.class, TrackedDataHandlerRegistry.BOOLEAN);
     protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(EntityPawn.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 
@@ -133,7 +132,7 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
         this.dataTracker.startTracking(PAWN_TYPE, pawnType);
         this.dataTracker.startTracking(OWNER_TYPE, 0);
         if (!this.dataTracker.containsKey(DANDORI_STATE))
-            this.dataTracker.startTracking(DANDORI_STATE, false);
+            this.dataTracker.startTracking(DANDORI_STATE, 0);
         if (!this.dataTracker.containsKey(THROWN))
             this.dataTracker.startTracking(THROWN, false);
         if (!this.dataTracker.containsKey(OWNER_UUID))
@@ -214,18 +213,18 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
         this.dataTracker.set(OWNER_UUID, Optional.ofNullable(uuid));
     }
 
-    public boolean getDandoriState()
+    public int getDandoriState()
     {
         return this.dataTracker.get(DANDORI_STATE);
     }
-    public void setDandoriState(boolean pDandoriState)
+    public void setDandoriState(int pDandoriState)
     {
 
-        if (this.getOwner() != null && this.getDandoriState()) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
-        if (pDandoriState)
+        if (this.getOwner() != null) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        if (pDandoriState > 0)
         {
             this.setDeployPosition(null);
-            if (this.getOwner() != null && !this.getDandoriState())
+            if (this.getOwner() != null && this.isDandoriOn())
                 this.playSound(ModSounds.ENTITY_VILLAGER_DANDORI_PLUCK, 0.2f, this.random.nextFloat() * 0.4f + 0.3f);
         }
         else
@@ -398,7 +397,7 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
                 else timeWithoutTarget = 0;
             }
             // Drop a block target if we've been ordered to do other things.
-            if ((this.getTarget() != null || this.getDandoriState()) && this.blockTarget != null)
+            if ((this.getTarget() != null || this.isDandoriOn()) && this.blockTarget != null)
             {
                 getWorld().setBlockBreakingInfo(getId(), this.blockTarget, -1);
                 this.blockTarget = null;
@@ -431,12 +430,12 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
                 }
             }
             // If we're not in dandori and the player owner is near, and we're not doing anything anyways, just dandori.
-            if (this.getOwnerType() == OWNER_TYPES.PLAYER.ordinal() && this.getOwner() != null && !this.getDandoriState())
+            if (this.getOwnerType() == OWNER_TYPES.PLAYER.ordinal() && this.getOwner() != null && this.isDandoriOff())
             {
                 if (this.getTarget() == null && this.blockTarget == null && this.squaredDistanceTo(this.getOwner()) < MathHelper.square(safeRange + 1) && noDandoriTimer == 0)
                 {
                     ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
-                    this.setDandoriState(true);
+                    this.setDandoriState(DANDORI_STATES.HARD.ordinal());
                 }
             }
             if (noDandoriTimer > 0) noDandoriTimer--;
@@ -523,7 +522,7 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
     @Override
     public void remove(RemovalReason reason)
     {
-        if (this.getOwnerType() == OWNER_TYPES.PLAYER.ordinal() && this.getDandoriState() && this.getOwner() != null)
+        if (this.getOwnerType() == OWNER_TYPES.PLAYER.ordinal() && this.isDandoriOn() && this.getOwner() != null)
         {
             ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         }
@@ -604,6 +603,12 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
     public BlockPos getDeployPosition()
     {
         return this.deployPosition;
+    }
+    @Override
+    public double getTargetRange()
+    {
+        if (this.isDandoriOn()) return 6.0d;
+        return this.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE);
     }
 
     @Override
@@ -869,7 +874,7 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
                 }
                 else
                 {
-                    return this.pawn.getDandoriState();
+                    return this.pawn.isDandoriOn();
                 }
             }
             return false;
@@ -978,8 +983,8 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
         @Override
         public boolean canStart() {
             if (this.pawn.getPawnType() != PAWN_TYPES.PIK_BLUE.ordinal()) return false;
-            if (this.pawn.getDandoriState() && this.pawn.getOwner() != null && this.pawn.getOwner().getY() < this.pawn.getY() && !this.pawn.isOnGround()) return false;
-            if (!this.pawn.getDandoriState() && this.pawn.getTarget() != null && this.pawn.getTarget().getY() < this.pawn.getY() && !this.pawn.isOnGround()) return false;
+            if (this.pawn.isDandoriOn() && this.pawn.getOwner() != null && this.pawn.getOwner().getY() < this.pawn.getY() && !this.pawn.isOnGround()) return false;
+            if (this.pawn.isDandoriOff() && this.pawn.getTarget() != null && this.pawn.getTarget().getY() < this.pawn.getY() && !this.pawn.isOnGround()) return false;
             return (this.pawn.isTouchingWater() || this.pawn.isInLava()) && this.pawn.getMoveControl() instanceof EntityPawn.SlimeMoveControl;
         }
 
@@ -997,7 +1002,7 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
             if ((moveControl = this.pawn.getMoveControl()) instanceof EntityPawn.SlimeMoveControl) {
                 EntityPawn.SlimeMoveControl slimeMoveControl = (EntityPawn.SlimeMoveControl)moveControl;
                 float speed = 2.0f;
-                if (!this.pawn.getDandoriState() && this.pawn.getTarget() == null && this.pawn.blockTarget == null) speed = 0.0f;
+                if (this.pawn.isDandoriOn() && this.pawn.getTarget() == null && this.pawn.blockTarget == null) speed = 0.0f;
                 slimeMoveControl.move(speed);
             }
         }
@@ -1018,7 +1023,7 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
             if (this.pawn.getOwner() == null) return false;
             if (this.pawn.squaredDistanceTo(this.pawn.getOwner()) < MathHelper.square(this.pawn.safeRange))
             {
-                if (this.pawn.getDandoriState() || (this.pawn.getTarget() == null && this.pawn.blockTarget == null))
+                if (this.pawn.isDandoriOn() || (this.pawn.getTarget() == null && this.pawn.blockTarget == null))
                     return false;
             }
             return !this.pawn.hasVehicle();
@@ -1031,7 +1036,7 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
                 if (this.pawn.getOwnerType() == OWNER_TYPES.PLAYER.ordinal())
                 {
                     float speed = 1.75f;
-                    if (!this.pawn.getDandoriState() && this.pawn.getTarget() == null && this.pawn.blockTarget == null) speed = 0.0f;
+                    if (this.pawn.isDandoriOff() && this.pawn.getTarget() == null && this.pawn.blockTarget == null) speed = 0.0f;
                     slimeMoveControl.move(speed);
                 }
                 else

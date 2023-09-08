@@ -118,7 +118,7 @@ public class ItemDandoriAttack extends Item
             // Skip anything that doesn't follow dandori rules
             if (!(target instanceof IEntityDandoriFollower)) continue;
             // Skip piks that are not in dandori mode, unless we're forcing dandori.
-            if (!((IEntityDandoriFollower) target).getDandoriState() && !forceDandori) continue;
+            if (((IEntityDandoriFollower) target).isDandoriOff() && !forceDandori) continue;
             // If the thing has an owner, skip ones unless we are the owner.
             boolean targetHasOwner = ((IEntityDandoriFollower) target).getOwner() != null;
             if (targetHasOwner)
@@ -138,7 +138,7 @@ public class ItemDandoriAttack extends Item
             targetCount++;
             // Make the pik target the enemy we got earlier.
             target.setTarget(enemy);
-            ((IEntityDandoriFollower) target).setDandoriState(false);
+            ((IEntityDandoriFollower) target).setDandoriState(IEntityDandoriFollower.DANDORI_STATES.OFF.ordinal());
         }
         return targetCount;
     }

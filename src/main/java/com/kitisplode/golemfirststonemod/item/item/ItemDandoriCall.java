@@ -1,6 +1,5 @@
 package com.kitisplode.golemfirststonemod.item.item;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
@@ -10,12 +9,7 @@ import com.kitisplode.golemfirststonemod.util.DataDandoriCount;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.Tameable;
-import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.Monster;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,7 +20,6 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
@@ -88,6 +81,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
                         user.playSound(ModSounds.ITEM_DANDORI_ATTACK_WIN, 1.0f, 1.0f);
                         effectDeploy(world, 20, 6, ray.getPos());
                     }
+                    user.swingHand(Hand.MAIN_HAND);
                 }
             }
         }
@@ -146,12 +140,12 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
         {
             if (!user.isSneaking())
             {
-                int dandoriCount = dandoriWhistle(world, user, false, true);
+                int dandoriCount = dandoriWhistle(world, user, false, IEntityDandoriFollower.DANDORI_STATES.HARD);
                 if (dandoriCount > 0) ((IEntityWithDandoriCount) user).setRecountDandori();
             }
             else
             {
-                int dandoriCount = dandoriWhistle(world, user, true, false);
+                int dandoriCount = dandoriWhistle(world, user, true, IEntityDandoriFollower.DANDORI_STATES.OFF);
                 if (dandoriCount > 0) ((IEntityWithDandoriCount) user).setRecountDandori();
             }
             effectWhistle(world, user, dandoriForceTime);
@@ -161,6 +155,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
         user.playSound(ModSounds.ITEM_DANDORI_CALL, 0.4f, 0.9f);
         user.setCurrentHand(hand);
         ItemStack itemStack = user.getStackInHand(hand);
+        user.swingHand(Hand.MAIN_HAND);
         return TypedActionResult.pass(itemStack);
     }
 
@@ -176,7 +171,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
                 {
                     if (!user.isSneaking())
                     {
-                        int dandoriCount = dandoriWhistle(world, user, true, true);
+                        int dandoriCount = dandoriWhistle(world, user, true, IEntityDandoriFollower.DANDORI_STATES.HARD);
                         if (dandoriCount > 0) ((IEntityWithDandoriCount) user).setRecountDandori();
                     }
                     if (remainingUseTicks + 10 >= actualDandoriForceTime)
@@ -209,7 +204,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
             ((PlayerEntity)user).getItemCooldownManager().set(this, cooldownTime);
     }
 
-    private int dandoriWhistle(World world, LivingEntity user, boolean forceDandori, boolean dandoriValue)
+    private int dandoriWhistle(World world, LivingEntity user, boolean forceDandori, IEntityDandoriFollower.DANDORI_STATES dandoriValue)
     {
         int targetCount = 0;
         List<MobEntity> targetList = world.getNonSpectatingEntities(MobEntity.class, user.getBoundingBox().expand(dandoriRange));
@@ -223,7 +218,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
             if (!(target instanceof IEntityDandoriFollower)) continue;
             IEntityDandoriFollower dandoriTarget = (IEntityDandoriFollower) target;
             // Skip things that already have dandori active?
-            if (dandoriTarget.getDandoriState() == dandoriValue) continue;
+            if (dandoriTarget.getDandoriState() == dandoriValue.ordinal()) continue;
             // If the thing has an owner, skip ones unless we are the owner.
             boolean targetHasOwner = dandoriTarget.getOwner() != null;
             if (targetHasOwner)
@@ -236,7 +231,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
             // If the pik doesn't have a target, or if we're forcing dandori, activate the pik's dandori mode.
             if (target.getTarget() == null || forceDandori)
             {
-                dandoriTarget.setDandoriState(dandoriValue);
+                dandoriTarget.setDandoriState(dandoriValue.ordinal());
             }
         }
         return targetCount;
@@ -256,7 +251,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
             // Skip anything that doesn't follow dandori rules
             if (!(target instanceof IEntityDandoriFollower)) continue;
             // Skip piks that are not in dandori mode, unless we're forcing dandori.
-            if (!((IEntityDandoriFollower) target).getDandoriState() && !forceDandori) continue;
+            if (((IEntityDandoriFollower) target).isDandoriOff() && !forceDandori) continue;
             // If the thing has an owner, skip ones unless we are the owner.
             boolean targetHasOwner = ((IEntityDandoriFollower) target).getOwner() != null;
             if (targetHasOwner)
@@ -270,7 +265,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
             targetCount++;
             // Deploy the pik to the given location.
             ((IEntityDandoriFollower) target).setDeployPosition(position);
-            ((IEntityDandoriFollower) target).setDandoriState(false);
+            ((IEntityDandoriFollower) target).setDandoriState(IEntityDandoriFollower.DANDORI_STATES.OFF.ordinal());
         }
         return targetCount;
     }

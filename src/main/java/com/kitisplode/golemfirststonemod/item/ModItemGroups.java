@@ -39,6 +39,7 @@ public class ModItemGroups
                         entries.add(ModItems.ITEM_SPAWN_GOLEM_MOSSY);
                         entries.add(ModItems.ITEM_SPAWN_GOLEM_GRINDSTONE);
                         entries.add(ModItems.ITEM_DANDORI_CALL);
+                        entries.add(ModItems.ITEM_DANDORI_BANNER);
                         entries.add(ModItems.ITEM_DANDORI_ATTACK);
                         entries.add(ModItems.ITEM_DANDORI_DIG);
                         entries.add(ModItems.ITEM_DANDORI_THROW);

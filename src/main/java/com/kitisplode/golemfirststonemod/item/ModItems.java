@@ -2,10 +2,7 @@ package com.kitisplode.golemfirststonemod.item;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.item.item.ItemDandoriAttack;
-import com.kitisplode.golemfirststonemod.item.item.ItemDandoriCall;
-import com.kitisplode.golemfirststonemod.item.item.ItemDandoriDig;
-import com.kitisplode.golemfirststonemod.item.item.ItemDandoriThrow;
+import com.kitisplode.golemfirststonemod.item.item.*;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.item.Item;
@@ -42,6 +39,8 @@ public class ModItems
             new ItemDandoriDig(new FabricItemSettings().maxCount(1)));
     public static final Item ITEM_DANDORI_THROW = registerItem("item_dandori_throw",
             new ItemDandoriThrow(new FabricItemSettings().maxCount(1)));
+    public static final Item ITEM_DANDORI_BANNER = registerItem("item_dandori_banner",
+            new ItemDandoriBanner(new FabricItemSettings().maxCount(1)));
     public static final Item ITEM_FLAME_OF_CREATION_BLUE = registerItem("item_flame_of_creation_blue",
             new Item(new FabricItemSettings().maxCount(16)));
     public static final Item ITEM_FLAME_OF_CREATION_RED = registerItem("item_flame_of_creation_red",
@@ -61,5 +60,6 @@ public class ModItems
     {
         ModelPredicateProviderRegistry.register(ITEM_DANDORI_CALL, new Identifier("tooting"),
                 (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
+
     }
 }

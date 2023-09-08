@@ -91,3 +91,7 @@
         - apply short slowness effect to enemies hit with charge
     + Changes to Dandori Call item
         - Can now use to command followers to go to a looked at location (hopefully makes golem commands slightly less clunky)
+        - Followers now have two states of Dandori:
+            = hard dandori: will ignore all enemies until they are out of range, at which point it will switch to soft dandori
+            = soft dandori: will attack enemies that get too close then return to following the player
+    + Added Banner of Courage (it's just a reskin of the Dandori Call item lol)

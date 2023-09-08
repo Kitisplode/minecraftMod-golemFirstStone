@@ -35,7 +35,7 @@ public class DataDandoriCount
         List<LivingEntity> followerList = player.getWorld().getEntitiesByClass(LivingEntity.class, player.getBoundingBox().expand(dandoriSeeRange), entity ->
         {
             if (!(entity instanceof IEntityDandoriFollower)) return false;
-            if (!((IEntityDandoriFollower) entity).getDandoriState()) return false;
+            if (!((IEntityDandoriFollower) entity).isDandoriOn()) return false;
             return ((IEntityDandoriFollower) entity).getOwner() == player;
         });
         // Clear the current follower map.

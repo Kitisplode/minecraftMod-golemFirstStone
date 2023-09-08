@@ -9,9 +9,33 @@ public interface IEntityDandoriFollower
 {
     byte ENTITY_EVENT_DANDORI_START = 8;
 
-    public boolean getDandoriState();
+    enum DANDORI_STATES
+    {
+        OFF,
+        SOFT,
+        HARD
+    }
 
-    public void setDandoriState(boolean pDandoriState);
+    public int getDandoriState();
+
+    public void setDandoriState(int pDandoriState);
+
+    default boolean isDandoriOff()
+    {
+        return getDandoriState() == DANDORI_STATES.OFF.ordinal();
+    }
+    default boolean isDandoriOn()
+    {
+        return getDandoriState() != DANDORI_STATES.OFF.ordinal();
+    }
+    default boolean isDandoriSoft()
+    {
+        return getDandoriState() == DANDORI_STATES.SOFT.ordinal();
+    }
+    default boolean isDandoriHard()
+    {
+        return getDandoriState() == DANDORI_STATES.HARD.ordinal();
+    }
 
     public LivingEntity getOwner();
 
@@ -41,4 +65,6 @@ public interface IEntityDandoriFollower
 
     void setDeployPosition(BlockPos bp);
     BlockPos getDeployPosition();
+
+    double getTargetRange();
 }

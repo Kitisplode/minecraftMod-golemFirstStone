@@ -6,6 +6,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowSoftGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriMoveToDeployPositionGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.entity.goal.target.PassiveTargetGoal;
@@ -102,14 +103,18 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
 	protected void initGoals() {
 		this.attackGoal = new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(attackAOERange), new int[]{120, 85,80, 25}, 0);
 		this.attackGoal.setCooldownMax(200);
-		this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.4, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
+
+		this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
 
 		this.goalSelector.add(2, this.attackGoal);
 		this.goalSelector.add(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
 
+		this.goalSelector.add(3, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+
 		this.goalSelector.add(3, new WanderNearTargetGoal(this, 0.8, 32.0F));
 		this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.8));
 		this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
+		this.goalSelector.add(7, new LookAtEntityGoal(this, MerchantEntity.class, 8.0F));
 		this.goalSelector.add(8, new LookAroundGoal(this));
 		this.targetSelector
 				.add(1, new PassiveTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, false, false, golemTarget()));
@@ -266,7 +271,7 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
 	public void tick()
 	{
 		super.tick();
-		if (this.getAttackState() == 0 && this.attackGoal != null && this.attackGoal.isCooledDown() && !this.getDandoriState())
+		if (this.getAttackState() == 0 && this.attackGoal != null && this.attackGoal.isCooledDown() && this.isDandoriOff())
 		{
 			List<LivingEntity> list = this.getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(32), entity->entity instanceof Monster && this.canSee(entity));
 			if (!list.isEmpty())
