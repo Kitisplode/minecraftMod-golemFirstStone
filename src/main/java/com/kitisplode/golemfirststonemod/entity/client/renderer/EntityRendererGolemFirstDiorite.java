@@ -9,6 +9,8 @@ import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.item.HeldItemRenderer;
@@ -68,7 +70,8 @@ public class EntityRendererGolemFirstDiorite extends GeoEntityRenderer<EntityGol
 		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotation(-(float)ExtraMath.getYawBetweenPoints(entity.getEyePos(), MinecraftClient.getInstance().player.getPos()) + (float)(Math.PI)));
 		matrixStack.translate(0,-0.25,0);
 		matrixStack.scale(1.5f, 1.5f, 1.5f);
-		this.heldItemRenderer.renderItem(entity, itemStack, ModelTransformationMode.GROUND, false, matrixStack, bufferSource, packedLight);
+
+		this.heldItemRenderer.renderItem(entity, itemStack, ModelTransformationMode.GROUND, false, matrixStack, bufferSource, 255);
 		matrixStack.pop();
 	}
 }

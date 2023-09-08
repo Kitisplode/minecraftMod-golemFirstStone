@@ -8,6 +8,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntitySummoner;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriMoveToDeployPositionGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.SummonEntityGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.WanderAroundTargetGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
@@ -131,7 +132,10 @@ public class EntityGolemFirstDiorite extends EntityGolemCobble implements GeoEnt
 	protected void initGoals() {
 		this.summonGoal	= new SummonEntityGoal<>(this, EntityPawn.class, spawnStages, pawnSearchRange, pawnsMax, spawnCooldown, 1);
 		this.goalSelector.add(0, new DandoriFollowHardGoal(this, 1.4, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
+
 		this.goalSelector.add(1, this.summonGoal);
+		this.goalSelector.add(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+
 		this.goalSelector.add(2, new EscapeDangerGoal(this, 1.0));
 		this.goalSelector.add(3, new WanderAroundTargetGoal(this, 0.8, 13.0f));
 		this.goalSelector.add(5, new IronGolemWanderAroundGoal(this, 0.8));

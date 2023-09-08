@@ -7,6 +7,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityCanAtta
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriMoveToDeployPositionGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackBlockGoalRanged;
 import com.kitisplode.golemfirststonemod.entity.goal.target.BlockTargetGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
@@ -185,6 +186,7 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.2, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
         this.goalSelector.add(2, new CopperGolemFleeEntityGoal<HostileEntity>(this, HostileEntity.class, 16.0f, 0.9, 1.0));
         this.goalSelector.add(2, new CopperGolemEscapeDangerGoal(this, 1.0));
         this.goalSelector.add(3, new MultiStageAttackBlockGoalRanged(this, 1.0, true, 9.0D, new int[]{40, 25, 10}));

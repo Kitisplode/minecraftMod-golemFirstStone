@@ -1,7 +1,11 @@
 package com.kitisplode.golemfirststonemod.util;
 
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
+import net.minecraft.world.World;
 
 public class ExtraMath
 {
@@ -53,5 +57,20 @@ public class ExtraMath
             f = -max;
         }
         return from + f;
+    }
+
+    public static BlockHitResult playerRaycast(World world, PlayerEntity player, RaycastContext.FluidHandling fluidHandling, double range) {
+        float f = player.getPitch();
+        float g = player.getYaw();
+        Vec3d vec3d = player.getEyePos();
+        float h = MathHelper.cos(-g * ((float)Math.PI / 180) - (float)Math.PI);
+        float i = MathHelper.sin(-g * ((float)Math.PI / 180) - (float)Math.PI);
+        float j = -MathHelper.cos(-f * ((float)Math.PI / 180));
+        float k = MathHelper.sin(-f * ((float)Math.PI / 180));
+        float l = i * j;
+        float m = k;
+        float n = h * j;
+        Vec3d vec3d2 = vec3d.add((double)l * range, (double)m * range, (double)n * range);
+        return world.raycast(new RaycastContext(vec3d, vec3d2, RaycastContext.ShapeType.OUTLINE, fluidHandling, player));
     }
 }

@@ -3,6 +3,7 @@ package com.kitisplode.golemfirststonemod.mixin.entity;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriMoveToDeployPositionGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -16,6 +17,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.ServerConfigHandler;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -34,6 +36,7 @@ public abstract class MixinIronGolemEntity extends GolemEntity implements Angera
     private static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(MixinIronGolemEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     private static final double dandoriMoveRange = 3;
     private static final double dandoriSeeRange = 36;
+    private BlockPos deployPosition;
 
     protected MixinIronGolemEntity(EntityType<? extends GolemEntity> entityType, World world)
     {
@@ -118,13 +121,18 @@ public abstract class MixinIronGolemEntity extends GolemEntity implements Angera
     public void setDandoriState(boolean pDandoriState)
     {
         if (this.getOwner() != null && this.getDandoriState()) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        if (pDandoriState)
+        {
+            this.setDeployPosition(null);
+        }
         this.dataTracker.set(DANDORI_STATE, pDandoriState);
     }
 
     @Inject(method = ("initGoals"), at = @At("HEAD"))
-    protected void initGoals(CallbackInfo ci)
+    protected void initGoals_head(CallbackInfo ci)
     {
         this.goalSelector.add(0, new DandoriFollowHardGoal(this, 1.4, Ingredient.ofItems(ModItems.ITEM_DANDORI_CALL, ModItems.ITEM_DANDORI_ATTACK), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
     }
 
     @ModifyVariable(method = ("handleStatus"), at = @At("HEAD"), ordinal = 0)
@@ -150,5 +158,16 @@ public abstract class MixinIronGolemEntity extends GolemEntity implements Angera
             ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         }
         super.remove(reason);
+    }
+
+    @Override
+    public void setDeployPosition(BlockPos bp)
+    {
+        this.deployPosition = bp;
+    }
+    @Override
+    public BlockPos getDeployPosition()
+    {
+        return this.deployPosition;
     }
 }

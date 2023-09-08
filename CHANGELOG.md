@@ -76,6 +76,18 @@
     + Rebalance changes to First of Diorite
         - Diorite Pawns no longer starve without targets
         - First of Diorite will now spawn only 1 pawn at a time, but with a much shorter cool down, and it can chain spawns together to go even faster
-        - Once the First of Diorite stops spawning, it will have to cooldown a little longer before it can get down and spawn more again
+        - once the First of Diorite stops spawning, it will have to cooldown a little longer before it can get down and spawn more again
         - First of Diorite can have only 15 pawns active at a time
     + First of Diorite now has the flame inside its head like it's supposed to lol
+    + Rebalance changes to Cobblestone Golem
+        - deal less knockback when attacking
+    + Rebalance changes to Plank Golem
+        - deal less damage per arrow
+        - slightly reduced fire rate
+    + Rebalance changes to Mossy Golem
+        - increased windup time for healing
+    + Rebalance changes to Grindstone Golem
+        - now have some damage resistance while charging
+        - apply short slowness effect to enemies hit with charge
+    + Changes to Dandori Call item
+        - Can now use to command followers to go to a looked at location (hopefully makes golem commands slightly less clunky)

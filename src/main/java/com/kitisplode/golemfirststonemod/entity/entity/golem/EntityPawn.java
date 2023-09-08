@@ -91,6 +91,8 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
     public enum OWNER_TYPES {WANDERING, FIRST_OF_DIORITE, PLAYER, VILLAGER_DANDORI};
     public enum PAWN_TYPES {DIORITE_ACTION, DIORITE_FORESIGHT, DIORITE_KNOWLEDGE, PIK_YELLOW, PIK_PINK, PIK_BLUE};
 
+    private BlockPos deployPosition;
+
     public EntityPawn(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
     {
         super(pEntityType, pLevel);
@@ -218,15 +220,17 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
     }
     public void setDandoriState(boolean pDandoriState)
     {
-        if (!pDandoriState)
+
+        if (this.getOwner() != null && this.getDandoriState()) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        if (pDandoriState)
         {
-            if (this.getOwner() != null && this.getDandoriState()) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
-            noDandoriTimer = noDandoriTime;
+            this.setDeployPosition(null);
+            if (this.getOwner() != null && !this.getDandoriState())
+                this.playSound(ModSounds.ENTITY_VILLAGER_DANDORI_PLUCK, 0.2f, this.random.nextFloat() * 0.4f + 0.3f);
         }
         else
         {
-            if (this.getOwner() != null && !this.getDandoriState())
-                this.playSound(ModSounds.ENTITY_VILLAGER_DANDORI_PLUCK, 0.2f, this.random.nextFloat() * 0.4f + 0.3f);
+            noDandoriTimer = noDandoriTime;
         }
         this.dataTracker.set(DANDORI_STATE, pDandoriState);
     }
@@ -589,6 +593,17 @@ public class EntityPawn extends IronGolemEntity implements GeoEntity, IEntityDan
         getWorld().addParticle(ParticleTypes.NOTE,
                 getX(), getY() + getHeight() * 1.5, getZ(),
                 0,1,0);
+    }
+
+    @Override
+    public void setDeployPosition(BlockPos bp)
+    {
+        this.deployPosition = bp;
+    }
+    @Override
+    public BlockPos getDeployPosition()
+    {
+        return this.deployPosition;
     }
 
     @Override

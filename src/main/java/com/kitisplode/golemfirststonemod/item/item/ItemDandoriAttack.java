@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ItemDandoriAttack extends Item implements IItemSwingUse
+public class ItemDandoriAttack extends Item
 {
     static private final double dandoriRange = 16;
     static private final int maxUseTime = 72000;
@@ -53,17 +53,6 @@ public class ItemDandoriAttack extends Item implements IItemSwingUse
         tooltip.add(Text.translatable("item.golemfirststonemod.item_description.item_dandori_attack_1"));
         tooltip.add(Text.translatable("item.golemfirststonemod.item_description.item_dandori_attack_2"));
         tooltip.add(Text.translatable("item.golemfirststonemod.item_description.item_dandori_attack_3"));
-    }
-
-    @Override
-    public void swing(PlayerEntity player)
-    {
-        GolemFirstStoneMod.LOGGER.info("Dandori Attack!");
-    }
-    @Override
-    public void swingTick(PlayerEntity player)
-    {
-        GolemFirstStoneMod.LOGGER.info("Dandori Attack Tick!");
     }
 
     @Override

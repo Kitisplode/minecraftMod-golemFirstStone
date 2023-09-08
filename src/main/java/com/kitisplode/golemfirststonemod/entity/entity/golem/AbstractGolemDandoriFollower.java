@@ -14,6 +14,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.ServerConfigHandler;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -31,6 +32,8 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
     protected static final double dandoriSeeRange = 36;
     private boolean lastOnGround = false;
     private float throwAngle = 0.0f;
+
+    private BlockPos deployPosition;
 
     public AbstractGolemDandoriFollower(EntityType<? extends IronGolemEntity> entityType, World world)
     {
@@ -105,9 +108,10 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
     }
     public void setDandoriState(boolean pDandoriState)
     {
-        if (!pDandoriState)
+        if (this.getOwner() != null && this.getDandoriState()) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        if (pDandoriState)
         {
-            if (this.getOwner() != null && this.getDandoriState()) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+            this.setDeployPosition(null);
         }
         this.dataTracker.set(DANDORI_STATE, pDandoriState);
     }
@@ -184,6 +188,17 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
             ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         }
         super.remove(reason);
+    }
+
+    @Override
+    public void setDeployPosition(BlockPos bp)
+    {
+        this.deployPosition = bp;
+    }
+    @Override
+    public BlockPos getDeployPosition()
+    {
+        return this.deployPosition;
     }
 
     public boolean isImmobile()

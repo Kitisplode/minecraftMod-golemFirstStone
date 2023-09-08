@@ -18,7 +18,8 @@ public class C2SPacketItemSwingUseTick
         ItemStack itemStack = player.getStackInHand(Hand.MAIN_HAND);
         if (itemStack.getItem() instanceof IItemSwingUse item)
         {
-            item.swingTick(player);
+            if (!player.getItemCooldownManager().isCoolingDown(itemStack.getItem()))
+                item.swingTick(player);
         }
     }
 }

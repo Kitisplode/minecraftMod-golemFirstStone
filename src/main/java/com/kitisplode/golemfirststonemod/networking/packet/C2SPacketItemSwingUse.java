@@ -20,7 +20,8 @@ public class C2SPacketItemSwingUse
         ItemStack itemStack = player.getStackInHand(Hand.MAIN_HAND);
         if (itemStack.getItem() instanceof IItemSwingUse item)
         {
-            item.swing(player);
+            if (!player.getItemCooldownManager().isCoolingDown(itemStack.getItem()))
+                item.swing(player);
         }
     }
 }

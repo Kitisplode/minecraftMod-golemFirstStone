@@ -47,9 +47,13 @@
   "entity.minecraft.villager.villager_brick": "Golem Lapidarist",
   "entity.minecraft.villager.villager_diorite": "Golem Goldsmith",
 
-  "item.golemfirststonemod.item_description.item_dandori_call_1": "Use to call your idle golems to follow you.",
-  "item.golemfirststonemod.item_description.item_dandori_call_2": " Hold a little longer to call golems that are busy, too.",
-  "item.golemfirststonemod.item_description.item_dandori_call_3": " Use while sneaking to dismiss your followers.",
+  "item.golemfirststonemod.item_description.item_dandori_call_1": "Use this to lead your nearby golems!",
+  "item.golemfirststonemod.item_description.item_dandori_call_2": " Right click to call any of your nearby idle golems.",
+  "item.golemfirststonemod.item_description.item_dandori_call_3": " Hold right click a little bit to call all of your nearby golems.",
+  "item.golemfirststonemod.item_description.item_dandori_call_4": " Shift right click to dismiss golems following you.",
+  "item.golemfirststonemod.item_description.item_dandori_call_5": " Left click to order 1 selected golem type to go where you're looking.",
+  "item.golemfirststonemod.item_description.item_dandori_call_6": " Left click longer to order all your followers to go where you want.",
+  "item.golemfirststonemod.item_description.item_dandori_call_7": " Shift left click to cycle between types of golems to command.",
 
   "item.golemfirststonemod.item_description.item_dandori_attack_1": "Use to have your golem followers attack a target you're",
   "item.golemfirststonemod.item_description.item_dandori_attack_2": " looking near. Use while sneaking to cycle between",

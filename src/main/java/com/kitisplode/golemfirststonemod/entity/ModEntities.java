@@ -76,38 +76,38 @@ public class ModEntities
     public static final EntityType<EntityGolemCobble> ENTITY_GOLEM_COBBLE = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_golem_cobble"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityGolemCobble::new)
-                    .dimensions(EntityDimensions.fixed(1.0f, 1.0f))
+                    .dimensions(EntityDimensions.fixed(0.9f, 1.0f))
                     .build()
     );
     public static final EntityType<EntityGolemPlank> ENTITY_GOLEM_PLANK = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_golem_plank"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityGolemPlank::new)
-                    .dimensions(EntityDimensions.fixed(1.0f, 1.0f))
+                    .dimensions(EntityDimensions.fixed(0.9f, 1.0f))
                     .build()
     );
     public static final EntityType<EntityGolemMossy> ENTITY_GOLEM_MOSSY = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_golem_mossy"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityGolemMossy::new)
-                    .dimensions(EntityDimensions.fixed(1.0f, 1.0f))
+                    .dimensions(EntityDimensions.fixed(0.9f, 1.0f))
                     .build()
     );
     public static final EntityType<EntityGolemGrindstone> ENTITY_GOLEM_GRINDSTONE = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_golem_grindstone"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityGolemGrindstone::new)
-                    .dimensions(EntityDimensions.fixed(1.0f, 1.0f))
+                    .dimensions(EntityDimensions.fixed(0.9f, 1.0f))
                     .build()
     );
 
     public static final EntityType<EntityGolemTuff> ENTITY_GOLEM_TUFF = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_golem_tuff"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityGolemTuff::new)
-                    .dimensions(EntityDimensions.fixed(1.0f, 1.0f))
+                    .dimensions(EntityDimensions.fixed(0.9f, 1.0f))
                     .build()
     );
     public static final EntityType<EntityGolemCopper> ENTITY_GOLEM_COPPER = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(GolemFirstStoneMod.MOD_ID, "entity_golem_copper"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityGolemCopper::new)
-                    .dimensions(EntityDimensions.fixed(1.0f, 1.0f))
+                    .dimensions(EntityDimensions.fixed(0.9f, 1.0f))
                     .build()
     );
 

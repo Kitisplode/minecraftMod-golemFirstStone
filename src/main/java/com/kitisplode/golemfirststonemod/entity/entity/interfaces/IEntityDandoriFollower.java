@@ -2,6 +2,7 @@ package com.kitisplode.golemfirststonemod.entity.entity.interfaces;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public interface IEntityDandoriFollower
@@ -38,5 +39,6 @@ public interface IEntityDandoriFollower
         return 0.0f;
     }
 
-
+    void setDeployPosition(BlockPos bp);
+    BlockPos getDeployPosition();
 }
