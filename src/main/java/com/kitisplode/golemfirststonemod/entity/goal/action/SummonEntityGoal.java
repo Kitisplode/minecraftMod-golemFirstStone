@@ -5,10 +5,12 @@ import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntitySummone
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.mob.PathAwareEntity;
 
+import java.util.EnumSet;
 import java.util.List;
 
-public class SummonEntityGoal <T extends LivingEntity & IEntitySummoner, R extends Entity & IEntityDandoriFollower> extends Goal
+public class SummonEntityGoal <T extends PathAwareEntity & IEntitySummoner, R extends Entity & IEntityDandoriFollower> extends Goal
 {
     protected final T summoner;
     protected final Class<R> targetClass;
@@ -32,6 +34,7 @@ public class SummonEntityGoal <T extends LivingEntity & IEntitySummoner, R exten
         this.cooldownTime = time;
         this.cooldownTimer = 0;
         this.fastRepeatStage = fastRepeatStage;
+        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
     @Override
@@ -77,6 +80,7 @@ public class SummonEntityGoal <T extends LivingEntity & IEntitySummoner, R exten
     public void start()
     {
         this.forceSummon(this.summonStages[0]);
+        this.summoner.getNavigation().stop();
     }
 
     @Override
