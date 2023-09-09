@@ -118,6 +118,12 @@ public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implem
         if (this.getSummonState() > 0) return 0;
         return super.getMaxHeadXRot();
     }
+    @Override
+    public int getHeadRotSpeed()
+    {
+        if (this.getSummonState() > 0) return 0;
+        return super.getHeadRotSpeed();
+    }
 
     @Override
     public double getEyeY()
@@ -150,7 +156,7 @@ public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implem
     public void tick()
     {
         super.tick();
-        if (this.isSleeping() || this.isImmobile())
+        if (this.isSleeping() || this.isImmobile() || this.getSummonState() > 0)
         {
             this.xxa = 0.0F;
             this.zza = 0.0F;
