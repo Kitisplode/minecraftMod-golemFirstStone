@@ -9,10 +9,11 @@
     "entity/MixinIronGolem",
     "entity/MixinSnowGolem",
     "entity/MixinPlayer",
-    "entity/MixinLocalPlayer",
     "MixinStructurePoolAccessor",
     "MixinServerLevel"
   ],
   "client": [
+    "entity/MixinLocalPlayer",
+    "MixinMinecraft"
   ]
 }

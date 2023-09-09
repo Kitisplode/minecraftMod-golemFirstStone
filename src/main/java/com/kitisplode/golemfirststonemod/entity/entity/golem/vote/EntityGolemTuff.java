@@ -8,6 +8,8 @@ import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandori
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileAoEOwnerAware;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowSoftGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriMoveToDeployPositionGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.core.BlockPos;
@@ -177,16 +179,22 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
     @Override
     protected void registerGoals()
     {
-        this.goalSelector.addGoal(0, new PickupItemGoal(this, 1.0));
-        this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.4, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
-        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Monster.class, 16, 0.9D, 1));
-        this.goalSelector.addGoal(2, new PanicGoal(this, 1.0D));
-        this.goalSelector.addGoal(3, new DelayedCalmDownGoal(this, 200, 60 * 5));
-        this.goalSelector.addGoal(4, new MoveToFavoredPosition(this, 0.8D, 12));
-        this.goalSelector.addGoal(5, new GolemRandomStrollInVillageGoal(this, 0.8D));
-        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, AbstractVillager.class, 6.0F));
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+
+        this.goalSelector.addGoal(2, new PickupItemGoal(this, 1.0));
+        this.goalSelector.addGoal(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+
+        this.goalSelector.addGoal(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+
+
+        this.goalSelector.addGoal(5, new AvoidEntityGoal<>(this, Monster.class, 16, 0.9D, 1));
+        this.goalSelector.addGoal(5, new PanicGoal(this, 1.0D));
+        this.goalSelector.addGoal(6, new DelayedCalmDownGoal(this, 200, 60 * 5));
+        this.goalSelector.addGoal(7, new MoveToFavoredPosition(this, 0.8D, 12));
+        this.goalSelector.addGoal(8, new GolemRandomStrollInVillageGoal(this, 0.8D));
+        this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, AbstractVillager.class, 6.0F));
+        this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
     }
 
     @Override
@@ -431,7 +439,7 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
             return hasBlockNextTo;
         }
         protected boolean canCalmDown() {
-            if (this.mob.getDandoriState()) return false;
+            if (this.mob.isDandoriOn()) return false;
             if (this.mob.getSleepStatus() == 3) return false;
             if (this.mob.getLastAttacker() != null)
                 return Math.abs(this.mob.getLastHurtByMobTimestamp() - this.mob.tickCount) >= 10;

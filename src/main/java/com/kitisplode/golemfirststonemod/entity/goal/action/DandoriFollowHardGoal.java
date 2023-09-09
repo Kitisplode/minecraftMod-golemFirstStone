@@ -14,28 +14,23 @@ import java.util.EnumSet;
 
 public class DandoriFollowHardGoal extends Goal
 {
-    private static final TargetingConditions TEMP_TARGETING = TargetingConditions.forNonCombat().range(10.0D).ignoreLineOfSight();
-    private final TargetingConditions targetingConditions;
     protected final PathfinderMob mob;
     private final IEntityDandoriFollower pik;
     private final double speedModifier;
     @Nullable
     protected Player closestPlayer;
     private boolean isRunning;
-    private final Ingredient items;
     private final double moveRange;
     private final double seeRange;
 
-    public DandoriFollowHardGoal(PathfinderMob entity, double pSpeed, Ingredient items, double pRange, double pSeeRange)
+    public DandoriFollowHardGoal(PathfinderMob entity, double pSpeed, double pRange, double pSeeRange)
     {
         this.mob = entity;
         pik = (IEntityDandoriFollower) entity;
         this.speedModifier = pSpeed;
-        this.items = items;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         this.moveRange = Mth.square(pRange);
         this.seeRange = pSeeRange;
-        this.targetingConditions = TEMP_TARGETING.copy().selector(this::shouldFollow).range(Math.max(10.0, this.seeRange));
     }
 
     @Override
@@ -43,7 +38,7 @@ public class DandoriFollowHardGoal extends Goal
     {
         if (this.mob.isSleeping() || this.pik.isImmobile()) return false;
         // Dandori only things that are in dandori mode.
-        if (!pik.getDandoriState()) return false;
+        if (!pik.isDandoriHard()) return false;
         // Get the nearest player that we should follow.
         this.closestPlayer = (Player)this.pik.getOwner();
         return this.closestPlayer != null;
@@ -51,6 +46,13 @@ public class DandoriFollowHardGoal extends Goal
 
     private boolean shouldFollow(LivingEntity targetEntity) {
         return targetEntity == this.pik.getOwner();
+    }
+
+    @Override
+    public boolean canContinueToUse()
+    {
+        if (!this.canUse()) return false;
+        return this.mob.getTarget() != null;
     }
 
     public void start()
@@ -64,7 +66,7 @@ public class DandoriFollowHardGoal extends Goal
         this.closestPlayer = null;
         this.mob.getNavigation().stop();
         this.isRunning = false;
-        this.pik.setDandoriState(false);
+        this.pik.setDandoriState(IEntityDandoriFollower.DANDORI_STATES.SOFT.ordinal());
     }
 
     public void tick() {

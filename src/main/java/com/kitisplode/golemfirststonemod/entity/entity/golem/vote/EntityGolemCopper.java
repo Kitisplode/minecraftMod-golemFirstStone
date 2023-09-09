@@ -6,10 +6,10 @@ import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandor
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityCanAttackBlocks;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
-import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileAoEOwnerAware;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowSoftGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriMoveToDeployPositionGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackBlockGoalRanged;
-import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.entity.goal.target.BlockTargetGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.Mth;
 import net.minecraft.util.ParticleUtils;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
@@ -35,11 +34,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
@@ -50,7 +45,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -183,15 +177,19 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
     @Override
     protected void registerGoals()
     {
-        this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.2, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
-        this.goalSelector.addGoal(2, new CopperGolemAvoidEntityGoal<>(this, Monster.class, 16, 0.9D, 1));
-        this.goalSelector.addGoal(2, new CopperGolemPanicGoal(this, 1.0D));
-        this.goalSelector.addGoal(3, new MultiStageAttackBlockGoalRanged(this, 1.0, true, 9.0D, new int[]{40, 25, 10}));
-        this.goalSelector.addGoal(5, new CopperGolemRandomStrollInVillageGoal(this, 0.8D));
+        this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+
+        this.goalSelector.addGoal(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+        this.goalSelector.addGoal(3, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+
+        this.goalSelector.addGoal(4, new CopperGolemAvoidEntityGoal<>(this, Monster.class, 16, 0.9D, 1));
+        this.goalSelector.addGoal(4, new CopperGolemPanicGoal(this, 1.0D));
+        this.goalSelector.addGoal(5, new MultiStageAttackBlockGoalRanged(this, 1.0, true, 9.0D, new int[]{40, 25, 10}));
+        this.goalSelector.addGoal(6, new CopperGolemRandomStrollInVillageGoal(this, 0.8D));
         this.goalSelector.addGoal(7, new CopperGolemLookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(7, new CopperGolemLookAtPlayerGoal(this, AbstractVillager.class, 6.0F));
         this.goalSelector.addGoal(8, new CopperGolemRandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new BlockTargetGoal(this, 16, 35, true, true, bsPredicate, true));
+        this.targetSelector.addGoal(1, new BlockTargetGoal(this, 16, 75, true, true, bsPredicate, true));
     }
 
     @Override
@@ -338,6 +336,12 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         controllerRegistrar.add(new AnimationController<>(this, "controller", 0, event ->
         {
             EntityGolemCopper pGolem = event.getAnimatable();
+            int oxidation = pGolem.getOxidation();
+            if (oxidation == 3)
+            {
+                event.getController().setAnimationSpeed(0.00);
+                return null;
+            }
             if (pGolem.getAttackState() > 0)
             {
                 if (pGolem.getAttackState() == 1)
@@ -358,7 +362,6 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
                 pGolem.setAttackState(0);
                 if (pGolem.getDeltaMovement().horizontalDistanceSqr() > 0.001D || event.isMoving())
                 {
-                    int oxidation = pGolem.getOxidation();
                     if (oxidation == 0)
                     {
                         event.getController().setAnimationSpeed(1.00);

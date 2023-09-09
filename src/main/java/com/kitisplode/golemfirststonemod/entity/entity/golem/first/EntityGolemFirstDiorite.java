@@ -1,12 +1,13 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem.first;
 
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
+import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
-import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
-import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
-import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoalRanged;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntitySummoner;
+import com.kitisplode.golemfirststonemod.entity.goal.action.*;
+import com.kitisplode.golemfirststonemod.entity.goal.target.ActiveTargetGoalBiggerY;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -26,6 +27,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -42,14 +44,23 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
 
-public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
+public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implements GeoEntity, IEntitySummoner, IEntityDandoriFollower
 {
-    private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemFirstDiorite.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> SUMMON_STATE = SynchedEntityData.defineId(EntityGolemFirstDiorite.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> SUMMON_COOLDOWN = SynchedEntityData.defineId(EntityGolemFirstDiorite.class, EntityDataSerializers.BOOLEAN);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-    private static final float attackRange = 20.0f;
-    private static final int pawnsToSpawn = 3;
+
+    private static final double pawnSearchRange = 24;
+    private static final int pawnsMax = 15;
+    private static final int pawnsToSpawn = 1;
+    private static final int spawnCooldown = 100;
+    private static final int[] spawnStages = new int[]{140,100,50};
+    private static final int spawnStage = 3;
+
     private static final double dandoriMoveRange = 6;
     private static final double dandoriSeeRange = 36;
+
+    private SummonEntityGoal summonGoal;
 
     public EntityGolemFirstDiorite(EntityType<? extends IronGolem> pEntityType, Level pLevel)
     {
@@ -75,19 +86,37 @@ public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implem
     protected void defineSynchedData()
     {
         super.defineSynchedData();
-        if (!this.entityData.hasItem(ATTACK_STATE)) this.entityData.define(ATTACK_STATE, 0);
+        if (!this.entityData.hasItem(SUMMON_STATE)) this.entityData.define(SUMMON_STATE, 0);
+        if (!this.entityData.hasItem(SUMMON_COOLDOWN)) this.entityData.define(SUMMON_COOLDOWN, false);
     }
-    public int getAttackState()
+    public int getSummonState()
     {
-        return this.entityData.get(ATTACK_STATE);
+        return this.entityData.get(SUMMON_STATE);
     }
-    public void setAttackState(int pInt)
+    public void setSummonState(int pInt)
     {
-        this.entityData.set(ATTACK_STATE, pInt);
+        this.entityData.set(SUMMON_STATE, pInt);
+    }
+    public boolean getSummonCooleddown()
+    {
+        return this.entityData.get(SUMMON_COOLDOWN);
+    }
+    public void setSummonCooledDown(boolean pBoolean)
+    {
+        this.entityData.set(SUMMON_COOLDOWN, pBoolean);
     }
 
-    private float getAttackDamage() {
-        return (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE);
+    @Override
+    public int getMaxHeadYRot()
+    {
+        if (this.getSummonState() > 0) return 0;
+        return super.getMaxHeadYRot();
+    }
+    @Override
+    public int getMaxHeadXRot()
+    {
+        if (this.getSummonState() > 0) return 0;
+        return super.getMaxHeadXRot();
     }
 
     @Override
@@ -99,30 +128,57 @@ public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implem
     @Override
     protected void registerGoals()
     {
-        this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.4, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
-        this.goalSelector.addGoal(2, new MultiStageAttackGoalRanged(this, 1.0, true, Mth.square(attackRange), new int[]{300, 240, 50}));
-        this.goalSelector.addGoal(3, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
-        this.goalSelector.addGoal(4, new GolemRandomStrollInVillageGoal(this, 0.8D));
+        this.summonGoal = new SummonEntityGoal<>(this, EntityPawn.class, spawnStages, pawnSearchRange, pawnsMax, spawnCooldown, 1);
+
+        this.goalSelector.addGoal(0, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+
+        this.goalSelector.addGoal(1, this.summonGoal);
+        this.goalSelector.addGoal(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+        this.goalSelector.addGoal(3, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+
+        this.goalSelector.addGoal(4, new PanicGoal(this, 1.0D));
+        this.goalSelector.addGoal(5, new WanderAroundTargetGoal(this, 0.8D, 13.0f));
+        this.goalSelector.addGoal(6, new GolemRandomStrollInVillageGoal(this, 0.8D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, AbstractVillager.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 5, false, false, (entity) -> entity instanceof Enemy && !(entity instanceof Creeper)));
+        this.targetSelector.addGoal(3, new ActiveTargetGoalBiggerY<>(this, Mob.class, 5, false, false, (entity) -> entity instanceof Enemy && !(entity instanceof Creeper), 5));
+    }
+
+    @Override
+    public void tick()
+    {
+        super.tick();
+        if (this.isSleeping() || this.isImmobile())
+        {
+            this.xxa = 0.0F;
+            this.zza = 0.0F;
+        }
+        if (!this.level().isClientSide())
+        {
+            if (this.summonGoal != null)
+            {
+                this.setSummonCooledDown(this.summonGoal.isCooledDown());
+            }
+        }
     }
 
     @Override
     public boolean isPushable()
     {
-        return getAttackState() == 0;
+        return getSummonState() == 0;
     }
 
     @Override
-    public boolean tryAttack()
+    public boolean trySummon(int summonState)
     {
-        if (getAttackState() != 3) return false;
+        if (summonState != spawnStage) return false;
 
         this.level().broadcastEntityEvent(this, (byte)4);
         this.playSound(SoundEvents.BEACON_POWER_SELECT, 1.0F, 1.0F);
         spawnPawns(pawnsToSpawn);
+        spawnEffect(this.level(), 10, 4, new Vec3(this.getX(), this.getY() + 2.5d, this.getZ()));
         return true;
     }
 
@@ -131,22 +187,10 @@ public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implem
         for (int i = 0; i < pawnCount; i++)
         {
             double direction = this.random.nextInt(360) * Mth.DEG_TO_RAD;
-            double offset = this.random.nextInt(4) + 2;
+            double offset = 0.0f;
             Vec3 spawnOffset = new Vec3(Math.sin(direction) * offset,
-                    0.0d,
+                    2.5d,
                     Math.cos(direction) * offset);
-            BlockState bs = level().getBlockState(new BlockPos((int)(getX() + spawnOffset.x()), (int)(getY() + spawnOffset.y()),(int)(getZ() + spawnOffset.z())));
-            BlockState bsUnder = level().getBlockState(new BlockPos((int)(getX() + spawnOffset.x()), (int)(getY() + spawnOffset.y() - 1),(int)(getZ() + spawnOffset.z())));
-            int failCount = 0;
-            while (!bs.isAir() || bs.canOcclude() || bsUnder.isAir() || !bsUnder.canOcclude())
-            {
-                spawnOffset = spawnOffset.add(0,1,0);
-                bs = level().getBlockState(new BlockPos((int)(getX() + spawnOffset.x()), (int)(getY() + spawnOffset.y()),(int)(getZ() + spawnOffset.z())));
-                bsUnder = level().getBlockState(new BlockPos((int)(getX() + spawnOffset.x()), (int)(getY() + spawnOffset.y() - 1),(int)(getZ() + spawnOffset.z())));
-                failCount++;
-                if (failCount > 5) break;
-            }
-            if (failCount > 5) continue;
 
             EntityPawn pawn = ModEntities.ENTITY_PAWN_FIRST_DIORITE.get().create(level());
             if (pawn == null) continue;
@@ -166,25 +210,23 @@ public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implem
         }
     }
 
+    private void spawnEffect(Level world, int time, float range, Vec3 position)
+    {
+        EntityEffectCubeDandoriWhistle whistleEffect = ModEntities.ENTITY_EFFECT_CUBE_DANDORI_WHISTLE.get().create(world);
+        if (whistleEffect != null)
+        {
+            whistleEffect.setPos(position);
+            whistleEffect.setLifeTime(time);
+            whistleEffect.setFullScale(range * 2.0f);
+            whistleEffect.setYBodyRot(this.getYRot());
+            whistleEffect.setYRot(this.getYRot());
+            world.addFreshEntity(whistleEffect);
+        }
+    }
+
     @Override
     protected InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
-        ItemStack itemstack = pPlayer.getItemInHand(pHand);
-        if (!itemstack.is(Items.GOLD_INGOT)) {
-            return InteractionResult.PASS;
-        } else {
-            float f = this.getHealth();
-            this.heal(25.0F);
-            if (this.getHealth() == f) {
-                return InteractionResult.PASS;
-            } else {
-                float f1 = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
-                this.playSound(SoundEvents.IRON_GOLEM_REPAIR, 1.0F, f1);
-                if (!pPlayer.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-                return InteractionResult.sidedSuccess(this.level().isClientSide);
-            }
-        }
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -193,9 +235,9 @@ public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implem
         controllerRegistrar.add(new AnimationController<>(this, "controller", 0, event ->
         {
             EntityGolemFirstDiorite pGolem = event.getAnimatable();
-            if (pGolem.getAttackState() > 0)
+            if (pGolem.getSummonState() > 0)
             {
-                switch (pGolem.getAttackState())
+                switch (pGolem.getSummonState())
                 {
                     case 1:
                         event.getController().setAnimationSpeed(0.5);
@@ -211,7 +253,7 @@ public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implem
             else
             {
                 event.getController().setAnimationSpeed(1.00);
-                pGolem.setAttackState(0);
+                pGolem.setSummonState(0);
                 if (getDeltaMovement().horizontalDistanceSqr() > 0.001D || event.isMoving())
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.first_diorite.walk"));
             }

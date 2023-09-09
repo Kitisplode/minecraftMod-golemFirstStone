@@ -2,11 +2,10 @@ package com.kitisplode.golemfirststonemod.entity.client.model;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.AbstractEntityEffectCube;
-import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
-public class EntityModelShieldFirstBrick extends GeoModel<AbstractEntityEffectCube>
+public class EntityModelEffectCube extends GeoModel<AbstractEntityEffectCube>
 {
 	@Override
 	public ResourceLocation getModelResource(AbstractEntityEffectCube animatable)

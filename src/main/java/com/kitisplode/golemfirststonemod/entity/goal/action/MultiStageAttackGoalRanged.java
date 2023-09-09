@@ -29,6 +29,9 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
     private final int turnDuringState;
 
     private boolean forced = false;
+    private boolean running = false;
+    private int cooldown = 0;
+    private int cooldownMax;
 
     public MultiStageAttackGoalRanged(IEntityWithDelayedMeleeAttack pMob, double pSpeed, boolean pauseWhenMobIdle, double pAttackRange, int[] pAttackStages, int pTurnDuringState)
     {
@@ -47,8 +50,10 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         this(pMob, pSpeed, pauseWhenMobIdle, pAttackRange, pAttackStages, 0);
     }
 
-    public boolean canUse() {
-
+    public boolean canUse()
+    {
+        if (this.cooldown > 0) this.cooldown--;
+        if (!this.isCooledDown()) return false;
         if (forced) return true;
         if (!this.mob.getPassengers().isEmpty()) return false;
 
@@ -71,7 +76,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
 
         Vec3 distanceFlattened = new Vec3(target.getX() - this.mob.getX(), 0, target.getZ() - this.mob.getZ());
         double distanceFlatSquared = distanceFlattened.lengthSqr();
-        return this.getAttackReachSqr(target) >= distanceFlatSquared;//this.mob.distanceToSqr(target.getX(), target.getY(), target.getZ());
+        return this.getAttackReachSqr(target) >= distanceFlatSquared;
 
     }
 
@@ -154,6 +159,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
                 targetY = null;
                 targetZ = null;
                 attackTimer = adjustedTickDelay(attackStages[0]);
+                resetCooldown();
             }
         }
         else
@@ -211,5 +217,31 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
     public void forceAttack()
     {
         forced = true;
+    }
+
+    public boolean isRunning()
+    {
+        return running;
+    }
+
+    public void setCooldownMax(int p)
+    {
+        this.cooldownMax = p;
+    }
+
+    protected void resetCooldown() {
+        this.cooldown = this.adjustedTickDelay(this.cooldownMax);
+    }
+
+    public boolean isCooledDown() {
+        return this.cooldown <= 0;
+    }
+
+    protected int getCooldown() {
+        return this.cooldown;
+    }
+
+    protected int getMaxCooldown() {
+        return this.adjustedTickDelay(20);
     }
 }

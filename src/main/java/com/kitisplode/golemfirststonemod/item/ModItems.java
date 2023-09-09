@@ -2,10 +2,7 @@ package com.kitisplode.golemfirststonemod.item;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.item.item.ItemDandoriAttack;
-import com.kitisplode.golemfirststonemod.item.item.ItemDandoriCall;
-import com.kitisplode.golemfirststonemod.item.item.ItemDandoriDig;
-import com.kitisplode.golemfirststonemod.item.item.ItemDandoriThrow;
+import com.kitisplode.golemfirststonemod.item.item.*;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -27,6 +24,26 @@ public class ModItems
     public static final RegistryObject<Item> ITEM_SPAWN_VILLAGER_DANDORI = ITEMS.register("item_spawn_villager_dandori",
             () -> new ForgeSpawnEggItem(ModEntities.ENTITY_VILLAGER_DANDORI, 0xDFDFDF, 0x38A836,
                     new Item.Properties()));
+    public static final RegistryObject<Item> ITEM_SPAWN_GOLEM_COBBLE = ITEMS.register("item_spawn_golem_cobble",
+            () -> new ForgeSpawnEggItem(ModEntities.ENTITY_GOLEM_COBBLE, 0xDFDFDF, 0xAAAAAA,
+                    new Item.Properties()));
+    public static final RegistryObject<Item> ITEM_SPAWN_GOLEM_PLANK = ITEMS.register("item_spawn_golem_plank",
+            () -> new ForgeSpawnEggItem(ModEntities.ENTITY_GOLEM_PLANK, 0xDFDFDF, 0xA86836,
+                    new Item.Properties()));
+    public static final RegistryObject<Item> ITEM_SPAWN_GOLEM_MOSSY = ITEMS.register("item_spawn_golem_mossy",
+            () -> new ForgeSpawnEggItem(ModEntities.ENTITY_GOLEM_MOSSY, 0xDFDFDF, 0x32A852,
+                    new Item.Properties()));
+    public static final RegistryObject<Item> ITEM_SPAWN_GOLEM_GRINDSTONE = ITEMS.register("item_spawn_golem_grindstone",
+            () -> new ForgeSpawnEggItem(ModEntities.ENTITY_GOLEM_GRINDSTONE, 0xDFDFDF, 0x333333,
+                    new Item.Properties()));
+    public static final RegistryObject<Item> ITEM_SPAWN_GOLEM_COPPER = ITEMS.register("item_spawn_golem_copper",
+            () -> new ForgeSpawnEggItem(ModEntities.ENTITY_GOLEM_COPPER, 0xDFDFDF, 0xEF8430,
+                    new Item.Properties()));
+    public static final RegistryObject<Item> ITEM_SPAWN_GOLEM_TUFF = ITEMS.register("item_spawn_golem_tuff",
+            () -> new ForgeSpawnEggItem(ModEntities.ENTITY_GOLEM_TUFF, 0xDFDFDF, 0x424742,
+                    new Item.Properties()));
+
+
     public static final RegistryObject<Item> ITEM_DANDORI_CALL = ITEMS.register("item_dandori_call",
             () -> new ItemDandoriCall(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ITEM_DANDORI_ATTACK = ITEMS.register("item_dandori_attack",
@@ -35,6 +52,13 @@ public class ModItems
             () -> new ItemDandoriDig(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ITEM_DANDORI_THROW = ITEMS.register("item_dandori_throw",
             () -> new ItemDandoriThrow(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ITEM_DANDORI_BANNER = ITEMS.register("item_dandori_banner",
+            () -> new ItemDandoriBanner(new Item.Properties().stacksTo(1)));
+
+    public static final RegistryObject<Item> ITEM_FLAME_OF_CREATION_BLUE = ITEMS.register("item_flame_of_creation_blue",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ITEM_FLAME_OF_CREATION_RED = ITEMS.register("item_flame_of_creation_red",
+            () -> new Item(new Item.Properties().stacksTo(1)));
 
 
     // Called to actually register the items list.

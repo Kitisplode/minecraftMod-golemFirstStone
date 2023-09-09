@@ -16,7 +16,7 @@ public class ModCreativeModTabs
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, GolemFirstStoneMod.MOD_ID);
 
     public static final RegistryObject<CreativeModeTab> MOD_PLAYGROUND_TAB = CREATIVE_MODE_TABS.register("golemfirststonemod",
-            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.BLOCK_HEAD_STONE.get()))  // Set the tab's icon
+            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.ITEM_DANDORI_BANNER.get()))  // Set the tab's icon
                     .title(Component.translatable("creativetab.golemfirststonemod"))        // Fetch the tab name translation
                     .displayItems((pParameters, pOutput) -> {                                    // List included items
                         // Blocks
@@ -36,7 +36,15 @@ public class ModCreativeModTabs
                         // Items
 //                        pOutput.accept(ModItems.ITEM_SPAWN_PAWN_FIRST_DIORITE.get());
 //                        pOutput.accept(ModItems.ITEM_SPAWN_VILLAGER_DANDORI.get());
+                        pOutput.accept(ModItems.ITEM_SPAWN_GOLEM_COPPER.get());
+                        pOutput.accept(ModItems.ITEM_SPAWN_GOLEM_TUFF.get());
+                        pOutput.accept(ModItems.ITEM_SPAWN_GOLEM_COBBLE.get());
+                        pOutput.accept(ModItems.ITEM_SPAWN_GOLEM_PLANK.get());
+                        pOutput.accept(ModItems.ITEM_SPAWN_GOLEM_MOSSY.get());
+                        pOutput.accept(ModItems.ITEM_SPAWN_GOLEM_GRINDSTONE.get());
+
                         pOutput.accept(ModItems.ITEM_DANDORI_CALL.get());
+                        pOutput.accept(ModItems.ITEM_DANDORI_BANNER.get());
                         pOutput.accept(ModItems.ITEM_DANDORI_ATTACK.get());
                         pOutput.accept(ModItems.ITEM_DANDORI_DIG.get());
                         pOutput.accept(ModItems.ITEM_DANDORI_THROW.get());

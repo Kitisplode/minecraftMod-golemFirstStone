@@ -28,6 +28,7 @@ public class EntityProjectileAoEOwnerAware extends Arrow
     private LivingEntity golemOwner;
     private static final float attackVerticalRange = 3.0f;
     private boolean hasAoE = true;
+    private static final int maxAge = 1200;
 
     public EntityProjectileAoEOwnerAware(EntityType<? extends Arrow> entityType, Level world) {
         super(entityType, world);
@@ -60,29 +61,38 @@ public class EntityProjectileAoEOwnerAware extends Arrow
     }
 
     @Override
-    public void onHitEntity(EntityHitResult pResult)
+    public void tick()
     {
-        Entity target = pResult.getEntity();
-        // Skip some targets.
+        super.tick();
+        if (this.tickCount > maxAge) this.discard();
+    }
+
+    protected boolean canHitEntity(Entity target)
+    {
         if (target != null)
         {
             LivingEntity owner = null;
             if (golemOwner instanceof IEntityDandoriFollower dandoriFollower) owner = dandoriFollower.getOwner();
             // Do not damage the golem that shot this arrow.
-            if (target == golemOwner) return;
+            if (target == golemOwner) return false;
             // Do not damage the golem's owner.
-            if (target == owner) return;
-            if (target instanceof TamableAnimal tamableAnimal && tamableAnimal.getOwner() == owner) return;
-            if (target instanceof IEntityDandoriFollower dandoriFollower && dandoriFollower.getOwner() == owner) return;
+            if (target == owner) return false;
+            if (target instanceof TamableAnimal tamableAnimal && tamableAnimal.getOwner() == owner) return false;
+            if (target instanceof IEntityDandoriFollower dandoriFollower && dandoriFollower.getOwner() == owner) return false;
             // Do not damage targets that are pawns owned by a first of diorite that is owned by our owner lol
             if (target instanceof EntityPawn pawn && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite)
             {
-                if (firstDiorite.getOwner() == owner) return;
+                if (firstDiorite.getOwner() == owner) return false;
             }
             // Do not damage villagers.
-            if (target instanceof Merchant) return;
+            if (target instanceof Merchant) return false;
         }
-        // Then perform the damage.
+        return super.canHitEntity(target);
+    }
+
+    @Override
+    public void onHitEntity(EntityHitResult pResult)
+    {
         super.onHitEntity(pResult);
         if (this.hasAoE) attackAOE();
         this.setNoGravity(false);
@@ -99,7 +109,7 @@ public class EntityProjectileAoEOwnerAware extends Arrow
     @Override
     protected ItemStack getPickupItem()
     {
-        return null;
+        return ItemStack.EMPTY;
     }
 
     private void attackAOE()

@@ -1,6 +1,10 @@
 package com.kitisplode.golemfirststonemod.util;
 
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class ExtraMath
@@ -32,5 +36,21 @@ public class ExtraMath
             if (a2 > a1 - 180) return a2 - a1;
             else return a2 - a1 + 360;
         }
+    }
+
+    public static BlockHitResult playerRaycast(Level world, Player player, ClipContext.Fluid fluidHandling, double range)
+    {
+        float f = player.getXRot();
+        float g = player.getYRot();
+        Vec3 vec3d = player.getEyePosition();
+        float h = Mth.cos(-g * ((float) Math.PI / 180) - (float) Math.PI);
+        float i = Mth.sin(-g * ((float) Math.PI / 180) - (float) Math.PI);
+        float j = -Mth.cos(-f * ((float) Math.PI / 180));
+        float k = Mth.sin(-f * ((float) Math.PI / 180));
+        float l = i * j;
+        float m = k;
+        float n = h * j;
+        Vec3 vec3d2 = vec3d.add((double) l * range, (double) m * range, (double) n * range);
+        return world.clip(new ClipContext(vec3d, vec3d2, ClipContext.Block.OUTLINE, fluidHandling, player));
     }
 }

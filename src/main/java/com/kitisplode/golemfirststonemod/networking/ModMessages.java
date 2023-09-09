@@ -2,6 +2,8 @@ package com.kitisplode.golemfirststonemod.networking;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.networking.packet.C2SPacketGrindstoneAttack;
+import com.kitisplode.golemfirststonemod.networking.packet.C2SPacketItemSwingUse;
+import com.kitisplode.golemfirststonemod.networking.packet.C2SPacketItemSwingUseTick;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
@@ -34,6 +36,20 @@ public class ModMessages
                 .decoder(C2SPacketGrindstoneAttack::new)
                 .encoder(C2SPacketGrindstoneAttack::toBytes)
                 .consumerMainThread(C2SPacketGrindstoneAttack::handle)
+                .add();
+
+
+        net.messageBuilder(C2SPacketItemSwingUse.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(C2SPacketItemSwingUse::new)
+                .encoder(C2SPacketItemSwingUse::toBytes)
+                .consumerMainThread(C2SPacketItemSwingUse::handle)
+                .add();
+
+
+        net.messageBuilder(C2SPacketItemSwingUseTick.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(C2SPacketItemSwingUseTick::new)
+                .encoder(C2SPacketItemSwingUseTick::toBytes)
+                .consumerMainThread(C2SPacketItemSwingUseTick::handle)
                 .add();
     }
 

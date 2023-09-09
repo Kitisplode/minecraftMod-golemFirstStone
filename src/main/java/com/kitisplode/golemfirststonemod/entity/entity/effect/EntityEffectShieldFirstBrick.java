@@ -36,7 +36,7 @@ public class EntityEffectShieldFirstBrick extends AbstractEntityEffectCube imple
 
     public EntityEffectShieldFirstBrick(Level pWorld, double pX, double pY, double pZ)
     {
-        super(ModEntities.ENTITY_SHIELD_FIRST_BRICK.get(), pWorld);
+        super(ModEntities.ENTITY_EFFECT_SHIELD_FIRST_BRICK.get(), pWorld);
         setPos(pX, pY, pZ);
     }
     @Override
@@ -92,7 +92,7 @@ public class EntityEffectShieldFirstBrick extends AbstractEntityEffectCube imple
         scaleY = ((float)Math.sin(((float)this.tickCount / (float)lifeTime * 180.0f) * Mth.DEG_TO_RAD) * finalSize) / 4.0f;
         if (this.tickCount >= lifeTime)
         {
-            this.kill();
+            this.discard();
         }
     }
 

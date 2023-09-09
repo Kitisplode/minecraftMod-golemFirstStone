@@ -3,7 +3,11 @@ package com.kitisplode.golemfirststonemod.item.item;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
+import com.kitisplode.golemfirststonemod.util.DataDandoriCount;
+import com.kitisplode.golemfirststonemod.util.ExtraMath;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -17,19 +21,25 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemDandoriCall extends Item
+public class ItemDandoriCall extends Item implements IItemSwingUse
 {
     static private final double dandoriRange = 10;
     static private final int maxUseTime = 40;
     static private final int dandoriForceTime = 5;
     static private final int cooldownTime = 20;
+    static private final double maxAttackRange = 48;
+
+    static private final int fullDeployTime = 15;
+    private int fullDeployTimer = 0;
 
     public ItemDandoriCall(Properties pProperties)
     {
@@ -42,6 +52,77 @@ public class ItemDandoriCall extends Item
         pTooltipComponents.add(Component.translatable("item.golemfirststonemod.item_description.item_dandori_call_1"));
         pTooltipComponents.add(Component.translatable("item.golemfirststonemod.item_description.item_dandori_call_2"));
         pTooltipComponents.add(Component.translatable("item.golemfirststonemod.item_description.item_dandori_call_3"));
+        pTooltipComponents.add(Component.translatable("item.golemfirststonemod.item_description.item_dandori_call_4"));
+        pTooltipComponents.add(Component.translatable("item.golemfirststonemod.item_description.item_dandori_call_5"));
+        pTooltipComponents.add(Component.translatable("item.golemfirststonemod.item_description.item_dandori_call_6"));
+        pTooltipComponents.add(Component.translatable("item.golemfirststonemod.item_description.item_dandori_call_7"));
+    }
+
+    @Override
+    public void swing(Player user)
+    {
+        Level world = user.level();
+        //if (!world.isClientSide())
+        {
+            if (user.isCrouching())
+            {
+                if (user instanceof IEntityWithDandoriCount player && !world.isClientSide()) player.nextDandoriCurrentType();
+            }
+            else
+            {
+                DataDandoriCount.FOLLOWER_TYPE currentType = ((IEntityWithDandoriCount) user).getDandoriCurrentType();
+                ClipContext.Fluid fh = ClipContext.Fluid.ANY;
+                if (user.isUnderWater()) fh = ClipContext.Fluid.NONE;
+                BlockHitResult ray = ExtraMath.playerRaycast(world, user, fh, maxAttackRange);
+                if (user.distanceToSqr(ray.getLocation()) <= Mth.square(maxAttackRange))
+                {
+                    int count = dandoriDeploy(world, user, ray.getBlockPos(), false, currentType, 1);
+                    if (count == 0) user.playSound(ModSounds.ITEM_DANDORI_ATTACK_FAIL.get(), 1.0f, 0.9f);
+                    else
+                    {
+                        user.playSound(ModSounds.ITEM_DANDORI_ATTACK_WIN.get(), 1.0f, 1.0f);
+                        effectDeploy(world, 20, 6, ray.getLocation());
+                    }
+                    user.swing(InteractionHand.MAIN_HAND);
+                }
+            }
+        }
+        if (user.isCrouching()) fullDeployTimer = fullDeployTime;
+        else fullDeployTimer = 0;
+    }
+    @Override
+    public void swingTick(Player user)
+    {
+        Level world = user.level();
+        if (fullDeployTimer < fullDeployTime)
+        {
+            fullDeployTimer++;
+            if (fullDeployTimer >= fullDeployTime)
+            {
+                DataDandoriCount.FOLLOWER_TYPE currentType = ((IEntityWithDandoriCount) user).getDandoriCurrentType();
+                ClipContext.Fluid fh = ClipContext.Fluid.ANY;
+                if (user.isUnderWater()) fh = ClipContext.Fluid.NONE;
+                BlockHitResult ray = ExtraMath.playerRaycast(world, user, fh, maxAttackRange);
+                if (user.distanceToSqr(ray.getLocation()) <= Mth.square(maxAttackRange))
+                {
+                    int count = dandoriDeploy(world, user, ray.getBlockPos(), false, currentType, 1000);
+                    if (count == 0) user.playSound(ModSounds.ITEM_DANDORI_ATTACK_FAIL.get(), 1.0f, 0.9f);
+                    else
+                    {
+                        user.playSound(ModSounds.ITEM_DANDORI_ATTACK_WIN.get(), 1.0f, 1.0f);
+                        effectDeploy(world, 20, 6, ray.getLocation());
+                    }
+                    user.swing(InteractionHand.MAIN_HAND);
+                    user.getCooldowns().addCooldown(this, cooldownTime);
+                }
+            }
+        }
+        else if (fullDeployTimer == fullDeployTime)
+        {
+            fullDeployTimer++;
+            user.swing(InteractionHand.MAIN_HAND);
+            user.getCooldowns().addCooldown(this, cooldownTime);
+        }
     }
 
     @Override
@@ -64,11 +145,13 @@ public class ItemDandoriCall extends Item
             if (!pPlayer.isCrouching())
             {
                 effectWhistle(pLevel, pPlayer, dandoriForceTime);
-                dandoriWhistle(pLevel, pPlayer, false, true);
+                int dandoriCount = dandoriWhistle(pLevel, pPlayer, false, IEntityDandoriFollower.DANDORI_STATES.HARD);
+                if (dandoriCount > 0) ((IEntityWithDandoriCount) pPlayer).setRecountDandori();
             }
             else
             {
-                dandoriWhistle(pLevel, pPlayer, true, false);
+                int dandoriCount = dandoriWhistle(pLevel, pPlayer, true, IEntityDandoriFollower.DANDORI_STATES.OFF);
+                if (dandoriCount > 0) ((IEntityWithDandoriCount) pPlayer).setRecountDandori();
             }
         }
 
@@ -76,6 +159,7 @@ public class ItemDandoriCall extends Item
         pPlayer.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.4f, 0.9f);
         pPlayer.startUsingItem(pUsedHand);
         ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
+        pPlayer.swing(InteractionHand.MAIN_HAND);
         return InteractionResultHolder.pass(itemStack);
     }
 
@@ -91,7 +175,7 @@ public class ItemDandoriCall extends Item
                 {
                     if (!pLivingEntity.isCrouching())
                     {
-                        dandoriWhistle(pLevel, pLivingEntity, true, true);
+                        dandoriWhistle(pLevel, pLivingEntity, true, IEntityDandoriFollower.DANDORI_STATES.HARD);
                     }
                     if (pRemainingUseDuration + 10 >= actualDandoriForceTime)
                     {
@@ -124,7 +208,7 @@ public class ItemDandoriCall extends Item
             ((Player) pEntityLiving).getCooldowns().addCooldown(this, cooldownTime);
     }
 
-    private int dandoriWhistle(Level world, LivingEntity user, boolean forceDandori, boolean dandoriValue)
+    private int dandoriWhistle(Level world, LivingEntity user, boolean forceDandori, IEntityDandoriFollower.DANDORI_STATES dandoriValue)
     {
         int targetCount = 0;
         List<Mob> targetList = world.getEntitiesOfClass(Mob.class, user.getBoundingBox().inflate(dandoriRange));
@@ -136,23 +220,46 @@ public class ItemDandoriCall extends Item
             if (target.hasPassenger(user)) continue;
             // Skip anything that doesn't follow dandori rules
             if (!(target instanceof IEntityDandoriFollower)) continue;
+            IEntityDandoriFollower dandoriTarget = (IEntityDandoriFollower) target;
             // Skip things that already have dandori active?
-            if (((IEntityDandoriFollower) target).getDandoriState() == dandoriValue) continue;
+            if (dandoriTarget.getDandoriState() == dandoriValue.ordinal()) continue;
             // If the thing has an owner, skip ones unless we are the owner.
-            boolean targetHasOwner = ((IEntityDandoriFollower) target).getOwner() != null;
-            if (targetHasOwner)
-            {
-                if (((IEntityDandoriFollower) target).getOwner() != user) continue;
-            }
-            // Skip iron golems that are not player-made
-            if (target instanceof IronGolem)
-            {
-                if (!((IronGolem) target).isPlayerCreated() || ((IEntityDandoriFollower) target).getOwner() != user) continue;
-            }
+            if (dandoriTarget.getOwner() != user) continue;
             targetCount++;
             // If the pik doesn't have a target, or if we're forcing dandori, activate the pik's dandori mode.
             if (target.getTarget() == null || forceDandori)
-                ((IEntityDandoriFollower)target).setDandoriState(dandoriValue);
+                ((IEntityDandoriFollower)target).setDandoriState(dandoriValue.ordinal());
+        }
+        return targetCount;
+    }
+
+    private int dandoriDeploy(Level world, LivingEntity user, BlockPos position, boolean forceDandori, DataDandoriCount.FOLLOWER_TYPE currentType, int count)
+    {
+        if (position == null) return 0;
+
+        int targetCount = 0;
+        List<Mob> targetList = world.getEntitiesOfClass(Mob.class, user.getBoundingBox().inflate(dandoriRange * 2));
+        for (Mob target : targetList)
+        {
+            if (targetCount >= count && count > 0) break;
+            // Skip the item user.
+            if (target == user) continue;
+            // Skip anything that doesn't follow dandori rules
+            if (!(target instanceof IEntityDandoriFollower)) continue;
+            // Skip piks that are not in dandori mode, unless we're forcing dandori.
+            if (((IEntityDandoriFollower) target).isDandoriOff() && !forceDandori) continue;
+            // If the thing has an owner, skip ones unless we are the owner.
+            if (((IEntityDandoriFollower) target).getOwner() != user) continue;
+            // SKip anything that isn't of the player's currently selected type.
+            if (!DataDandoriCount.entityIsOfType(currentType, target)) continue;
+
+            targetCount++;
+            // Deploy the pik to the given location.
+            if (!world.isClientSide())
+            {
+                ((IEntityDandoriFollower) target).setDeployPosition(position);
+                ((IEntityDandoriFollower) target).setDandoriState(IEntityDandoriFollower.DANDORI_STATES.OFF.ordinal());
+            }
         }
         return targetCount;
     }
@@ -176,6 +283,18 @@ public class ItemDandoriCall extends Item
             whistleEffect.setLifeTime(time);
             whistleEffect.setFullScale((float) dandoriRange * 2.0f);
             whistleEffect.setOwner(user);
+            world.addFreshEntity(whistleEffect);
+        }
+    }
+
+    private void effectDeploy(Level world, int time, float size, Vec3 position)
+    {
+        EntityEffectCubeDandoriWhistle whistleEffect = ModEntities.ENTITY_EFFECT_CUBE_DANDORI_WHISTLE.get().create(world);
+        if (whistleEffect != null)
+        {
+            whistleEffect.setPos(position);
+            whistleEffect.setLifeTime(time);
+            whistleEffect.setFullScale(size);
             world.addFreshEntity(whistleEffect);
         }
     }

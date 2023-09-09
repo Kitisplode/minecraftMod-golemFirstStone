@@ -1,13 +1,40 @@
 package com.kitisplode.golemfirststonemod.entity.entity.interfaces;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 
 public interface IEntityDandoriFollower
 {
     byte ENTITY_EVENT_DANDORI_START = 8;
 
-    boolean getDandoriState();
-    void setDandoriState(boolean pDandoriState);
+    enum DANDORI_STATES
+    {
+        OFF,
+        SOFT,
+        HARD
+    }
+
+    public int getDandoriState();
+
+    public void setDandoriState(int pDandoriState);
+
+    default boolean isDandoriOff()
+    {
+        return getDandoriState() == DANDORI_STATES.OFF.ordinal();
+    }
+    default boolean isDandoriOn()
+    {
+        return getDandoriState() != DANDORI_STATES.OFF.ordinal();
+    }
+    default boolean isDandoriSoft()
+    {
+        return getDandoriState() == DANDORI_STATES.SOFT.ordinal();
+    }
+    default boolean isDandoriHard()
+    {
+        return getDandoriState() == DANDORI_STATES.HARD.ordinal();
+    }
+
     LivingEntity getOwner();
     void setOwner(LivingEntity newOwner);
     public boolean isImmobile();
@@ -27,4 +54,9 @@ public interface IEntityDandoriFollower
     {
         return 0.0f;
     }
+
+    void setDeployPosition(BlockPos bp);
+    BlockPos getDeployPosition();
+
+    double getTargetRange();
 }

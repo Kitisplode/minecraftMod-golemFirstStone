@@ -77,7 +77,7 @@ public class ItemDandoriDig extends Item
                 entity -> DataDandoriCount.entityIsOfType(currentType, entity)
                         && entity instanceof IEntityDandoriFollower dandoriFollower
                         && dandoriFollower.getOwner() == user
-                        && (dandoriFollower.getDandoriState() || forceDandori)
+                        && (dandoriFollower.isDandoriOn() || forceDandori)
                         && entity instanceof IEntityCanAttackBlocks blockAttacker
                         && blockAttacker.canTargetBlock(blockPos));
         LivingEntity golem = world.getNearestEntity(LivingEntity.class, tp, null, user.getX(),user.getY(),user.getZ(), user.getBoundingBox().inflate(dandoriRange));
@@ -87,7 +87,7 @@ public class ItemDandoriDig extends Item
             IEntityCanAttackBlocks blockAttacker = (IEntityCanAttackBlocks) golem;
             targetCount++;
             blockAttacker.setBlockTarget(blockPos);
-            ((IEntityDandoriFollower)golem).setDandoriState(false);
+            ((IEntityDandoriFollower)golem).setDandoriState(IEntityDandoriFollower.DANDORI_STATES.OFF.ordinal());
         }
         return targetCount;
     }

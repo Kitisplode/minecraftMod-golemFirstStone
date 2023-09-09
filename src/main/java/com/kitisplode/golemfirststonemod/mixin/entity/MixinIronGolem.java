@@ -3,7 +3,10 @@ package com.kitisplode.golemfirststonemod.mixin.entity;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowSoftGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriMoveToDeployPositionGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -14,6 +17,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.NeutralMob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -32,10 +36,11 @@ import java.util.UUID;
 @Mixin(value = IronGolem.class)
 public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob, IEntityDandoriFollower
 {
-    private static final EntityDataAccessor<Boolean> DANDORI_STATE = SynchedEntityData.defineId(MixinIronGolem.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> DANDORI_STATE = SynchedEntityData.defineId(MixinIronGolem.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(MixinIronGolem.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final double dandoriMoveRange = 3;
     private static final double dandoriSeeRange = 36;
+    private BlockPos deployPosition;
 
     protected MixinIronGolem(EntityType<? extends AbstractGolem> pEntityType, Level pLevel)
     {
@@ -45,7 +50,7 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     @Inject(method = ("defineSynchedData"), at = @At("TAIL"))
     protected void inject_defineSynchedData(CallbackInfo ci)
     {
-        if (!this.entityData.hasItem(DANDORI_STATE)) this.entityData.define(DANDORI_STATE, false);
+        if (!this.entityData.hasItem(DANDORI_STATE)) this.entityData.define(DANDORI_STATE, 0);
         if (!this.entityData.hasItem(DATA_OWNERUUID_ID)) this.entityData.define(DATA_OWNERUUID_ID, Optional.empty());
     }
     @ModifyVariable(method = ("addAdditionalSaveData"), at = @At("TAIL"), ordinal = 0)
@@ -91,13 +96,17 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
         if (pOwner != null) setOwnerUUID(pOwner.getUUID());
     }
 
-    public boolean getDandoriState()
+    public int getDandoriState()
     {
         return this.entityData.get(DANDORI_STATE);
     }
-    public void setDandoriState(boolean pDandoriState)
+    public void setDandoriState(int pDandoriState)
     {
-        if (this.getOwner() != null && this.getDandoriState()) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        if (this.getOwner() != null) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        if (pDandoriState > 0)
+        {
+            this.setDeployPosition(null);
+        }
         this.entityData.set(DANDORI_STATE, pDandoriState);
     }
 
@@ -105,7 +114,9 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     @Inject(method = ("registerGoals"), at = @At("HEAD"))
     protected void registerGoals(CallbackInfo ci)
     {
-        this.goalSelector.addGoal(0, new DandoriFollowHardGoal(this, 1.4, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(0, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+        this.goalSelector.addGoal(2, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
     }
 
     @ModifyVariable(method = ("handleEntityEvent"), at = @At("HEAD"), ordinal = 0)
@@ -126,7 +137,7 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     @Override
     public void remove(Entity.RemovalReason pReason)
     {
-        if (this.getDandoriState() && this.getOwner() != null)
+        if (this.isDandoriOn() && this.getOwner() != null)
         {
             ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         }
@@ -137,6 +148,23 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     public boolean isImmobile()
     {
         return super.isImmobile();
+    }
+
+    @Override
+    public void setDeployPosition(BlockPos bp)
+    {
+        this.deployPosition = bp;
+    }
+    @Override
+    public BlockPos getDeployPosition()
+    {
+        return this.deployPosition;
+    }
+    @Override
+    public double getTargetRange()
+    {
+        if (this.isDandoriOn()) return 6.0d;
+        return this.getAttributeValue(Attributes.FOLLOW_RANGE);
     }
 
     @Override

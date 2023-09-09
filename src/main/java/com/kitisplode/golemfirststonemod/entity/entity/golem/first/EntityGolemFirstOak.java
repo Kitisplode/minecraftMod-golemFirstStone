@@ -5,8 +5,11 @@ import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandori
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileAoEOwnerAware;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowSoftGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriMoveToDeployPositionGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.target.ActiveTargetGoalBiggerY;
 import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoalRanged;
+import com.kitisplode.golemfirststonemod.entity.goal.target.SharedTargetGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -21,8 +24,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -57,7 +62,7 @@ public class EntityGolemFirstOak extends AbstractGolemDandoriFollower implements
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 500.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.25f)
-                .add(Attributes.ATTACK_DAMAGE, 10.0f)
+                .add(Attributes.ATTACK_DAMAGE, 7.50f)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0f)
                 .add(Attributes.FOLLOW_RANGE, 32);
     }
@@ -95,14 +100,20 @@ public class EntityGolemFirstOak extends AbstractGolemDandoriFollower implements
     @Override
     protected void registerGoals()
     {
-        this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.4, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+
         this.goalSelector.addGoal(2, new MultiStageAttackGoalRanged(this, 1.0, true, 1024.0, new int[]{40, 18, 13}, 0));
-        this.goalSelector.addGoal(3, new MoveTowardsTargetGoal(this, 0.8D, 48.0F));
-        this.goalSelector.addGoal(4, new GolemRandomStrollInVillageGoal(this, 0.8D));
+        this.goalSelector.addGoal(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+
+        this.goalSelector.addGoal(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+
+        this.goalSelector.addGoal(5, new MoveTowardsTargetGoal(this, 0.8D, 48.0F));
+        this.goalSelector.addGoal(6, new GolemRandomStrollInVillageGoal(this, 0.8D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, AbstractVillager.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(3, new ActiveTargetGoalBiggerY<>(this, Mob.class, 5, true, false, entity -> entity instanceof Enemy, 32));
+        this.targetSelector.addGoal(3, new SharedTargetGoal<>(this, AbstractGolem.class, Mob.class, 5, true, false, entity -> entity instanceof Enemy, 24));
 
     }
 
@@ -116,19 +127,8 @@ public class EntityGolemFirstOak extends AbstractGolemDandoriFollower implements
 
         this.level().broadcastEntityEvent(this, (byte)4);
         this.playSound(SoundEvents.CROSSBOW_SHOOT, 1.0F, 1.0F);
-        attackDust();
         attack();
         return true;
-    }
-
-    private void attackDust()
-    {
-//        AreaEffectCloud dust = new AreaEffectCloud(level(), getX(),getY(),getZ());
-//        dust.setParticle(ParticleTypes.SMOKE);
-//        dust.setRadius(5.0f);
-//        dust.setDuration(1);
-//        dust.setPos(getX(),getY(),getZ());
-//        level().addFreshEntity(dust);
     }
 
     private void attack()
@@ -142,32 +142,17 @@ public class EntityGolemFirstOak extends AbstractGolemDandoriFollower implements
             EntityProjectileAoEOwnerAware arrow = new EntityProjectileAoEOwnerAware(this.level(), this, attackAOERange, getAttackDamage());
             Vec3 shootingVelocity = target.getEyePosition().subtract(this.getEyePosition()).normalize().scale(projectileSpeed);
             arrow.setDeltaMovement(shootingVelocity);
-            arrow.tickCount = 35;
             arrow.setBaseDamage(getAttackDamage());
             arrow.setNoGravity(true);
+            arrow.setPierceLevel((byte)4);
+            arrow.setHasAoE(false);
             this.level().addFreshEntity(arrow);
         }
     }
 
     @Override
     protected InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
-        ItemStack itemstack = pPlayer.getItemInHand(pHand);
-        if (!itemstack.is(Items.OAK_WOOD)) {
-            return InteractionResult.PASS;
-        } else {
-            float f = this.getHealth();
-            this.heal(25.0F);
-            if (this.getHealth() == f) {
-                return InteractionResult.PASS;
-            } else {
-                float f1 = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
-                this.playSound(SoundEvents.IRON_GOLEM_REPAIR, 1.0F, f1);
-                if (!pPlayer.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-                return InteractionResult.sidedSuccess(this.level().isClientSide);
-            }
-        }
+        return InteractionResult.PASS;
     }
 
     @Override

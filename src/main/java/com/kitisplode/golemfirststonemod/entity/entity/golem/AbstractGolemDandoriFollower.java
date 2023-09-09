@@ -2,6 +2,7 @@ package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -25,13 +27,14 @@ import java.util.UUID;
 abstract public class AbstractGolemDandoriFollower extends IronGolem implements IEntityDandoriFollower
 {
 
-    private static final EntityDataAccessor<Boolean> DANDORI_STATE = SynchedEntityData.defineId(AbstractGolemDandoriFollower.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> DANDORI_STATE = SynchedEntityData.defineId(AbstractGolemDandoriFollower.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(AbstractGolemDandoriFollower.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final EntityDataAccessor<Boolean> THROWN = SynchedEntityData.defineId(AbstractGolemDandoriFollower.class, EntityDataSerializers.BOOLEAN);
     protected static final double dandoriMoveRange = 6;
     protected static final double dandoriSeeRange = 36;
     private boolean lastOnGround = false;
     private float throwAngle = 0.0f;
+    private BlockPos deployPosition;
 
     public AbstractGolemDandoriFollower(EntityType<? extends IronGolem> pEntityType, Level pLevel)
     {
@@ -47,7 +50,7 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
     protected void defineSynchedData()
     {
         super.defineSynchedData();
-        if (!this.entityData.hasItem(DANDORI_STATE)) this.entityData.define(DANDORI_STATE, false);
+        if (!this.entityData.hasItem(DANDORI_STATE)) this.entityData.define(DANDORI_STATE, 0);
         if (!this.entityData.hasItem(OWNER_UUID)) this.entityData.define(OWNER_UUID, Optional.empty());
         if (!this.entityData.hasItem(THROWN)) this.entityData.define(THROWN, false);
     }
@@ -91,13 +94,17 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
         if (pOwner != null) setOwnerUUID(pOwner.getUUID());
     }
 
-    public boolean getDandoriState()
+    public int getDandoriState()
     {
         return this.entityData.get(DANDORI_STATE);
     }
-    public void setDandoriState(boolean pDandoriState)
+    public void setDandoriState(int pDandoriState)
     {
         if (this.getOwner() != null) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        if (pDandoriState > 0)
+        {
+            this.setDeployPosition(null);
+        }
         this.entityData.set(DANDORI_STATE, pDandoriState);
     }
 
@@ -116,7 +123,7 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
     @Override
     public void remove(Entity.RemovalReason pReason)
     {
-        if (this.getDandoriState() && this.getOwner() != null) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        if (this.isDandoriOn() && this.getOwner() != null) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         super.remove(pReason);
     }
 
@@ -164,5 +171,22 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
                 throwAngle = 0.0f;
             }
         }
+    }
+
+    @Override
+    public void setDeployPosition(BlockPos bp)
+    {
+        this.deployPosition = bp;
+    }
+    @Override
+    public BlockPos getDeployPosition()
+    {
+        return this.deployPosition;
+    }
+    @Override
+    public double getTargetRange()
+    {
+        if (this.isDandoriOn()) return 6.0d;
+        return this.getAttributeValue(Attributes.FOLLOW_RANGE);
     }
 }

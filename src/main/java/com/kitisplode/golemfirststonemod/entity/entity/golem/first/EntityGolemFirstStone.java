@@ -5,7 +5,10 @@ import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowSoftGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriMoveToDeployPositionGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoalRanged;
+import com.kitisplode.golemfirststonemod.entity.goal.target.ActiveTargetGoalBiggerY;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -14,6 +17,8 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -23,6 +28,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -46,11 +52,12 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
     private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemFirstStone.class, EntityDataSerializers.INT);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private static final float attackAOERange = 4.0f;
-    private static final float attackKnockbackAmount = 2.0f;
+    private static final float attackKnockbackAmount = 2.15f;
     private static final float attackKnockbackAmountVertical = 0.25f;
-    private static final float attackVerticalRange = 2.0f;
+    private static final float attackVerticalRange = 4.0f;
     private static final double dandoriMoveRange = 6;
     private static final double dandoriSeeRange = 36;
+    private static final MobEffectInstance defenseUpDuringWindup = new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 70, 1, false, false);
 
     public EntityGolemFirstStone(EntityType<? extends IronGolem> pEntityType, Level pLevel)
     {
@@ -100,19 +107,33 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
     @Override
     protected void registerGoals()
     {
-        this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.4, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+
         this.goalSelector.addGoal(2, new MultiStageAttackGoalRanged(this, 1.0, true, 6.5D, new int[]{70, 30, 25}));
-        this.goalSelector.addGoal(3, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
-        this.goalSelector.addGoal(4, new GolemRandomStrollInVillageGoal(this, 0.8D));
+        this.goalSelector.addGoal(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+        this.goalSelector.addGoal(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+
+        this.goalSelector.addGoal(5, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
+        this.goalSelector.addGoal(6, new GolemRandomStrollInVillageGoal(this, 0.8D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, AbstractVillager.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 5, false, false, (p_28879_) -> p_28879_ instanceof Enemy && !(p_28879_ instanceof Creeper)));
+        this.targetSelector.addGoal(3, new ActiveTargetGoalBiggerY<>(this, Mob.class, 5, false, false, (entity) -> entity instanceof Enemy && !(entity instanceof Creeper), 5));
+    }
+
+    public boolean isPushable()
+    {
+        return getAttackState() == 0;
     }
 
     @Override
     public boolean tryAttack()
     {
+        if (getAttackState() == 1)
+        {
+            this.addEffect(new MobEffectInstance(defenseUpDuringWindup));
+        }
         if (getAttackState() != 3) return false;
 
         this.level().broadcastEntityEvent(this, (byte)4);
@@ -154,7 +175,7 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
             if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
 
             // Apply damage.
-            float forceMultiplier = Math.abs((attackAOERange - this.distanceTo(target)) / attackAOERange);
+            float forceMultiplier = Math.max(0.65f, Math.abs((attackAOERange - this.distanceTo(target)) / attackAOERange));
             float totalDamage = getAttackDamage() * forceMultiplier;
             target.hurt(this.damageSources().mobAttack(this), totalDamage);
             // Apply knockback.
@@ -166,24 +187,9 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
     }
 
     @Override
-    protected InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
-        ItemStack itemstack = pPlayer.getItemInHand(pHand);
-        if (!itemstack.is(Items.STONE)) {
-            return InteractionResult.PASS;
-        } else {
-            float f = this.getHealth();
-            this.heal(25.0F);
-            if (this.getHealth() == f) {
-                return InteractionResult.PASS;
-            } else {
-                float f1 = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
-                this.playSound(SoundEvents.IRON_GOLEM_REPAIR, 1.0F, f1);
-                if (!pPlayer.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-                return InteractionResult.sidedSuccess(this.level().isClientSide);
-            }
-        }
+    protected InteractionResult mobInteract(Player pPlayer, InteractionHand pHand)
+    {
+        return InteractionResult.PASS;
     }
 
     @Override

@@ -7,10 +7,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDa
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntitySoundRepeated;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.*;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstBrick;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstOak;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstStone;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.first.*;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemCobble;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemGrindstone;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemMossy;
@@ -48,13 +45,18 @@ public class ModEntities
     public static final RegistryObject<EntityType<EntityProjectileAoEOwnerAware>> ENTITY_PROJECTILE_FIRST_OAK =
             ENTITY_TYPES.register("entity_projectile_first_oak",
                     () -> EntityType.Builder.<EntityProjectileAoEOwnerAware>of(EntityProjectileAoEOwnerAware::new, MobCategory.MISC)
-                            .sized(0.5f, 0.5f).clientTrackingRange(4).updateInterval(20)
+                            .sized(0.75f, 0.75f).clientTrackingRange(4).updateInterval(20)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_projectile_first_oak").toString()));
     public static final RegistryObject<EntityType<EntityGolemFirstBrick>> ENTITY_GOLEM_FIRST_BRICK =
             ENTITY_TYPES.register("entity_golem_first_brick",
                     () -> EntityType.Builder.of(EntityGolemFirstBrick::new, MobCategory.MISC)
                             .sized(2.5f, 4.0f)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_golem_first_brick").toString()));
+    public static final RegistryObject<EntityType<EntityShieldFirstBrick>> ENTITY_SHIELD_FIRST_BRICK =
+            ENTITY_TYPES.register("entity_shield_first_brick",
+                    () -> EntityType.Builder.<EntityShieldFirstBrick>of(EntityShieldFirstBrick::new, MobCategory.MISC)
+                            .sized(1.0f, 1.0f)
+                            .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_shield_first_brick").toString()));
     public static final RegistryObject<EntityType<EntityGolemFirstDiorite>> ENTITY_GOLEM_FIRST_DIORITE =
             ENTITY_TYPES.register("entity_golem_first_diorite",
                     () -> EntityType.Builder.of(EntityGolemFirstDiorite::new, MobCategory.MISC)
@@ -69,33 +71,33 @@ public class ModEntities
     public static final RegistryObject<EntityType<EntityGolemCobble>> ENTITY_GOLEM_COBBLE =
             ENTITY_TYPES.register("entity_golem_cobble",
                     () -> EntityType.Builder.of(EntityGolemCobble::new, MobCategory.MISC)
-                            .sized(1.0f, 1.0f)
+                            .sized(0.9f, 1.0f)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_golem_cobble").toString()));
     public static final RegistryObject<EntityType<EntityGolemPlank>> ENTITY_GOLEM_PLANK =
             ENTITY_TYPES.register("entity_golem_plank",
                     () -> EntityType.Builder.of(EntityGolemPlank::new, MobCategory.MISC)
-                            .sized(1.0f, 1.0f)
+                            .sized(0.9f, 1.0f)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_golem_plank").toString()));
     public static final RegistryObject<EntityType<EntityGolemMossy>> ENTITY_GOLEM_MOSSY =
             ENTITY_TYPES.register("entity_golem_mossy",
                     () -> EntityType.Builder.of(EntityGolemMossy::new, MobCategory.MISC)
-                            .sized(1.0f, 1.0f)
+                            .sized(0.9f, 1.0f)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_golem_mossy").toString()));
     public static final RegistryObject<EntityType<EntityGolemGrindstone>> ENTITY_GOLEM_GRINDSTONE =
             ENTITY_TYPES.register("entity_golem_grindstone",
                     () -> EntityType.Builder.of(EntityGolemGrindstone::new, MobCategory.MISC)
-                            .sized(1.0f, 1.0f)
+                            .sized(0.9f, 1.0f)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_golem_grindstone").toString()));
 
     public static final RegistryObject<EntityType<EntityGolemTuff>> ENTITY_GOLEM_TUFF =
             ENTITY_TYPES.register("entity_golem_tuff",
                     () -> EntityType.Builder.of(EntityGolemTuff::new, MobCategory.MISC)
-                            .sized(1.0f, 1.0f)
+                            .sized(0.9f, 1.0f)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_golem_tuff").toString()));
     public static final RegistryObject<EntityType<EntityGolemCopper>> ENTITY_GOLEM_COPPER =
             ENTITY_TYPES.register("entity_golem_copper",
                     () -> EntityType.Builder.of(EntityGolemCopper::new, MobCategory.MISC)
-                            .sized(1.0f, 1.0f)
+                            .sized(0.9f, 1.0f)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_golem_copper").toString()));
 
     public static final RegistryObject<EntityType<EntityPawn>> ENTITY_PAWN_TERRACOTTA =
@@ -114,15 +116,15 @@ public class ModEntities
                     () -> EntityType.Builder.<EntitySoundRepeated>of(EntitySoundRepeated::new, MobCategory.MISC)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_sound_repeated").toString()));
 
-    public static final RegistryObject<EntityType<EntityEffectShieldFirstBrick>> ENTITY_SHIELD_FIRST_BRICK =
-            ENTITY_TYPES.register("entity_shield_first_brick",
+    public static final RegistryObject<EntityType<EntityEffectShieldFirstBrick>> ENTITY_EFFECT_SHIELD_FIRST_BRICK =
+            ENTITY_TYPES.register("entity_effect_shield_first_brick",
                     () -> EntityType.Builder.<EntityEffectShieldFirstBrick>of(EntityEffectShieldFirstBrick::new, MobCategory.MISC)
-                            .sized(0.5f, 0.5f)
+                            .sized(0.1f, 0.1f)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_shield_first_brick").toString()));
     public static final RegistryObject<EntityType<EntityEffectCubeDandoriWhistle>> ENTITY_EFFECT_CUBE_DANDORI_WHISTLE =
             ENTITY_TYPES.register("entity_effect_cube_dandori_whistle",
                     () -> EntityType.Builder.<EntityEffectCubeDandoriWhistle>of(EntityEffectCubeDandoriWhistle::new, MobCategory.MISC)
-                            .sized(0.5f, 0.5f)
+                            .sized(0.1f, 0.1f)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_effect_cube_dandori_whistle").toString()));
 
     public static void register(IEventBus eventBus)
@@ -153,6 +155,7 @@ public class ModEntities
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_OAK.get(), EntityRendererGolemFirstOak::new);
         EntityRenderers.register(ModEntities.ENTITY_PROJECTILE_FIRST_OAK.get(), TippableArrowRenderer::new);
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_BRICK.get(), EntityRendererGolemFirstBrick::new);
+        EntityRenderers.register(ModEntities.ENTITY_SHIELD_FIRST_BRICK.get(), EntityRendererEffectCube::new);
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_DIORITE.get(), EntityRendererGolemFirstDiorite::new);
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_COBBLE.get(), EntityRendererGolemCobble::new);
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_PLANK.get(), EntityRendererGolemPlank::new);
@@ -164,7 +167,7 @@ public class ModEntities
         EntityRenderers.register(ModEntities.ENTITY_PAWN_TERRACOTTA.get(), EntityRendererPawn::new);
         EntityRenderers.register(ModEntities.ENTITY_VILLAGER_DANDORI.get(), EntityRendererVillagerDandori::new);
         EntityRenderers.register(ModEntities.ENTITY_SOUND_REPEATED.get(), EntityRendererSoundRepeated::new);
-        EntityRenderers.register(ModEntities.ENTITY_SHIELD_FIRST_BRICK.get(), EntityRendererShieldFirstBrick::new);
-        EntityRenderers.register(ModEntities.ENTITY_EFFECT_CUBE_DANDORI_WHISTLE.get(), EntityRendererShieldFirstBrick::new);
+        EntityRenderers.register(ModEntities.ENTITY_EFFECT_SHIELD_FIRST_BRICK.get(), EntityRendererEffectCube::new);
+        EntityRenderers.register(ModEntities.ENTITY_EFFECT_CUBE_DANDORI_WHISTLE.get(), EntityRendererEffectCube::new);
     }
 }

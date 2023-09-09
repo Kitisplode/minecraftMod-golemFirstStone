@@ -4,9 +4,8 @@ import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandor
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityCanAttackBlocks;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
-import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
-import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackBlockGoalRanged;
-import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoalRanged;
+import com.kitisplode.golemfirststonemod.entity.goal.action.*;
+import com.kitisplode.golemfirststonemod.entity.goal.target.SharedTargetGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -14,6 +13,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -24,9 +24,11 @@ import net.minecraft.world.entity.ai.goal.MoveTowardsTargetGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
@@ -75,6 +77,11 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
         return createAttributes().build();
     }
 
+    public RandomSource getRandom()
+    {
+        return super.getRandom();
+    }
+
     @Override
     public boolean isThrowable()
     {
@@ -118,15 +125,21 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
     @Override
     protected void registerGoals()
     {
-        this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.2, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.2,dandoriMoveRange, dandoriSeeRange));
+
         this.goalSelector.addGoal(2, new MultiStageAttackGoalRanged(this, 1.0, true, 6.0D, new int[]{10, 5}));
         this.goalSelector.addGoal(2, new MultiStageAttackBlockGoalRanged(this, 1.0, true, 8.0D, new int[]{10, 5}));
-        this.goalSelector.addGoal(3, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
-        this.goalSelector.addGoal(4, new GolemRandomStrollInVillageGoal(this, 0.8D));
+        this.goalSelector.addGoal(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+
+        this.goalSelector.addGoal(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+
+        this.goalSelector.addGoal(5, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
+        this.goalSelector.addGoal(6, new GolemRandomStrollInVillageGoal(this, 0.8D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, AbstractVillager.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 5, false, false, (p_28879_) -> p_28879_ instanceof Enemy && !(p_28879_ instanceof Creeper)));
+        this.targetSelector.addGoal(3, new SharedTargetGoal<>(this, AbstractGolem.class, Mob.class, 5, false, false, (p_28879_) -> p_28879_ instanceof Enemy && !(p_28879_ instanceof Creeper), 5));
     }
 
     @Override
@@ -139,6 +152,7 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
         {
             this.playSound(SoundEvents.IRON_GOLEM_ATTACK, 1.0F, 1.0F);
             getTarget().hurt(this.damageSources().mobAttack(this), getAttackDamage());
+            getTarget().setDeltaMovement(getTarget().getDeltaMovement().scale(0.35d));
             this.doEnchantDamageEffects(this, getTarget());
         }
         return true;
@@ -155,7 +169,7 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
     {
         super.tick();
         // Drop a block target if we've been ordered to do other things.
-        if ((this.getTarget() != null || this.getDandoriState()) && getBlockTarget() != null)
+        if ((this.getTarget() != null || this.isDandoriOn()) && getBlockTarget() != null)
         {
             level().destroyBlockProgress(getId(), this.blockTarget, -1);
             setBlockTarget(null);

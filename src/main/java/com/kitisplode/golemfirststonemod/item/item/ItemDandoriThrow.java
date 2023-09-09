@@ -93,7 +93,7 @@ public class ItemDandoriThrow extends Item
                         && entity instanceof IEntityDandoriFollower
                         && ((IEntityDandoriFollower)entity).getOwner() == user
                         && ((IEntityDandoriFollower)entity).isThrowable()
-                        && (((IEntityDandoriFollower)entity).getDandoriState() || forceDandori));
+                        && (((IEntityDandoriFollower)entity).isDandoriOn() || forceDandori));
         LivingEntity throwableGolem = world.getNearestEntity(LivingEntity.class, tp, null, user.getX(),user.getY(),user.getZ(), user.getBoundingBox().inflate(dandoriRange));
         int targetCount = 0;
         if (throwableGolem != null)
@@ -109,7 +109,7 @@ public class ItemDandoriThrow extends Item
             }
             if (follower instanceof EntityPawn)
                 user.playSound(ModSounds.ITEM_DANDORI_THROW.get(), 0.6f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.4f));
-            follower.setDandoriState(false);
+            follower.setDandoriState(IEntityDandoriFollower.DANDORI_STATES.OFF.ordinal());
         }
         return targetCount;
     }

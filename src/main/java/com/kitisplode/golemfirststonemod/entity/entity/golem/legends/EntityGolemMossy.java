@@ -8,6 +8,8 @@ import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFi
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowSoftGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriMoveToDeployPositionGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.entity.goal.target.PassiveTargetGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
@@ -26,6 +28,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.trading.Merchant;
@@ -47,15 +50,16 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
     private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemMossy.class, EntityDataSerializers.INT);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private static final int healRegenTime = 20 * 2;
-    private static final int healRegenAmount = 3;
+    private static final int healRegenAmount = 0;
     private static final float attackAOERange = 4.0f;
     private static final float attackVerticalRange = 5.0f;
     private static final ArrayList<MobEffectInstance> shieldStatusEffects = new ArrayList<>();
+    private MultiStageAttackGoalRanged attackGoal;
 
     public EntityGolemMossy(EntityType<? extends IronGolem> pEntityType, Level pLevel)
     {
         super(pEntityType, pLevel);
-        shieldStatusEffects.add(new MobEffectInstance(MobEffects.REGENERATION, healRegenTime, healRegenAmount, false, true));
+        shieldStatusEffects.add(new MobEffectInstance(MobEffects.HEAL, healRegenTime, healRegenAmount, false, true));
     }
 
     public static AttributeSupplier.Builder createAttributes()
@@ -93,10 +97,6 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
         this.entityData.set(ATTACK_STATE, pInt);
     }
 
-    private float getAttackDamage() {
-        return (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE);
-    }
-
     @Override
     public double getEyeY()
     {
@@ -106,13 +106,21 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
     @Override
     protected void registerGoals()
     {
-        this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.2, Ingredient.of(ModItems.ITEM_DANDORI_CALL.get(), ModItems.ITEM_DANDORI_ATTACK.get()), dandoriMoveRange, dandoriSeeRange));
-        this.goalSelector.addGoal(2, new MultiStageAttackGoalRanged(this, 1.0, true, 4.0D, new int[]{60, 20}));
-        this.goalSelector.addGoal(3, new PanicGoal(this, 1.0D));
-        this.goalSelector.addGoal(4, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
-        this.goalSelector.addGoal(5, new GolemRandomStrollInVillageGoal(this, 0.8D));
-        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        this.attackGoal = new MultiStageAttackGoalRanged(this, 1.0, true, 4.0D, new int[]{80, 20});
+
+        this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+
+        this.goalSelector.addGoal(2, this.attackGoal);
+        this.goalSelector.addGoal(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+
+        this.goalSelector.addGoal(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+
+        this.goalSelector.addGoal(5, new PanicGoal(this, 1.0D));
+        this.goalSelector.addGoal(6, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
+        this.goalSelector.addGoal(7, new GolemRandomStrollInVillageGoal(this, 0.8D));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, AbstractVillager.class, 6.0F));
+        this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new PassiveTargetGoal<>(this, Player.class, 5, false, false, golemTarget()));
         this.targetSelector.addGoal(2, new PassiveTargetGoal<>(this, Mob.class, 5, false, false, golemTarget()));
     }
@@ -227,7 +235,7 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
             {
                 if (pGolem.getAttackState() == 1)
                 {
-                    event.getController().setAnimationSpeed(1.00);
+                    event.getController().setAnimationSpeed(0.50);
                     return event.setAndContinue(RawAnimation.begin().then("animation.golem_mossy.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
                 }
                 event.getController().setAnimationSpeed(1.00);
