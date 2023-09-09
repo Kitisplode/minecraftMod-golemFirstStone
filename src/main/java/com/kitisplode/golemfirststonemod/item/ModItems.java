@@ -31,6 +31,14 @@ public class ModItems
     public static final Item ITEM_SPAWN_GOLEM_GRINDSTONE = registerItem("item_spawn_golem_grindstone",
             new SpawnEggItem(ModEntities.ENTITY_GOLEM_GRINDSTONE, 0xDFDFDF, 0x333333,
                     new FabricItemSettings()));
+    public static final Item ITEM_SPAWN_GOLEM_COPPER = registerItem("item_spawn_golem_copper",
+            new SpawnEggItem(ModEntities.ENTITY_GOLEM_COPPER, 0xDFDFDF, 0xEF8430,
+                    new FabricItemSettings()));
+    public static final Item ITEM_SPAWN_GOLEM_TUFF = registerItem("item_spawn_golem_tuff",
+            new SpawnEggItem(ModEntities.ENTITY_GOLEM_TUFF, 0xDFDFDF, 0x424742,
+                    new FabricItemSettings()));
+
+
     public static final Item ITEM_DANDORI_CALL = registerItem("item_dandori_call",
             new ItemDandoriCall(new FabricItemSettings().maxCount(1)));
     public static final Item ITEM_DANDORI_ATTACK = registerItem("item_dandori_attack",
@@ -41,6 +49,7 @@ public class ModItems
             new ItemDandoriThrow(new FabricItemSettings().maxCount(1)));
     public static final Item ITEM_DANDORI_BANNER = registerItem("item_dandori_banner",
             new ItemDandoriBanner(new FabricItemSettings().maxCount(1)));
+
     public static final Item ITEM_FLAME_OF_CREATION_BLUE = registerItem("item_flame_of_creation_blue",
             new Item(new FabricItemSettings().maxCount(16)));
     public static final Item ITEM_FLAME_OF_CREATION_RED = registerItem("item_flame_of_creation_red",

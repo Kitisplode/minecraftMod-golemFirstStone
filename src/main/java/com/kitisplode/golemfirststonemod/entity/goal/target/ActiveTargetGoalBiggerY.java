@@ -27,7 +27,8 @@ public class ActiveTargetGoalBiggerY<T extends LivingEntity> extends ActiveTarge
     }
 
     @Override
-    protected double getFollowRange() {
+    protected double getFollowRange()
+    {
         if (this.mob instanceof IEntityDandoriFollower) return ((IEntityDandoriFollower)this.mob).getTargetRange();
         return this.mob.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE);
     }

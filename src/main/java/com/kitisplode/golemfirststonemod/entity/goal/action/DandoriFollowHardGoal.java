@@ -14,8 +14,6 @@ import java.util.EnumSet;
 
 public class DandoriFollowHardGoal extends Goal
 {
-    private static final TargetPredicate TEMPTING_ENTITY_PREDICATE = TargetPredicate.createNonAttackable().setBaseMaxDistance(10.0);
-    private final TargetPredicate predicate;
     protected final PathAwareEntity mob;
     private final IEntityDandoriFollower pik;
     private final double speed;
@@ -31,7 +29,6 @@ public class DandoriFollowHardGoal extends Goal
         this.speed = pSpeed;
         this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
         this.moveRange = MathHelper.square(pRange);
-        this.predicate = TEMPTING_ENTITY_PREDICATE.copy().setPredicate(this::isTemptedBy).setBaseMaxDistance(Math.max(10.0, pSeeRange));
     }
 
     @Override

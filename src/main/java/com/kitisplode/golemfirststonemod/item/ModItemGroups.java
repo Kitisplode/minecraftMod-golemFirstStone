@@ -16,7 +16,7 @@ public class ModItemGroups
             new Identifier(GolemFirstStoneMod.MOD_ID, "golemfirststonemod"),
             FabricItemGroup.builder()
                     .displayName(Text.translatable("creativetab.golemfirststonemod"))
-                    .icon( () -> new ItemStack(ModBlocks.BLOCK_HEAD_STONE))
+                    .icon( () -> new ItemStack(ModItems.ITEM_DANDORI_BANNER))
                     .entries((displayContext, entries) -> {
                         entries.add(ModBlocks.BLOCK_HEAD_STONE);
                         entries.add(ModBlocks.BLOCK_CORE_STONE);
@@ -34,10 +34,13 @@ public class ModItemGroups
 //                        entries.add(ModBlocks.BLOCK_DANDORI);
 //                        entries.add(ModItems.ITEM_SPAWN_PAWN_FIRST_DIORITE);
 //                        entries.add(ModItems.ITEM_SPAWN_VILLAGER_DANDORI);
+                        entries.add(ModItems.ITEM_SPAWN_GOLEM_COPPER);
+                        entries.add(ModItems.ITEM_SPAWN_GOLEM_TUFF);
                         entries.add(ModItems.ITEM_SPAWN_GOLEM_COBBLE);
                         entries.add(ModItems.ITEM_SPAWN_GOLEM_PLANK);
                         entries.add(ModItems.ITEM_SPAWN_GOLEM_MOSSY);
                         entries.add(ModItems.ITEM_SPAWN_GOLEM_GRINDSTONE);
+
                         entries.add(ModItems.ITEM_DANDORI_CALL);
                         entries.add(ModItems.ITEM_DANDORI_BANNER);
                         entries.add(ModItems.ITEM_DANDORI_ATTACK);

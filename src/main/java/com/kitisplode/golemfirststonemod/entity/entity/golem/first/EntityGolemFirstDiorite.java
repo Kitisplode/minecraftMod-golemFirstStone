@@ -3,6 +3,7 @@ package com.kitisplode.golemfirststonemod.entity.entity.golem.first;
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemCobble;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
@@ -47,7 +48,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.List;
 
-public class EntityGolemFirstDiorite extends EntityGolemCobble implements GeoEntity, IEntitySummoner, IEntityDandoriFollower
+public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implements GeoEntity, IEntitySummoner, IEntityDandoriFollower
 {
 	private static final TrackedData<Integer> SUMMON_STATE = DataTracker.registerData(EntityGolemFirstDiorite.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Boolean> SUMMON_COOLDOWN = DataTracker.registerData(EntityGolemFirstDiorite.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -135,11 +136,11 @@ public class EntityGolemFirstDiorite extends EntityGolemCobble implements GeoEnt
 		this.goalSelector.add(1, this.summonGoal);
 		this.goalSelector.add(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
 
-		this.goalSelector.add(2, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+		this.goalSelector.add(3, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
 
-		this.goalSelector.add(2, new EscapeDangerGoal(this, 1.0));
-		this.goalSelector.add(3, new WanderAroundTargetGoal(this, 0.8, 13.0f));
-		this.goalSelector.add(5, new IronGolemWanderAroundGoal(this, 0.8));
+		this.goalSelector.add(4, new EscapeDangerGoal(this, 1.0));
+		this.goalSelector.add(5, new WanderAroundTargetGoal(this, 0.8, 13.0f));
+		this.goalSelector.add(6, new IronGolemWanderAroundGoal(this, 0.8));
 		this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
 		this.goalSelector.add(7, new LookAtEntityGoal(this, MerchantEntity.class, 8.0F));
 		this.goalSelector.add(8, new LookAroundGoal(this));

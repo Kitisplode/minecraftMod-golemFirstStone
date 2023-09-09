@@ -172,18 +172,18 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
         this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
 
         this.goalSelector.add(2, new PickupItemGoal(this, 1.0));
-        this.goalSelector.add(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+        this.goalSelector.add(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
 
-        this.goalSelector.add(3, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
 
-        this.goalSelector.add(3, new FleeEntityGoal<HostileEntity>(this, HostileEntity.class, 16.0f, 0.9, 1.0));
-        this.goalSelector.add(3, new EscapeDangerGoal(this, 1.0));
-        this.goalSelector.add(4, new DelayedCalmDownGoal(this, 200, 60 * 5));
-        this.goalSelector.add(5, new MoveToFavoredPositionGoal(this, 0.8, 12));
-        this.goalSelector.add(6, new IronGolemWanderAroundGoal(this, 0.8));
-        this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.add(7, new LookAtEntityGoal(this, MerchantEntity.class, 8.0F));
-        this.goalSelector.add(8, new LookAroundGoal(this));
+        this.goalSelector.add(5, new FleeEntityGoal<HostileEntity>(this, HostileEntity.class, 16.0f, 0.9, 1.0));
+        this.goalSelector.add(5, new EscapeDangerGoal(this, 1.0));
+        this.goalSelector.add(6, new DelayedCalmDownGoal(this, 200, 60 * 5));
+        this.goalSelector.add(7, new MoveToFavoredPositionGoal(this, 0.8, 12));
+        this.goalSelector.add(8, new IronGolemWanderAroundGoal(this, 0.8));
+        this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.add(9, new LookAtEntityGoal(this, MerchantEntity.class, 8.0F));
+        this.goalSelector.add(10, new LookAroundGoal(this));
     }
 
     @Override

@@ -37,8 +37,6 @@ public class EntityProjectileAoEOwnerAware extends ArrowEntity
     private LivingEntity golemOwner;
     private static final float attackVerticalRange = 3.0f;
     private boolean hasAoE = true;
-    private int piercingCount = 0;
-    private ArrayList<Entity> piercedEntities = null;
     private static final int maxAge = 1200;
 
     public EntityProjectileAoEOwnerAware(EntityType<? extends ArrowEntity> entityType, World world) {
@@ -70,10 +68,6 @@ public class EntityProjectileAoEOwnerAware extends ArrowEntity
     public void setHasAoE(boolean p)
     {
         this.hasAoE = p;
-    }
-    public void setPiercingCount(int p)
-    {
-        this.piercingCount = p;
     }
 
     @Override

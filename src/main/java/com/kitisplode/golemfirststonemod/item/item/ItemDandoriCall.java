@@ -64,7 +64,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
         {
             if (user.isSneaking())
             {
-                if (user instanceof IEntityWithDandoriCount player) player.nextDandoriCurrentType();
+                if (user instanceof IEntityWithDandoriCount player && !world.isClient()) player.nextDandoriCurrentType();
             }
             else
             {
@@ -220,12 +220,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
             // Skip things that already have dandori active?
             if (dandoriTarget.getDandoriState() == dandoriValue.ordinal()) continue;
             // If the thing has an owner, skip ones unless we are the owner.
-            boolean targetHasOwner = dandoriTarget.getOwner() != null;
-            if (targetHasOwner)
-            {
-                if (dandoriTarget.getOwner() != user) continue;
-            }
-            else continue;
+            if (dandoriTarget.getOwner() != user) continue;
 
             targetCount++;
             // If the pik doesn't have a target, or if we're forcing dandori, activate the pik's dandori mode.
@@ -253,12 +248,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
             // Skip piks that are not in dandori mode, unless we're forcing dandori.
             if (((IEntityDandoriFollower) target).isDandoriOff() && !forceDandori) continue;
             // If the thing has an owner, skip ones unless we are the owner.
-            boolean targetHasOwner = ((IEntityDandoriFollower) target).getOwner() != null;
-            if (targetHasOwner)
-            {
-                if (((IEntityDandoriFollower) target).getOwner() != user) continue;
-            }
-            else continue;
+            if (((IEntityDandoriFollower) target).getOwner() != user) continue;
             // SKip anything that isn't of the player's currently selected type.
             if (!DataDandoriCount.entityIsOfType(currentType, target)) continue;
 

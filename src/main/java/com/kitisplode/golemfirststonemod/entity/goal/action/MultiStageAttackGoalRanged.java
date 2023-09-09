@@ -76,7 +76,7 @@ public class MultiStageAttackGoalRanged extends MeleeAttackGoal
         }
         Vec3d distanceFlattened = new Vec3d(target.getX() - this.mob.getX(), 0, target.getZ() - this.mob.getZ());
 		double distanceFlatSquared = distanceFlattened.lengthSquared();
-        return this.getSquaredMaxAttackDistance(target) >= distanceFlatSquared;//this.mob.squaredDistanceTo(target.getX(), target.getY(), target.getZ());
+        return this.getSquaredMaxAttackDistance(target) >= distanceFlatSquared;
     }
 
     @Override
