@@ -59,3 +59,42 @@
     + added Tuff Golems
     + added Copper Golems
     + added Copper Buttons (for Copper Golems to press!)
+
+## 0.0.9
+    + Rebalance changes to First of Stone
+        - extended vertical range of AoE from 2 to 4
+        - no longer pushable while attacking
+        - resistance effect added while attacking
+        - range to start charging attack increased from 2.3 blocks to 5.5 blocks
+        - reduced damage drop-off so attack will always deal at least 65% of total damage to a target (30 maximum damage)
+    + Rebalance changes to First of Oak
+        - increase projectile speed from 2 to 4
+        - projectile will now pierce through up to 4 enemies
+        - reduced projectile damage from 10 to 7.5 (with the piercing, it felt like doing 10 to 4 enemies at once was maybe a bit much?)
+        - removed projectile AoE
+    + Rebalance changes to First of Brick
+        - shield now reflects enemy arrows fired from outside
+        - golem will now create a shield if an enemy is nearby as well as when allies are attacked
+        - shield now applies 2 stacks of resistance instead of absorption
+    + Rebalance changes to First of Diorite
+        - Diorite Pawns no longer starve without targets
+        - First of Diorite will now spawn only 1 pawn at a time, but with a much shorter cool down, and it can chain spawns together to go even faster
+        - once the First of Diorite stops spawning, it will have to cooldown a little longer before it can get down and spawn more again
+        - First of Diorite can have only 15 pawns active at a time
+    + First of Diorite now has the flame inside its head like it's supposed to lol
+    + Rebalance changes to Cobblestone Golem
+        - deal less knockback when attacking
+    + Rebalance changes to Plank Golem
+        - deal less damage per arrow
+        - slightly reduced fire rate
+    + Rebalance changes to Mossy Golem
+        - increased windup time for healing
+    + Rebalance changes to Grindstone Golem
+        - now have some damage resistance while charging
+        - apply short slowness effect to enemies hit with charge
+    + Changes to Dandori Call item
+        - Can now use to command followers to go to a looked at location (hopefully makes golem commands slightly less clunky)
+        - Followers now have two states of Dandori:
+            = hard dandori: will ignore all enemies until they are out of range, at which point it will switch to soft dandori
+            = soft dandori: will attack enemies that get too close then return to following the player
+    + Added Banner of Courage (it's just a reskin of the Dandori Call item lol)
