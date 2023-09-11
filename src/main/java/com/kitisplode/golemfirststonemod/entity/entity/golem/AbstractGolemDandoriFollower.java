@@ -31,7 +31,7 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(AbstractGolemDandoriFollower.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final EntityDataAccessor<Boolean> THROWN = SynchedEntityData.defineId(AbstractGolemDandoriFollower.class, EntityDataSerializers.BOOLEAN);
     protected static final double dandoriMoveRange = 6;
-    protected static final double dandoriSeeRange = 36;
+    protected static final double dandoriSeeRange = 16;
     private boolean lastOnGround = false;
     private float throwAngle = 0.0f;
     private BlockPos deployPosition;
@@ -62,10 +62,10 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
     }
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        UUID uuid;
+        UUID uuid = null;
         if (pCompound.hasUUID("Owner")) {
             uuid = pCompound.getUUID("Owner");
-        } else {
+        } else if (pCompound.contains("Owner")) {
             String s = pCompound.getString("Owner");
             uuid = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), s);
         }
@@ -100,10 +100,10 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
     }
     public void setDandoriState(int pDandoriState)
     {
-        if (this.getOwner() != null) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
-        if (pDandoriState > 0)
+        if (this.getOwner() != null && this.getOwner() instanceof IEntityWithDandoriCount) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        if (pDandoriState == 0)
         {
-            this.setDeployPosition(null);
+            this.setDeployPosition(this.getOnPos());
         }
         this.entityData.set(DANDORI_STATE, pDandoriState);
     }
@@ -123,7 +123,7 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
     @Override
     public void remove(Entity.RemovalReason pReason)
     {
-        if (this.isDandoriOn() && this.getOwner() != null) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        if (this.getOwner() != null && this.getOwner() instanceof IEntityWithDandoriCount) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         super.remove(pReason);
     }
 
@@ -160,7 +160,11 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
         {
             if (this.onGround() && !lastOnGround)
             {
-                if (this.getThrown()) this.setThrown(false);
+                if (this.getThrown())
+                {
+                    this.setThrown(false);
+                    this.setDeployPosition(this.getOnPos());
+                }
             }
             lastOnGround = this.onGround();
             if (this.getThrown())

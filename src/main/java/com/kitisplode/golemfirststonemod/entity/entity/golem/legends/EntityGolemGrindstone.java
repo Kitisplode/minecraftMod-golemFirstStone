@@ -112,12 +112,13 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
     protected void registerGoals()
     {
         this.attackGoal = new MultiStageAttackGoalRanged(this, 1.0, true, Mth.square(12.0d), new int[]{70, 40, 20});
-        this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(0, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(1, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
 
         this.goalSelector.addGoal(2, this.attackGoal);
         this.goalSelector.addGoal(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
 
-        this.goalSelector.addGoal(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 0));
 
         this.goalSelector.addGoal(5, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
         this.goalSelector.addGoal(6, new GolemRandomStrollInVillageGoal(this, 0.8D));
@@ -125,7 +126,7 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, AbstractGolem.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(3, new SharedTargetGoal<>(this, AbstractGolem.class, Mob.class, 5, false, false, (p_28879_) -> p_28879_ instanceof Enemy && !(p_28879_ instanceof Creeper), 5));
+        this.targetSelector.addGoal(3, new SharedTargetGoal<>(this, AbstractGolem.class, Mob.class, 5, true, false, (p_28879_) -> p_28879_ instanceof Enemy && !(p_28879_ instanceof Creeper), 5));
     }
 
     @Override

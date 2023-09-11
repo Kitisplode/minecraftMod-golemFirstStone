@@ -53,7 +53,7 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
     private static final int healRegenAmount = 0;
     private static final float attackAOERange = 4.0f;
     private static final float attackVerticalRange = 5.0f;
-    private static final ArrayList<MobEffectInstance> shieldStatusEffects = new ArrayList<>();
+    protected final ArrayList<MobEffectInstance> shieldStatusEffects = new ArrayList<>();
     private MultiStageAttackGoalRanged attackGoal;
 
     public EntityGolemMossy(EntityType<? extends IronGolem> pEntityType, Level pLevel)
@@ -108,12 +108,13 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
     {
         this.attackGoal = new MultiStageAttackGoalRanged(this, 1.0, true, 4.0D, new int[]{80, 20});
 
-        this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(0, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(1, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
 
         this.goalSelector.addGoal(2, this.attackGoal);
         this.goalSelector.addGoal(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
 
-        this.goalSelector.addGoal(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 0));
 
         this.goalSelector.addGoal(5, new PanicGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
@@ -121,8 +122,8 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, AbstractVillager.class, 6.0F));
         this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new PassiveTargetGoal<>(this, Player.class, 5, false, false, golemTarget()));
-        this.targetSelector.addGoal(2, new PassiveTargetGoal<>(this, Mob.class, 5, false, false, golemTarget()));
+        this.targetSelector.addGoal(1, new PassiveTargetGoal<>(this, Player.class, 5, true, false, golemTarget()));
+        this.targetSelector.addGoal(2, new PassiveTargetGoal<>(this, Mob.class, 5, true, false, golemTarget()));
     }
 
     private Predicate<LivingEntity> golemTarget()
@@ -132,8 +133,12 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
             // Skip itself.
             if (entity == this) return false;
             // Check other golems, villagers, and players
-            if ((entity instanceof IEntityDandoriFollower && ((IEntityDandoriFollower)entity).getOwner() == this.getOwner())
-                    || (entity instanceof EntityPawn pawn && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite && firstDiorite.getOwner() == this.getOwner())
+            if ((entity instanceof IEntityDandoriFollower dandoriFollower
+                    && (dandoriFollower.getOwner() == this.getOwner()
+                    || (dandoriFollower.getOwner() instanceof IEntityDandoriFollower dandoriFollowerOwner && dandoriFollowerOwner.getOwner() == this.getOwner())))
+                    || (entity instanceof EntityPawn pawn
+                    && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite
+                    && firstDiorite.getOwner() == this.getOwner())
                     || (entity instanceof Player && entity == this.getOwner())
                     || entity instanceof Merchant)
             {
@@ -184,6 +189,7 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
             if (target instanceof IEntityDandoriFollower dandoriFollower)
             {
                 if (dandoriFollower.getOwner() != this.getOwner()) continue;
+                if (!(this.getOwner() instanceof EntityGolemFirstDiorite) && dandoriFollower.getOwner() instanceof IEntityDandoriFollower dandoriFollowerOwner && dandoriFollowerOwner.getOwner() != this.getOwner()) continue;
                 if (dandoriFollower instanceof EntityPawn pawn)
                 {
                     if (pawn.getOwnerType() == EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
@@ -195,15 +201,18 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
             // Do not damage targets that are too far on the y axis.
             if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
 
-            for (MobEffectInstance statusEffectInstance : shieldStatusEffects)
+            ArrayList<MobEffectInstance> mobEffect = getStatusEffect();
+            for (MobEffectInstance statusEffectInstance : mobEffect)
             {
-                MobEffect statusEffect = statusEffectInstance.getEffect();
-                int i2 = statusEffectInstance.mapDuration(i -> (int)(1 * (double)i + 0.5));
-                MobEffectInstance statusEffectInstance2 = new MobEffectInstance(statusEffect, i2, statusEffectInstance.getAmplifier(), statusEffectInstance.isAmbient(), statusEffectInstance.isVisible());
-                if (statusEffectInstance2.getDuration() < 20) continue;
-                target.addEffect(statusEffectInstance2, this);
+                if (statusEffectInstance.getDuration() < 20) continue;
+                target.addEffect(statusEffectInstance, this);
             }
         }
+    }
+
+    protected ArrayList<MobEffectInstance> getStatusEffect()
+    {
+        return shieldStatusEffects;
     }
 
     private void effectWhistle(Level world, LivingEntity user, int time)

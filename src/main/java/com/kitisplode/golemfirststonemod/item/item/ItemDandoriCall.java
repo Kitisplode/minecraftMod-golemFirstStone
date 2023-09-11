@@ -228,7 +228,9 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
             targetCount++;
             // If the pik doesn't have a target, or if we're forcing dandori, activate the pik's dandori mode.
             if (target.getTarget() == null || forceDandori)
-                ((IEntityDandoriFollower)target).setDandoriState(dandoriValue.ordinal());
+            {
+                dandoriTarget.setDandoriState(dandoriValue.ordinal());
+            }
         }
         return targetCount;
     }
@@ -246,10 +248,11 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
             if (target == user) continue;
             // Skip anything that doesn't follow dandori rules
             if (!(target instanceof IEntityDandoriFollower)) continue;
+            IEntityDandoriFollower dandoriTarget = (IEntityDandoriFollower) target;
             // Skip piks that are not in dandori mode, unless we're forcing dandori.
-            if (((IEntityDandoriFollower) target).isDandoriOff() && !forceDandori) continue;
+            if (dandoriTarget.isDandoriOff() && !forceDandori) continue;
             // If the thing has an owner, skip ones unless we are the owner.
-            if (((IEntityDandoriFollower) target).getOwner() != user) continue;
+            if (dandoriTarget.getOwner() != user) continue;
             // SKip anything that isn't of the player's currently selected type.
             if (!DataDandoriCount.entityIsOfType(currentType, target)) continue;
 
@@ -257,8 +260,8 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
             // Deploy the pik to the given location.
             if (!world.isClientSide())
             {
-                ((IEntityDandoriFollower) target).setDeployPosition(position);
-                ((IEntityDandoriFollower) target).setDandoriState(IEntityDandoriFollower.DANDORI_STATES.OFF.ordinal());
+                dandoriTarget.setDandoriState(IEntityDandoriFollower.DANDORI_STATES.OFF.ordinal());
+                dandoriTarget.setDeployPosition(position);
             }
         }
         return targetCount;

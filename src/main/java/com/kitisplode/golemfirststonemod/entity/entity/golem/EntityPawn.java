@@ -590,23 +590,15 @@ public class EntityPawn extends IronGolem implements GeoEntity, IEntityDandoriFo
 
     public ResourceLocation getTextureLocation()
     {
-        if (this.getOwner() == null && this.getPawnType() < 3)
-            return switch (this.getPawnType())
-            {
-                case 0 -> new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_action.png");
-                case 1 -> new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_foresight.png");
-                default -> new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_knowledge.png");
-            };
-        else
-            return switch (this.getPawnType())
-            {
-                case 0 -> new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_action_active.png");
-                case 1 -> new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_foresight_active.png");
-                case 2 -> new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_knowledge_active.png");
-                case 3 -> new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/pik/pawn_pik_yellow.png");
-                case 4 -> new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/pik/pawn_pik_pink.png");
-                default -> new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/pik/pawn_pik_blue.png");
-            };
+        return switch (this.getPawnType())
+        {
+            case 0 -> new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_action.png");
+            case 1 -> new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_foresight.png");
+            case 2 -> new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_knowledge.png");
+            case 3 -> new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/pik/pawn_pik_yellow.png");
+            case 4 -> new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/pik/pawn_pik_pink.png");
+            default -> new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/pik/pawn_pik_blue.png");
+        };
     }
 
     // =================================================================================================================

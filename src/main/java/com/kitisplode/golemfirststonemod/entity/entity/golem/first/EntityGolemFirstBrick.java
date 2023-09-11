@@ -60,8 +60,6 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
     private static final float attackAOERange = 4.5f;
     private static final float attackVerticalRange = 5.0f;
     private static final ArrayList<MobEffectInstance> shieldStatusEffects = new ArrayList<>();
-    private static final double dandoriMoveRange = 6;
-    private static final double dandoriSeeRange = 36;
     private MultiStageAttackGoalRanged attackGoal;
 
     public EntityGolemFirstBrick(EntityType<? extends IronGolem> pEntityType, Level pLevel)
@@ -112,20 +110,21 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
         this.attackGoal = new MultiStageAttackGoalRanged(this, 1.0, true, Mth.square(attackAOERange), new int[]{120, 85,80, 25});
         this.attackGoal.setCooldownMax(200);
 
-        this.goalSelector.addGoal(1, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(0, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(1, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
 
         this.goalSelector.addGoal(2, this.attackGoal);
         this.goalSelector.addGoal(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
 
-        this.goalSelector.addGoal(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(4, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, 0));
 
         this.goalSelector.addGoal(5, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
         this.goalSelector.addGoal(6, new GolemRandomStrollInVillageGoal(this, 0.8D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, AbstractVillager.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new PassiveTargetGoal<>(this, Player.class, 5, false, false, golemTarget()));
-        this.targetSelector.addGoal(2, new PassiveTargetGoal<>(this, Mob.class, 5, false, false, golemTarget()));
+        this.targetSelector.addGoal(1, new PassiveTargetGoal<>(this, Player.class, 5, true, false, golemTarget()));
+        this.targetSelector.addGoal(2, new PassiveTargetGoal<>(this, Mob.class, 5, true, false, golemTarget()));
     }
 
     private Predicate<LivingEntity> golemTarget()
@@ -135,8 +134,12 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
             // Skip itself.
             if (entity == this) return false;
             // Check other golems, villagers, and players
-            if ((entity instanceof IEntityDandoriFollower && ((IEntityDandoriFollower)entity).getOwner() == this.getOwner())
-                    || (entity instanceof EntityPawn pawn && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite && firstDiorite.getOwner() == this.getOwner())
+            if ((entity instanceof IEntityDandoriFollower dandoriFollower
+                        && (dandoriFollower.getOwner() == this.getOwner()
+                        || (dandoriFollower.getOwner() instanceof IEntityDandoriFollower dandoriFollowerOwner && dandoriFollowerOwner.getOwner() == this.getOwner())))
+                    || (entity instanceof EntityPawn pawn
+                        && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite
+                        && firstDiorite.getOwner() == this.getOwner())
                     || (entity instanceof Player && entity == this.getOwner())
                     || entity instanceof Merchant)
             {
@@ -240,6 +243,7 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
             if (target instanceof IEntityDandoriFollower dandoriFollower)
             {
                 if (dandoriFollower.getOwner() != this.getOwner()) continue;
+                if (dandoriFollower.getOwner() instanceof IEntityDandoriFollower dandoriFollowerOwner && dandoriFollowerOwner.getOwner() != this.getOwner()) continue;
                 if (dandoriFollower instanceof EntityPawn pawn)
                 {
                     if (pawn.getOwnerType() == EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal())

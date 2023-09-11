@@ -39,7 +39,7 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     private static final EntityDataAccessor<Integer> DANDORI_STATE = SynchedEntityData.defineId(MixinIronGolem.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(MixinIronGolem.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final double dandoriMoveRange = 3;
-    private static final double dandoriSeeRange = 36;
+    private static final double dandoriSeeRange = 16;
     private BlockPos deployPosition;
 
     protected MixinIronGolem(EntityType<? extends AbstractGolem> pEntityType, Level pLevel)
@@ -62,10 +62,10 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     }
     @ModifyVariable(method = ("readAdditionalSaveData"), at = @At("TAIL"), ordinal = 0)
     public CompoundTag readAdditionalSaveData_owner(CompoundTag pCompound) {
-        UUID uuid;
+        UUID uuid = null;
         if (pCompound.hasUUID("Owner")) {
             uuid = pCompound.getUUID("Owner");
-        } else {
+        } else if (pCompound.contains("Owner")){
             String s = pCompound.getString("Owner");
             uuid = OldUsersConverter.convertMobOwnerIfNecessary(Objects.requireNonNull(this.getServer()), s);
         }
@@ -102,7 +102,7 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     }
     public void setDandoriState(int pDandoriState)
     {
-        if (this.getOwner() != null) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        if (this.getOwner() != null && this.getOwner() instanceof IEntityWithDandoriCount) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         if (pDandoriState > 0)
         {
             this.setDeployPosition(null);
@@ -114,9 +114,10 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     @Inject(method = ("registerGoals"), at = @At("HEAD"))
     protected void registerGoals(CallbackInfo ci)
     {
-        this.goalSelector.addGoal(0, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(-1, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(0, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
         this.goalSelector.addGoal(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
-        this.goalSelector.addGoal(2, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(2, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, 0));
     }
 
     @ModifyVariable(method = ("handleEntityEvent"), at = @At("HEAD"), ordinal = 0)
@@ -137,10 +138,7 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     @Override
     public void remove(Entity.RemovalReason pReason)
     {
-        if (this.isDandoriOn() && this.getOwner() != null)
-        {
-            ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
-        }
+        if (this.getOwner() != null && this.getOwner() instanceof IEntityWithDandoriCount) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         super.remove(pReason);
     }
 

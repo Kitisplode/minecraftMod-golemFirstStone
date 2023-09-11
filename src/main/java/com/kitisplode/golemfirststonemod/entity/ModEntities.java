@@ -2,12 +2,28 @@ package com.kitisplode.golemfirststonemod.entity;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.client.renderer.*;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.first.EntityRendererGolemFirstBrick;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.first.EntityRendererGolemFirstDiorite;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.first.EntityRendererGolemFirstOak;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.first.EntityRendererGolemFirstStone;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.first.diorite_pawns.EntityRendererPawnDioriteAction;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.first.diorite_pawns.EntityRendererPawnDioriteForesight;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.first.diorite_pawns.EntityRendererPawnDioriteKnowledge;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.legends.EntityRendererGolemCobble;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.legends.EntityRendererGolemGrindstone;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.legends.EntityRendererGolemMossy;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.legends.EntityRendererGolemPlank;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.vote.EntityRendererGolemCopper;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.vote.EntityRendererGolemTuff;
 import com.kitisplode.golemfirststonemod.entity.entity.EntityVillagerDandori;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectCubeDandoriWhistle;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntityEffectShieldFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntitySoundRepeated;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.*;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.*;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.first.diorite_pawns.EntityPawnDioriteAction;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.first.diorite_pawns.EntityPawnDioriteForesight;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.first.diorite_pawns.EntityPawnDioriteKnowledge;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemCobble;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemGrindstone;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemMossy;
@@ -67,6 +83,21 @@ public class ModEntities
                     () -> EntityType.Builder.of(EntityPawn::new, MobCategory.MISC)
                             .sized(0.8f, 1.0f)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_pawn_first_diorite").toString()));
+    public static final RegistryObject<EntityType<EntityPawnDioriteAction>> ENTITY_PAWN_DIORITE_ACTION =
+            ENTITY_TYPES.register("entity_pawn_diorite_action",
+                    () -> EntityType.Builder.of(EntityPawnDioriteAction::new, MobCategory.MISC)
+                            .sized(0.8f, 1.0f)
+                            .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_pawn_diorite_action").toString()));
+    public static final RegistryObject<EntityType<EntityPawnDioriteKnowledge>> ENTITY_PAWN_DIORITE_KNOWLEDGE =
+            ENTITY_TYPES.register("entity_pawn_diorite_knowledge",
+                    () -> EntityType.Builder.of(EntityPawnDioriteKnowledge::new, MobCategory.MISC)
+                            .sized(0.8f, 1.0f)
+                            .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_pawn_diorite_knowledge").toString()));
+    public static final RegistryObject<EntityType<EntityPawnDioriteForesight>> ENTITY_PAWN_DIORITE_FORESIGHT =
+            ENTITY_TYPES.register("entity_pawn_diorite_foresight",
+                    () -> EntityType.Builder.of(EntityPawnDioriteForesight::new, MobCategory.MISC)
+                            .sized(0.8f, 1.0f)
+                            .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_pawn_diorite_foresight").toString()));
 
     public static final RegistryObject<EntityType<EntityGolemCobble>> ENTITY_GOLEM_COBBLE =
             ENTITY_TYPES.register("entity_golem_cobble",
@@ -138,12 +169,17 @@ public class ModEntities
         event.put(ModEntities.ENTITY_GOLEM_FIRST_OAK.get(), EntityGolemFirstOak.setAttributes());
         event.put(ModEntities.ENTITY_GOLEM_FIRST_BRICK.get(), EntityGolemFirstBrick.setAttributes());
         event.put(ModEntities.ENTITY_GOLEM_FIRST_DIORITE.get(), EntityGolemFirstDiorite.setAttributes());
+        event.put(ModEntities.ENTITY_PAWN_DIORITE_ACTION.get(), EntityPawnDioriteAction.setAttributes());
+        event.put(ModEntities.ENTITY_PAWN_DIORITE_KNOWLEDGE.get(), EntityPawnDioriteKnowledge.setAttributes());
+        event.put(ModEntities.ENTITY_PAWN_DIORITE_FORESIGHT.get(), EntityPawnDioriteForesight.setAttributes());
+
         event.put(ModEntities.ENTITY_GOLEM_COBBLE.get(), EntityGolemCobble.setAttributes());
         event.put(ModEntities.ENTITY_GOLEM_PLANK.get(), EntityGolemCobble.setAttributes());
         event.put(ModEntities.ENTITY_GOLEM_MOSSY.get(), EntityGolemCobble.setAttributes());
         event.put(ModEntities.ENTITY_GOLEM_GRINDSTONE.get(), EntityGolemGrindstone.setAttributes());
         event.put(ModEntities.ENTITY_GOLEM_TUFF.get(), EntityGolemTuff.setAttributes());
         event.put(ModEntities.ENTITY_GOLEM_COPPER.get(), EntityGolemCopper.setAttributes());
+
         event.put(ModEntities.ENTITY_PAWN_FIRST_DIORITE.get(), EntityPawn.setAttributes());
         event.put(ModEntities.ENTITY_VILLAGER_DANDORI.get(), EntityVillagerDandori.setAttributes());
         event.put(ModEntities.ENTITY_PAWN_TERRACOTTA.get(), EntityPawn.setAttributes());
@@ -157,15 +193,21 @@ public class ModEntities
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_BRICK.get(), EntityRendererGolemFirstBrick::new);
         EntityRenderers.register(ModEntities.ENTITY_SHIELD_FIRST_BRICK.get(), EntityRendererEffectCube::new);
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_DIORITE.get(), EntityRendererGolemFirstDiorite::new);
+        EntityRenderers.register(ModEntities.ENTITY_PAWN_DIORITE_ACTION.get(), EntityRendererPawnDioriteAction::new);
+        EntityRenderers.register(ModEntities.ENTITY_PAWN_DIORITE_KNOWLEDGE.get(), EntityRendererPawnDioriteKnowledge::new);
+        EntityRenderers.register(ModEntities.ENTITY_PAWN_DIORITE_FORESIGHT.get(), EntityRendererPawnDioriteForesight::new);
+
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_COBBLE.get(), EntityRendererGolemCobble::new);
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_PLANK.get(), EntityRendererGolemPlank::new);
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_MOSSY.get(), EntityRendererGolemMossy::new);
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_GRINDSTONE.get(), EntityRendererGolemGrindstone::new);
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_TUFF.get(), EntityRendererGolemTuff::new);
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_COPPER.get(), EntityRendererGolemCopper::new);
+
         EntityRenderers.register(ModEntities.ENTITY_PAWN_FIRST_DIORITE.get(), EntityRendererPawn::new);
         EntityRenderers.register(ModEntities.ENTITY_PAWN_TERRACOTTA.get(), EntityRendererPawn::new);
         EntityRenderers.register(ModEntities.ENTITY_VILLAGER_DANDORI.get(), EntityRendererVillagerDandori::new);
+
         EntityRenderers.register(ModEntities.ENTITY_SOUND_REPEATED.get(), EntityRendererSoundRepeated::new);
         EntityRenderers.register(ModEntities.ENTITY_EFFECT_SHIELD_FIRST_BRICK.get(), EntityRendererEffectCube::new);
         EntityRenderers.register(ModEntities.ENTITY_EFFECT_CUBE_DANDORI_WHISTLE.get(), EntityRendererEffectCube::new);
