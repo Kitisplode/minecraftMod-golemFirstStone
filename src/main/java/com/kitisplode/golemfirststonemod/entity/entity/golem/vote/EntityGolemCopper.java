@@ -180,12 +180,13 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         this.goalSelector.addGoal(0, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
         this.goalSelector.addGoal(1, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 6));
 
-        this.goalSelector.addGoal(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
-        this.goalSelector.addGoal(3, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 0));
+        this.goalSelector.addGoal(2, new CopperGolemAvoidEntityGoal<>(this, Monster.class, 16, 0.9D, 1));
+        this.goalSelector.addGoal(2, new CopperGolemPanicGoal(this, 1.0D));
+        this.goalSelector.addGoal(3, new MultiStageAttackBlockGoalRanged(this, 1.0, true, 9.0D, new int[]{40, 25, 10}));
 
-        this.goalSelector.addGoal(4, new CopperGolemAvoidEntityGoal<>(this, Monster.class, 16, 0.9D, 1));
-        this.goalSelector.addGoal(4, new CopperGolemPanicGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new MultiStageAttackBlockGoalRanged(this, 1.0, true, 9.0D, new int[]{40, 25, 10}));
+        this.goalSelector.addGoal(4, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+        this.goalSelector.addGoal(5, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 0));
+
         this.goalSelector.addGoal(6, new CopperGolemRandomStrollInVillageGoal(this, 0.8D));
         this.goalSelector.addGoal(7, new CopperGolemLookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(7, new CopperGolemLookAtPlayerGoal(this, AbstractVillager.class, 6.0F));
@@ -217,6 +218,15 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         if (oxidation == 3 || this.isImmobile()) speed = 0.0f;
         this.xxa *= speed;
         this.zza *= speed;
+    }
+
+    @Override
+    protected void updateDeployPosition()
+    {
+        if (this.getDeployPosition() != null)
+        {
+            if (this.distanceToSqr(this.getDeployPosition().getCenter()) < 4) this.setDeployPosition(null);
+        }
     }
 
     @Override

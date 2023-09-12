@@ -187,7 +187,6 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
 
         this.goalSelector.addGoal(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 0));
 
-
         this.goalSelector.addGoal(5, new AvoidEntityGoal<>(this, Monster.class, 16, 0.9D, 1));
         this.goalSelector.addGoal(5, new PanicGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new DelayedCalmDownGoal(this, 200, 60 * 5));
@@ -216,6 +215,15 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
                 if (this.getSleepStatus() == 1) this.setSleepStatus(2);
                 else this.setSleepStatus(0);
             }
+        }
+    }
+
+    @Override
+    protected void updateDeployPosition()
+    {
+        if (this.getDeployPosition() != null)
+        {
+            if (this.distanceToSqr(this.getDeployPosition().getCenter()) < 4) this.setDeployPosition(null);
         }
     }
 

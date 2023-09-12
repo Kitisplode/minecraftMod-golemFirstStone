@@ -98,3 +98,11 @@
             = hard dandori: will ignore all enemies until they are out of range, at which point it will switch to soft dandori
             = soft dandori: will attack enemies that get too close then return to following the player
     + Added Banner of Courage (it's just a reskin of the Dandori Call item lol)
+
+# 0.0.10
+    + Rebalance changes to First of Diorite
+        - First of Diorite's Pawns now behave differently:
+            = Action Pawn: Acts the same as the Cobblestone Golem, but with 30 HP
+            = Knowledge Pawn: Acts the same as the Plank Golem, but with 15 HP
+            = Foresight Pawn: Floats around, acts similarly to the Mossy Golem, but it gives nearby Pawns random buffs, has 20 HP
+    + Golems now default to patrol mode when not being led (e.g. they'll return to a position after performing other actions)

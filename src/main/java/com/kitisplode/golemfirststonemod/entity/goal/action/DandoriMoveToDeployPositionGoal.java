@@ -34,7 +34,7 @@ public class DandoriMoveToDeployPositionGoal extends Goal
 
     @Override
     public void stop() {
-        this.dandoriFollower.setDeployPosition(null);
+//        this.dandoriFollower.setDeployPosition(null);
         this.mob.getNavigation().stop();
     }
 

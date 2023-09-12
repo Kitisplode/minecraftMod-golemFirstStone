@@ -68,7 +68,7 @@ public class EntityPawnDioriteForesight extends EntityGolemMossy implements GeoE
     public static AttributeSupplier.Builder createAttributes()
     {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 15.0f)
+                .add(Attributes.MAX_HEALTH, 20.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.35f)
                 .add(Attributes.FLYING_SPEED, 0.75f)
                 .add(Attributes.ATTACK_DAMAGE, 5.0f)
@@ -178,6 +178,15 @@ public class EntityPawnDioriteForesight extends EntityGolemMossy implements GeoE
             this.floatCycle += 15;
             this.floatCycle = this.floatCycle % 360;
             this.floatAmount = Math.sin(this.floatCycle * Mth.DEG_TO_RAD);
+        }
+    }
+
+    @Override
+    protected void updateDeployPosition()
+    {
+        if (this.getDeployPosition() != null)
+        {
+            if (this.distanceToSqr(this.getDeployPosition().getCenter()) < 4) this.setDeployPosition(null);
         }
     }
 

@@ -68,6 +68,14 @@ public class EntityPawnDioriteAction extends EntityGolemCobble implements GeoEnt
             this.setDandoriState(DANDORI_STATES.SOFT.ordinal());
         }
     }
+    @Override
+    protected void updateDeployPosition()
+    {
+        if (this.getDeployPosition() != null)
+        {
+            if (this.distanceToSqr(this.getDeployPosition().getCenter()) < 4) this.setDeployPosition(null);
+        }
+    }
 
     @Override
     public double getTargetRange()

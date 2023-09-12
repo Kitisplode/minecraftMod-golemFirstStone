@@ -175,6 +175,12 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
                 throwAngle = 0.0f;
             }
         }
+        this.updateDeployPosition();
+    }
+
+    protected void updateDeployPosition()
+    {
+        if (this.getDeployPosition() == null) this.setDeployPosition(this.getOnPos());
     }
 
     @Override

@@ -70,6 +70,15 @@ public class EntityPawnDioriteKnowledge extends EntityGolemPlank implements GeoE
     }
 
     @Override
+    protected void updateDeployPosition()
+    {
+        if (this.getDeployPosition() != null)
+        {
+            if (this.distanceToSqr(this.getDeployPosition().getCenter()) < 4) this.setDeployPosition(null);
+        }
+    }
+
+    @Override
     public double getTargetRange()
     {
         return this.getAttributeValue(Attributes.FOLLOW_RANGE);
