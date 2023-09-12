@@ -31,7 +31,7 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(AbstractGolemDandoriFollower.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final EntityDataAccessor<Boolean> THROWN = SynchedEntityData.defineId(AbstractGolemDandoriFollower.class, EntityDataSerializers.BOOLEAN);
     protected static final double dandoriMoveRange = 6;
-    protected static final double dandoriSeeRange = 16;
+    protected static final double dandoriSeeRange = 12;
     private boolean lastOnGround = false;
     private float throwAngle = 0.0f;
     private BlockPos deployPosition;
@@ -180,7 +180,7 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
 
     protected void updateDeployPosition()
     {
-        if (this.getDeployPosition() == null) this.setDeployPosition(this.getOnPos());
+        if (this.getDeployPosition() == null && this.getOwner() != null) this.setDeployPosition(this.getOnPos());
     }
 
     @Override
