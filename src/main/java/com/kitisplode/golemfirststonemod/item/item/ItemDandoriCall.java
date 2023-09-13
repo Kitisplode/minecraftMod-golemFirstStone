@@ -240,7 +240,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
         if (position == null) return 0;
 
         int targetCount = 0;
-        List<Mob> targetList = world.getEntitiesOfClass(Mob.class, user.getBoundingBox().inflate(dandoriRange * 2));
+        List<Mob> targetList = world.getEntitiesOfClass(Mob.class, user.getBoundingBox().inflate(maxAttackRange));
         for (Mob target : targetList)
         {
             if (targetCount >= count && count > 0) break;

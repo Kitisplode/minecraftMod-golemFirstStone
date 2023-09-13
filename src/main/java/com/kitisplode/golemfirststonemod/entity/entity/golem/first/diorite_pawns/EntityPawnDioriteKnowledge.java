@@ -68,6 +68,13 @@ public class EntityPawnDioriteKnowledge extends EntityGolemPlank implements GeoE
             if (this.tickCount > 20 && this.getOwner() == null) discard();
             this.setDandoriState(DANDORI_STATES.SOFT.ordinal());
         }
+        if (this.getTarget() != null)
+        {
+            if (this.getTarget() instanceof Mob mob && mob.getTarget() == this.getOwner())
+            {
+                mob.setTarget(this);
+            }
+        }
     }
 
     @Override

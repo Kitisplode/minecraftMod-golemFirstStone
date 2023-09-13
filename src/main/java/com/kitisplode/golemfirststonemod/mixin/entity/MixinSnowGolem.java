@@ -108,6 +108,10 @@ public abstract class MixinSnowGolem extends AbstractGolem implements Shearable,
         {
             this.setDeployPosition(null);
         }
+        else
+        {
+            this.setDeployPosition(null);
+        }
         this.entityData.set(DANDORI_STATE, pDandoriState);
     }
 

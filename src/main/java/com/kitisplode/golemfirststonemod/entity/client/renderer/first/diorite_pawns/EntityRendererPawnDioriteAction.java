@@ -1,7 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.client.renderer.first.diorite_pawns;
 
 import com.kitisplode.golemfirststonemod.entity.client.model.first.diorite_pawns.EntityModelPawnDioriteAction;
-import com.kitisplode.golemfirststonemod.entity.client.renderer.AutoGlowingGeoLayerFixed;
+import com.kitisplode.golemfirststonemod.entity.client.utils.AutoGlowingGeoLayerFixed;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.diorite_pawns.EntityPawnDioriteAction;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;

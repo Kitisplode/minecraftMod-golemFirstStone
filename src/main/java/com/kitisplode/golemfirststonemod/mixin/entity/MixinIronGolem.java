@@ -107,6 +107,10 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
         {
             this.setDeployPosition(null);
         }
+        else
+        {
+            this.setDeployPosition(null);
+        }
         this.entityData.set(DANDORI_STATE, pDandoriState);
     }
 

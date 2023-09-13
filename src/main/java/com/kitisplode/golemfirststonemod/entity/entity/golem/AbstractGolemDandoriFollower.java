@@ -105,6 +105,10 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
         {
             this.setDeployPosition(this.getOnPos());
         }
+        else
+        {
+            this.setDeployPosition(null);
+        }
         this.entityData.set(DANDORI_STATE, pDandoriState);
     }
 
@@ -180,7 +184,7 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
 
     protected void updateDeployPosition()
     {
-        if (this.getDeployPosition() == null && this.getOwner() != null) this.setDeployPosition(this.getOnPos());
+        if (this.getDeployPosition() == null && this.getOwner() != null && this.isDandoriOff()) this.setDeployPosition(this.getOnPos());
     }
 
     @Override

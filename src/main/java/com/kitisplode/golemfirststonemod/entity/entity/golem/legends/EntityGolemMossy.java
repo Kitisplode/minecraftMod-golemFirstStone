@@ -50,7 +50,7 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
     private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemMossy.class, EntityDataSerializers.INT);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private static final int healRegenTime = 20 * 2;
-    private static final int healRegenAmount = 0;
+    private static final int healRegenAmount = 1;
     private static final float attackAOERange = 4.0f;
     private static final float attackVerticalRange = 5.0f;
     protected final ArrayList<MobEffectInstance> shieldStatusEffects = new ArrayList<>();
@@ -134,11 +134,11 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
             if (entity == this) return false;
             // Check other golems, villagers, and players
             if ((entity instanceof IEntityDandoriFollower dandoriFollower
-                    && (dandoriFollower.getOwner() == this.getOwner()
-                    || (dandoriFollower.getOwner() instanceof IEntityDandoriFollower dandoriFollowerOwner && dandoriFollowerOwner.getOwner() == this.getOwner())))
+                    && (dandoriFollower.getOwner() == this.getOwner()))
+//                    || (dandoriFollower.getOwner() instanceof IEntityDandoriFollower dandoriFollowerOwner && dandoriFollowerOwner.getOwner() == this.getOwner())))
                     || (entity instanceof EntityPawn pawn
-                    && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite
-                    && firstDiorite.getOwner() == this.getOwner())
+                        && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite
+                        && firstDiorite.getOwner() == this.getOwner())
                     || (entity instanceof Player && entity == this.getOwner())
                     || entity instanceof Merchant)
             {
@@ -189,7 +189,7 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
             if (target instanceof IEntityDandoriFollower dandoriFollower)
             {
                 if (dandoriFollower.getOwner() != this.getOwner()) continue;
-                if (!(this.getOwner() instanceof EntityGolemFirstDiorite) && dandoriFollower.getOwner() instanceof IEntityDandoriFollower dandoriFollowerOwner && dandoriFollowerOwner.getOwner() != this.getOwner()) continue;
+//                if (!(this.getOwner() instanceof EntityGolemFirstDiorite) && dandoriFollower.getOwner() instanceof IEntityDandoriFollower dandoriFollowerOwner && dandoriFollowerOwner.getOwner() != this.getOwner()) continue;
                 if (dandoriFollower instanceof EntityPawn pawn)
                 {
                     if (pawn.getOwnerType() == EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
@@ -201,18 +201,17 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
             // Do not damage targets that are too far on the y axis.
             if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
 
-            ArrayList<MobEffectInstance> mobEffect = getStatusEffect();
-            for (MobEffectInstance statusEffectInstance : mobEffect)
+            ArrayList<MobEffectInstance> mobEffects = getStatusEffect();
+            for (MobEffectInstance statusEffectInstance : mobEffects)
             {
-                if (statusEffectInstance.getDuration() < 20) continue;
-                target.addEffect(statusEffectInstance, this);
+                target.addEffect(new MobEffectInstance(statusEffectInstance), this);
             }
         }
     }
 
     protected ArrayList<MobEffectInstance> getStatusEffect()
     {
-        return shieldStatusEffects;
+        return this.shieldStatusEffects;
     }
 
     private void effectWhistle(Level world, LivingEntity user, int time)
