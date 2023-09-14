@@ -50,7 +50,7 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
     private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemMossy.class, EntityDataSerializers.INT);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private static final int healRegenTime = 20 * 2;
-    private static final int healRegenAmount = 1;
+    private static final int healRegenAmount = 0;
     private static final float attackAOERange = 4.0f;
     private static final float attackVerticalRange = 5.0f;
     protected final ArrayList<MobEffectInstance> shieldStatusEffects = new ArrayList<>();
@@ -140,7 +140,7 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
                         && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite
                         && firstDiorite.getOwner() == this.getOwner())
                     || (entity instanceof Player && entity == this.getOwner())
-                    || entity instanceof Merchant)
+                    || entity instanceof AbstractVillager)
             {
                 // See if the entity has less than its max HP.
                 return entity.getHealth() < entity.getMaxHealth();

@@ -40,7 +40,7 @@ public abstract class MixinSnowGolem extends AbstractGolem implements Shearable,
     private static final EntityDataAccessor<Integer> DANDORI_STATE = SynchedEntityData.defineId(MixinSnowGolem.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(MixinSnowGolem.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final double dandoriMoveRange = 3;
-    private static final double dandoriSeeRange = 16;
+    private static final double dandoriSeeRange = 12;
     private BlockPos deployPosition;
 
     protected MixinSnowGolem(EntityType<? extends AbstractGolem> pEntityType, Level pLevel)
@@ -105,10 +105,6 @@ public abstract class MixinSnowGolem extends AbstractGolem implements Shearable,
     {
         if (this.getOwner() != null && this.getOwner() instanceof IEntityWithDandoriCount) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         if (pDandoriState > 0)
-        {
-            this.setDeployPosition(null);
-        }
-        else
         {
             this.setDeployPosition(null);
         }

@@ -10,6 +10,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.Merchant;
@@ -59,6 +60,15 @@ public class EntityProjectileAoEOwnerAware extends Arrow
     {
         this.hasAoE = p;
     }
+    public void setAoERange(float pAoERange)
+    {
+        this.attackAOERange = pAoERange;
+    }
+    public void setOwner(LivingEntity pOwner)
+    {
+        this.golemOwner = pOwner;
+//        super.setOwner(pOwner);
+    }
 
     @Override
     public void tick()
@@ -72,7 +82,10 @@ public class EntityProjectileAoEOwnerAware extends Arrow
         if (target != null)
         {
             LivingEntity owner = null;
+            LivingEntity ownerOwner = null;
             if (golemOwner instanceof IEntityDandoriFollower dandoriFollower) owner = dandoriFollower.getOwner();
+            if (owner instanceof IEntityDandoriFollower dandoriOwner) ownerOwner = dandoriOwner.getOwner();
+
             // Do not damage the golem that shot this arrow.
             if (target == golemOwner) return false;
             // Do not damage the golem's owner.
@@ -83,6 +96,9 @@ public class EntityProjectileAoEOwnerAware extends Arrow
                 if (dandoriFollower.getOwner() == owner) return false;
                 if (dandoriFollower.getOwner() instanceof IEntityDandoriFollower dandoriFollowerOwner
                         && dandoriFollowerOwner.getOwner() == owner) return false;
+                if (dandoriFollower.getOwner() == ownerOwner) return false;
+                if (dandoriFollower.getOwner() instanceof IEntityDandoriFollower dandoriFollowerOwner
+                        && dandoriFollowerOwner.getOwner() == ownerOwner) return false;
             }
             // Do not damage targets that are pawns owned by a first of diorite that is owned by our owner lol
             if (target instanceof EntityPawn pawn && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite)
@@ -90,7 +106,7 @@ public class EntityProjectileAoEOwnerAware extends Arrow
                 if (firstDiorite.getOwner() == owner) return false;
             }
             // Do not damage villagers.
-            if (target instanceof Merchant) return false;
+            if (target instanceof AbstractVillager) return false;
         }
         return super.canHitEntity(target);
     }
@@ -122,26 +138,7 @@ public class EntityProjectileAoEOwnerAware extends Arrow
         List<LivingEntity> targetList = level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(attackAOERange));
         for (LivingEntity target : targetList)
         {
-            LivingEntity owner = null;
-            if (golemOwner instanceof IEntityDandoriFollower dandoriFollower) owner = dandoriFollower.getOwner();
-            // Do not damage the golem that shot this arrow.
-            if (target == golemOwner) continue;
-            // Do not damage the golem's owner.
-            if (target == owner) continue;
-            if (target instanceof TamableAnimal tamableAnimal && tamableAnimal.getOwner() == owner) continue;
-            if (target instanceof IEntityDandoriFollower dandoriFollower)
-            {
-                if (dandoriFollower.getOwner() == owner) continue;
-                if (dandoriFollower.getOwner() instanceof IEntityDandoriFollower dandoriFollowerOwner
-                        && dandoriFollowerOwner.getOwner() == owner) continue;
-            }
-            // Do not damage targets that are pawns owned by a first of diorite that is owned by our owner lol
-            if (target instanceof EntityPawn pawn && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite)
-            {
-                if (firstDiorite.getOwner() == owner) continue;
-            }
-            // Do not damage villagers.
-            if (target instanceof Merchant) continue;
+            if (!this.canHitEntity(target)) continue;
             // Do not damage targets that are too far on the y axis.
             if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
 

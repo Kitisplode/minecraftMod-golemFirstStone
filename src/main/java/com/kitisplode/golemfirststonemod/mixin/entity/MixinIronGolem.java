@@ -39,7 +39,7 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     private static final EntityDataAccessor<Integer> DANDORI_STATE = SynchedEntityData.defineId(MixinIronGolem.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(MixinIronGolem.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final double dandoriMoveRange = 3;
-    private static final double dandoriSeeRange = 16;
+    private static final double dandoriSeeRange = 12;
     private BlockPos deployPosition;
 
     protected MixinIronGolem(EntityType<? extends AbstractGolem> pEntityType, Level pLevel)
@@ -104,10 +104,6 @@ public abstract class MixinIronGolem extends AbstractGolem implements NeutralMob
     {
         if (this.getOwner() != null && this.getOwner() instanceof IEntityWithDandoriCount) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
         if (pDandoriState > 0)
-        {
-            this.setDeployPosition(null);
-        }
-        else
         {
             this.setDeployPosition(null);
         }

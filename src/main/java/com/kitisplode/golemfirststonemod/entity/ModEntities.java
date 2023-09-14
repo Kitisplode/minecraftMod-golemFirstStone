@@ -9,6 +9,7 @@ import com.kitisplode.golemfirststonemod.entity.client.renderer.first.EntityRend
 import com.kitisplode.golemfirststonemod.entity.client.renderer.first.diorite_pawns.EntityRendererPawnDioriteAction;
 import com.kitisplode.golemfirststonemod.entity.client.renderer.first.diorite_pawns.EntityRendererPawnDioriteForesight;
 import com.kitisplode.golemfirststonemod.entity.client.renderer.first.diorite_pawns.EntityRendererPawnDioriteKnowledge;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.first.diorite_pawns.EntityRendererProjectileDioriteKnowledge;
 import com.kitisplode.golemfirststonemod.entity.client.renderer.legends.EntityRendererGolemCobble;
 import com.kitisplode.golemfirststonemod.entity.client.renderer.legends.EntityRendererGolemGrindstone;
 import com.kitisplode.golemfirststonemod.entity.client.renderer.legends.EntityRendererGolemMossy;
@@ -31,6 +32,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolem
 import com.kitisplode.golemfirststonemod.entity.entity.golem.vote.EntityGolemCopper;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.vote.EntityGolemTuff;
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileAoEOwnerAware;
+import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileDioriteKnowledge;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.TippableArrowRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -93,6 +95,11 @@ public class ModEntities
                     () -> EntityType.Builder.of(EntityPawnDioriteKnowledge::new, MobCategory.MISC)
                             .sized(0.8f, 1.0f)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_pawn_diorite_knowledge").toString()));
+    public static final RegistryObject<EntityType<EntityProjectileDioriteKnowledge>> ENTITY_PROJECTILE_DIORITE_KNOWLEDGE =
+            ENTITY_TYPES.register("entity_projectile_diorite_knowledge",
+                    () -> EntityType.Builder.<EntityProjectileDioriteKnowledge>of(EntityProjectileDioriteKnowledge::new, MobCategory.MISC)
+                            .sized(0.75f, 0.75f)
+                            .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_projectile_diorite_knowledge").toString()));
     public static final RegistryObject<EntityType<EntityPawnDioriteForesight>> ENTITY_PAWN_DIORITE_FORESIGHT =
             ENTITY_TYPES.register("entity_pawn_diorite_foresight",
                     () -> EntityType.Builder.of(EntityPawnDioriteForesight::new, MobCategory.MISC)
@@ -195,6 +202,7 @@ public class ModEntities
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_DIORITE.get(), EntityRendererGolemFirstDiorite::new);
         EntityRenderers.register(ModEntities.ENTITY_PAWN_DIORITE_ACTION.get(), EntityRendererPawnDioriteAction::new);
         EntityRenderers.register(ModEntities.ENTITY_PAWN_DIORITE_KNOWLEDGE.get(), EntityRendererPawnDioriteKnowledge::new);
+        EntityRenderers.register(ModEntities.ENTITY_PROJECTILE_DIORITE_KNOWLEDGE.get(), EntityRendererProjectileDioriteKnowledge::new);
         EntityRenderers.register(ModEntities.ENTITY_PAWN_DIORITE_FORESIGHT.get(), EntityRendererPawnDioriteForesight::new);
 
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_COBBLE.get(), EntityRendererGolemCobble::new);

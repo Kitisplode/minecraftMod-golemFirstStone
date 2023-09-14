@@ -65,7 +65,7 @@ public class EntityPawnDioriteAction extends EntityGolemCobble implements GeoEnt
         super.tick();
         if (!this.level().isClientSide())
         {
-            if (this.tickCount > 20 && this.getOwner() == null) discard();
+            if (this.tickCount > 5 && this.getOwner() == null) discard();
             this.setDandoriState(DANDORI_STATES.SOFT.ordinal());
 
             if (this.getTarget() != null)

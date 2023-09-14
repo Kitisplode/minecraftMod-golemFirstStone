@@ -141,7 +141,7 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
                         && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite
                         && firstDiorite.getOwner() == this.getOwner())
                     || (entity instanceof Player && entity == this.getOwner())
-                    || entity instanceof Merchant)
+                    || entity instanceof AbstractVillager)
             {
                 // For entities currently being attacked:
                 LivingEntity targetCurrentAttacker = entity.getLastHurtByMob();

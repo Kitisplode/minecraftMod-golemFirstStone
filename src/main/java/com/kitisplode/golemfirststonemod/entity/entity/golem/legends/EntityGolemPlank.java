@@ -1,5 +1,6 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem.legends;
 
+import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
@@ -138,15 +139,25 @@ public class EntityGolemPlank extends AbstractGolemDandoriFollower implements Ge
         // Spawn the projectile
         if (!this.level().isClientSide())
         {
-            EntityProjectileAoEOwnerAware arrow = new EntityProjectileAoEOwnerAware(this.level(), this, 0.0f, getAttackDamage());
+            EntityProjectileAoEOwnerAware arrow = createProjectile();
+
+            if (arrow == null) return;
 
             Vec3 shootingVelocity = target.getEyePosition().subtract(this.getEyePosition()).normalize().scale(projectileSpeed);
+            arrow.setOwner(this);
+            arrow.setPos(this.getEyePosition());
             arrow.setDeltaMovement(shootingVelocity);
             arrow.setBaseDamage(getAttackDamage());
+            arrow.setAoERange(0.0f);
             arrow.setNoGravity(true);
             arrow.setHasAoE(false);
             this.level().addFreshEntity(arrow);
         }
+    }
+
+    protected EntityProjectileAoEOwnerAware createProjectile()
+    {
+        return ModEntities.ENTITY_PROJECTILE_FIRST_OAK.get().create(this.level());
     }
 
     @Override

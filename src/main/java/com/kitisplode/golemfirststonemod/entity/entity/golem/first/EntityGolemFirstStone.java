@@ -174,7 +174,7 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
                 if (firstDiorite.getOwner() == this.getOwner()) continue;
             }
             // Do not damage villagers.
-            if (target instanceof Merchant) continue;
+            if (target instanceof AbstractVillager) continue;
             // Do not damage targets that are too far on the y axis.
             if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
 

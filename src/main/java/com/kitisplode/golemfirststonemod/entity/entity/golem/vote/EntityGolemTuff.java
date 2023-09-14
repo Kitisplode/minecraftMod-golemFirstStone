@@ -180,12 +180,12 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
     protected void registerGoals()
     {
         this.goalSelector.addGoal(0, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
-        this.goalSelector.addGoal(1, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 6));
+        this.goalSelector.addGoal(1, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, 6));
 
         this.goalSelector.addGoal(2, new PickupItemGoal(this, 1.0));
         this.goalSelector.addGoal(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
 
-        this.goalSelector.addGoal(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 0));
+        this.goalSelector.addGoal(4, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, 0));
 
         this.goalSelector.addGoal(5, new AvoidEntityGoal<>(this, Monster.class, 16, 0.9D, 1));
         this.goalSelector.addGoal(5, new PanicGoal(this, 1.0D));

@@ -1,10 +1,11 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem.first.diorite_pawns;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
+import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemPlank;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
+import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileAoEOwnerAware;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -65,7 +66,7 @@ public class EntityPawnDioriteKnowledge extends EntityGolemPlank implements GeoE
         super.tick();
         if (!this.level().isClientSide())
         {
-            if (this.tickCount > 20 && this.getOwner() == null) discard();
+            if (this.tickCount > 5 && this.getOwner() == null) discard();
             this.setDandoriState(DANDORI_STATES.SOFT.ordinal());
         }
         if (this.getTarget() != null)
@@ -75,6 +76,11 @@ public class EntityPawnDioriteKnowledge extends EntityGolemPlank implements GeoE
                 mob.setTarget(this);
             }
         }
+    }
+
+    protected EntityProjectileAoEOwnerAware createProjectile()
+    {
+        return ModEntities.ENTITY_PROJECTILE_DIORITE_KNOWLEDGE.get().create(this.level());
     }
 
     @Override

@@ -17,6 +17,7 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -104,7 +105,7 @@ public class ItemDandoriAttack extends Item
                         return ((IEntityDandoriFollower) entity).getOwner() != user;
                     }
                     if (entity instanceof TamableAnimal) return ((TamableAnimal) entity).getOwner() != user;
-                    if (entity instanceof Merchant) return false;
+                    if (entity instanceof AbstractVillager) return false;
                     return true;
                 }
         );

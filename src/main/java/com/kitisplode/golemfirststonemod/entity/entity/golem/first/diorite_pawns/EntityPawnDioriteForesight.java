@@ -83,7 +83,7 @@ public class EntityPawnDioriteForesight extends EntityGolemMossy implements GeoE
     protected PathNavigation createNavigation(Level pLevel) {
         FlyingPathNavigation flyingpathnavigation = new FlyingPathNavigation(this, pLevel);
         flyingpathnavigation.setCanOpenDoors(false);
-        flyingpathnavigation.setCanFloat(true);
+        flyingpathnavigation.setCanFloat(false);
         flyingpathnavigation.setCanPassDoors(false);
         return flyingpathnavigation;
     }
@@ -107,7 +107,6 @@ public class EntityPawnDioriteForesight extends EntityGolemMossy implements GeoE
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, AbstractVillager.class, 6.0F));
         this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new PassiveTargetGoal<>(this, Player.class, 5, true, false, golemTarget()));
         this.targetSelector.addGoal(2, new PassiveTargetGoal<>(this, Mob.class, 5, true, false, golemTarget()));
     }
 
@@ -124,11 +123,10 @@ public class EntityPawnDioriteForesight extends EntityGolemMossy implements GeoE
                     || (entity instanceof EntityPawn pawn
                     && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite
                     && firstDiorite.getOwner() == this.getOwner())
-                    || entity instanceof Merchant)
+                    || entity instanceof AbstractVillager)
             {
-                // See if the entity has less than its max HP.
                 if (entity instanceof Mob mob)
-                    return mob.getTarget() != null && mob.getTarget() instanceof Enemy;
+                    return mob.getTarget() != null && mob.getTarget().isAlive() && mob.getTarget() instanceof Enemy;
             }
             return false;
         };
@@ -171,7 +169,7 @@ public class EntityPawnDioriteForesight extends EntityGolemMossy implements GeoE
                     this.setDeltaMovement(this.getDeltaMovement().add(0,-0.01,0));
                 }
             }
-            if (this.tickCount > 20 && this.getOwner() == null) discard();
+            if (this.tickCount > 5 && this.getOwner() == null) discard();
             this.setDandoriState(DANDORI_STATES.SOFT.ordinal());
         }
         else
@@ -196,7 +194,7 @@ public class EntityPawnDioriteForesight extends EntityGolemMossy implements GeoE
     {
         ArrayList<MobEffectInstance> results = new ArrayList<>();
         results.add(shieldStatusEffects.get(this.getRandom().nextInt(shieldStatusEffects.size())));
-        return shieldStatusEffects;
+        return results;
     }
 
     @Override

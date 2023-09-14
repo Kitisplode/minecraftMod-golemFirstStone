@@ -33,6 +33,7 @@ import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.trading.Merchant;
@@ -165,7 +166,7 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
                 if (firstDiorite.getOwner() == this.getOwner()) return;
             }
             // Do not damage villagers.
-            if (target instanceof Merchant) return;
+            if (target instanceof AbstractVillager) return;
 
             // Deal damage to the enemy.
             this.playSound(SoundEvents.IRON_GOLEM_ATTACK, 1.0f, 1.0f);
