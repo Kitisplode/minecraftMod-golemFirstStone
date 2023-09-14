@@ -15,7 +15,20 @@
 					"name": "whole",
 					"pivot": [0, 0, 0],
 					"cubes": [
-						{"origin": [-4, 0, -4], "size": [8, 17, 8], "uv": [0, 0]}
+						{"origin": [-4, 0, -4], "size": [8, 17, 8], "uv": [0, 0]},
+						{
+							"origin": [-4, 8, -4],
+							"size": [8, 9, 8],
+							"inflate": -0.5,
+							"uv": {
+								"north": {"uv": [0, 0], "uv_size": [8, 8]},
+								"east": {"uv": [0, 0], "uv_size": [8, 8]},
+								"south": {"uv": [0, 0], "uv_size": [8, 8]},
+								"west": {"uv": [0, 0], "uv_size": [8, 8]},
+								"up": {"uv": [0, 0], "uv_size": [8, 8]},
+								"down": {"uv": [0, 8], "uv_size": [8, -8]}
+							}
+						}
 					]
 				}
 			]

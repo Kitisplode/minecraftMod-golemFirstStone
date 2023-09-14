@@ -1,5 +1,6 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem.legends;
 
+import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
@@ -82,7 +83,7 @@ public class EntityGolemPlank extends AbstractGolemDandoriFollower implements Ge
         this.dataTracker.set(ATTACK_STATE, pInt);
     }
 
-    private float getAttackDamage() {
+    protected float getAttackDamage() {
         return (float)this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
     }
 
@@ -93,13 +94,15 @@ public class EntityGolemPlank extends AbstractGolemDandoriFollower implements Ge
     }
 
     @Override
-    protected void initGoals() {
-        this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+    protected void initGoals()
+    {
+        this.goalSelector.add(0, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(1, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
 
         this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(20), new int[]{30, 10}, 0));
         this.goalSelector.add(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
 
-        this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 0));
 
         this.goalSelector.add(5, new WanderNearTargetGoal(this, 0.8, 32.0F));
         this.goalSelector.add(6, new IronGolemWanderAroundGoal(this, 0.8));
@@ -107,7 +110,7 @@ public class EntityGolemPlank extends AbstractGolemDandoriFollower implements Ge
         this.goalSelector.add(7, new LookAtEntityGoal(this, MerchantEntity.class, 8.0F));
         this.goalSelector.add(8, new LookAroundGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this));
-        this.targetSelector.add(3, new SharedTargetGoal<>(this, GolemEntity.class, MobEntity.class, 5, false, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity), 16));
+        this.targetSelector.add(3, new SharedTargetGoal<>(this, GolemEntity.class, MobEntity.class, 5, true, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity), 16));
     }
 
     @Override
@@ -131,15 +134,25 @@ public class EntityGolemPlank extends AbstractGolemDandoriFollower implements Ge
         // Spawn the projectile
         if (!this.getWorld().isClient())
         {
-            EntityProjectileAoEOwnerAware arrow = new EntityProjectileAoEOwnerAware(this.getWorld(), this, 0.0f, getAttackDamage());
+            EntityProjectileAoEOwnerAware arrow = createProjectile();
+
+            if (arrow == null) return;
 
             Vec3d shootingVelocity = target.getEyePos().subtract(this.getEyePos()).normalize().multiply(projectileSpeed);
+            arrow.setPosition(this.getEyePos());
+            arrow.setOwner(this);
             arrow.setVelocity(shootingVelocity);
             arrow.setDamage(getAttackDamage());
+            arrow.setAoERange(0.0f);
             arrow.setNoGravity(true);
             arrow.setHasAoE(false);
             this.getWorld().spawnEntity(arrow);
         }
+    }
+
+    protected EntityProjectileAoEOwnerAware createProjectile()
+    {
+        return ModEntities.ENTITY_PROJECTILE_FIRST_OAK.create(this.getWorld());
     }
 
     @Override

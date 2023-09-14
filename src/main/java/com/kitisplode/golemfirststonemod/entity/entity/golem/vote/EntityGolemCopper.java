@@ -186,14 +186,16 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
-        this.goalSelector.add(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+        this.goalSelector.add(0, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(1, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 6));
 
-        this.goalSelector.add(3, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(2, new CopperGolemFleeEntityGoal<HostileEntity>(this, HostileEntity.class, 16.0f, 0.9, 1.0));
+        this.goalSelector.add(2, new CopperGolemEscapeDangerGoal(this, 1.0));
+        this.goalSelector.add(3, new MultiStageAttackBlockGoalRanged(this, 1.0, true, 9.0D, new int[]{40, 25, 10}));
 
-        this.goalSelector.add(4, new CopperGolemFleeEntityGoal<HostileEntity>(this, HostileEntity.class, 16.0f, 0.9, 1.0));
-        this.goalSelector.add(4, new CopperGolemEscapeDangerGoal(this, 1.0));
-        this.goalSelector.add(5, new MultiStageAttackBlockGoalRanged(this, 1.0, true, 9.0D, new int[]{40, 25, 10}));
+        this.goalSelector.add(4, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+        this.goalSelector.add(5, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 0));
+
         this.goalSelector.add(6, new CopperGolemWanderAroundGoal(this, 0.8));
         this.goalSelector.add(7, new CopperGolemLookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(7, new CopperGolemLookAtEntityGoal(this, MerchantEntity.class, 6.0F));
@@ -216,6 +218,15 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
                 this.nextOxidationCounter = 0;
                 this.setOxidation(oxidation + 1);
             }
+        }
+    }
+
+    @Override
+    protected void updateDeployPosition()
+    {
+        if (this.getDeployPosition() != null)
+        {
+            if (this.squaredDistanceTo(this.getDeployPosition().toCenterPos()) < 4) this.setDeployPosition(null);
         }
     }
 

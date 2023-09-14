@@ -1,4 +1,4 @@
-package com.kitisplode.golemfirststonemod.entity.client.renderer;
+package com.kitisplode.golemfirststonemod.entity.client.utils;
 
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;

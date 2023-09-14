@@ -104,11 +104,12 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
 	@Override
 	protected void initGoals() {
 		this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+		this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
 
 		this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, MathHelper.square(5.5d), new int[]{70, 30, 25}));
 		this.goalSelector.add(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
 
-		this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+		this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, 0));
 
 		this.goalSelector.add(5, new WanderNearTargetGoal(this, 0.8, 32.0F));
 		this.goalSelector.add(6, new IronGolemWanderAroundGoal(this, 0.8));
@@ -116,7 +117,7 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
 		this.goalSelector.add(7, new LookAtEntityGoal(this, MerchantEntity.class, 8.0F));
 		this.goalSelector.add(8, new LookAroundGoal(this));
 		this.targetSelector.add(2, new RevengeGoal(this));
-		this.targetSelector.add(3, new ActiveTargetGoalBiggerY<>(this, MobEntity.class, 5, false, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity), 5));
+		this.targetSelector.add(3, new ActiveTargetGoalBiggerY<>(this, MobEntity.class, 5, true, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity), 5));
 	}
 	@Override
 	public boolean isPushable()
@@ -167,7 +168,12 @@ public class EntityGolemFirstStone extends AbstractGolemDandoriFollower implemen
 			// Do not damage targets that are our owner or are owned by our owner.
 			if (this.getOwner() == target) continue;
 			if (target instanceof TameableEntity && ((TameableEntity)target).getOwner() == this.getOwner()) continue;
-			if (target instanceof IEntityDandoriFollower && ((IEntityDandoriFollower)target).getOwner() == this.getOwner()) continue;
+			if (target instanceof IEntityDandoriFollower dandoriFollower)
+			{
+				if (dandoriFollower.getOwner() == this.getOwner()) continue;
+				if (dandoriFollower.getOwner() instanceof IEntityDandoriFollower dandoriFollowerOwner
+						&& dandoriFollowerOwner.getOwner() == this.getOwner()) continue;
+			}
 			// Do not damage targets that are pawns owned by a first of diorite that is owned by our owner lol
 			if (target instanceof EntityPawn pawn && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite)
 			{

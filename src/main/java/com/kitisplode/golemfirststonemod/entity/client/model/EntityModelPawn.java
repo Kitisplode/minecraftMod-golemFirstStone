@@ -7,7 +7,7 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class EntityModelPawnFirstDiorite extends GeoModel<EntityPawn>
+public class EntityModelPawn extends GeoModel<EntityPawn>
 {
 	@Override
 	public Identifier getModelResource(EntityPawn animatable)

@@ -1,15 +1,11 @@
 package com.kitisplode.golemfirststonemod.entity.client.model.first.diorite_pawn;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.diorite_pawn.EntityPawnDioriteAction;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemCobble;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.model.data.EntityModelData;
 
 public class EntityModelPawnDioriteAction extends GeoModel<EntityPawnDioriteAction>
 {

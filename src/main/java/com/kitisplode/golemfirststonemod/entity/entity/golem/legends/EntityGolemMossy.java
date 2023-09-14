@@ -53,7 +53,7 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
     private static final int healRegenAmount = 0;
     private static final float attackAOERange = 4.0f;
     private static final float attackVerticalRange = 5.0f;
-    private final ArrayList<StatusEffectInstance> shieldStatusEffects = new ArrayList<>();
+    protected final ArrayList<StatusEffectInstance> shieldStatusEffects = new ArrayList<>();
     private MultiStageAttackGoalRanged attackGoal;
 
     public EntityGolemMossy(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
@@ -94,10 +94,6 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
         this.dataTracker.set(ATTACK_STATE, pInt);
     }
 
-    private float getAttackDamage() {
-        return (float)this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
-    }
-
     @Override
     public double getEyeY()
     {
@@ -107,12 +103,13 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
     @Override
     protected void initGoals() {
         this.attackGoal = new MultiStageAttackGoalRanged(this, 1.0, true, 4.0D, new int[]{80, 20});
-        this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(0, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(1, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
 
         this.goalSelector.add(2, this.attackGoal);
         this.goalSelector.add(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
 
-        this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 0));
 
         this.goalSelector.add(5, new EscapeDangerGoal(this, 1.0));
         this.goalSelector.add(6, new WanderNearTargetGoal(this, 0.8, 32.0F));
@@ -121,9 +118,9 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
         this.goalSelector.add(8, new LookAtEntityGoal(this, MerchantEntity.class, 8.0F));
         this.goalSelector.add(9, new LookAroundGoal(this));
         this.targetSelector
-                .add(1, new PassiveTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, false, false, golemTarget()));
+                .add(1, new PassiveTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, true, false, golemTarget()));
         this.targetSelector
-                .add(2, new PassiveTargetGoal<MobEntity>(this, MobEntity.class, 5, false, false, golemTarget()));
+                .add(2, new PassiveTargetGoal<MobEntity>(this, MobEntity.class, 5, true, false, golemTarget()));
     }
 
     private Predicate<LivingEntity> golemTarget()
@@ -133,7 +130,8 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
             // Skip itself.
             if (entity == this) return false;
             // Check other golems, villagers, and players
-            if ((entity instanceof IEntityDandoriFollower dandoriFollower && dandoriFollower.getOwner() == this.getOwner())
+            if ((entity instanceof IEntityDandoriFollower dandoriFollower
+                    && dandoriFollower.getOwner() == this.getOwner())
                     || (entity instanceof EntityPawn pawn && pawn.getOwner() instanceof EntityGolemFirstDiorite firstDiorite && firstDiorite.getOwner() == this.getOwner())
                     || (entity instanceof PlayerEntity && entity == this.getOwner())
                     || entity instanceof MerchantEntity)
@@ -197,15 +195,17 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
             // Do not heal targets that are too far on the y axis.
             if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
 
-            for (StatusEffectInstance statusEffectInstance : shieldStatusEffects)
+            ArrayList<StatusEffectInstance> mobEffects = getStatusEffect();
+            for (StatusEffectInstance statusEffectInstance : mobEffects)
             {
-                StatusEffect statusEffect = statusEffectInstance.getEffectType();
-                int i2 = statusEffectInstance.mapDuration(i -> (int)(1 * (double)i + 0.5));
-                StatusEffectInstance statusEffectInstance2 = new StatusEffectInstance(statusEffect, i2, statusEffectInstance.getAmplifier(), statusEffectInstance.isAmbient(), statusEffectInstance.shouldShowParticles());
-                if (statusEffectInstance2.isDurationBelow(20)) continue;
-                target.addStatusEffect(statusEffectInstance2, this);
+                target.addStatusEffect(new StatusEffectInstance(statusEffectInstance), this);
             }
         }
+    }
+
+    protected ArrayList<StatusEffectInstance> getStatusEffect()
+    {
+        return this.shieldStatusEffects;
     }
 
     private void effectAttack(World world, LivingEntity user, int time)

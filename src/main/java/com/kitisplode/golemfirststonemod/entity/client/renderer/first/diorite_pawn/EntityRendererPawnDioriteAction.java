@@ -1,32 +1,18 @@
-package com.kitisplode.golemfirststonemod.entity.client.renderer.legends;
+package com.kitisplode.golemfirststonemod.entity.client.renderer.first.diorite_pawn;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.client.model.legends.EntityModelGolemCobble;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemCobble;
-import net.minecraft.client.render.VertexConsumerProvider;
+import com.kitisplode.golemfirststonemod.entity.client.model.first.diorite_pawn.EntityModelPawnDioriteAction;
+import com.kitisplode.golemfirststonemod.entity.client.utils.AutoGlowingGeoLayerFixed;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.first.diorite_pawn.EntityPawnDioriteAction;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class EntityRendererGolemCobble extends GeoEntityRenderer<EntityGolemCobble>
+public class EntityRendererPawnDioriteAction extends GeoEntityRenderer<EntityPawnDioriteAction>
 {
-	public EntityRendererGolemCobble(EntityRendererFactory.Context renderManager)
+	public EntityRendererPawnDioriteAction(EntityRendererFactory.Context renderManager)
 	{
-		super(renderManager, new EntityModelGolemCobble());
+		super(renderManager, new EntityModelPawnDioriteAction());
 		this.shadowRadius = 0.4f;
-	}
 
-	@Override
-	public Identifier getTextureLocation(EntityGolemCobble animatable)
-	{
-		return new Identifier(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/golem_cobble.png");
-	}
-
-	@Override
-	public void render(EntityGolemCobble entity, float entityYaw, float partialTick, MatrixStack poseStack,
-					   VertexConsumerProvider bufferSource, int packedLight)
-	{
-		super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+		this.addRenderLayer(new AutoGlowingGeoLayerFixed<>(this, EntityPawnDioriteAction.GLOW_TEXTURE));
 	}
 }

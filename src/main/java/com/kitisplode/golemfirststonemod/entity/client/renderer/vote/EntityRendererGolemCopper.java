@@ -1,9 +1,6 @@
-package com.kitisplode.golemfirststonemod.entity.client.renderer;
+package com.kitisplode.golemfirststonemod.entity.client.renderer.vote;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelGolemCopper;
-import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelGolemPlank;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemPlank;
+import com.kitisplode.golemfirststonemod.entity.client.model.vote.EntityModelGolemCopper;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.vote.EntityGolemCopper;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;

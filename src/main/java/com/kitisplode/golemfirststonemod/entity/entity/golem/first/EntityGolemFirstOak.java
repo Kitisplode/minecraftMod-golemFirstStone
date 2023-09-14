@@ -1,5 +1,6 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem.first;
 
+import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileAoEOwnerAware;
@@ -7,10 +8,8 @@ import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDel
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowSoftGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriMoveToDeployPositionGoal;
-import com.kitisplode.golemfirststonemod.entity.goal.target.ActiveTargetGoalBiggerY;
 import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.entity.goal.target.SharedTargetGoal;
-import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -27,9 +26,6 @@ import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -49,8 +45,6 @@ public class EntityGolemFirstOak extends AbstractGolemDandoriFollower implements
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 	private static final float attackAOERange = 4.0f;
 	private static final float projectileSpeed = 5.0f;
-
-	private boolean printTargetMessage = false;
 
 	public EntityGolemFirstOak(EntityType<? extends IronGolemEntity> pEntityType, World pLevel)
 	{
@@ -96,12 +90,13 @@ public class EntityGolemFirstOak extends AbstractGolemDandoriFollower implements
 
 	@Override
 	protected void initGoals() {
-		this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+		this.goalSelector.add(0, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+		this.goalSelector.add(1, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
 
 		this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, 1024.0, new int[]{40, 18, 13}, 0));
 		this.goalSelector.add(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
 
-		this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+		this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, 0));
 
 		this.goalSelector.add(5, new WanderNearTargetGoal(this, 0.8, 48.0F));
 		this.goalSelector.add(6, new IronGolemWanderAroundGoal(this, 0.8));
@@ -109,22 +104,7 @@ public class EntityGolemFirstOak extends AbstractGolemDandoriFollower implements
 		this.goalSelector.add(7, new LookAtEntityGoal(this, MerchantEntity.class, 8.0F));
 		this.goalSelector.add(8, new LookAroundGoal(this));
 		this.targetSelector.add(2, new RevengeGoal(this));
-		this.targetSelector.add(3, new SharedTargetGoal<>(this, GolemEntity.class, MobEntity.class, 5, false, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity), 24));
-	}
-
-	@Override
-	public void tickMovement() {
-		if (getTarget() != null)
-		{
-			if (!printTargetMessage)
-			{
-				printTargetMessage = true;
-//				GolemFirstStoneMod.LOGGER.info("First of Oak has a target!");
-			}
-		}
-		else
-			printTargetMessage = false;
-		super.tickMovement();
+		this.targetSelector.add(3, new SharedTargetGoal<>(this, GolemEntity.class, MobEntity.class, 5, true, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity), 24));
 	}
 
 	@Override
@@ -149,11 +129,16 @@ public class EntityGolemFirstOak extends AbstractGolemDandoriFollower implements
 		// Spawn the projectile
 		if (!this.getWorld().isClient())
 		{
-			EntityProjectileAoEOwnerAware arrow = new EntityProjectileAoEOwnerAware(this.getWorld(), this, attackAOERange, getAttackDamage());
+			EntityProjectileAoEOwnerAware arrow = ModEntities.ENTITY_PROJECTILE_FIRST_OAK.create(this.getWorld());
+
+			if (arrow == null) return;
 
 			Vec3d shootingVelocity = target.getEyePos().subtract(this.getEyePos()).normalize().multiply(projectileSpeed);
+			arrow.setPosition(this.getEyePos());
+			arrow.setOwner(this);
 			arrow.setVelocity(shootingVelocity);
 			arrow.setDamage(getAttackDamage());
+			arrow.setAoERange(attackAOERange);
 			arrow.setNoGravity(true);
 			arrow.setPierceLevel((byte)4);
 			arrow.setHasAoE(false);

@@ -36,8 +36,8 @@ public abstract class MixinIronGolemEntity extends GolemEntity implements Angera
 {
     private static final TrackedData<Integer> DANDORI_STATE = DataTracker.registerData(MixinIronGolemEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(MixinIronGolemEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
-    private static final double dandoriMoveRange = 3;
-    private static final double dandoriSeeRange = 36;
+    private static final double dandoriMoveRange = 4;
+    private static final double dandoriSeeRange = 12;
     private BlockPos deployPosition;
 
     protected MixinIronGolemEntity(EntityType<? extends GolemEntity> entityType, World world)
@@ -66,10 +66,10 @@ public abstract class MixinIronGolemEntity extends GolemEntity implements Angera
     @ModifyVariable(method = ("readCustomDataFromNbt"), at = @At("TAIL"), ordinal = 0)
     protected NbtCompound readNBT_owner(NbtCompound nbt)
     {
-        UUID uUID;
+        UUID uUID = null;
         if (nbt.containsUuid("Owner")) {
             uUID = nbt.getUuid("Owner");
-        } else {
+        } else if (nbt.contains("Owner")) {
             String string = nbt.getString("Owner");
             uUID = ServerConfigHandler.getPlayerUuidByName(this.getServer(), string);
         }
@@ -122,8 +122,8 @@ public abstract class MixinIronGolemEntity extends GolemEntity implements Angera
 
     public void setDandoriState(int pDandoriState)
     {
-        if (this.getOwner() != null) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
-        if (pDandoriState == 0)
+        if (this.getOwner() != null && this.getOwner() instanceof IEntityWithDandoriCount) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        if (pDandoriState > 0)
         {
             this.setDeployPosition(null);
         }
@@ -133,9 +133,10 @@ public abstract class MixinIronGolemEntity extends GolemEntity implements Angera
     @Inject(method = ("initGoals"), at = @At("HEAD"))
     protected void initGoals_head(CallbackInfo ci)
     {
-        this.goalSelector.add(0, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(-1, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(0, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
         this.goalSelector.add(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
-        this.goalSelector.add(2, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(2, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, 0));
     }
 
     @ModifyVariable(method = ("handleStatus"), at = @At("HEAD"), ordinal = 0)
@@ -156,10 +157,7 @@ public abstract class MixinIronGolemEntity extends GolemEntity implements Angera
     @Override
     public void remove(RemovalReason reason)
     {
-        if (this.isDandoriOn() && this.getOwner() != null)
-        {
-            ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
-        }
+        if (this.getOwner() != null && this.getOwner() instanceof IEntityWithDandoriCount dandoriOwner) (dandoriOwner).setRecountDandori();
         super.remove(reason);
     }
 

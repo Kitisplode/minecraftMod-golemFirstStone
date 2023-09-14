@@ -1,22 +1,16 @@
-package com.kitisplode.golemfirststonemod.entity.client.renderer;
+package com.kitisplode.golemfirststonemod.entity.client.renderer.first;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelGolemFirstDiorite;
+import com.kitisplode.golemfirststonemod.entity.client.model.first.EntityModelGolemFirstDiorite;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.vote.EntityGolemTuff;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -46,7 +40,7 @@ public class EntityRendererGolemFirstDiorite extends GeoEntityRenderer<EntityGol
 					   VertexConsumerProvider bufferSource, int packedLight)
 	{
 		super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-		renderHeadFlame(entity, partialTick, poseStack, bufferSource, packedLight);
+		renderHeadFlame(entity, partialTick, poseStack, bufferSource, 255);
 	}
 
 	private void renderHeadFlame(EntityGolemFirstDiorite entity, float partialTick, MatrixStack matrixStack, VertexConsumerProvider bufferSource, int packedLight)
@@ -71,7 +65,7 @@ public class EntityRendererGolemFirstDiorite extends GeoEntityRenderer<EntityGol
 		matrixStack.translate(0,-0.25,0);
 		matrixStack.scale(1.5f, 1.5f, 1.5f);
 
-		this.heldItemRenderer.renderItem(entity, itemStack, ModelTransformationMode.GROUND, false, matrixStack, bufferSource, 255);
+		this.heldItemRenderer.renderItem(entity, itemStack, ModelTransformationMode.GROUND, false, matrixStack, bufferSource, packedLight);
 		matrixStack.pop();
 	}
 }

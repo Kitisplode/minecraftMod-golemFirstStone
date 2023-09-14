@@ -97,6 +97,14 @@ public class SummonEntityGoal <T extends PathAwareEntity & IEntitySummoner, R ex
         return listPiks.size() < this.pikCountMax;
     }
 
+    public int getPikCount()
+    {
+        List<R> listPiks = this.summoner.getWorld().getEntitiesByClass(this.targetClass,
+                this.summoner.getBoundingBox().expand(this.pikSearchRange),
+                entity -> entity.getOwner() == this.summoner);
+        return listPiks.size();
+    }
+
     private int calculateCurrentSummonState(int pAttackTimer)
     {
         if (pAttackTimer <= 0)

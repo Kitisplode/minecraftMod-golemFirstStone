@@ -1,7 +1,7 @@
-package com.kitisplode.golemfirststonemod.entity.client.renderer;
+package com.kitisplode.golemfirststonemod.entity.client.renderer.legends;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelGolemPlank;
+import com.kitisplode.golemfirststonemod.entity.client.model.legends.EntityModelGolemPlank;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemPlank;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;

@@ -69,6 +69,15 @@ public class EntityProjectileAoEOwnerAware extends ArrowEntity
     {
         this.hasAoE = p;
     }
+    public void setAoERange(float pAoERange)
+    {
+        this.attackAOERange = pAoERange;
+    }
+    public void setOwner(LivingEntity pOwner)
+    {
+        this.golemOwner = pOwner;
+//        super.setOwner(pOwner);
+    }
 
     @Override
     public void tick()
@@ -83,13 +92,25 @@ public class EntityProjectileAoEOwnerAware extends ArrowEntity
         if (target != null)
         {
             LivingEntity owner = null;
+            LivingEntity ownerOwner = null;
+            if (golemOwner instanceof IEntityDandoriFollower dandoriFollower) owner = dandoriFollower.getOwner();
+            if (owner instanceof IEntityDandoriFollower dandoriOwner) ownerOwner = dandoriOwner.getOwner();
+
             if (golemOwner != null && golemOwner instanceof IEntityDandoriFollower dandoriFollower) owner = dandoriFollower.getOwner();
             // Do not damage the golem that shot this arrow.
             if (target == golemOwner) return false;
             // Do not damage the golem's owner.
             if (target == owner) return false;
             if (target instanceof TameableEntity && ((TameableEntity)target).getOwner() == owner) return false;
-            if (target instanceof IEntityDandoriFollower && ((IEntityDandoriFollower)target).getOwner() == owner) return false;
+            if (target instanceof IEntityDandoriFollower dandoriFollower)
+            {
+                if (dandoriFollower.getOwner() == owner) return false;
+                if (dandoriFollower.getOwner() instanceof IEntityDandoriFollower dandoriFollowerOwner
+                        && dandoriFollowerOwner.getOwner() == owner) return false;
+                if (dandoriFollower.getOwner() == ownerOwner) return false;
+                if (dandoriFollower.getOwner() instanceof IEntityDandoriFollower dandoriFollowerOwner
+                        && dandoriFollowerOwner.getOwner() == ownerOwner) return false;
+            }
             // Do not damage targets that are pawns owned by a first of diorite that is owned by our owner lol
             if (target instanceof EntityPawn pawn && ((EntityPawn)target).getOwnerType() == EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
             {
@@ -129,20 +150,7 @@ public class EntityProjectileAoEOwnerAware extends ArrowEntity
         List<LivingEntity> targetList = getWorld().getNonSpectatingEntities(LivingEntity.class, getBoundingBox().expand(attackAOERange));
         for (LivingEntity target : targetList)
         {
-            LivingEntity owner = null;
-            if (golemOwner != null && golemOwner instanceof IEntityDandoriFollower dandoriFollower) owner = dandoriFollower.getOwner();
-            // Do not damage targets that are our owner or are owned by our owner.
-            if (owner == target) continue;
-            if (target instanceof TameableEntity && ((TameableEntity)target).getOwner() == owner) continue;
-            if (target instanceof IEntityDandoriFollower && ((IEntityDandoriFollower)target).getOwner() == owner) continue;
-            // Do not damage targets that are pawns owned by a first of diorite that is owned by our owner lol
-            if (target instanceof EntityPawn pawn && ((EntityPawn)target).getOwnerType() == EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal())
-            {
-                EntityGolemFirstDiorite pawnOwner = (EntityGolemFirstDiorite) pawn.getOwner();
-                if (pawnOwner != null && pawnOwner.getOwner() == owner) continue;
-            }
-            // Do not damage villagers.
-            if (target instanceof MerchantEntity) continue;
+            if (!this.canHit(target)) continue;
             // Do not damage targets that are too far on the y axis.
             if (Math.abs(getY() - target.getY()) > attackVerticalRange) continue;
 

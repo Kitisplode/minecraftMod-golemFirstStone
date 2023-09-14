@@ -110,7 +110,7 @@ public class ItemDandoriAttack extends Item
         if (enemy == null) return 0;
 
         int targetCount = 0;
-        List<MobEntity> targetList = world.getNonSpectatingEntities(MobEntity.class, user.getBoundingBox().expand(dandoriRange));
+        List<MobEntity> targetList = world.getNonSpectatingEntities(MobEntity.class, user.getBoundingBox().expand(maxAttackRange));
         for (MobEntity target : targetList)
         {
             // Skip the item user.

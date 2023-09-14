@@ -35,12 +35,17 @@
   "entity.golemfirststonemod.entity_golem_first_brick": "First of Brick",
   "entity.golemfirststonemod.entity_golem_first_diorite": "First of Diorite",
   "entity.golemfirststonemod.entity_pawn_first_diorite": "Diorite Pawn",
+  "entity.golemfirststonemod.entity_pawn_diorite_action": "Diorite Pawn",
+  "entity.golemfirststonemod.entity_pawn_diorite_foresight": "Diorite Pawn",
+  "entity.golemfirststonemod.entity_pawn_diorite_knowledge": "Diorite Pawn",
+
   "entity.golemfirststonemod.entity_golem_cobble": "Cobblestone Golem",
   "entity.golemfirststonemod.entity_golem_plank": "Plank Golem",
   "entity.golemfirststonemod.entity_golem_mossy": "Mossy Golem",
   "entity.golemfirststonemod.entity_golem_grindstone": "Grindstone Golem",
   "entity.golemfirststonemod.entity_golem_tuff": "Tuff Golem",
   "entity.golemfirststonemod.entity_golem_copper": "Copper Golem",
+
   "entity.golemfirststonemod.entity_pawn_terracotta": "Terracota Pawn",
   "entity.golemfirststonemod.entity_villager_dandori": "Dandori Acolyte",
 

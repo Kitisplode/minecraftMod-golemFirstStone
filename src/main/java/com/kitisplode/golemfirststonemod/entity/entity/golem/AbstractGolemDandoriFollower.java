@@ -27,7 +27,7 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
     protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(AbstractGolemDandoriFollower.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     private static final TrackedData<Boolean> THROWN = DataTracker.registerData(AbstractGolemDandoriFollower.class, TrackedDataHandlerRegistry.BOOLEAN);
     protected static final double dandoriMoveRange = 6;
-    protected static final double dandoriSeeRange = 36;
+    protected static final double dandoriSeeRange = 12;
     private boolean lastOnGround = false;
     private float throwAngle = 0.0f;
 
@@ -62,10 +62,10 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
     public void readCustomDataFromNbt(NbtCompound nbt)
     {
         super.readCustomDataFromNbt(nbt);
-        UUID uUID;
+        UUID uUID = null;
         if (nbt.containsUuid("Owner")) {
             uUID = nbt.getUuid("Owner");
-        } else {
+        } else if (nbt.contains("Owner")) {
             String string = nbt.getString("Owner");
             uUID = ServerConfigHandler.getPlayerUuidByName(this.getServer(), string);
         }
@@ -106,8 +106,12 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
     }
     public void setDandoriState(int pDandoriState)
     {
-        if (this.getOwner() != null) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
-        if (pDandoriState > 0)
+        if (this.getOwner() != null && this.getOwner() instanceof IEntityWithDandoriCount) ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
+        if (pDandoriState == 0)
+        {
+            this.setDeployPosition(this.getBlockPos());
+        }
+        else
         {
             this.setDeployPosition(null);
         }
@@ -159,7 +163,11 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
         {
             if (this.isOnGround() && !lastOnGround)
             {
-                if (this.getThrown()) this.setThrown(false);
+                if (this.getThrown())
+                {
+                    this.setThrown(false);
+                    this.setDeployPosition(this.getBlockPos());
+                }
             }
             lastOnGround = this.isOnGround();
             if (this.getThrown())
@@ -170,6 +178,13 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
                 throwAngle = 0.0f;
             }
         }
+        this.updateDeployPosition();
+    }
+
+    protected void updateDeployPosition()
+    {
+        if (this.getDeployPosition() == null && this.getOwner() != null && this.isDandoriOff())
+            this.setDeployPosition(this.getBlockPos());
     }
 
     @Override
@@ -181,10 +196,7 @@ abstract public class AbstractGolemDandoriFollower extends IronGolemEntity imple
     @Override
     public void remove(RemovalReason reason)
     {
-        if (this.isDandoriOn() && this.getOwner() != null)
-        {
-            ((IEntityWithDandoriCount) this.getOwner()).setRecountDandori();
-        }
+        if (this.getOwner() != null && this.getOwner() instanceof IEntityWithDandoriCount dandoriOwner) (dandoriOwner).setRecountDandori();
         super.remove(reason);
     }
 

@@ -1,10 +1,8 @@
 package com.kitisplode.golemfirststonemod.entity.client.renderer;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelGolemFirstStone;
 import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelSoundRepeated;
 import com.kitisplode.golemfirststonemod.entity.entity.effect.EntitySoundRepeated;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstStone;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;

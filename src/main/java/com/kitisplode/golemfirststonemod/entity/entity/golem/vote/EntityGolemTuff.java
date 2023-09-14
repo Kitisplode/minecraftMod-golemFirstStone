@@ -169,14 +169,15 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(0, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(1, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, 6));
 
         this.goalSelector.add(2, new PickupItemGoal(this, 1.0));
         this.goalSelector.add(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
 
-        this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, 0));
 
-        this.goalSelector.add(5, new FleeEntityGoal<HostileEntity>(this, HostileEntity.class, 16.0f, 0.9, 1.0));
+        this.goalSelector.add(5, new FleeEntityGoal<>(this, HostileEntity.class, 16.0f, 0.9, 1.0));
         this.goalSelector.add(5, new EscapeDangerGoal(this, 1.0));
         this.goalSelector.add(6, new DelayedCalmDownGoal(this, 200, 60 * 5));
         this.goalSelector.add(7, new MoveToFavoredPositionGoal(this, 0.8, 12));
@@ -199,6 +200,15 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
                 if (this.getSleepStatus() == 1) this.setSleepStatus(2);
                 else this.setSleepStatus(0);
             }
+        }
+    }
+
+    @Override
+    protected void updateDeployPosition()
+    {
+        if (this.getDeployPosition() != null)
+        {
+            if (this.squaredDistanceTo(this.getDeployPosition().toCenterPos()) < 4) this.setDeployPosition(null);
         }
     }
 

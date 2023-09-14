@@ -1,34 +1,34 @@
 package com.kitisplode.golemfirststonemod.entity.client.model.first.diorite_pawn;
 
-import com.kitisplode.golemfirststonemod.entity.entity.golem.first.diorite_pawn.EntityPawnDioriteAction;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.first.diorite_pawn.EntityPawnDioriteKnowledge;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class EntityModelPawnDioriteAction extends GeoModel<EntityPawnDioriteAction>
+public class EntityModelPawnDioriteKnowledge extends GeoModel<EntityPawnDioriteKnowledge>
 {
 	@Override
-	public Identifier getModelResource(EntityPawnDioriteAction animatable)
+	public Identifier getModelResource(EntityPawnDioriteKnowledge animatable)
 	{
 		return animatable.getModelLocation();
 	}
 
 	@Override
-	public Identifier getTextureResource(EntityPawnDioriteAction animatable)
+	public Identifier getTextureResource(EntityPawnDioriteKnowledge animatable)
 	{
 		return animatable.getTextureLocation();
 	}
 
 	@Override
-	public Identifier getAnimationResource(EntityPawnDioriteAction animatable)
+	public Identifier getAnimationResource(EntityPawnDioriteKnowledge animatable)
 	{
 		return animatable.getAnimationsLocation();
 	}
 
 	@Override
-	public void setCustomAnimations(EntityPawnDioriteAction animatable, long instanceId, AnimationState<EntityPawnDioriteAction> animationState)
+	public void setCustomAnimations(EntityPawnDioriteKnowledge animatable, long instanceId, AnimationState<EntityPawnDioriteKnowledge> animationState)
 	{
 		CoreGeoBone whole = getAnimationProcessor().getBone("whole");
 		if (whole != null)

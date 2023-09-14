@@ -92,11 +92,11 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
     {
         this.dataTracker.set(ATTACK_STATE, pInt);
     }
-    private boolean getLeftArm()
+    protected boolean getLeftArm()
     {
         return this.dataTracker.get(LEFT_ARM);
     }
-    private void setLeftArm(boolean pLeftArm)
+    protected void setLeftArm(boolean pLeftArm)
     {
         this.dataTracker.set(LEFT_ARM, pLeftArm);
     }
@@ -132,7 +132,7 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
         this.goalSelector.add(7, new LookAtEntityGoal(this, MerchantEntity.class, 8.0F));
         this.goalSelector.add(8, new LookAroundGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this, new Class[0]));
-        this.targetSelector.add(3, new SharedTargetGoal<>(this, GolemEntity.class, MobEntity.class, 5, false, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity), 5));
+        this.targetSelector.add(3, new SharedTargetGoal<>(this, GolemEntity.class, MobEntity.class, 5, true, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity), 5));
     }
 
     @Override

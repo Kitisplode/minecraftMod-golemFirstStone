@@ -54,15 +54,12 @@ public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implem
 	private static final TrackedData<Boolean> SUMMON_COOLDOWN = DataTracker.registerData(EntityGolemFirstDiorite.class, TrackedDataHandlerRegistry.BOOLEAN);
 	private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 
-	private static final double pawnSearchRange = 24;
-	private static final int pawnsMax = 15;
-	private static final int pawnsToSpawn = 1;
+	private static final double pawnSearchRange = 64;
+	private static final int pawnsMax = 6;
+	private static final int pawnsToSpawn = 3;
 	private static final int spawnCooldown = 100;
-	private static final int[] spawnStages = new int[]{140,100,50};
+	private static final int[] spawnStages = new int[]{125,85,35};
 	private static final int spawnStage = 3;
-
-	private static final double dandoriMoveRange = 6;
-	private static final double dandoriSeeRange = 36;
 
 	private SummonEntityGoal summonGoal;
 
@@ -130,22 +127,23 @@ public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implem
 
 	@Override
 	protected void initGoals() {
-		this.summonGoal	= new SummonEntityGoal<>(this, EntityPawn.class, spawnStages, pawnSearchRange, pawnsMax, spawnCooldown, 1);
+		this.summonGoal	= new SummonEntityGoal<>(this, AbstractGolemDandoriFollower.class, spawnStages, pawnSearchRange, pawnsMax, spawnCooldown, 1);
 		this.goalSelector.add(0, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
+		this.goalSelector.add(1, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
 
-		this.goalSelector.add(1, this.summonGoal);
-		this.goalSelector.add(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+		this.goalSelector.add(2, this.summonGoal);
+		this.goalSelector.add(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
 
-		this.goalSelector.add(3, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+		this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, 0));
 
-		this.goalSelector.add(4, new EscapeDangerGoal(this, 1.0));
-		this.goalSelector.add(5, new WanderAroundTargetGoal(this, 0.8, 13.0f));
-		this.goalSelector.add(6, new IronGolemWanderAroundGoal(this, 0.8));
-		this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
-		this.goalSelector.add(7, new LookAtEntityGoal(this, MerchantEntity.class, 8.0F));
-		this.goalSelector.add(8, new LookAroundGoal(this));
+		this.goalSelector.add(5, new EscapeDangerGoal(this, 1.0));
+		this.goalSelector.add(6, new WanderAroundTargetGoal(this, 0.8, 13.0f));
+		this.goalSelector.add(7, new IronGolemWanderAroundGoal(this, 0.8));
+		this.goalSelector.add(8, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
+		this.goalSelector.add(8, new LookAtEntityGoal(this, MerchantEntity.class, 8.0F));
+		this.goalSelector.add(9, new LookAroundGoal(this));
 		this.targetSelector.add(2, new RevengeGoal(this));
-		this.targetSelector.add(3, new ActiveTargetGoalBiggerY<>(this, MobEntity.class, 5, false, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity), 5));
+		this.targetSelector.add(3, new ActiveTargetGoalBiggerY<>(this, MobEntity.class, 5, true, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity), 5));
 	}
 
 	@Override
@@ -178,7 +176,10 @@ public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implem
 
 		this.getWorld().sendEntityStatus(this, EntityStatuses.PLAY_ATTACK_SOUND);
 		this.playSound(SoundEvents.BLOCK_BEACON_POWER_SELECT, 1.0f, 1.0f);
-		spawnPawns(pawnsToSpawn);
+		int pawnCount = pawnsToSpawn;
+		int currentPawns = this.summonGoal.getPikCount();
+		if (currentPawns > pawnsMax - pawnsToSpawn) pawnCount = Math.abs(currentPawns - pawnsMax);
+		spawnPawns(pawnCount);
 		spawnEffect(this.getWorld(), this, 10, 4, new Vec3d(this.getX(), this.getY() + 2.5d, this.getZ()));
 		return true;
 	}
@@ -187,9 +188,8 @@ public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implem
 	{
 		for (int i = 0; i < pawnCount; i++)
 		{
-			double direction = this.random.nextInt(360) * MathHelper.RADIANS_PER_DEGREE;
-//			double offset = this.random.nextInt(4) + 2;
-			double offset = 0.0d;
+			double direction = (((double) (360 / pawnCount) * i) + this.getBodyYaw()) * MathHelper.RADIANS_PER_DEGREE;
+			double offset = 1.0f;
 			Vec3d spawnOffset = new Vec3d(Math.sin(direction) * offset,
 					2.5f,
 					Math.cos(direction) * offset);
@@ -206,12 +206,15 @@ public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implem
 //			}
 //			if (failCount > 5) continue;
 
-			EntityPawn pawn = ModEntities.ENTITY_PAWN_FIRST_DIORITE.create(getWorld());
+			AbstractGolemDandoriFollower pawn = null;
+			int randomType = this.getRandom().nextInt(3);
+			if (i == 0)        pawn = ModEntities.ENTITY_PAWN_DIORITE_ACTION.create(this.getWorld());
+			else if (i == 1)   pawn = ModEntities.ENTITY_PAWN_DIORITE_KNOWLEDGE.create(this.getWorld());
+			else               pawn = ModEntities.ENTITY_PAWN_DIORITE_FORESIGHT.create(this.getWorld());
+
 			if (pawn == null) continue;
-			pawn.setOwnerType(EntityPawn.OWNER_TYPES.FIRST_OF_DIORITE.ordinal());
 			pawn.setOwner(this);
 			pawn.setPlayerCreated(isPlayerCreated());
-			pawn.setPawnTypeDiorite();
 			pawn.refreshPositionAndAngles(getX() + spawnOffset.getX(), getY() + spawnOffset.getY(), getZ() + spawnOffset.getZ(), 0.0f, 0.0F);
 			getWorld().spawnEntity(pawn);
 

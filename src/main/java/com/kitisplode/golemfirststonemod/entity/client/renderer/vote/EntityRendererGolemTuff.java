@@ -1,7 +1,6 @@
-package com.kitisplode.golemfirststonemod.entity.client.renderer;
+package com.kitisplode.golemfirststonemod.entity.client.renderer.vote;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelGolemTuff;
+import com.kitisplode.golemfirststonemod.entity.client.model.vote.EntityModelGolemTuff;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.vote.EntityGolemTuff;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;

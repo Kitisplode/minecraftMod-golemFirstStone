@@ -1,6 +1,6 @@
 package com.kitisplode.golemfirststonemod.entity.client.renderer;
 
-import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelPawnFirstDiorite;
+import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -8,11 +8,11 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class EntityRendererPawnFirstDiorite extends GeoEntityRenderer<EntityPawn>
+public class EntityRendererPawn extends GeoEntityRenderer<EntityPawn>
 {
-	public EntityRendererPawnFirstDiorite(EntityRendererFactory.Context renderManager)
+	public EntityRendererPawn(EntityRendererFactory.Context renderManager)
 	{
-		super(renderManager, new EntityModelPawnFirstDiorite());
+		super(renderManager, new EntityModelPawn());
 		this.shadowRadius = 0.4f;
 	}
 
