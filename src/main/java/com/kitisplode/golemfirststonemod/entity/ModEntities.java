@@ -14,6 +14,7 @@ import com.kitisplode.golemfirststonemod.entity.client.renderer.legends.EntityRe
 import com.kitisplode.golemfirststonemod.entity.client.renderer.legends.EntityRendererGolemGrindstone;
 import com.kitisplode.golemfirststonemod.entity.client.renderer.legends.EntityRendererGolemMossy;
 import com.kitisplode.golemfirststonemod.entity.client.renderer.legends.EntityRendererGolemPlank;
+import com.kitisplode.golemfirststonemod.entity.client.renderer.other.EntityRendererGolemAgent;
 import com.kitisplode.golemfirststonemod.entity.client.renderer.vote.EntityRendererGolemCopper;
 import com.kitisplode.golemfirststonemod.entity.client.renderer.vote.EntityRendererGolemTuff;
 import com.kitisplode.golemfirststonemod.entity.entity.EntityVillagerDandori;
@@ -29,6 +30,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolem
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemGrindstone;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemMossy;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemPlank;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.other.EntityGolemAgent;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.vote.EntityGolemCopper;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.vote.EntityGolemTuff;
 import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileAoEOwnerAware;
@@ -137,6 +139,11 @@ public class ModEntities
                     () -> EntityType.Builder.of(EntityGolemCopper::new, MobCategory.MISC)
                             .sized(0.9f, 1.0f)
                             .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_golem_copper").toString()));
+    public static final RegistryObject<EntityType<EntityGolemAgent>> ENTITY_GOLEM_AGENT =
+            ENTITY_TYPES.register("entity_golem_agent",
+                    () -> EntityType.Builder.of(EntityGolemAgent::new, MobCategory.MISC)
+                            .sized(0.9f, 1.0f)
+                            .build(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "entity_golem_agent").toString()));
 
     public static final RegistryObject<EntityType<EntityPawn>> ENTITY_PAWN_TERRACOTTA =
             ENTITY_TYPES.register("entity_pawn_terracotta",
@@ -186,6 +193,7 @@ public class ModEntities
         event.put(ModEntities.ENTITY_GOLEM_GRINDSTONE.get(), EntityGolemGrindstone.setAttributes());
         event.put(ModEntities.ENTITY_GOLEM_TUFF.get(), EntityGolemTuff.setAttributes());
         event.put(ModEntities.ENTITY_GOLEM_COPPER.get(), EntityGolemCopper.setAttributes());
+        event.put(ModEntities.ENTITY_GOLEM_AGENT.get(), EntityGolemAgent.setAttributes());
 
         event.put(ModEntities.ENTITY_PAWN_FIRST_DIORITE.get(), EntityPawn.setAttributes());
         event.put(ModEntities.ENTITY_VILLAGER_DANDORI.get(), EntityVillagerDandori.setAttributes());
@@ -211,6 +219,7 @@ public class ModEntities
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_GRINDSTONE.get(), EntityRendererGolemGrindstone::new);
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_TUFF.get(), EntityRendererGolemTuff::new);
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_COPPER.get(), EntityRendererGolemCopper::new);
+        EntityRenderers.register(ModEntities.ENTITY_GOLEM_AGENT.get(), EntityRendererGolemAgent::new);
 
         EntityRenderers.register(ModEntities.ENTITY_PAWN_FIRST_DIORITE.get(), EntityRendererPawn::new);
         EntityRenderers.register(ModEntities.ENTITY_PAWN_TERRACOTTA.get(), EntityRendererPawn::new);

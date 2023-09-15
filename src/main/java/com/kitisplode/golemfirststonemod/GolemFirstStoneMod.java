@@ -1,11 +1,11 @@
 package com.kitisplode.golemfirststonemod;
 
 import com.kitisplode.golemfirststonemod.block.ModBlocks;
-import com.kitisplode.golemfirststonemod.client.HudDandoriCount;
+import com.kitisplode.golemfirststonemod.client.gui.HudDandoriCount;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
-import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.item.ModCreativeModTabs;
 import com.kitisplode.golemfirststonemod.item.ModItems;
+import com.kitisplode.golemfirststonemod.menu.ModMenus;
 import com.kitisplode.golemfirststonemod.networking.ModMessages;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
 import com.kitisplode.golemfirststonemod.structure.ModStructures;
@@ -13,17 +13,14 @@ import com.kitisplode.golemfirststonemod.villager.ModPOIs;
 import com.kitisplode.golemfirststonemod.villager.ModProfessions;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -55,6 +52,8 @@ public class GolemFirstStoneMod
 
         ModPOIs.POI_TYPES.register(modEventBus);
         ModProfessions.VILLAGER_PROFESSIONS.register(modEventBus);
+
+        ModMenus.register(modEventBus);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
@@ -101,6 +100,7 @@ public class GolemFirstStoneMod
             ModItems.registerModelPredicates();
             ModBlocks.registerRenderLayers();
             ModEntities.registerRenderers();
+            ModMenus.registerScreens();
         }
 
         @SubscribeEvent

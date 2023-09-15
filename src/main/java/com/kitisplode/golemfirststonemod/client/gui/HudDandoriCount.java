@@ -1,4 +1,4 @@
-package com.kitisplode.golemfirststonemod.client;
+package com.kitisplode.golemfirststonemod.client.gui;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;

@@ -4,6 +4,7 @@ import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.networking.packet.C2SPacketGrindstoneAttack;
 import com.kitisplode.golemfirststonemod.networking.packet.C2SPacketItemSwingUse;
 import com.kitisplode.golemfirststonemod.networking.packet.C2SPacketItemSwingUseTick;
+import com.kitisplode.golemfirststonemod.networking.packet.S2CPacketAgentScreenOpen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
@@ -50,6 +51,12 @@ public class ModMessages
                 .decoder(C2SPacketItemSwingUseTick::new)
                 .encoder(C2SPacketItemSwingUseTick::toBytes)
                 .consumerMainThread(C2SPacketItemSwingUseTick::handle)
+                .add();
+
+        net.messageBuilder(S2CPacketAgentScreenOpen.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(S2CPacketAgentScreenOpen::new)
+                .encoder(S2CPacketAgentScreenOpen::toBytes)
+                .consumerMainThread(S2CPacketAgentScreenOpen::handle)
                 .add();
     }
 
