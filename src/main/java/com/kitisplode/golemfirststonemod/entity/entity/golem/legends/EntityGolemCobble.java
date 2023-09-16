@@ -118,13 +118,14 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(1, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(0, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(1, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
 
         this.goalSelector.add(2, new MultiStageAttackGoalRanged(this, 1.0, true, 6.0D, new int[]{10, 5}));
         this.goalSelector.add(2, new MultiStageAttackBlockGoalRanged(this, 1.0, true, 8.0D, new int[]{10, 5}));
         this.goalSelector.add(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
 
-        this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 0));
 
         this.goalSelector.add(5, new WanderNearTargetGoal(this, 0.8, 32.0F));
         this.goalSelector.add(6, new IronGolemWanderAroundGoal(this, 0.8));
