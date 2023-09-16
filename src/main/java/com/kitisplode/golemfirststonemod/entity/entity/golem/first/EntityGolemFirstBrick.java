@@ -143,43 +143,47 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
                     || (entity instanceof Player && entity == this.getOwner())
                     || entity instanceof AbstractVillager)
             {
-                // For entities currently being attacked:
-                LivingEntity targetCurrentAttacker = entity.getLastHurtByMob();
-                if (targetCurrentAttacker != null && targetCurrentAttacker.isAlive())
-                {
-                    return golemTarget_checkTargetAttacker(targetCurrentAttacker);
-                }
+                if (entity instanceof Mob mob)
+                    return mob.getTarget() != null && mob.getTarget().isAlive() && mob.getTarget() instanceof Enemy;
+//                // For entities currently being attacked:
+//                LivingEntity targetCurrentAttacker = entity.getLastHurtByMob();
+//                if (targetCurrentAttacker != null && targetCurrentAttacker.isAlive())
+//                {
+//                    return golemTarget_checkTargetAttacker(targetCurrentAttacker);
+//                }
+//
+//                // For entities not currently being attacked but attacked recently.
+//                LivingEntity targetLastAttacker = entity.getLastAttacker();
+//                if (targetLastAttacker != null)
+//                {
+//                    entity.tick();
+//                    if (Mth.abs(entity.getLastHurtByMobTimestamp() - entity.tickCount) < shieldHurtTime)
+//                    {
+//                        return golemTarget_checkTargetAttacker(targetLastAttacker);
+//                    }
+//                }
 
-                // For entities not currently being attacked but attacked recently.
-                LivingEntity targetLastAttacker = entity.getLastAttacker();
-                if (targetLastAttacker != null)
-                {
-                    entity.tick();
-                    if (Mth.abs(entity.getLastHurtByMobTimestamp() - entity.tickCount) < shieldHurtTime)
-                    {
-                        return golemTarget_checkTargetAttacker(targetLastAttacker);
-                    }
-                }
+                //
             }
             return false;
         };
     }
 
-    private boolean golemTarget_checkTargetAttacker(LivingEntity targetAttacker)
-    {
-        // If the golem was player made, skip potential targets that were attacked by the player.
-        if (targetAttacker instanceof Player && targetAttacker == this.getOwner())
-        {
-            return false;
-        }
-        // Skip other potential targets that are being attacked by golems (only happens accidentally or by other cleric golems)
-        if (targetAttacker instanceof IEntityDandoriFollower dandoriFollower)
-        {
-            if (dandoriFollower.getOwner() == this.getOwner()) return false;
-        }
-        // Otherwise, this is a good target.
-        return true;
-    }
+//    private boolean golemTarget_checkTargetAttacker(LivingEntity targetAttacker)
+//    {
+//        // If the golem was player made, skip potential targets that were attacked by the player.
+//        if (targetAttacker instanceof Player && targetAttacker == this.getOwner())
+//        {
+//            return false;
+//        }
+//        // Skip other potential targets that are being attacked by golems (only happens accidentally or by other cleric golems)
+//        if (targetAttacker instanceof IEntityDandoriFollower dandoriFollower)
+//        {
+//            if (dandoriFollower.getOwner() == this.getOwner()) return false;
+//        }
+//        // Otherwise, this is a good target.
+//        return true;
+//    }
 
     public boolean canAttack(LivingEntity entity) {
         return !(entity instanceof Enemy);
@@ -276,14 +280,14 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
     public void tick()
     {
         super.tick();
-        if (this.getAttackState() == 0 && this.attackGoal != null && this.attackGoal.isCooledDown() && this.isDandoriOff())
-        {
-            List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(32), entity->entity instanceof Enemy && this.hasLineOfSight(entity));
-            if (!list.isEmpty())
-            {
-                this.attackGoal.forceAttack();
-            }
-        }
+//        if (this.getAttackState() == 0 && this.attackGoal != null && this.attackGoal.isCooledDown() && this.isDandoriOff())
+//        {
+//            List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(32), entity->entity instanceof Enemy && this.hasLineOfSight(entity));
+//            if (!list.isEmpty())
+//            {
+//                this.attackGoal.forceAttack();
+//            }
+//        }
     }
 
     @Override
