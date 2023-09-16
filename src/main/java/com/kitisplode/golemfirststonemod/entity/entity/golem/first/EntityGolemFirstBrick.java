@@ -139,42 +139,44 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
 					|| (entity instanceof PlayerEntity && entity == this.getOwner())
 					|| entity instanceof MerchantEntity)
 			{
-				// For entities currently being attacked:
-				LivingEntity targetCurrentAttacker = entity.getAttacker();
-				if (targetCurrentAttacker != null && targetCurrentAttacker.isAlive())
-				{
-					return golemTarget_checkTargetAttacker(targetCurrentAttacker);
-				}
-
-				// For entities not currently being attacked but attacked recently.
-				LivingEntity targetLastAttacker = entity.getLastAttacker();
-				if (targetLastAttacker != null)
-				{
-					if (MathHelper.abs(entity.getLastAttackedTime() - entity.age) < shieldHurtTime)
-					{
-						return golemTarget_checkTargetAttacker(targetLastAttacker);
-					}
-				}
+				if (entity instanceof MobEntity mob)
+					return mob.getTarget() != null && mob.getTarget().isAlive() && mob.getTarget() instanceof Monster;
+//				// For entities currently being attacked:
+//				LivingEntity targetCurrentAttacker = entity.getAttacker();
+//				if (targetCurrentAttacker != null && targetCurrentAttacker.isAlive())
+//				{
+//					return golemTarget_checkTargetAttacker(targetCurrentAttacker);
+//				}
+//
+//				// For entities not currently being attacked but attacked recently.
+//				LivingEntity targetLastAttacker = entity.getLastAttacker();
+//				if (targetLastAttacker != null)
+//				{
+//					if (MathHelper.abs(entity.getLastAttackedTime() - entity.age) < shieldHurtTime)
+//					{
+//						return golemTarget_checkTargetAttacker(targetLastAttacker);
+//					}
+//				}
 			}
 			return false;
 		};
 	}
 
-	private boolean golemTarget_checkTargetAttacker(LivingEntity targetAttacker)
-	{
-		// If the golem was player made, skip potential targets that were attacked by the player.
-		if (targetAttacker instanceof PlayerEntity && this.getOwner() == targetAttacker)
-		{
-			return false;
-		}
-		// Skip other potential targets that are being attacked by golems (only happens accidentally or by other cleric golems)
-		if (targetAttacker instanceof IEntityDandoriFollower dandoriFollower)
-		{
-			if (dandoriFollower.getOwner() == this.getOwner()) return false;
-		}
-		// Otherwise, this is a good target.
-		return true;
-	}
+//	private boolean golemTarget_checkTargetAttacker(LivingEntity targetAttacker)
+//	{
+//		// If the golem was player made, skip potential targets that were attacked by the player.
+//		if (targetAttacker instanceof PlayerEntity && this.getOwner() == targetAttacker)
+//		{
+//			return false;
+//		}
+//		// Skip other potential targets that are being attacked by golems (only happens accidentally or by other cleric golems)
+//		if (targetAttacker instanceof IEntityDandoriFollower dandoriFollower)
+//		{
+//			if (dandoriFollower.getOwner() == this.getOwner()) return false;
+//		}
+//		// Otherwise, this is a good target.
+//		return true;
+//	}
 
 	@Override
 	public boolean canTarget(LivingEntity entity)
