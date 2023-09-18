@@ -60,6 +60,13 @@ public class ModItems
     public static final RegistryObject<Item> ITEM_FLAME_OF_CREATION_RED = ITEMS.register("item_flame_of_creation_red",
             () -> new Item(new Item.Properties().stacksTo(1)));
 
+    public static final RegistryObject<Item> ITEM_INSTRUCTION_MOVE_FORWARD = ITEMS.register("item_instruction_move_forward",
+            () -> new Item(new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<Item> ITEM_INSTRUCTION_TURN_LEFT_90 = ITEMS.register("item_instruction_turn_left_90",
+            () -> new Item(new Item.Properties().stacksTo(2)));
+    public static final RegistryObject<Item> ITEM_INSTRUCTION_TURN_RIGHT_90 = ITEMS.register("item_instruction_turn_right_90",
+            () -> new Item(new Item.Properties().stacksTo(2)));
+
 
     // Called to actually register the items list.
     public static void register(IEventBus eventBus)

@@ -15,6 +15,10 @@
   "item.golemfirststonemod.item_flame_of_creation_blue": "Blue Flame of Creation",
   "item.golemfirststonemod.item_flame_of_creation_red": "Red Flame of Creation",
 
+  "item.golemfirststonemod.item_instruction_move_forward": "Agent Instruction",
+  "item.golemfirststonemod.item_instruction_turn_left_90": "Agent Instruction",
+  "item.golemfirststonemod.item_instruction_turn_right_90": "Agent Instruction",
+
   "block.golemfirststonemod.block_head_stone": "Chiseled Stone Head",
   "block.golemfirststonemod.block_core_stone": "Chiseled Stone Core",
   "block.golemfirststonemod.block_head_oak": "Carved Oak Head",

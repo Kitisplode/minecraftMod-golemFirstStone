@@ -198,7 +198,7 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
     @Override
     public boolean tryAttackBlock()
     {
-        if (getAttackState() == 1) this.setLeftArm(!this.getLeftArm());
+        if (getAttackState() == 0) this.setLeftArm(!this.getLeftArm());
         if (getAttackState() != 2) return false;
         if (!canTargetBlock(getBlockTarget())) return false;
 

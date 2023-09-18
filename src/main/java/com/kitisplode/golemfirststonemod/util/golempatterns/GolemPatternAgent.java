@@ -23,7 +23,7 @@ public class GolemPatternAgent extends AbstractGolemPattern
 	public GolemPatternAgent(Predicate<BlockState> pPredicate)
 	{
 		super(pPredicate);
-		spawnPositionOffset = new Vec3i(0,2,0);
+		spawnPositionOffset = new Vec3i(0,1,0);
 		patternList.add(BlockPatternBuilder.start()
 			.aisle(
 				"^",

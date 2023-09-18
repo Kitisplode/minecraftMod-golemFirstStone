@@ -4,6 +4,7 @@ import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
 import com.kitisplode.golemfirststonemod.util.DataDandoriCount;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.GameType;
@@ -23,6 +24,7 @@ public class HudDandoriCount implements IGuiOverlay
     private static final ResourceLocation GOLEM_GRINDSTONE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_grindstone.png");
     private static final ResourceLocation GOLEM_TUFF = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_tuff.png");
     private static final ResourceLocation GOLEM_COPPER = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_copper.png");
+    private static final ResourceLocation GOLEM_AGENT = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_agent.png");
     private static final ResourceLocation FIRST_STONE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_stone.png");
     private static final ResourceLocation FIRST_OAK = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_oak.png");
     private static final ResourceLocation FIRST_BRICK = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_brick.png");
@@ -53,181 +55,69 @@ public class HudDandoriCount implements IGuiOverlay
         int plank = player.getDandoriCountPlank();
         int mossy = player.getDandoriCountMossy();
         int grindstone = player.getDandoriCountGrindstone();
-        int tuff = player.getDandoriCountTuff();
         int copper = player.getDandoriCountCopper();
+        int tuff = player.getDandoriCountTuff();
+        int agent = player.getDandoriCountAgent();
         int firstStone = player.getDandoriCountFirstStone();
         int firstOak = player.getDandoriCountFirstOak();
         int firstBrick = player.getDandoriCountFirstBrick();
         int firstDiorite = player.getDandoriCountFirstDiorite();
-        int golemTotalMelee = iron + cobble + grindstone;
-        int golemTotalRanged = snow + plank;
-        int golemTotalMisc = mossy + tuff + copper;
-        int firstTotal = firstStone + firstOak + firstBrick + firstDiorite;
+
+        int[] golemCounts = {firstStone, firstOak, firstBrick, firstDiorite, iron, cobble, grindstone, snow, plank, mossy, copper, tuff, agent, red, yellow, blue};
+
+        int golemTotal = 0;
 
         DataDandoriCount.FOLLOWER_TYPE currentType = player.getDandoriCurrentType();
 
+        final int perRow = 3;
         final int start_x = 12;//width / 2 - 90;
         int draw_x = start_x;
         int draw_y = (int)((float)height * 0.95f);
         int color = 0xff_ffffff;
 
-        if (!mc.player.isCreative()) draw_y -= 32;
+        DataDandoriCount.FOLLOWER_TYPE[] types = DataDandoriCount.FOLLOWER_TYPE.values();
+        for (int i = 0; i < types.length; i++)
+        {
+            if (golemCounts[i] <= 0) continue;
+            DataDandoriCount.FOLLOWER_TYPE type = types[i];
+            boolean isCurrentType = currentType == type;
+            if (type == DataDandoriCount.FOLLOWER_TYPE.FIRST_STONE) drawPikCount(guiGraphics, draw_x, draw_y-8, FIRST_STONE, 16,16, golemCounts[i], isCurrentType,0,0, mc.font, 18,8, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.FIRST_OAK) drawPikCount(guiGraphics, draw_x, draw_y-8, FIRST_OAK, 16,16, golemCounts[i], isCurrentType,0,0, mc.font, 18,8, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.FIRST_BRICK) drawPikCount(guiGraphics, draw_x, draw_y-8, FIRST_BRICK, 16,16, golemCounts[i], isCurrentType,0,0, mc.font, 18,8, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.FIRST_DIORITE) drawPikCount(guiGraphics, draw_x, draw_y-8, FIRST_DIORITE, 16,16, golemCounts[i], isCurrentType,0,0, mc.font, 18,8, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.IRON) drawPikCount(guiGraphics, draw_x, draw_y, GOLEM_IRON, 8,8, golemCounts[i], isCurrentType,-4,-4, mc.font, 12,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.COBBLE) drawPikCount(guiGraphics, draw_x-4, draw_y, GOLEM_COBBLE, 16,8, golemCounts[i], isCurrentType,0,-4, mc.font, 16,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.GRINDSTONE) drawPikCount(guiGraphics, draw_x-4, draw_y, GOLEM_GRINDSTONE, 16,8, golemCounts[i], isCurrentType,0,-4, mc.font, 16,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.SNOW) drawPikCount(guiGraphics, draw_x, draw_y, GOLEM_SNOW, 8,8, golemCounts[i], isCurrentType,-4,-4, mc.font, 12,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.PLANK) drawPikCount(guiGraphics, draw_x, draw_y, GOLEM_PLANK, 8,8, golemCounts[i], isCurrentType,-4,-4, mc.font, 12,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.MOSSY) drawPikCount(guiGraphics, draw_x - 4, draw_y, GOLEM_MOSSY, 16,8, golemCounts[i], isCurrentType,0,-4, mc.font, 16,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.COPPER) drawPikCount(guiGraphics, draw_x-4, draw_y, GOLEM_COPPER, 16,16, golemCounts[i], isCurrentType,0,-4, mc.font, 16,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.TUFF) drawPikCount(guiGraphics, draw_x, draw_y, GOLEM_TUFF, 8,8, golemCounts[i], isCurrentType,-4,-4, mc.font, 12,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.AGENT) drawPikCount(guiGraphics, draw_x, draw_y, GOLEM_AGENT, 8,8, golemCounts[i], isCurrentType,-4,-4, mc.font, 12,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.PAWN_RED) drawPikCount(guiGraphics, draw_x, draw_y, PIK_RED, 8,8, golemCounts[i], isCurrentType,-4,-4, mc.font, 12,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.PAWN_YELLOW) drawPikCount(guiGraphics, draw_x-4, draw_y, PIK_YELLOW, 16,16, golemCounts[i], isCurrentType,0,-4, mc.font, 16,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.PAWN_BLUE) drawPikCount(guiGraphics, draw_x, draw_y, PIK_BLUE, 8,8, golemCounts[i], isCurrentType,-4,-4, mc.font, 12,0, color);
 
-        // Firsts
-        if (firstStone > 0)
-        {
-            guiGraphics.blit(FIRST_STONE, draw_x,draw_y-8, 0,0, 16,16, 16,16);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.FIRST_STONE)
-                guiGraphics.blit(CURSOR, draw_x,draw_y-8, 0, 0, 16, 16, 16, 16);
-            draw_x += 18;
-            guiGraphics.drawString(mc.font, "x " + firstStone, draw_x,draw_y, color, true);
-            draw_x += 24;
+            if (++golemTotal >= perRow)
+            {
+                draw_x = start_x;
+                draw_y -= 18;
+                golemTotal = 0;
+            }
+            else
+            {
+                if (i < 4) draw_x += 42;
+                else draw_x += 32;
+            }
         }
-        if (firstOak > 0)
-        {
-            guiGraphics.blit(FIRST_OAK, draw_x,draw_y-8, 0,0, 16,16, 16,16);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.FIRST_OAK)
-                guiGraphics.blit(CURSOR, draw_x,draw_y-8, 0, 0, 16, 16, 16, 16);
-            draw_x += 18;
-            guiGraphics.drawString(mc.font, "x " + firstOak, draw_x,draw_y, color, true);
-            draw_x += 24;
-        }
-        if (firstBrick > 0)
-        {
-            guiGraphics.blit(FIRST_BRICK, draw_x,draw_y-8, 0,0, 16,16, 16,16);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.FIRST_BRICK)
-                guiGraphics.blit(CURSOR, draw_x,draw_y-8, 0, 0, 16, 16, 16, 16);
-            draw_x += 18;
-            guiGraphics.drawString(mc.font, "x " + firstBrick, draw_x,draw_y, color, true);
-            draw_x += 24;
-        }
-        if (firstDiorite > 0)
-        {
-            guiGraphics.blit(FIRST_DIORITE, draw_x,draw_y-8, 0,0, 16,16, 16,16);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.FIRST_DIORITE)
-                guiGraphics.blit(CURSOR, draw_x,draw_y-8, 0, 0, 16, 16, 16, 16);
-            draw_x += 18;
-            guiGraphics.drawString(mc.font, "x " + firstDiorite, draw_x,draw_y, color, true);
-            draw_x += 24;
-        }
+    }
 
-        if (firstTotal > 0) draw_y -= 18;
-        draw_x = start_x;
+    private void drawPikCount(GuiGraphics guiGraphics, int x, int y, ResourceLocation sprite, int width, int height, int count, boolean highlighted, int cursorX, int cursorY, Font font, int textOffsetX, int textOffsetY, int textColor)
+    {
+        guiGraphics.blit(sprite, x,y, 0,0, width,height, width,height);
+        if (highlighted)
+            guiGraphics.blit(CURSOR, x + cursorX, y + cursorY, 0, 0, 16, 16, 16, 16);
 
-        // Melee Golems
-        if (iron > 0)
-        {
-            guiGraphics.blit(GOLEM_IRON, draw_x,draw_y, 0,0, 8,8, 8,8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.IRON)
-                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            guiGraphics.drawString(mc.font, "x " + iron, draw_x,draw_y, color, true);
-            draw_x += 20;
-        }
-        if (cobble > 0)
-        {
-            guiGraphics.blit(GOLEM_COBBLE, draw_x-4,draw_y, 0,0, 16,8, 16,8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.COBBLE)
-                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            guiGraphics.drawString(mc.font, "x " + cobble, draw_x,draw_y, color, true);
-            draw_x += 20;
-        }
-        if (grindstone > 0)
-        {
-            guiGraphics.blit(GOLEM_GRINDSTONE, draw_x-4,draw_y, 0,0, 16,8, 16,8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.GRINDSTONE)
-                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            guiGraphics.drawString(mc.font, "x " + grindstone, draw_x,draw_y, color, true);
-            draw_x += 20;
-        }
-
-        if (golemTotalMelee > 0) draw_y -= 18;
-        draw_x = start_x;
-
-        // Ranged Golems
-        if (snow > 0)
-        {
-            guiGraphics.blit(GOLEM_SNOW, draw_x,draw_y, 0,0, 8,8, 8,8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.SNOW)
-                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            guiGraphics.drawString(mc.font, "x " + snow, draw_x,draw_y, color, true);
-            draw_x += 20;
-        }
-        if (plank > 0)
-        {
-            guiGraphics.blit(GOLEM_PLANK, draw_x,draw_y, 0,0, 8,8, 8,8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.PLANK)
-                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            guiGraphics.drawString(mc.font, "x " + plank, draw_x,draw_y, color, true);
-            draw_x += 20;
-        }
-
-        if (golemTotalRanged > 0) draw_y -= 18;
-        draw_x = start_x;
-
-        // Misc Golems
-        if (mossy > 0)
-        {
-            guiGraphics.blit(GOLEM_MOSSY, draw_x-4,draw_y, 0,0, 16,8, 16,8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.MOSSY)
-                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            guiGraphics.drawString(mc.font, "x " + mossy, draw_x,draw_y, color, true);
-            draw_x += 20;
-        }
-        if (tuff > 0)
-        {
-            guiGraphics.blit(GOLEM_TUFF, draw_x,draw_y, 0,0, 8,8, 8,8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.TUFF)
-                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            guiGraphics.drawString(mc.font, "x " + tuff, draw_x,draw_y, color, true);
-            draw_x += 20;
-        }
-        if (copper > 0)
-        {
-            guiGraphics.blit(GOLEM_COPPER, draw_x-4,draw_y, 0,0, 16,16, 16,16);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.COPPER)
-                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            guiGraphics.drawString(mc.font, "x " + copper, draw_x,draw_y, color, true);
-            draw_x += 20;
-        }
-
-        if (golemTotalMisc > 0) draw_y -= 18;
-        draw_x = start_x;
-
-        // Pawns
-        if (red > 0)
-        {
-            guiGraphics.blit(PIK_RED, draw_x,draw_y, 0,0, 8,8, 8,8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.PAWN_RED)
-                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            guiGraphics.drawString(mc.font, "x " + red, draw_x,draw_y, color, true);
-            draw_x += 20;
-        }
-        if (yellow > 0)
-        {
-            guiGraphics.blit(PIK_YELLOW, draw_x-4,draw_y, 0,0, 16,16, 16,16);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.PAWN_YELLOW)
-                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            guiGraphics.drawString(mc.font, "x " + yellow, draw_x,draw_y, color, true);
-            draw_x += 20;
-        }
-        if (blue > 0)
-        {
-            guiGraphics.blit(PIK_BLUE, draw_x,draw_y, 0,0, 8,8, 8,8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.PAWN_BLUE)
-                guiGraphics.blit(CURSOR, draw_x-4,draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            guiGraphics.drawString(mc.font, "x " + blue, draw_x,draw_y, color, true);
-            draw_x += 20;
-        }
+        guiGraphics.drawString(font, "x " + count, x + textOffsetX,y + textOffsetY, textColor, true);
     }
 }
