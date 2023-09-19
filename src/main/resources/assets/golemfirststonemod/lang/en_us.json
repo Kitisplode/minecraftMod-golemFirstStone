@@ -15,9 +15,11 @@
   "item.golemfirststonemod.item_flame_of_creation_blue": "Blue Flame of Creation",
   "item.golemfirststonemod.item_flame_of_creation_red": "Red Flame of Creation",
 
-  "item.golemfirststonemod.item_instruction_move_forward": "Agent Instruction",
-  "item.golemfirststonemod.item_instruction_turn_left_90": "Agent Instruction",
-  "item.golemfirststonemod.item_instruction_turn_right_90": "Agent Instruction",
+  "item.golemfirststonemod.item_instruction_move_forward": "Move Forward",
+  "item.golemfirststonemod.item_instruction_turn_left_90": "Turn Left",
+  "item.golemfirststonemod.item_instruction_turn_right_90": "Turn Right",
+  "item.golemfirststonemod.item_instruction_if_block": "Check for Block",
+  "item.golemfirststonemod.item_instruction_if_solid": "Check for Solid",
 
   "block.golemfirststonemod.block_head_stone": "Chiseled Stone Head",
   "block.golemfirststonemod.block_core_stone": "Chiseled Stone Core",

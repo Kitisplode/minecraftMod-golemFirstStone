@@ -49,6 +49,11 @@
 					]
 				},
 				{
+					"name": "hand_right",
+					"parent": "arm_right",
+					"pivot": [-5, 0, 0]
+				},
+				{
 					"name": "waist",
 					"parent": "whole",
 					"pivot": [0, 5, 0],

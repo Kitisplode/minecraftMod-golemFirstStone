@@ -66,6 +66,10 @@ public class ModItems
             () -> new Item(new Item.Properties().stacksTo(2)));
     public static final RegistryObject<Item> ITEM_INSTRUCTION_TURN_RIGHT_90 = ITEMS.register("item_instruction_turn_right_90",
             () -> new Item(new Item.Properties().stacksTo(2)));
+    public static final RegistryObject<Item> ITEM_INSTRUCTION_IF_BLOCK = ITEMS.register("item_instruction_if_block",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ITEM_INSTRUCTION_IF_SOLID = ITEMS.register("item_instruction_if_solid",
+            () -> new Item(new Item.Properties().stacksTo(1)));
 
 
     // Called to actually register the items list.

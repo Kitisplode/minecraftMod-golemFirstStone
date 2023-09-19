@@ -158,7 +158,7 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     protected void registerGoals()
     {
         this.goalSelector.addGoal(0, new DandoriFollowHardGoal(this, 1.2,dandoriMoveRange, dandoriSeeRange));
-        this.goalSelector.addGoal(1, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(1, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 6));
 
         this.goalSelector.addGoal(2, new AgentFollowProgramGoal(this));
         this.goalSelector.addGoal(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
@@ -170,13 +170,19 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     }
 
     @Override
+    public boolean isPushable()
+    {
+        return !getActive();
+    }
+
+    @Override
     public void tick()
     {
         super.tick();
         if (!this.getActive())
         {
             BlockPos bp = this.getOnPos();
-            if (this.level().hasNeighborSignal(bp) || this.level().hasNeighborSignal(bp.below()))
+            if (this.level().hasNeighborSignal(bp))
             {
                 this.setActive(true);
             }

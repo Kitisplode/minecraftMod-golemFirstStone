@@ -52,6 +52,8 @@ public class ModCreativeModTabs
                         pOutput.accept(ModItems.ITEM_INSTRUCTION_MOVE_FORWARD.get());
                         pOutput.accept(ModItems.ITEM_INSTRUCTION_TURN_LEFT_90.get());
                         pOutput.accept(ModItems.ITEM_INSTRUCTION_TURN_RIGHT_90.get());
+                        pOutput.accept(ModItems.ITEM_INSTRUCTION_IF_BLOCK.get());
+                        pOutput.accept(ModItems.ITEM_INSTRUCTION_IF_SOLID.get());
 
                     })
                     .build());
