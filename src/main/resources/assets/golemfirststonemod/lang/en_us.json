@@ -20,6 +20,8 @@
   "item.golemfirststonemod.item_instruction_turn_right_90": "Turn Right",
   "item.golemfirststonemod.item_instruction_if_block": "Check for Block",
   "item.golemfirststonemod.item_instruction_if_solid": "Check for Solid",
+  "item.golemfirststonemod.item_instruction_use_block": "Use Block",
+  "item.golemfirststonemod.item_instruction_place_block": "Place Block",
 
   "block.golemfirststonemod.block_head_stone": "Chiseled Stone Head",
   "block.golemfirststonemod.block_core_stone": "Chiseled Stone Core",

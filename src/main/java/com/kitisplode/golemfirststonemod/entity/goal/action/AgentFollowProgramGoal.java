@@ -1,17 +1,24 @@
 package com.kitisplode.golemfirststonemod.entity.goal.action;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.other.EntityGolemAgent;
 import com.kitisplode.golemfirststonemod.item.ModItems;
+import com.kitisplode.golemfirststonemod.util.ExtraMath;
+import com.kitisplode.golemfirststonemod.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -96,10 +103,7 @@ public class AgentFollowProgramGoal extends Goal
             Instruction instruction = this.pullInstructionFromFirstItem(items);
             items.remove(0);
             if (instruction == null) continue;
-            if (instruction instanceof InstructionIf instructionIf)
-            {
-                for (int o = 0; o < instructionIf.skipAmount(); o++) items.remove(0);
-            }
+            for (int o = 0; o < instruction.skipAmount(); o++) items.remove(0);
             this.instructions.add(instruction);
         }
     }
@@ -135,10 +139,7 @@ public class AgentFollowProgramGoal extends Goal
                 Instruction instruction = this.pullInstructionFromFirstItem(itemsInBox);
                 itemsInBox.remove(0);
                 if (instruction == null) continue;
-                if (instruction instanceof InstructionIf instructionIf)
-                {
-                    for (int o = 0; o < instructionIf.skipAmount(); o++) itemsInBox.remove(0);
-                }
+                for (int o = 0; o < instruction.skipAmount(); o++) itemsInBox.remove(0);
                 list.add(instruction);
             }
             set = new InstructionSet(this.agent, list);
@@ -153,9 +154,11 @@ public class AgentFollowProgramGoal extends Goal
         if (itemStack.is(ModItems.ITEM_INSTRUCTION_MOVE_FORWARD.get())) return new InstructionMoveForward(this.agent, itemStack.getCount());
         if (itemStack.is(ModItems.ITEM_INSTRUCTION_TURN_LEFT_90.get())) return new InstructionTurn(this.agent, -itemStack.getCount());
         if (itemStack.is(ModItems.ITEM_INSTRUCTION_TURN_RIGHT_90.get())) return new InstructionTurn(this.agent, itemStack.getCount());
+        if (itemStack.is(ModItems.ITEM_INSTRUCTION_USE_BLOCK.get())) return new InstructionUseBlock(this.agent);
         if (this.itemIsShulkerBox(itemStack)) return this.shulkerBoxToInstruction(itemStack);
         if (itemStack.is(ModItems.ITEM_INSTRUCTION_IF_BLOCK.get()) || itemStack.is(ModItems.ITEM_INSTRUCTION_IF_SOLID.get()))
             return this.ifItemToInstruction(items);
+        if (itemStack.is(ModItems.ITEM_INSTRUCTION_PLACE_BLOCK.get())) return this.placeItemToInstruction(items);
         return null;
     }
 
@@ -185,26 +188,52 @@ public class AgentFollowProgramGoal extends Goal
         return null;
     }
 
+    private InstructionPlaceBlock placeItemToInstruction(ArrayList<ItemStack> items)
+    {
+        if (items.size() < 2) return null;
+        return new InstructionPlaceBlock(this.agent, items.get(1));
+    }
+
 //======================================================================================================================
 
     abstract class Instruction
     {
+        protected final EntityGolemAgent agent;
+
+        public Instruction(EntityGolemAgent agent)
+        {
+            this.agent = agent;
+        }
+        public int skipAmount()
+        {
+            return 0;
+        }
+
         private boolean isRunning;
         public boolean isRunning()
         {
             return this.isRunning;
         }
-        abstract public boolean isDone();
+        public boolean isDone()
+        {
+            return true;
+        }
         public void start()
         {
             this.isRunning = true;
         }
         public void tick() {}
+
+        protected BlockPos getBlockPosForward()
+        {
+            Direction direction = Direction.orderedByNearest(this.agent)[0];
+            Vec3 eyePos = this.agent.getEyePosition();
+            return new BlockPos((int) Math.floor(eyePos.x()), (int) Math.floor(eyePos.y()), (int) Math.floor(eyePos.z())).offset(direction.getNormal());
+        }
     }
 
     class InstructionMoveForward extends Instruction
     {
-        private final EntityGolemAgent agent;
         private final int distance;
         private BlockPos blockPos;
         private int ticks = 10;
@@ -212,7 +241,7 @@ public class AgentFollowProgramGoal extends Goal
 
         public InstructionMoveForward(EntityGolemAgent agent, int distance)
         {
-            this.agent = agent;
+            super(agent);
             this.distance = distance;
         }
 
@@ -253,7 +282,6 @@ public class AgentFollowProgramGoal extends Goal
 
     class InstructionTurn extends Instruction
     {
-        private final EntityGolemAgent agent;
         private final int directionMultiplier;
         private float directionToTurn;
         private int ticks = 10;
@@ -261,7 +289,7 @@ public class AgentFollowProgramGoal extends Goal
 
         public InstructionTurn(EntityGolemAgent agent, int directionMultiplier)
         {
-            this.agent = agent;
+            super(agent);
             this.directionMultiplier = directionMultiplier;
         }
 
@@ -303,12 +331,11 @@ public class AgentFollowProgramGoal extends Goal
 
     class InstructionSet extends Instruction
     {
-        protected final EntityGolemAgent agent;
         protected final ArrayList<Instruction> instructionList;
 
         public InstructionSet(EntityGolemAgent agent, ArrayList<Instruction> instructionList)
         {
-            this.agent = agent;
+            super(agent);
             this.instructionList = instructionList;
         }
 
@@ -347,8 +374,6 @@ public class AgentFollowProgramGoal extends Goal
             super(agent, instructionList);
         }
 
-        abstract public int skipAmount();
-
         @Override
         public void start()
         {
@@ -361,13 +386,11 @@ public class AgentFollowProgramGoal extends Goal
 
     class InstructionIfCheckBlock extends InstructionIf
     {
-        private final EntityGolemAgent agent;
         private final Block blockType;
 
         public InstructionIfCheckBlock(EntityGolemAgent agent, Block blockType, ArrayList<Instruction> instructionList)
         {
             super(agent, instructionList);
-            this.agent = agent;
             this.blockType = blockType;
         }
 
@@ -380,21 +403,16 @@ public class AgentFollowProgramGoal extends Goal
         @Override
         public boolean checkCondition()
         {
-            Direction direction = Direction.orderedByNearest(this.agent)[0];
-            Vec3 eyePos = this.agent.getEyePosition();
-            BlockPos bp = new BlockPos((int) Math.floor(eyePos.x()), (int) Math.floor(eyePos.y()), (int) Math.floor(eyePos.z())).offset(direction.getNormal());
+            BlockPos bp = this.getBlockPosForward();
             return this.agent.level().getBlockState(bp).is(this.blockType);
         }
     }
 
     class InstructionIfCheckSolid extends InstructionIf
     {
-        private final EntityGolemAgent agent;
-
         public InstructionIfCheckSolid(EntityGolemAgent agent, ArrayList<Instruction> instructionList)
         {
             super(agent, instructionList);
-            this.agent = agent;
         }
 
         @Override
@@ -406,10 +424,80 @@ public class AgentFollowProgramGoal extends Goal
         @Override
         public boolean checkCondition()
         {
-            Direction direction = Direction.orderedByNearest(this.agent)[0];
-            Vec3 eyePos = this.agent.getEyePosition();
-            BlockPos bp = new BlockPos((int) Math.floor(eyePos.x()), (int) Math.floor(eyePos.y()), (int) Math.floor(eyePos.z())).offset(direction.getNormal());
+            BlockPos bp = this.getBlockPosForward();
             return this.agent.level().getBlockState(bp).canOcclude();
         }
     }
+
+//======================================================================================================================
+
+    class InstructionUseBlock extends Instruction
+    {
+        private int ticks = 10;
+
+        public InstructionUseBlock(EntityGolemAgent agent)
+        {
+            super(agent);
+        }
+
+        @Override
+        public boolean isDone()
+        {
+            return --ticks <= 0;
+        }
+
+        @Override
+        public void start()
+        {
+            super.start();
+            BlockPos bp = this.getBlockPosForward();
+            BlockState bs = this.agent.level().getBlockState(bp);
+            this.agent.swingArm();
+            if (!bs.is(ModTags.Blocks.AGENT_CAN_INTERACT)) return;
+            bs.use(this.agent.level(), null, InteractionHand.MAIN_HAND, ExtraMath.playerRaycast(this.agent.level(), this.agent, ClipContext.Fluid.ANY, 1));
+        }
+    }
+
+    class InstructionPlaceBlock extends Instruction
+    {
+        private int ticks = 10;
+        private final ItemStack itemStack;
+
+        public InstructionPlaceBlock(EntityGolemAgent agent, ItemStack itemStack)
+        {
+            super(agent);
+            this.itemStack = itemStack;
+        }
+
+        @Override
+        public int skipAmount()
+        {
+            return 1;
+        }
+
+        @Override
+        public boolean isDone()
+        {
+            return --ticks <= 0;
+        }
+
+        @Override
+        public void start()
+        {
+            super.start();
+            if (itemStack.isEmpty()) return;
+            if (itemStack.getItem() instanceof BlockItem blockItem)
+            {
+                BlockPos bp = this.getBlockPosForward();
+                BlockState bs = blockItem.getBlock().defaultBlockState();
+                if (this.agent.level().getBlockState(bp).canBeReplaced())
+                {
+                    this.agent.level().setBlock(bp, bs, 11);
+                    itemStack.shrink(1);
+                    this.agent.swingArm();
+                }
+            }
+        }
+    }
+
 }

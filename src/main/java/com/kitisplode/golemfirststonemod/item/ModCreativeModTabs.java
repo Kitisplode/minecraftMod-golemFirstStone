@@ -54,6 +54,8 @@ public class ModCreativeModTabs
                         pOutput.accept(ModItems.ITEM_INSTRUCTION_TURN_RIGHT_90.get());
                         pOutput.accept(ModItems.ITEM_INSTRUCTION_IF_BLOCK.get());
                         pOutput.accept(ModItems.ITEM_INSTRUCTION_IF_SOLID.get());
+                        pOutput.accept(ModItems.ITEM_INSTRUCTION_USE_BLOCK.get());
+                        pOutput.accept(ModItems.ITEM_INSTRUCTION_PLACE_BLOCK.get());
 
                     })
                     .build());

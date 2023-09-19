@@ -1,6 +1,7 @@
 package com.kitisplode.golemfirststonemod.util;
 
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -38,7 +39,7 @@ public class ExtraMath
         }
     }
 
-    public static BlockHitResult playerRaycast(Level world, Player player, ClipContext.Fluid fluidHandling, double range)
+    public static BlockHitResult playerRaycast(Level world, LivingEntity player, ClipContext.Fluid fluidHandling, double range)
     {
         float f = player.getXRot();
         float g = player.getYRot();

@@ -20,6 +20,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.HasCustomInventoryScreen;
@@ -52,9 +53,12 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     public static final ResourceLocation GLOWMASK = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/other/golem_agent_glowmask.png");
     public static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/golem_agent.animation.json");
 
-    private static final EntityDataAccessor<Boolean> ACTIVE = SynchedEntityData.defineId(EntityGolemCobble.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> ACTIVE = SynchedEntityData.defineId(EntityGolemAgent.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Float> ARM_SWING = SynchedEntityData.defineId(EntityGolemAgent.class, EntityDataSerializers.FLOAT);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 
+    private static final float armSwingAmount = 0.15f;
+    private static final float armSwingAmountStart = 180.0f;
     protected SimpleContainer inventory;
     private net.minecraftforge.common.util.LazyOptional<?> itemHandler = null;
 
@@ -84,6 +88,7 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     {
         super.defineSynchedData();
         if (!this.entityData.hasItem(ACTIVE)) this.entityData.define(ACTIVE, false);
+        if (!this.entityData.hasItem(ARM_SWING)) this.entityData.define(ARM_SWING, 0.0f);
     }
     public boolean getActive()
     {
@@ -92,6 +97,18 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     public void setActive(boolean pBoolean)
     {
         this.entityData.set(ACTIVE, pBoolean);
+    }
+    public float getArmSwing()
+    {
+        return this.entityData.get(ARM_SWING);
+    }
+    private void setArmSwing(float pFloat)
+    {
+        this.entityData.set(ARM_SWING, pFloat);
+    }
+    public void swingArm()
+    {
+        this.entityData.set(ARM_SWING, armSwingAmountStart);
     }
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
@@ -186,6 +203,11 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
             {
                 this.setActive(true);
             }
+        }
+        if (this.getArmSwing() > 0.0f)
+        {
+            float swing = Mth.lerp(armSwingAmount, this.getArmSwing(), 0.0f);
+            this.setArmSwing(swing);
         }
     }
 
