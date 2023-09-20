@@ -1,24 +1,28 @@
 package com.kitisplode.golemfirststonemod.entity.goal.action;
 
 import com.kitisplode.golemfirststonemod.entity.entity.golem.other.EntityGolemAgent;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import com.kitisplode.golemfirststonemod.util.ModTags;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -159,6 +163,7 @@ public class AgentFollowProgramGoal extends Goal
         if (itemStack.is(ModItems.ITEM_INSTRUCTION_IF_BLOCK.get()) || itemStack.is(ModItems.ITEM_INSTRUCTION_IF_SOLID.get()))
             return this.ifItemToInstruction(items);
         if (itemStack.is(ModItems.ITEM_INSTRUCTION_PLACE_BLOCK.get())) return this.placeItemToInstruction(items);
+        if (itemStack.is(ModItems.ITEM_INSTRUCTION_BREAK_BLOCK.get())) return new InstructionDestroyBlock(this.agent, this.agent.getHeldItem());
         return null;
     }
 
@@ -497,6 +502,77 @@ public class AgentFollowProgramGoal extends Goal
                     this.agent.swingArm();
                 }
             }
+        }
+    }
+
+    class InstructionDestroyBlock extends Instruction
+    {
+        private BlockPos targetBlock;
+        private ItemStack destroyingItem;
+        private float destroyProgress;
+        private final int ticksBetweenSwings = 5;
+        private int ticks = ticksBetweenSwings;
+        private boolean cancel = false;
+
+        public InstructionDestroyBlock(EntityGolemAgent agent, ItemStack destroyingItem)
+        {
+            super(agent);
+            this.destroyingItem = destroyingItem;
+        }
+
+        @Override
+        public boolean isDone()
+        {
+            return this.cancel;
+        }
+
+        @Override
+        public void start()
+        {
+            super.start();
+            this.targetBlock = this.getBlockPosForward();
+        }
+
+        @Override
+        public void tick()
+        {
+            this.ticks--;
+            if (this.ticks <= 0)
+            {
+                this.ticks = this.ticksBetweenSwings;
+                this.agent.swingArm();
+                BlockState bs = this.agent.level().getBlockState(this.targetBlock);
+                float itemSpeed = destroyingItem.getDestroySpeed(bs);
+                float destroySpeed = bs.getDestroySpeed(this.agent.level(), this.targetBlock);
+                if (destroySpeed == -1.0f)
+                {
+                    this.cancel = true;
+                    return;
+                }
+                float destroyInc = itemSpeed / destroySpeed / 15;
+                this.destroyProgress += destroyInc;
+                if (this.destroyProgress >= 1.0f)
+                {
+                    if (this.destroyingItem.isDamageableItem())
+                    {
+                        this.destroyingItem.hurtAndBreak(1, this.agent, agent -> {
+                            agent.level().broadcastEntityEvent(agent, EntityGolemAgent.ENTITY_EVENT_TOOL_BROKEN);});
+                    }
+                    this.agent.level().destroyBlock(this.targetBlock, true, this.agent);
+                    this.destroyProgress = 0.0f;
+                    this.cancel = true;
+                }
+                else
+                {
+                    SoundType soundtype = bs.getSoundType(this.agent.level(), this.targetBlock, null);
+                    Minecraft.getInstance().getSoundManager().play(new SimpleSoundInstance(soundtype.getHitSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 8.0F, soundtype.getPitch() * 0.5F, SoundInstance.createUnseededRandom(), this.targetBlock));
+                }
+                this.agent.level().destroyBlockProgress(this.agent.getId(), this.targetBlock, this.getDestroyStage());
+            }
+        }
+
+        private int getDestroyStage() {
+            return this.destroyProgress > 0.0F ? (int)(this.destroyProgress * 10.0F) : -1;
         }
     }
 

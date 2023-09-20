@@ -38,7 +38,7 @@ public class InventoryScreenAgent extends AbstractContainerScreen<InventoryMenuA
         // Draw the hand slot
         pGuiGraphics.blit(BG, i + 7, j + 35 - 18, 18, this.imageHeight + 54, 18, 18);
 
-        InventoryScreen.renderEntityInInventoryFollowsMouse(pGuiGraphics, i + 51, j + 60, 17, (float)(i + 51) - this.xMouse, (float)(j + 75 - 50) - this.yMouse, this.agent);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(pGuiGraphics, i + 51, j + 60, 25, (float)(i + 51) - this.xMouse, (float)(j + 75 - 50) - this.yMouse, this.agent);
     }
 
     @Override

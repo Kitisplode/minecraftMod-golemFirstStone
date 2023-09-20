@@ -7,6 +7,8 @@
   "item.golemfirststonemod.item_spawn_golem_grindstone": "Grindstone Golem Spawn Egg",
   "item.golemfirststonemod.item_spawn_golem_copper": "Copper Golem Spawn Egg",
   "item.golemfirststonemod.item_spawn_golem_tuff": "Tuff Golem Spawn Egg",
+  "item.golemfirststonemod.item_spawn_golem_agent": "Agent Golem Spawn Egg",
+
   "item.golemfirststonemod.item_dandori_call": "Golem Dandori Call",
   "item.golemfirststonemod.item_dandori_attack": "Golem Dandori Attack",
   "item.golemfirststonemod.item_dandori_dig": "Golem Dandori Dig",
@@ -18,10 +20,11 @@
   "item.golemfirststonemod.item_instruction_move_forward": "Move Forward",
   "item.golemfirststonemod.item_instruction_turn_left_90": "Turn Left",
   "item.golemfirststonemod.item_instruction_turn_right_90": "Turn Right",
-  "item.golemfirststonemod.item_instruction_if_block": "Check for Block",
-  "item.golemfirststonemod.item_instruction_if_solid": "Check for Solid",
+  "item.golemfirststonemod.item_instruction_if_block": "Inspect Ahead for Block",
+  "item.golemfirststonemod.item_instruction_if_solid": "Inspect Ahead for Solid",
   "item.golemfirststonemod.item_instruction_use_block": "Use Block",
   "item.golemfirststonemod.item_instruction_place_block": "Place Block",
+  "item.golemfirststonemod.item_instruction_break_block": "Break Block",
 
   "block.golemfirststonemod.block_head_stone": "Chiseled Stone Head",
   "block.golemfirststonemod.block_core_stone": "Chiseled Stone Core",
@@ -83,11 +86,21 @@
   "item.golemfirststonemod.item_description.item_dandori_throw_1": "Use to throw a golem follower pawn. Use while sneaking",
   "item.golemfirststonemod.item_description.item_dandori_throw_2": " to cycle between types of golems to throw.",
 
+  "item.golemfirststonemod.item_description.item_instruction_move_forward": "Command an Agent to walk forward. Stack size = # of blocks to walk.",
+  "item.golemfirststonemod.item_description.item_instruction_turn_left": "Command an Agent to turn left 90 degrees.",
+  "item.golemfirststonemod.item_description.item_instruction_turn_right": "Command an Agent to turn right 90 degrees.",
+  "item.golemfirststonemod.item_description.item_instruction_if_block": "Have an Agent see if the block in front matches the given block, then perform the next command if so.",
+  "item.golemfirststonemod.item_description.item_instruction_if_solid": "Have an Agent see if the block in front is solid, then perform the next command if so.",
+  "item.golemfirststonemod.item_description.item_instruction_use_block": "Command an Agent to use the block in front of them (e.g. press a button).",
+  "item.golemfirststonemod.item_description.item_instruction_place_block": "Command an Agent to place the given block in front of them.",
+  "item.golemfirststonemod.item_description.item_instruction_break_block": "Command an Agent to break the block in front of them.",
+
   "sound.golemfirststonemod.item_dandori_call": "Golem Dandori Call",
   "sound.golemfirststonemod.item_dandori_attack_fail": "Golem Dandori Attack - Failed",
   "sound.golemfirststonemod.item_dandori_attack_win": "Golem Dandori Attack - Success",
   "sound.golemfirststonemod.item_dandori_throw": "Golem pawn thrown",
   "sound.golemfirststonemod.entity_villager_dandori_pluck": "Golem pawn attention",
 
-  "creativetab.golemfirststonemod": "Golem Dandori"
+  "creativetab.golemfirststonemod": "Golem Dandori",
+  "creativetab.golemfirststonemodagent": "Golem Dandori: Agent"
 }

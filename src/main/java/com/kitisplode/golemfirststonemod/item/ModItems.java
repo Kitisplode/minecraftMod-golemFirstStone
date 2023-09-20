@@ -60,20 +60,26 @@ public class ModItems
     public static final RegistryObject<Item> ITEM_FLAME_OF_CREATION_RED = ITEMS.register("item_flame_of_creation_red",
             () -> new Item(new Item.Properties().stacksTo(1)));
 
+
+    public static final RegistryObject<Item> ITEM_SPAWN_GOLEM_AGENT = ITEMS.register("item_spawn_golem_agent",
+            () -> new ForgeSpawnEggItem(ModEntities.ENTITY_GOLEM_AGENT, 0xDFDFDF, 0x755452,
+                    new Item.Properties()));
     public static final RegistryObject<Item> ITEM_INSTRUCTION_MOVE_FORWARD = ITEMS.register("item_instruction_move_forward",
-            () -> new Item(new Item.Properties().stacksTo(16)));
+            () -> new ItemInstruction(new Item.Properties().stacksTo(16), "item.golemfirststonemod.item_description.item_instruction_move_forward"));
     public static final RegistryObject<Item> ITEM_INSTRUCTION_TURN_LEFT_90 = ITEMS.register("item_instruction_turn_left_90",
-            () -> new Item(new Item.Properties().stacksTo(2)));
+            () -> new ItemInstruction(new Item.Properties().stacksTo(2), "item.golemfirststonemod.item_description.item_instruction_turn_left"));
     public static final RegistryObject<Item> ITEM_INSTRUCTION_TURN_RIGHT_90 = ITEMS.register("item_instruction_turn_right_90",
-            () -> new Item(new Item.Properties().stacksTo(2)));
+            () -> new ItemInstruction(new Item.Properties().stacksTo(2), "item.golemfirststonemod.item_description.item_instruction_turn_right"));
     public static final RegistryObject<Item> ITEM_INSTRUCTION_IF_BLOCK = ITEMS.register("item_instruction_if_block",
-            () -> new Item(new Item.Properties().stacksTo(1)));
+            () -> new ItemInstruction(new Item.Properties().stacksTo(1), "item.golemfirststonemod.item_description.item_instruction_if_block"));
     public static final RegistryObject<Item> ITEM_INSTRUCTION_IF_SOLID = ITEMS.register("item_instruction_if_solid",
-            () -> new Item(new Item.Properties().stacksTo(1)));
+            () -> new ItemInstruction(new Item.Properties().stacksTo(1), "item.golemfirststonemod.item_description.item_instruction_if_solid"));
     public static final RegistryObject<Item> ITEM_INSTRUCTION_USE_BLOCK = ITEMS.register("item_instruction_use_block",
-            () -> new Item(new Item.Properties().stacksTo(1)));
+            () -> new ItemInstruction(new Item.Properties().stacksTo(1), "item.golemfirststonemod.item_description.item_instruction_use_block"));
     public static final RegistryObject<Item> ITEM_INSTRUCTION_PLACE_BLOCK = ITEMS.register("item_instruction_place_block",
-            () -> new Item(new Item.Properties().stacksTo(1)));
+            () -> new ItemInstruction(new Item.Properties().stacksTo(1), "item.golemfirststonemod.item_description.item_instruction_place_block"));
+    public static final RegistryObject<Item> ITEM_INSTRUCTION_BREAK_BLOCK = ITEMS.register("item_instruction_break_block",
+            () -> new ItemInstruction(new Item.Properties().stacksTo(1), "item.golemfirststonemod.item_description.item_instruction_break_block"));
 
 
     // Called to actually register the items list.

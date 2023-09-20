@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "golemfirststonemod:item/agent_instruction/item_instruction_turn_left_90"
+    "layer0": "golemfirststonemod:item/agent_instruction/item_instruction_turn_left"
   }
 }

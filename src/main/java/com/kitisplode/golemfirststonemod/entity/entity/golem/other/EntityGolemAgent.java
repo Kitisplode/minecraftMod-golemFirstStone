@@ -12,6 +12,8 @@ import com.kitisplode.golemfirststonemod.menu.InventoryMenuAgent;
 import com.kitisplode.golemfirststonemod.networking.ModMessages;
 import com.kitisplode.golemfirststonemod.networking.packet.S2CPacketAgentScreenOpen;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.game.ClientboundHorseScreenOpenPacket;
@@ -19,7 +21,9 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.EntityType;
@@ -37,6 +41,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
@@ -53,10 +58,13 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     public static final ResourceLocation GLOWMASK = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/other/golem_agent_glowmask.png");
     public static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/golem_agent.animation.json");
 
+    public static final byte ENTITY_EVENT_TOOL_BROKEN = 47;
+
     private static final EntityDataAccessor<Boolean> ACTIVE = SynchedEntityData.defineId(EntityGolemAgent.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Float> ARM_SWING = SynchedEntityData.defineId(EntityGolemAgent.class, EntityDataSerializers.FLOAT);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 
+    private ItemStack lastHeldItem;
     private static final float armSwingAmount = 0.15f;
     private static final float armSwingAmountStart = 180.0f;
     protected SimpleContainer inventory;
@@ -155,6 +163,11 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
         return this.inventory;
     }
 
+    public ItemStack getHeldItem()
+    {
+        return this.inventory.getItem(0);
+    }
+
     @Override
     public double getEyeY()
     {
@@ -208,6 +221,10 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
         {
             float swing = Mth.lerp(armSwingAmount, this.getArmSwing(), 0.0f);
             this.setArmSwing(swing);
+        }
+        if (this.getHeldItem() != null && !(this.getHeldItem().isEmpty()))
+        {
+            this.lastHeldItem = this.getHeldItem();
         }
     }
 
@@ -274,6 +291,37 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
         if (this.getActive()) return InteractionResult.PASS;
         this.openCustomInventoryScreen(pPlayer);
         return InteractionResult.sidedSuccess(this.level().isClientSide);
+    }
+
+    public void handleEntityEvent(byte pId)
+    {
+        if (pId == ENTITY_EVENT_TOOL_BROKEN)
+        {
+            if (!this.isSilent()) {
+                this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_BREAK, this.getSoundSource(), 0.8F, 0.8F + this.level().random.nextFloat() * 0.4F, false);
+            }
+
+            if (this.lastHeldItem != null) this.spawnItemParticles(this.lastHeldItem, 5);
+        }
+        else super.handleEntityEvent(pId);
+    }
+
+    private void spawnItemParticles(ItemStack pStack, int pAmount) {
+        for(int i = 0; i < pAmount; ++i) {
+            Vec3 vec3 = new Vec3(((double)this.random.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+            vec3 = vec3.xRot(-this.getXRot() * ((float)Math.PI / 180F));
+            vec3 = vec3.yRot(-this.getYRot() * ((float)Math.PI / 180F));
+            double d0 = (double)(-this.random.nextFloat()) * 0.6D - 0.3D;
+            Vec3 vec31 = new Vec3(((double)this.random.nextFloat() - 0.5D) * 0.3D, d0, 0.6D);
+            vec31 = vec31.xRot(-this.getXRot() * ((float)Math.PI / 180F));
+            vec31 = vec31.yRot(-this.getYRot() * ((float)Math.PI / 180F));
+            vec31 = vec31.add(this.getX(), this.getEyeY(), this.getZ());
+            if (this.level() instanceof ServerLevel) //Forge: Fix MC-2518 spawnParticle is nooped on server, need to use server specific variant
+                ((ServerLevel) this.level()).sendParticles(new ItemParticleOption(ParticleTypes.ITEM, pStack), vec31.x, vec31.y, vec31.z, 1, vec3.x, vec3.y + 0.05D, vec3.z, 0.0D);
+            else
+                this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, pStack), vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z);
+        }
+
     }
 
     public ResourceLocation getModelLocation()
