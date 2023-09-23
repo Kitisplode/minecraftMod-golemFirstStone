@@ -33,5 +33,19 @@
     "sounds": [
       "golemfirststonemod:item_dandori_throw"
     ]
+  },
+  "item_dandori_banner_01":
+  {
+    "subtitle": "sound.golemfirststonemod.item_dandori_banner",
+    "sounds": [
+      "golemfirststonemod:item_dandori_banner_01"
+    ]
+  },
+  "item_dandori_banner_02":
+  {
+    "subtitle": "sound.golemfirststonemod.item_dandori_banner",
+    "sounds": [
+      "golemfirststonemod:item_dandori_banner_02"
+    ]
   }
 }

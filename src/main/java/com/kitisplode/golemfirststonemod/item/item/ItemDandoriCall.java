@@ -13,6 +13,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -32,14 +34,16 @@ import java.util.List;
 
 public class ItemDandoriCall extends Item implements IItemSwingUse
 {
-    static private final double dandoriRange = 10;
-    static private final int maxUseTime = 40;
-    static private final int dandoriForceTime = 5;
-    static private final int cooldownTime = 20;
-    static private final double maxAttackRange = 48;
+    static protected final double dandoriRange = 10;
+    static protected final int maxUseTime = 40;
+    static protected final int dandoriForceTime = 5;
+    static protected final int cooldownTime = 20;
+    static protected final double maxAttackRange = 48;
 
-    static private final int fullDeployTime = 15;
-    private int fullDeployTimer = 0;
+    static protected final MobEffectInstance glowEffect = new MobEffectInstance(MobEffects.GLOWING, 100, 0, false, false);
+
+    static protected final int fullDeployTime = 15;
+    protected int fullDeployTimer = 0;
 
     public ItemDandoriCall(Properties pProperties)
     {
@@ -136,6 +140,17 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
         return UseAnim.TOOT_HORN;
     }
 
+    protected void playWhistleSound(Player pPlayer)
+    {
+        pPlayer.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.4f, 0.8f);
+        pPlayer.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.4f, 0.9f);
+    }
+    protected void playWhistleSoundForced(LivingEntity pLivingEntity)
+    {
+        pLivingEntity.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.4f, 0.8f);
+        pLivingEntity.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.4f, 0.95f);
+    }
+
     @Override
     @NotNull
     public InteractionResultHolder<ItemStack> use(Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand)
@@ -155,8 +170,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
             }
         }
 
-        pPlayer.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.4f, 0.8f);
-        pPlayer.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.4f, 0.9f);
+        this.playWhistleSound(pPlayer);
         pPlayer.startUsingItem(pUsedHand);
         ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
         pPlayer.swing(InteractionHand.MAIN_HAND);
@@ -181,14 +195,13 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
                     {
                         effectWhistle(pLevel, pLivingEntity, actualDandoriForceTime);
                     }
+                    this.playWhistleSoundForced(pLivingEntity);
                 }
             }
             else
             {
                 spawnParticles(pLevel, pLivingEntity);
             }
-            pLivingEntity.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.4f, 0.8f);
-            pLivingEntity.playSound(ModSounds.ITEM_DANDORI_CALL.get(), 0.4f, 0.95f);
         }
     }
 
@@ -208,7 +221,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
             ((Player) pEntityLiving).getCooldowns().addCooldown(this, cooldownTime);
     }
 
-    private int dandoriWhistle(Level world, LivingEntity user, boolean forceDandori, IEntityDandoriFollower.DANDORI_STATES dandoriValue)
+    protected int dandoriWhistle(Level world, LivingEntity user, boolean forceDandori, IEntityDandoriFollower.DANDORI_STATES dandoriValue)
     {
         int targetCount = 0;
         List<Mob> targetList = world.getEntitiesOfClass(Mob.class, user.getBoundingBox().inflate(dandoriRange));
@@ -230,12 +243,16 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
             if (target.getTarget() == null || forceDandori)
             {
                 dandoriTarget.setDandoriState(dandoriValue.ordinal());
+                if (dandoriValue != IEntityDandoriFollower.DANDORI_STATES.OFF)
+                {
+                    target.addEffect(new MobEffectInstance(glowEffect));
+                }
             }
         }
         return targetCount;
     }
 
-    private int dandoriDeploy(Level world, LivingEntity user, BlockPos position, boolean forceDandori, DataDandoriCount.FOLLOWER_TYPE currentType, int count)
+    protected int dandoriDeploy(Level world, LivingEntity user, BlockPos position, boolean forceDandori, DataDandoriCount.FOLLOWER_TYPE currentType, int count)
     {
         if (position == null) return 0;
 
@@ -267,7 +284,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
         return targetCount;
     }
 
-    private void spawnParticles(Level world, LivingEntity user)
+    protected void spawnParticles(Level world, LivingEntity user)
     {
         Vec3 particlePos = new Vec3(0,0,1);
         particlePos = particlePos.yRot(user.getYRot() * -Mth.DEG_TO_RAD);
@@ -277,7 +294,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
                 particlePos.x * 3, particlePos.y, particlePos.z * 3);
     }
 
-    private void effectWhistle(Level world, LivingEntity user, int time)
+    protected void effectWhistle(Level world, LivingEntity user, int time)
     {
         EntityEffectCubeDandoriWhistle whistleEffect = ModEntities.ENTITY_EFFECT_CUBE_DANDORI_WHISTLE.get().create(world);
         if (whistleEffect != null)
@@ -290,7 +307,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse
         }
     }
 
-    private void effectDeploy(Level world, int time, float size, Vec3 position)
+    protected void effectDeploy(Level world, int time, float size, Vec3 position)
     {
         EntityEffectCubeDandoriWhistle whistleEffect = ModEntities.ENTITY_EFFECT_CUBE_DANDORI_WHISTLE.get().create(world);
         if (whistleEffect != null)

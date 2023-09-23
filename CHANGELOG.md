@@ -111,3 +111,7 @@
     + Fixed issue with Mossy Golems being attacked by Villager Iron Golems after healing a Villager. I hope lol...
     + Reduced amplifiers on Foresight Pawn's buffs from 2 to 0.
     + Added Agent Golem
+        - Some item interactions on the Use Item instruction might not be done yet...
+        - Currently available only in creative mode / with cheats, i'm not yet sure about survival integration
+    + Added Dandori Staff item
+        - It's the Dandori Call item, except you click directly on the golems you want to follow you instead.

@@ -45,6 +45,7 @@ public class ModCreativeModTabs
 
                         pOutput.accept(ModItems.ITEM_DANDORI_CALL.get());
                         pOutput.accept(ModItems.ITEM_DANDORI_BANNER.get());
+                        pOutput.accept(ModItems.ITEM_DANDORI_STAFF.get());
                         pOutput.accept(ModItems.ITEM_DANDORI_ATTACK.get());
                         pOutput.accept(ModItems.ITEM_DANDORI_DIG.get());
                         pOutput.accept(ModItems.ITEM_DANDORI_THROW.get());
@@ -63,7 +64,7 @@ public class ModCreativeModTabs
                         pOutput.accept(ModItems.ITEM_INSTRUCTION_TURN_RIGHT_90.get());
                         pOutput.accept(ModItems.ITEM_INSTRUCTION_IF_BLOCK.get());
                         pOutput.accept(ModItems.ITEM_INSTRUCTION_IF_SOLID.get());
-                        pOutput.accept(ModItems.ITEM_INSTRUCTION_USE_BLOCK.get());
+//                        pOutput.accept(ModItems.ITEM_INSTRUCTION_USE_BLOCK.get());
                         pOutput.accept(ModItems.ITEM_INSTRUCTION_PLACE_BLOCK.get());
                         pOutput.accept(ModItems.ITEM_INSTRUCTION_BREAK_BLOCK.get());
                         pOutput.accept(ModItems.ITEM_INSTRUCTION_USE_TOOL.get());

@@ -1,5 +1,6 @@
 package com.kitisplode.golemfirststonemod.menu;
 
+import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.other.EntityGolemAgent;
 import com.kitisplode.golemfirststonemod.item.item.ItemInstruction;
 import com.kitisplode.golemfirststonemod.menu.InventoryMenuAgent;
@@ -18,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class InventoryScreenAgent extends AbstractContainerScreen<InventoryMenuAgent>
 {
-    private static final ResourceLocation BG = new ResourceLocation("textures/gui/container/horse.png");
+    private static final ResourceLocation BG = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/screen_agent.png");
     private EntityGolemAgent agent;
 
     /** The mouse x-position recorded during the last rendered frame. */

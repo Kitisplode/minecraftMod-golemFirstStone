@@ -54,6 +54,8 @@ public class ModItems
             () -> new ItemDandoriThrow(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ITEM_DANDORI_BANNER = ITEMS.register("item_dandori_banner",
             () -> new ItemDandoriBanner(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ITEM_DANDORI_STAFF = ITEMS.register("item_dandori_staff",
+            () -> new ItemDandoriStaff(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<Item> ITEM_FLAME_OF_CREATION_BLUE = ITEMS.register("item_flame_of_creation_blue",
             () -> new Item(new Item.Properties().stacksTo(1)));

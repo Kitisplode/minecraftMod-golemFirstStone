@@ -14,6 +14,8 @@ public class ModSounds
             DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, GolemFirstStoneMod.MOD_ID);
 
     public static final RegistryObject<SoundEvent> ITEM_DANDORI_CALL = registerSoundEvent("item_dandori_call");
+    public static final RegistryObject<SoundEvent> ITEM_DANDORI_BANNER_01 = registerSoundEvent("item_dandori_banner_01");
+    public static final RegistryObject<SoundEvent> ITEM_DANDORI_BANNER_02 = registerSoundEvent("item_dandori_banner_02");
     public static final RegistryObject<SoundEvent> ITEM_DANDORI_ATTACK_FAIL = registerSoundEvent("item_dandori_attack_fail");
     public static final RegistryObject<SoundEvent> ITEM_DANDORI_ATTACK_WIN = registerSoundEvent("item_dandori_attack_win");
     public static final RegistryObject<SoundEvent> ITEM_DANDORI_THROW = registerSoundEvent("item_dandori_throw");
