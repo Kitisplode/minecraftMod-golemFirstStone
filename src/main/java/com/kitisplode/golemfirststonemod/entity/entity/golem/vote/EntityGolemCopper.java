@@ -189,7 +189,7 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         this.goalSelector.addGoal(7, new CopperGolemLookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(7, new CopperGolemLookAtPlayerGoal(this, AbstractVillager.class, 6.0F));
         this.goalSelector.addGoal(8, new CopperGolemRandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new BlockTargetGoal(this, 16, 75, true, true, bsPredicate, true));
+        this.targetSelector.addGoal(1, new BlockTargetGoal(this, 16, 50, true, true, bsPredicate, true));
     }
 
     @Override
@@ -216,15 +216,6 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         if (oxidation == 3 || this.isImmobile()) speed = 0.0f;
         this.xxa *= speed;
         this.zza *= speed;
-    }
-
-    @Override
-    protected void updateDeployPosition()
-    {
-        if (this.getDeployPosition() != null)
-        {
-            if (this.distanceToSqr(this.getDeployPosition().getCenter()) < 4) this.setDeployPosition(null);
-        }
     }
 
     @Override
