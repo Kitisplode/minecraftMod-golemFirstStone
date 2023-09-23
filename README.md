@@ -58,17 +58,41 @@ Like in their trailer from Mob Vote 2022, these golems like to pick up and proud
 
 Agent Golem
 The Agent Golem is constructed by placing a carved pumpkin upon a command block.
-They can be programmed using special instruction items placed in their inventory and can perform many actions that 
+They can be programmed using special instruction items placed in their inventory and can perform many actions that are usually reserved for players only.
 
-Each First has 500 HP and special attacks. (Previously 1000 but that seemed a little much)
+---
 
-First of Stone has an AoE melee attack that deals massive damage and knocks back many enemies at once.
+The Firsts:
+Each First has 500 HP and special attacks. (Previously 1000 but that seemed a little much lol)
+They take a bit of effort to create as the player will need to track down their heads then place them in their matching bodies scattered throughout the world.
 
-First of Oak shoots arrows with a huge range that deal AoE damage around the impact point.
+First of Stone
+Craft a Chiseled Stone Head by surrounding a Lodestone with Stone blocks, then find a broken down First of Stone structure out in the world and reawaken it!
+It attacks with an AoE melee attack that deals massive damage and knocks back many enemies at once.
 
-First of Brick, instead of attacking, will approach allies that are under attack and cast an AoE shield spell that gives all nearby allies a short burst of absorption.
+First of Oak
+Craft a Carved Oak Head with a Lodestone and Oak Wood blocks, and place it in a First of Oak structure in the world.
+When it spots an enemy from far away, it can shoot arrows from a huge range that deal AoE damage around the impact point.
 
-First of Diorite also does not attack directly, instead summoning a small group of Diorite Pawns to attack its targets instead.
+First of Brick
+Craft a Sculpted Emerald Head with a Lodestone and Emerald blocks, then place it in a First of Brick structure in the world.
+Instead of attacking, the First of Brick will approach allies that are under attack and cast an AoE shield spell that gives all nearby allies a short burst of Absorption.
+
+First of Diorite
+Craft a Sculpted Gold Head with a Lodestone and Gold blocks, then place it in a First of Diorite structure in the world.
+The First of Diorite also does not attack directly, instead summoning a small group of Diorite Pawns to attack its targets instead.
+I didn't really like the idea of it spawning the small golems since i felt players should make those themselves, so they have their own special Diorite Pawns based on some familiar faces...
+
+You can alternatively obtain the First Heads from associated villagers in some villages instead of crafting them (this might become the only way at some point idk)
+
+---
+
+Banner of Courage
+Use the Banner of Courage to lead your golems!
+Right click to call any of your nearby idle golems to follow you. Hold it a little longer to recall busy golems, too! Then lead them around! Shift right click to dismiss your followers, and they'll go about their own business there.
+Left click to send 1 of your selected golems to the location you're looking at. Hold it a little longer, and you'll send all of your selected golems to that location together.
+You can cycle between the different types of golems to command with shift left click. If you don't have a specific type selected, then your commands will apply to any of your golems.
+You can craft a Banner of Courage using 3 Sticks and 2 Wool Carpets.
 
 ---
 
@@ -76,6 +100,7 @@ Features currently planned for future updates:
 + Add some interactions between the Firsts and the villagers, similar to the Iron Golem.
 + Maybe some of the other golems from other Minecraft spinoffs?
 + Some refinement in how to spawn golems to make it more... interesting?
++ Additional behaviors for Mob Vote golems to make them... useful... lol
 + More Dandori???
 
 ---
