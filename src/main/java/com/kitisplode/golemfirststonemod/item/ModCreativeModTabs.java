@@ -66,6 +66,10 @@ public class ModCreativeModTabs
                         pOutput.accept(ModItems.ITEM_INSTRUCTION_USE_BLOCK.get());
                         pOutput.accept(ModItems.ITEM_INSTRUCTION_PLACE_BLOCK.get());
                         pOutput.accept(ModItems.ITEM_INSTRUCTION_BREAK_BLOCK.get());
+                        pOutput.accept(ModItems.ITEM_INSTRUCTION_USE_TOOL.get());
+                        pOutput.accept(ModItems.ITEM_INSTRUCTION_ATTACK.get());
+                        pOutput.accept(ModItems.ITEM_INSTRUCTION_LOOP.get());
+                        pOutput.accept(ModItems.ITEM_INSTRUCTION_NOT.get());
                     })
                     .build());
 

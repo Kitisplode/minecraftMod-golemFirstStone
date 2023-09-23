@@ -1,13 +1,20 @@
 package com.kitisplode.golemfirststonemod.menu;
 
 import com.kitisplode.golemfirststonemod.entity.entity.golem.other.EntityGolemAgent;
+import com.kitisplode.golemfirststonemod.item.item.ItemInstruction;
 import com.kitisplode.golemfirststonemod.menu.InventoryMenuAgent;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 public class InventoryScreenAgent extends AbstractContainerScreen<InventoryMenuAgent>
 {
@@ -47,6 +54,41 @@ public class InventoryScreenAgent extends AbstractContainerScreen<InventoryMenuA
         this.xMouse = (float)pMouseX;
         this.yMouse = (float)pMouseY;
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        this.inner_render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+    }
+
+    public void inner_render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick)
+    {
+        int i = this.leftPos;
+        int j = this.topPos;
+        RenderSystem.disableDepthTest();
+        pGuiGraphics.pose().pushPose();
+        pGuiGraphics.pose().translate((float)i, (float)j, 0.0F);
+
+        for(int k = 0; k < this.menu.slots.size(); ++k) {
+            Slot slot = this.menu.slots.get(k);
+
+            if (this.isHovering(slot, pMouseX, pMouseY) && slot.isActive()) {
+                ItemStack item = slot.getItem();
+                if (item.getItem() instanceof ItemInstruction itemInstruction)
+                {
+                    int highlightedSlotCount = itemInstruction.getInstructionCount();
+                    for (int s = 1; s < highlightedSlotCount + 1; s++)
+                    {
+                        if (s >= this.menu.slots.size()) break;
+                        Slot extraSlot = this.menu.slots.get(k + s);
+                        renderSlotHighlight(pGuiGraphics, extraSlot.x, extraSlot.y, 0, getSlotColor(k + s));
+                    }
+                }
+            }
+        }
+
+        pGuiGraphics.pose().popPose();
+        RenderSystem.enableDepthTest();
+    }
+
+    private boolean isHovering(Slot pSlot, double pMouseX, double pMouseY) {
+        return this.isHovering(pSlot.x, pSlot.y, 16, 16, pMouseX, pMouseY);
     }
 }

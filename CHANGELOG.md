@@ -106,3 +106,8 @@
             = Knowledge Pawn: Acts the same as the Plank Golem, but with 15 HP
             = Foresight Pawn: Floats around, acts similarly to the Mossy Golem, but it gives nearby Pawns random buffs, has 20 HP
     + Golems now default to patrol mode when not being led (e.g. they'll return to a position after performing other actions)
+
+# 0.0.11
+    + Fixed issue with Mossy Golems being attacked by Villager Iron Golems after healing a Villager. I hope lol...
+    + Reduced amplifiers on Foresight Pawn's buffs from 2 to 0.
+    + Added Agent Golem

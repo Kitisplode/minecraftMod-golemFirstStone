@@ -9,6 +9,8 @@
     "entity/MixinIronGolem",
     "entity/MixinSnowGolem",
     "entity/MixinPlayer",
+    "MixinMushroomCowAccessor",
+    "MixinItemFrameAccessor",
     "MixinStructurePoolAccessor",
     "MixinServerLevel"
   ],

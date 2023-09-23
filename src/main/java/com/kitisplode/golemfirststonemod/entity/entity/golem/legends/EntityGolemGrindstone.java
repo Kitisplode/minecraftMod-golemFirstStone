@@ -269,6 +269,12 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
         return this.getBbHeight() * 1.25d;
     }
 
+    public Vec3 getDismountLocationForPassenger(LivingEntity pPassenger)
+    {
+        this.setDeployPosition(null);
+        return super.getDismountLocationForPassenger(pPassenger);
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar)
     {

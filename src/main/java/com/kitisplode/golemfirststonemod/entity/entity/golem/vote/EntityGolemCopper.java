@@ -288,17 +288,17 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         {
             if (this.getWaxed())
             {
-                this.level().playSound(pPlayer, this.getOnPos(), SoundEvents.AXE_WAX_OFF, SoundSource.BLOCKS, 1.0f, 1.0f);
+                this.level().playSound(pPlayer, this.getOnPos(0.5f), SoundEvents.AXE_WAX_OFF, SoundSource.NEUTRAL, 1.0f, 1.0f);
                 this.setWaxed(false);
-                ParticleUtils.spawnParticlesOnBlockFaces(this.level(), this.getOnPos(), ParticleTypes.WAX_OFF, UniformInt.of(3, 5));
+                ParticleUtils.spawnParticlesOnBlockFaces(this.level(), this.getOnPos(0.5f), ParticleTypes.WAX_OFF, UniformInt.of(3, 5));
             }
             else
             {
                 int oxidation = this.getOxidation();
                 if (oxidation == 0) return InteractionResult.PASS;
-                this.level().playSound(pPlayer, this.getOnPos(), SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0f, 1.0f);
+                this.level().playSound(pPlayer, this.getOnPos(), SoundEvents.AXE_SCRAPE, SoundSource.NEUTRAL, 1.0f, 1.0f);
                 this.setOxidation(oxidation - 1);
-                ParticleUtils.spawnParticlesOnBlockFaces(this.level(), this.getOnPos(), ParticleTypes.SCRAPE, UniformInt.of(3, 5));
+                ParticleUtils.spawnParticlesOnBlockFaces(this.level(), this.getOnPos(0.5f), ParticleTypes.SCRAPE, UniformInt.of(3, 5));
             }
             this.nextOxidationCounter = 0;
 
@@ -308,7 +308,7 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         {
             if (this.getWaxed()) return InteractionResult.PASS;
             this.setWaxed(true);
-            this.level().playSound(pPlayer, this.getOnPos(), SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS, 1.0f, 1.0f);
+            this.level().playSound(pPlayer, this.getOnPos(), SoundEvents.HONEYCOMB_WAX_ON, SoundSource.NEUTRAL, 1.0f, 1.0f);
             ParticleUtils.spawnParticlesOnBlockFaces(this.level(), this.getOnPos(), ParticleTypes.WAX_ON, UniformInt.of(3, 5));
 
             return InteractionResult.SUCCESS;

@@ -26,9 +26,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.*;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.HasCustomInventoryScreen;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -38,7 +36,11 @@ import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.FishingHook;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -49,6 +51,8 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.Animation;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
+
+import javax.annotation.Nullable;
 
 public class EntityGolemAgent extends AbstractGolemDandoriFollower implements ContainerListener, InventoryCarrier, HasCustomInventoryScreen, GeoEntity, IEntityDandoriFollower
 {
@@ -61,6 +65,7 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     public static final byte ENTITY_EVENT_TOOL_BROKEN = 47;
 
     private static final EntityDataAccessor<Boolean> ACTIVE = SynchedEntityData.defineId(EntityGolemAgent.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> SWINGING_ARM = SynchedEntityData.defineId(EntityGolemAgent.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Float> ARM_SWING = SynchedEntityData.defineId(EntityGolemAgent.class, EntityDataSerializers.FLOAT);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 
@@ -69,6 +74,8 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     private static final float armSwingAmountStart = 180.0f;
     protected SimpleContainer inventory;
     private net.minecraftforge.common.util.LazyOptional<?> itemHandler = null;
+    @Nullable
+    public FishingHook fishing;
 
     public EntityGolemAgent(EntityType<? extends IronGolem> pEntityType, Level pLevel)
     {
@@ -96,6 +103,7 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     {
         super.defineSynchedData();
         if (!this.entityData.hasItem(ACTIVE)) this.entityData.define(ACTIVE, false);
+        if (!this.entityData.hasItem(SWINGING_ARM)) this.entityData.define(SWINGING_ARM, false);
         if (!this.entityData.hasItem(ARM_SWING)) this.entityData.define(ARM_SWING, 0.0f);
     }
     public boolean getActive()
@@ -117,6 +125,14 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     public void swingArm()
     {
         this.entityData.set(ARM_SWING, armSwingAmountStart);
+    }
+    public boolean getSwingingArm()
+    {
+        return this.entityData.get(SWINGING_ARM);
+    }
+    public void setSwingingArm(boolean pBoolean)
+    {
+        this.entityData.set(SWINGING_ARM, pBoolean);
     }
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
@@ -166,6 +182,11 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     public ItemStack getHeldItem()
     {
         return this.inventory.getItem(0);
+    }
+    @Override
+    public ItemStack getMainHandItem()
+    {
+        return getHeldItem();
     }
 
     @Override
@@ -221,7 +242,9 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
         {
             float swing = Mth.lerp(armSwingAmount, this.getArmSwing(), 0.0f);
             this.setArmSwing(swing);
+            this.setSwingingArm(true);
         }
+        else this.setSwingingArm(false);
         if (this.getHeldItem() != null && !(this.getHeldItem().isEmpty()))
         {
             this.lastHeldItem = this.getHeldItem();
@@ -301,7 +324,7 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
                 this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_BREAK, this.getSoundSource(), 0.8F, 0.8F + this.level().random.nextFloat() * 0.4F, false);
             }
 
-            if (this.lastHeldItem != null) this.spawnItemParticles(this.lastHeldItem, 5);
+            this.spawnItemParticles(this.getHeldItem(), 5);
         }
         else super.handleEntityEvent(pId);
     }
@@ -322,6 +345,59 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
                 this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, pStack), vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z);
         }
 
+    }
+
+    public boolean doHurtTarget(Entity pEntity) {
+        float f = (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        float f1 = (float)this.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
+        if (pEntity instanceof LivingEntity) {
+            f += EnchantmentHelper.getDamageBonus(this.getMainHandItem(), ((LivingEntity)pEntity).getMobType());
+            f1 += (float)EnchantmentHelper.getKnockbackBonus(this);
+        }
+        int i = EnchantmentHelper.getFireAspect(this);
+        if (i > 0) {
+            pEntity.setSecondsOnFire(i * 4);
+        }
+        boolean flag = pEntity.hurt(this.damageSources().mobAttack(this), f);
+        if (flag) {
+            if (f1 > 0.0F && pEntity instanceof LivingEntity) {
+                ((LivingEntity)pEntity).knockback((double)(f1 * 0.5F), (double)Mth.sin(this.getYRot() * ((float)Math.PI / 180F)), (double)(-Mth.cos(this.getYRot() * ((float)Math.PI / 180F))));
+                this.setDeltaMovement(this.getDeltaMovement().multiply(0.6D, 1.0D, 0.6D));
+            }
+
+            if (pEntity instanceof Player) {
+                Player player = (Player)pEntity;
+                this.maybeDisableShield(player, this.getMainHandItem(), player.isUsingItem() ? player.getUseItem() : ItemStack.EMPTY);
+            }
+            this.doEnchantDamageEffects(this, pEntity);
+            this.setLastHurtMob(pEntity);
+        }
+        return flag;
+    }
+
+    private void maybeDisableShield(Player pPlayer, ItemStack pMobItemStack, ItemStack pPlayerItemStack) {
+        if (!pMobItemStack.isEmpty() && !pPlayerItemStack.isEmpty() && pMobItemStack.getItem() instanceof AxeItem && pPlayerItemStack.is(Items.SHIELD)) {
+            float f = 0.25F + (float)EnchantmentHelper.getBlockEfficiency(this) * 0.05F;
+            if (this.random.nextFloat() < f) {
+                pPlayer.getCooldowns().addCooldown(Items.SHIELD, 100);
+                this.level().broadcastEntityEvent(pPlayer, (byte)30);
+            }
+        }
+    }
+
+    @Override
+    public boolean canAttack(LivingEntity pTarget) {
+        if (this.getOwner() == null) return super.canAttack(pTarget);
+        if (pTarget instanceof IEntityDandoriFollower dandoriFollower)
+        {
+            if (this.getOwner() == dandoriFollower.getOwner()) return false;
+            if (dandoriFollower.getOwner() instanceof IEntityDandoriFollower targetOwner)
+            {
+                if (this.getOwner() == targetOwner.getOwner()) return false;
+            }
+        }
+        if (pTarget instanceof TamableAnimal tamableAnimal && this.getOwner() == tamableAnimal.getOwner()) return false;
+        return super.canAttack(pTarget);
     }
 
     public ResourceLocation getModelLocation()

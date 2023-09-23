@@ -12,12 +12,10 @@ import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowSoftGoa
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriMoveToDeployPositionGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoalRanged;
 import com.kitisplode.golemfirststonemod.entity.goal.target.PassiveTargetGoal;
-import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -30,8 +28,6 @@ import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -204,7 +200,10 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
             ArrayList<MobEffectInstance> mobEffects = getStatusEffect();
             for (MobEffectInstance statusEffectInstance : mobEffects)
             {
-                target.addEffect(new MobEffectInstance(statusEffectInstance), this);
+                if (target instanceof AbstractVillager)
+                    target.addEffect(new MobEffectInstance(statusEffectInstance), null);
+                else
+                    target.addEffect(new MobEffectInstance(statusEffectInstance), target);
             }
         }
     }

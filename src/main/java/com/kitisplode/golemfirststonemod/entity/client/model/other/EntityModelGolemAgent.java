@@ -49,11 +49,14 @@ public class EntityModelGolemAgent extends GeoModel<EntityGolemAgent>
             }
         }
 
-        float armSwing = animatable.getArmSwing();
-        CoreGeoBone arm_right = getAnimationProcessor().getBone("arm_right");
-        if (arm_right != null)
+        if (animatable.getSwingingArm())
         {
-            arm_right.setRotX(armSwing * Mth.DEG_TO_RAD);
+            float armSwing = animatable.getArmSwing();
+            CoreGeoBone arm_right = getAnimationProcessor().getBone("arm_right");
+            if (arm_right != null && armSwing != 0.0f)
+            {
+                arm_right.setRotX(armSwing * Mth.DEG_TO_RAD);
+            }
         }
     }
 }
