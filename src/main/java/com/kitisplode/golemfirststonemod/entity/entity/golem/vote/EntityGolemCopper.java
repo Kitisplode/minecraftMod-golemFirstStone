@@ -11,7 +11,6 @@ import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowSoftGoa
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriMoveToDeployPositionGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackBlockGoalRanged;
 import com.kitisplode.golemfirststonemod.entity.goal.target.BlockTargetGoal;
-import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -40,7 +39,6 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ButtonBlock;
@@ -180,12 +178,12 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         this.goalSelector.addGoal(0, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
         this.goalSelector.addGoal(1, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 6));
 
-        this.goalSelector.addGoal(2, new CopperGolemAvoidEntityGoal<>(this, Monster.class, 16, 0.9D, 1));
-        this.goalSelector.addGoal(2, new CopperGolemPanicGoal(this, 1.0D));
+        this.goalSelector.addGoal(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
         this.goalSelector.addGoal(3, new MultiStageAttackBlockGoalRanged(this, 1.0, true, 9.0D, new int[]{40, 25, 10}));
+        this.goalSelector.addGoal(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 0));
 
-        this.goalSelector.addGoal(4, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
-        this.goalSelector.addGoal(5, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 0));
+        this.goalSelector.addGoal(5, new CopperGolemAvoidEntityGoal<>(this, Monster.class, 16, 0.9D, 1));
+        this.goalSelector.addGoal(5, new CopperGolemPanicGoal(this, 1.0D));
 
         this.goalSelector.addGoal(6, new CopperGolemRandomStrollInVillageGoal(this, 0.8D));
         this.goalSelector.addGoal(7, new CopperGolemLookAtPlayerGoal(this, Player.class, 6.0F));

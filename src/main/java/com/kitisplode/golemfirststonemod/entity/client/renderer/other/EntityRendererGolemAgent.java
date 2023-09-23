@@ -1,5 +1,6 @@
 package com.kitisplode.golemfirststonemod.entity.client.renderer.other;
 
+import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.client.model.other.EntityModelGolemAgent;
 import com.kitisplode.golemfirststonemod.entity.client.utils.AutoGlowingGeoLayerFixed;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.other.EntityGolemAgent;
@@ -46,7 +47,7 @@ public class EntityRendererGolemAgent extends GeoEntityRenderer<EntityGolemAgent
 
     private void renderHeldItem(EntityGolemAgent entity, float partialTick, PoseStack matrixStack, MultiBufferSource bufferSource, int packedLight)
     {
-        ItemStack itemStack = entity.getInventory().getItem(0);
+        ItemStack itemStack = entity.getMainHandItem();
         if (itemStack.isEmpty()) return;
 
         matrixStack.pushPose();
@@ -60,6 +61,8 @@ public class EntityRendererGolemAgent extends GeoEntityRenderer<EntityGolemAgent
         RenderUtils.prepMatrixForBone(matrixStack, body);
         RenderUtils.prepMatrixForBone(matrixStack, arm);
         RenderUtils.prepMatrixForBone(matrixStack, hand);
+        matrixStack.translate(hand.getPivotX()/16, hand.getPivotY()/16.0, (hand.getPivotZ() - 1)/16);
+        matrixStack.mulPose(Axis.XP.rotationDegrees(-90));
         matrixStack.scale(0.75f, 0.75f, 0.75f);
         this.itemInHandRenderer.renderItem(entity, itemStack, ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, false, matrixStack, bufferSource, packedLight);
         matrixStack.popPose();

@@ -35,6 +35,7 @@ import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.level.Level;
@@ -189,6 +190,8 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
     @NotNull
     public InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand)
     {
+        ItemStack playerItem = pPlayer.getItemInHand(pHand);
+        if (playerItem.is(ModItems.ITEM_DANDORI_STAFF.get())) return InteractionResult.PASS;
         if (!this.getPassengers().isEmpty()) return super.mobInteract(pPlayer, pHand);
         if (this.getOwner() != pPlayer) return super.mobInteract(pPlayer, pHand);
         this.doPlayerRide(pPlayer);

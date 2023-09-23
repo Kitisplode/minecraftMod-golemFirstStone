@@ -182,8 +182,8 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
         this.goalSelector.addGoal(0, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
         this.goalSelector.addGoal(1, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, 6));
 
-        this.goalSelector.addGoal(2, new PickupItemGoal(this, 1.0));
-        this.goalSelector.addGoal(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+        this.goalSelector.addGoal(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+        this.goalSelector.addGoal(3, new PickupItemGoal(this, 1.0));
 
         this.goalSelector.addGoal(4, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, 0));
 
@@ -277,17 +277,18 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
             this.endSleep();
             return InteractionResult.SUCCESS;
         }
+        ItemStack playerItem = pPlayer.getItemInHand(pHand);
+        if (playerItem.is(ModItems.ITEM_DANDORI_STAFF.get())) return InteractionResult.PASS;
         if (isSleeping()) return InteractionResult.PASS;
-        ItemStack itemStack = pPlayer.getItemInHand(pHand);
-        ItemStack itemStack2 = this.getItemInHand(InteractionHand.MAIN_HAND);
-        if (!itemStack2.isEmpty() && pHand == InteractionHand.MAIN_HAND && itemStack.isEmpty())
+        ItemStack golemItem = this.getItemInHand(InteractionHand.MAIN_HAND);
+        if (!golemItem.isEmpty() && pHand == InteractionHand.MAIN_HAND && playerItem.isEmpty())
         {
             soundPickup();
             this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-            pPlayer.addItem(itemStack2);
+            pPlayer.addItem(golemItem);
             return InteractionResult.SUCCESS;
         }
-        else if (itemStack2.isEmpty() && pHand == InteractionHand.MAIN_HAND && !itemStack.isEmpty())
+        else if (golemItem.isEmpty() && pHand == InteractionHand.MAIN_HAND && !playerItem.isEmpty())
         {
             EntitySoundRepeated sound = new EntitySoundRepeated(this.level(), this.getSoundSource());
             sound.setPos(this.position());
@@ -295,18 +296,18 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
             sound.addSoundNode(SoundEvents.IRON_GOLEM_REPAIR, 3, 0.25f, 1.5f);
             this.level().addFreshEntity(sound);
 
-            this.setItemInHand(InteractionHand.MAIN_HAND, itemStack.copyWithCount(1));
+            this.setItemInHand(InteractionHand.MAIN_HAND, playerItem.copyWithCount(1));
             this.setGuaranteedDrop(EquipmentSlot.MAINHAND);
-            this.removeInteractionItem(pPlayer, itemStack);
+            this.removeInteractionItem(pPlayer, playerItem);
             return InteractionResult.SUCCESS;
         }
-        else if (!itemStack2.isEmpty() && pHand == InteractionHand.MAIN_HAND && !itemStack.isEmpty())
+        else if (!golemItem.isEmpty() && pHand == InteractionHand.MAIN_HAND && !playerItem.isEmpty())
         {
             soundPickup();
-            pPlayer.addItem(itemStack2);
-            this.setItemInHand(InteractionHand.MAIN_HAND, itemStack.copyWithCount(1));
+            pPlayer.addItem(golemItem);
+            this.setItemInHand(InteractionHand.MAIN_HAND, playerItem.copyWithCount(1));
             this.setGuaranteedDrop(EquipmentSlot.MAINHAND);
-            this.removeInteractionItem(pPlayer, itemStack);
+            this.removeInteractionItem(pPlayer, playerItem);
             return InteractionResult.SUCCESS;
         }
         return super.mobInteract(pPlayer, pHand);

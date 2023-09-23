@@ -8,6 +8,7 @@ import com.kitisplode.golemfirststonemod.entity.goal.action.AgentFollowProgramGo
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowSoftGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriMoveToDeployPositionGoal;
+import com.kitisplode.golemfirststonemod.item.ModItems;
 import com.kitisplode.golemfirststonemod.menu.InventoryMenuAgent;
 import com.kitisplode.golemfirststonemod.networking.ModMessages;
 import com.kitisplode.golemfirststonemod.networking.packet.S2CPacketAgentScreenOpen;
@@ -183,11 +184,6 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     {
         return this.inventory.getItem(0);
     }
-    @Override
-    public ItemStack getMainHandItem()
-    {
-        return getHeldItem();
-    }
 
     @Override
     public double getEyeY()
@@ -284,6 +280,8 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     @Override
     public void containerChanged(Container pContainer)
     {
+        if (!this.level().isClientSide())
+            this.setItemInHand(InteractionHand.MAIN_HAND, this.getHeldItem());
     }
     public boolean hasInventoryChanged(Container pInventory) {
         return this.inventory != pInventory;
@@ -311,6 +309,8 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     @Override
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand)
     {
+        ItemStack playerItem = pPlayer.getItemInHand(pHand);
+        if (playerItem.is(ModItems.ITEM_DANDORI_STAFF.get())) return InteractionResult.PASS;
         if (this.getActive()) return InteractionResult.PASS;
         this.openCustomInventoryScreen(pPlayer);
         return InteractionResult.sidedSuccess(this.level().isClientSide);
