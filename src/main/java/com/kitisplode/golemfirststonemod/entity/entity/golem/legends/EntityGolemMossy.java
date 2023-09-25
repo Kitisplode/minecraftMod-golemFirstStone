@@ -203,7 +203,7 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
                 if (target instanceof AbstractVillager)
                     target.addEffect(new MobEffectInstance(statusEffectInstance), null);
                 else
-                    target.addEffect(new MobEffectInstance(statusEffectInstance), target);
+                    target.addEffect(new MobEffectInstance(statusEffectInstance), this);
             }
         }
     }

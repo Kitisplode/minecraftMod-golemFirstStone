@@ -101,6 +101,7 @@ Features currently planned for future updates:
 + Maybe some of the other golems from other Minecraft spinoffs?
 + Some refinement in how to spawn golems to make it more... interesting?
 + Additional behaviors for Mob Vote golems to make them... useful... lol
++ More refinement & behaviors for Agent Golem
 + More Dandori???
 
 ---

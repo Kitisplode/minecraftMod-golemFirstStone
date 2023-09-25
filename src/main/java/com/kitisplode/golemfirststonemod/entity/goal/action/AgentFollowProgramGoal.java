@@ -25,7 +25,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.stats.Stats;
 import net.minecraft.tags.*;
 import net.minecraft.util.Mth;
 import net.minecraft.util.ParticleUtils;
@@ -48,7 +47,6 @@ import net.minecraft.world.entity.vehicle.ChestBoat;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -246,7 +244,7 @@ public class AgentFollowProgramGoal extends Goal
         if (!(itemStack.getItem() instanceof ItemInstruction itemInstruction)) return null;
         ArrayList<ItemStack> tempList = (ArrayList<ItemStack>) items.clone();
         if (items.size() <= itemInstruction.getInstructionCount()) return null;
-        for (int i = 0; i <= itemInstruction.getInstructionCount(); i++) tempList.remove(0);
+        for (int i = 0; i < itemInstruction.getInstructionCount(); i++) tempList.remove(0);
 
         Instruction nextInstruction = this.pullInstructionFromFirstItem(tempList);
         if (nextInstruction == null) return null;
@@ -649,7 +647,7 @@ public class AgentFollowProgramGoal extends Goal
                 else
                 {
                     SoundType soundtype = bs.getSoundType(this.agent.level(), this.targetBlock, null);
-                    Minecraft.getInstance().getSoundManager().play(new SimpleSoundInstance(soundtype.getHitSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 8.0F, soundtype.getPitch() * 0.5F, SoundInstance.createUnseededRandom(), this.targetBlock));
+                    Minecraft.getInstance().getSoundManager().play(new SimpleSoundInstance(soundtype.getHitSound(), SoundSource.NEUTRAL, (soundtype.getVolume() + 1.0F) / 8.0F, soundtype.getPitch() * 0.5F, SoundInstance.createUnseededRandom(), this.targetBlock));
                 }
                 this.agent.level().destroyBlockProgress(this.agent.getId(), this.targetBlock, this.getDestroyStage());
             }
@@ -1537,7 +1535,7 @@ public class AgentFollowProgramGoal extends Goal
                 }
                 if (optional.isEmpty())
                 {
-                    Iterator<Holder<Instrument>> iterator = BuiltInRegistries.INSTRUMENT.getTagOrEmpty(InstrumentTags.GOAT_HORNS).iterator();
+                    Iterator<Holder<Instrument>> iterator = BuiltInRegistries.INSTRUMENT.getTagOrEmpty(instruments).iterator();
                     optional = iterator.hasNext() ? Optional.of(iterator.next()) : Optional.empty();
                 }
 
@@ -1708,7 +1706,7 @@ public class AgentFollowProgramGoal extends Goal
                         {
                             SoundEvent soundevent = this.usedItem.is(Items.ENCHANTED_BOOK) ? SoundEvents.CHISELED_BOOKSHELF_INSERT_ENCHANTED : SoundEvents.CHISELED_BOOKSHELF_INSERT;
                             shelfBe.setItem(i, this.usedItem.split(1));
-                            this.agent.level().playSound(null, bp, soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
+                            this.agent.level().playSound(null, bp, soundevent, SoundSource.NEUTRAL, 1.0F, 1.0F);
 
                             this.agent.level().gameEvent(this.agent, GameEvent.BLOCK_CHANGE, bp);
                             return true;
@@ -1721,7 +1719,7 @@ public class AgentFollowProgramGoal extends Goal
                     {
                         ItemStack newBook = shelfBe.removeItem(i, 1);
                         SoundEvent soundevent = newBook.is(Items.ENCHANTED_BOOK) ? SoundEvents.CHISELED_BOOKSHELF_PICKUP_ENCHANTED : SoundEvents.CHISELED_BOOKSHELF_PICKUP;
-                        this.agent.level().playSound(null, bp, soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        this.agent.level().playSound(null, bp, soundevent, SoundSource.NEUTRAL, 1.0F, 1.0F);
 
                         this.agent.level().gameEvent(this.agent, GameEvent.BLOCK_CHANGE, bp);
                         Block.popResource(this.agent.level(), this.agent.getOnPos().above(), newBook);
