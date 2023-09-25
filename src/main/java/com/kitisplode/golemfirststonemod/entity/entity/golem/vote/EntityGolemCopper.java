@@ -189,18 +189,18 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         this.goalSelector.add(0, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
         this.goalSelector.add(1, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 6));
 
-        this.goalSelector.add(2, new CopperGolemFleeEntityGoal<HostileEntity>(this, HostileEntity.class, 16.0f, 0.9, 1.0));
-        this.goalSelector.add(2, new CopperGolemEscapeDangerGoal(this, 1.0));
+        this.goalSelector.add(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
         this.goalSelector.add(3, new MultiStageAttackBlockGoalRanged(this, 1.0, true, 9.0D, new int[]{40, 25, 10}));
+        this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 0));
 
-        this.goalSelector.add(4, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
-        this.goalSelector.add(5, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 0));
+        this.goalSelector.add(5, new CopperGolemFleeEntityGoal<HostileEntity>(this, HostileEntity.class, 16.0f, 0.9, 1.0));
+        this.goalSelector.add(5, new CopperGolemEscapeDangerGoal(this, 1.0));
 
         this.goalSelector.add(6, new CopperGolemWanderAroundGoal(this, 0.8));
         this.goalSelector.add(7, new CopperGolemLookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(7, new CopperGolemLookAtEntityGoal(this, MerchantEntity.class, 6.0F));
         this.goalSelector.add(8, new CopperGolemLookAroundGoal(this));
-        this.targetSelector.add(1, new BlockTargetGoal(this, 16, 75, true, true, bsPredicate, true));
+        this.targetSelector.add(1, new BlockTargetGoal(this, 16, 50, true, true, bsPredicate, true));
     }
 
     @Override
@@ -218,15 +218,6 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
                 this.nextOxidationCounter = 0;
                 this.setOxidation(oxidation + 1);
             }
-        }
-    }
-
-    @Override
-    protected void updateDeployPosition()
-    {
-        if (this.getDeployPosition() != null)
-        {
-            if (this.squaredDistanceTo(this.getDeployPosition().toCenterPos()) < 4) this.setDeployPosition(null);
         }
     }
 
@@ -290,7 +281,7 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         {
             if (this.getWaxed())
             {
-                this.getWorld().playSound(player, this.getBlockPos(), SoundEvents.ITEM_AXE_WAX_OFF, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                this.getWorld().playSound(player, this.getBlockPos(), SoundEvents.ITEM_AXE_WAX_OFF, SoundCategory.NEUTRAL, 1.0f, 1.0f);
                 this.setWaxed(false);
                 ParticleUtil.spawnParticle(this.getWorld(), this.getBlockPos(), ParticleTypes.WAX_OFF, UniformIntProvider.create(3, 5));
             }
@@ -298,7 +289,7 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
             {
                 int oxidation = this.getOxidation();
                 if (oxidation == 0) return ActionResult.PASS;
-                this.getWorld().playSound(player, this.getBlockPos(), SoundEvents.ITEM_AXE_SCRAPE, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                this.getWorld().playSound(player, this.getBlockPos(), SoundEvents.ITEM_AXE_SCRAPE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
                 this.setOxidation(oxidation - 1);
                 ParticleUtil.spawnParticle(this.getWorld(), this.getBlockPos(), ParticleTypes.SCRAPE, UniformIntProvider.create(3, 5));
             }
@@ -310,7 +301,7 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         {
             if (this.getWaxed()) return ActionResult.PASS;
             this.setWaxed(true);
-            this.getWorld().playSound(player, this.getBlockPos(), SoundEvents.ITEM_HONEYCOMB_WAX_ON, SoundCategory.BLOCKS, 1.0f, 1.0f);
+            this.getWorld().playSound(player, this.getBlockPos(), SoundEvents.ITEM_HONEYCOMB_WAX_ON, SoundCategory.NEUTRAL, 1.0f, 1.0f);
             ParticleUtil.spawnParticle(this.getWorld(), this.getBlockPos(), ParticleTypes.WAX_ON, UniformIntProvider.create(3, 5));
 
             return ActionResult.SUCCESS;

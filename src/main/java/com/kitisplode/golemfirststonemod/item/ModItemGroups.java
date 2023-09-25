@@ -43,9 +43,31 @@ public class ModItemGroups
 
                         entries.add(ModItems.ITEM_DANDORI_CALL);
                         entries.add(ModItems.ITEM_DANDORI_BANNER);
+                        entries.add(ModItems.ITEM_DANDORI_STAFF);
                         entries.add(ModItems.ITEM_DANDORI_ATTACK);
                         entries.add(ModItems.ITEM_DANDORI_DIG);
                         entries.add(ModItems.ITEM_DANDORI_THROW);
+                    }).build());
+
+    public static final ItemGroup MOD_AGENT_TAB = Registry.register(Registries.ITEM_GROUP,
+            new Identifier(GolemFirstStoneMod.MOD_ID, "golemfirststonemodagent"),
+            FabricItemGroup.builder()
+                    .displayName(Text.translatable("creativetab.golemfirststonemodagent"))
+                    .icon( () -> new ItemStack(ModItems.ITEM_SPAWN_GOLEM_AGENT))
+                    .entries((displayContext, entries) -> {
+                        entries.add(ModItems.ITEM_SPAWN_GOLEM_AGENT);
+                        entries.add(ModItems.ITEM_INSTRUCTION_MOVE_FORWARD);
+                        entries.add(ModItems.ITEM_INSTRUCTION_TURN_LEFT_90);
+                        entries.add(ModItems.ITEM_INSTRUCTION_TURN_RIGHT_90);
+                        entries.add(ModItems.ITEM_INSTRUCTION_IF_BLOCK);
+                        entries.add(ModItems.ITEM_INSTRUCTION_IF_SOLID);
+                        entries.add(ModItems.ITEM_INSTRUCTION_USE_BLOCK);
+                        entries.add(ModItems.ITEM_INSTRUCTION_PLACE_BLOCK);
+                        entries.add(ModItems.ITEM_INSTRUCTION_BREAK_BLOCK);
+                        entries.add(ModItems.ITEM_INSTRUCTION_USE_TOOL);
+                        entries.add(ModItems.ITEM_INSTRUCTION_ATTACK);
+                        entries.add(ModItems.ITEM_INSTRUCTION_LOOP);
+                        entries.add(ModItems.ITEM_INSTRUCTION_NOT);
                     }).build());
 
     public static void registerItemGroups()

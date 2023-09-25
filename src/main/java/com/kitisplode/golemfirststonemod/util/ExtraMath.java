@@ -1,5 +1,6 @@
 package com.kitisplode.golemfirststonemod.util;
 
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.MathHelper;
@@ -59,7 +60,7 @@ public class ExtraMath
         return from + f;
     }
 
-    public static BlockHitResult playerRaycast(World world, PlayerEntity player, RaycastContext.FluidHandling fluidHandling, double range) {
+    public static BlockHitResult playerRaycast(World world, LivingEntity player, RaycastContext.FluidHandling fluidHandling, double range) {
         float f = player.getPitch();
         float g = player.getYaw();
         Vec3d vec3d = player.getEyePos();

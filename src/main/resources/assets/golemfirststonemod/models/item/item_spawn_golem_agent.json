@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "golemfirststonemod:item/spawn/item_spawn_golem_agent"
+  }
+}

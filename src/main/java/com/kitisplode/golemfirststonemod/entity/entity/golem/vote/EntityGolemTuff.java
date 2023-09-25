@@ -172,8 +172,8 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
         this.goalSelector.add(0, new DandoriFollowHardGoal(this, 1.4, dandoriMoveRange, dandoriSeeRange));
         this.goalSelector.add(1, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, 6));
 
-        this.goalSelector.add(2, new PickupItemGoal(this, 1.0));
-        this.goalSelector.add(3, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+        this.goalSelector.add(2, new DandoriMoveToDeployPositionGoal(this, 2.0f, 1.0f));
+        this.goalSelector.add(3, new PickupItemGoal(this, 1.0));
 
         this.goalSelector.add(4, new DandoriFollowSoftGoal(this, 1.4, dandoriMoveRange, 0));
 
@@ -279,8 +279,9 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
             this.endSleep();
             return ActionResult.SUCCESS;
         }
-        if (isSleeping()) return ActionResult.PASS;
         ItemStack playerItem = player.getStackInHand(hand);
+        if (playerItem.isOf(ModItems.ITEM_DANDORI_STAFF)) return ActionResult.PASS;
+        if (isSleeping()) return ActionResult.PASS;
         ItemStack golemItem = this.getStackInHand(Hand.MAIN_HAND);
         if (!golemItem.isEmpty() && hand == Hand.MAIN_HAND && playerItem.isEmpty())
         {

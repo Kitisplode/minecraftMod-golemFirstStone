@@ -30,6 +30,7 @@ import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
@@ -192,6 +193,8 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand)
     {
+        ItemStack playerItem = player.getStackInHand(hand);
+        if (playerItem.isOf(ModItems.ITEM_DANDORI_STAFF)) return ActionResult.PASS;
         if (this.hasPassengers()) return super.interactMob(player, hand);
         if (this.getOwner() != player) return super.interactMob(player, hand);
         this.putPlayerOnBack(player);
@@ -268,6 +271,13 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
     @Override
     public double getMountedHeightOffset() {
         return getHeight() * 1.25;
+    }
+
+    @Override
+    public Vec3d updatePassengerForDismount(LivingEntity passenger)
+    {
+        this.setDeployPosition(null);
+        return updatePassengerForDismount(passenger);
     }
 
     public void forceAttack()

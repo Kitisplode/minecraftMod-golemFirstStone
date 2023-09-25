@@ -4,9 +4,15 @@
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
 		"block/MixinCarvedPumpkinBlock",
+		"MixinTntBlockAccessor",
 		"entity/MixinIronGolemEntity",
 		"entity/MixinSnowGolemEntity",
 		"entity/MixinPlayerEntity",
+		"MixinShovelItemAccessor",
+		"MixinAxeItemAccessor",
+		"MixinItemFrameEntityAccessor",
+		"MixinMooshroomEntityAccessor",
+		"MixinServerPlayerEntityAccessor",
 		"MixinServerWorld",
 		"MixinStructurePoolAccessor"
 	],

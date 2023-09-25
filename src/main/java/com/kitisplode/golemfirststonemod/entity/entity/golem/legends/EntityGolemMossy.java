@@ -29,6 +29,7 @@ import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.MerchantEntity;
+import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvents;
@@ -198,7 +199,10 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
             ArrayList<StatusEffectInstance> mobEffects = getStatusEffect();
             for (StatusEffectInstance statusEffectInstance : mobEffects)
             {
-                target.addStatusEffect(new StatusEffectInstance(statusEffectInstance), this);
+                if (target instanceof MerchantEntity)
+                    target.addStatusEffect(new StatusEffectInstance(statusEffectInstance), null);
+                else
+                    target.addStatusEffect(new StatusEffectInstance(statusEffectInstance), this);
             }
         }
     }

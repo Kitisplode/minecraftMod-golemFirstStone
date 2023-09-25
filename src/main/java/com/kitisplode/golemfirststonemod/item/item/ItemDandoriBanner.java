@@ -1,7 +1,10 @@
 package com.kitisplode.golemfirststonemod.item.item;
 
 import com.kitisplode.golemfirststonemod.item.client.ItemRendererDandoriBanner;
+import com.kitisplode.golemfirststonemod.sound.ModSounds;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.UseAction;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -31,6 +34,15 @@ public class ItemDandoriBanner extends ItemDandoriCall implements GeoItem
     @Override
     public UseAction getUseAction(ItemStack stack) {
         return UseAction.NONE;
+    }
+
+    protected void playWhistleSound(PlayerEntity pPlayer)
+    {
+        pPlayer.playSound(ModSounds.ITEM_DANDORI_BANNER_01, 0.8f, 1.0f);
+    }
+    protected void playWhistleSoundForced(LivingEntity pLivingEntity)
+    {
+        pLivingEntity.playSound(ModSounds.ITEM_DANDORI_BANNER_02, 0.8f, 1.0f);
     }
 
     @Override

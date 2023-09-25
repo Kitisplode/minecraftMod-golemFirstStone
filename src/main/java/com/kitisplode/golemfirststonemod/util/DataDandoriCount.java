@@ -9,6 +9,7 @@ import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolem
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemGrindstone;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemMossy;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemPlank;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.other.EntityGolemAgent;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.vote.EntityGolemCopper;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.vote.EntityGolemTuff;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
@@ -24,7 +25,9 @@ public class DataDandoriCount
 {
     private static final double dandoriSeeRange = 36;
     public enum FOLLOWER_TYPE {FIRST_STONE, FIRST_OAK, FIRST_BRICK, FIRST_DIORITE,
-        IRON, COBBLE, GRINDSTONE, SNOW, PLANK, MOSSY, COPPER, TUFF,
+        IRON, COBBLE, GRINDSTONE,
+        SNOW, PLANK,
+        MOSSY, COPPER, TUFF, AGENT,
         PAWN_RED, PAWN_YELLOW, PAWN_BLUE};
     private Map<FOLLOWER_TYPE, Integer> followerCounts = new HashMap<>();
     private int totalCount = 0;
@@ -51,6 +54,7 @@ public class DataDandoriCount
             if (entity instanceof EntityGolemMossy) key = FOLLOWER_TYPE.MOSSY;
             if (entity instanceof EntityGolemTuff) key = FOLLOWER_TYPE.TUFF;
             if (entity instanceof EntityGolemCopper) key = FOLLOWER_TYPE.COPPER;
+            if (entity instanceof EntityGolemAgent) key = FOLLOWER_TYPE.AGENT;
             if (entity instanceof EntityGolemGrindstone) key = FOLLOWER_TYPE.GRINDSTONE;
             if (entity instanceof EntityGolemFirstStone) key = FOLLOWER_TYPE.FIRST_STONE;
             if (entity instanceof EntityGolemFirstOak) key = FOLLOWER_TYPE.FIRST_OAK;
@@ -121,6 +125,7 @@ public class DataDandoriCount
         if (type == FOLLOWER_TYPE.MOSSY && entity instanceof EntityGolemMossy) return true;
         if (type == FOLLOWER_TYPE.TUFF && entity instanceof EntityGolemTuff) return true;
         if (type == FOLLOWER_TYPE.COPPER && entity instanceof EntityGolemCopper) return true;
+        if (type == FOLLOWER_TYPE.AGENT && entity instanceof EntityGolemAgent) return true;
         if (type == FOLLOWER_TYPE.GRINDSTONE && entity instanceof EntityGolemGrindstone) return true;
         if (type == FOLLOWER_TYPE.FIRST_STONE && entity instanceof EntityGolemFirstStone) return true;
         if (type == FOLLOWER_TYPE.FIRST_OAK && entity instanceof EntityGolemFirstOak) return true;

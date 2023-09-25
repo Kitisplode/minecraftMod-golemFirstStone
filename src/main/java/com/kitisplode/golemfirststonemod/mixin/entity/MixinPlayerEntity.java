@@ -34,6 +34,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IEntityW
     private static final TrackedData<Integer> DANDORI_MOSSY = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> DANDORI_TUFF = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> DANDORI_COPPER = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> DANDORI_AGENT = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> DANDORI_GRINDSTONE = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> DANDORI_FIRST_STONE = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> DANDORI_FIRST_OAK = DataTracker.registerData(MixinPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -77,6 +78,8 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IEntityW
             this.dataTracker.startTracking(DANDORI_TUFF, 0);
         if (!this.dataTracker.containsKey(DANDORI_COPPER))
             this.dataTracker.startTracking(DANDORI_COPPER, 0);
+        if (!this.dataTracker.containsKey(DANDORI_AGENT))
+            this.dataTracker.startTracking(DANDORI_AGENT, 0);
         if (!this.dataTracker.containsKey(DANDORI_FIRST_STONE))
             this.dataTracker.startTracking(DANDORI_FIRST_STONE, 0);
         if (!this.dataTracker.containsKey(DANDORI_FIRST_OAK))
@@ -123,6 +126,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IEntityW
         this.setTrackedInt(DANDORI_GRINDSTONE, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.GRINDSTONE));
         this.setTrackedInt(DANDORI_TUFF, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.TUFF));
         this.setTrackedInt(DANDORI_COPPER, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.COPPER));
+        this.setTrackedInt(DANDORI_AGENT, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.AGENT));
         this.setTrackedInt(DANDORI_FIRST_STONE, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.FIRST_STONE));
         this.setTrackedInt(DANDORI_FIRST_OAK, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.FIRST_OAK));
         this.setTrackedInt(DANDORI_FIRST_BRICK, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.FIRST_BRICK));
@@ -189,6 +193,10 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IEntityW
     public int getDandoriCountCopper()
     {
         return this.dataTracker.get(DANDORI_COPPER);
+    }
+    public int getDandoriCountAgent()
+    {
+        return this.dataTracker.get(DANDORI_AGENT);
     }
     public int getDandoriCountFirstStone()
     {

@@ -22,8 +22,9 @@ public class HudDandoriCount implements HudRenderCallback
     private static final Identifier GOLEM_PLANK = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_plank.png");
     private static final Identifier GOLEM_MOSSY = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_mossy.png");
     private static final Identifier GOLEM_GRINDSTONE = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_grindstone.png");
-    private static final Identifier GOLEM_TUFF = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_tuff.png");
     private static final Identifier GOLEM_COPPER = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_copper.png");
+    private static final Identifier GOLEM_TUFF = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_tuff.png");
+    private static final Identifier GOLEM_AGENT = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_agent.png");
     private static final Identifier FIRST_STONE = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_stone.png");
     private static final Identifier FIRST_OAK = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_oak.png");
     private static final Identifier FIRST_BRICK = new Identifier(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_brick.png");
@@ -55,183 +56,61 @@ public class HudDandoriCount implements HudRenderCallback
         int plank = player.getDandoriCountPlank();
         int mossy = player.getDandoriCountMossy();
         int grindstone = player.getDandoriCountGrindstone();
-        int tuff = player.getDandoriCountTuff();
         int copper = player.getDandoriCountCopper();
+        int tuff = player.getDandoriCountTuff();
+        int agent = player.getDandoriCountAgent();
         int firstStone = player.getDandoriCountFirstStone();
         int firstOak = player.getDandoriCountFirstOak();
         int firstBrick = player.getDandoriCountFirstBrick();
         int firstDiorite = player.getDandoriCountFirstDiorite();
-        int golemTotalMelee = iron + cobble + grindstone;
-        int golemTotalRanged = snow + plank;
-        int golemTotalMisc = mossy + tuff + copper;
-        int firstTotal = firstStone + firstOak + firstBrick + firstDiorite;
 
+        int[] golemCounts = {firstStone, firstOak, firstBrick, firstDiorite, iron, cobble, grindstone, snow, plank, mossy, copper, tuff, agent, red, yellow, blue};
         DataDandoriCount.FOLLOWER_TYPE currentType = player.getDandoriCurrentType();
-
         TextRenderer tr = client.textRenderer;
-
+        final int perRow = 84;
         final int start_x = 12;//width / 2 - 90;
         int draw_x = start_x;
         int draw_y = (int)((float)height * 0.95f);
-        int color = 0xffffffff;
+        int color = 0xff_ffffff;
 
-        if (!client.player.isCreative()) draw_y -= 32;
+        DataDandoriCount.FOLLOWER_TYPE[] types = DataDandoriCount.FOLLOWER_TYPE.values();
+        for (int i = 0; i < types.length; i++)
+        {
+            if (golemCounts[i] <= 0) continue;
+            DataDandoriCount.FOLLOWER_TYPE type = types[i];
+            boolean isCurrentType = currentType == type;
+            if (type == DataDandoriCount.FOLLOWER_TYPE.FIRST_STONE) drawPikCount(drawContext, draw_x, draw_y-8, FIRST_STONE, 16,16, golemCounts[i], isCurrentType,0,0, tr, 18,8, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.FIRST_OAK) drawPikCount(drawContext, draw_x, draw_y-8, FIRST_OAK, 16,16, golemCounts[i], isCurrentType,0,0, tr, 18,8, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.FIRST_BRICK) drawPikCount(drawContext, draw_x, draw_y-8, FIRST_BRICK, 16,16, golemCounts[i], isCurrentType,0,0, tr, 18,8, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.FIRST_DIORITE) drawPikCount(drawContext, draw_x, draw_y-8, FIRST_DIORITE, 16,16, golemCounts[i], isCurrentType,0,0, tr, 18,8, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.IRON) drawPikCount(drawContext, draw_x, draw_y, GOLEM_IRON, 8,8, golemCounts[i], isCurrentType,-4,-4, tr, 12,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.COBBLE) drawPikCount(drawContext, draw_x-4, draw_y, GOLEM_COBBLE, 16,8, golemCounts[i], isCurrentType,0,-4, tr, 16,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.GRINDSTONE) drawPikCount(drawContext, draw_x-4, draw_y, GOLEM_GRINDSTONE, 16,8, golemCounts[i], isCurrentType,0,-4, tr, 16,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.SNOW) drawPikCount(drawContext, draw_x, draw_y, GOLEM_SNOW, 8,8, golemCounts[i], isCurrentType,-4,-4, tr, 12,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.PLANK) drawPikCount(drawContext, draw_x, draw_y, GOLEM_PLANK, 8,8, golemCounts[i], isCurrentType,-4,-4, tr, 12,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.MOSSY) drawPikCount(drawContext, draw_x - 4, draw_y, GOLEM_MOSSY, 16,8, golemCounts[i], isCurrentType,0,-4, tr, 16,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.COPPER) drawPikCount(drawContext, draw_x-4, draw_y, GOLEM_COPPER, 16,16, golemCounts[i], isCurrentType,0,-4, tr, 16,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.TUFF) drawPikCount(drawContext, draw_x, draw_y, GOLEM_TUFF, 8,8, golemCounts[i], isCurrentType,-4,-4, tr, 12,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.AGENT) drawPikCount(drawContext, draw_x, draw_y, GOLEM_AGENT, 8,8, golemCounts[i], isCurrentType,-4,-4, tr, 12,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.PAWN_RED) drawPikCount(drawContext, draw_x, draw_y, PIK_RED, 8,8, golemCounts[i], isCurrentType,-4,-4, tr, 12,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.PAWN_YELLOW) drawPikCount(drawContext, draw_x-4, draw_y, PIK_YELLOW, 16,16, golemCounts[i], isCurrentType,0,-4, tr, 16,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.PAWN_BLUE) drawPikCount(drawContext, draw_x, draw_y, PIK_BLUE, 8,8, golemCounts[i], isCurrentType,-4,-4, tr, 12,0, color);
 
-        // Firsts
-        if (firstStone > 0)
-        {
-            drawContext.drawTexture(FIRST_STONE, draw_x, draw_y-8, 0, 0, 16, 16, 16, 16);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.FIRST_STONE)
-                drawContext.drawTexture(CURSOR, draw_x, draw_y-8, 0, 0, 16, 16, 16, 16);
-            draw_x += 18;
-            drawContext.drawText(tr, "x " + firstStone, draw_x, draw_y, color, true);
-            draw_x += 24;
+            if (i < 4) draw_x += 42;
+            else draw_x += 32;
+            if (draw_x >= perRow)
+            {
+                draw_x = start_x;
+                draw_y -= 18;
+            }
         }
-        if (firstOak > 0)
-        {
-            drawContext.drawTexture(FIRST_OAK, draw_x, draw_y-8, 0, 0, 16, 16, 16, 16);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.FIRST_OAK)
-                drawContext.drawTexture(CURSOR, draw_x, draw_y-8, 0, 0, 16, 16, 16, 16);
-            draw_x += 18;
-            drawContext.drawText(tr, "x " + firstOak, draw_x, draw_y, color, true);
-            draw_x += 24;
-        }
-        if (firstBrick > 0)
-        {
-            drawContext.drawTexture(FIRST_BRICK, draw_x, draw_y-8, 0, 0, 16, 16, 16, 16);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.FIRST_BRICK)
-                drawContext.drawTexture(CURSOR, draw_x, draw_y-8, 0, 0, 16, 16, 16, 16);
-            draw_x += 18;
-            drawContext.drawText(tr, "x " + firstBrick, draw_x, draw_y, color, true);
-            draw_x += 24;
-        }
-        if (firstDiorite > 0)
-        {
-            drawContext.drawTexture(FIRST_DIORITE, draw_x, draw_y-8, 0, 0, 16, 16, 16, 16);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.FIRST_DIORITE)
-                drawContext.drawTexture(CURSOR, draw_x, draw_y-8, 0, 0, 16, 16, 16, 16);
-            draw_x += 18;
-            drawContext.drawText(tr, "x " + firstDiorite, draw_x, draw_y, color, true);
-            draw_x += 24;
-        }
+    }
 
-        if (firstTotal > 0) draw_y -= 18;
-        draw_x = start_x;
-        // Melee golems
-
-
-        if (iron > 0)
-        {
-            drawContext.drawTexture(GOLEM_IRON, draw_x, draw_y, 0, 0, 8, 8, 8, 8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.IRON)
-                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            drawContext.drawText(tr, "x " + iron, draw_x, draw_y, color, true);
-            draw_x += 20;
-        }
-        if (cobble > 0)
-        {
-            drawContext.drawTexture(GOLEM_COBBLE, draw_x-4, draw_y, 0, 0, 16, 8, 16, 8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.COBBLE)
-                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            drawContext.drawText(tr, "x " + cobble, draw_x, draw_y, color, true);
-            draw_x += 20;
-        }
-        if (grindstone > 0)
-        {
-            drawContext.drawTexture(GOLEM_GRINDSTONE, draw_x-4, draw_y, 0, 0, 16, 8, 16, 8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.GRINDSTONE)
-                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            drawContext.drawText(tr, "x " + grindstone, draw_x, draw_y, color, true);
-            draw_x += 20;
-        }
-
-        if (golemTotalMelee > 0) draw_y -= 12;
-        draw_x = start_x;
-
-        // Ranged golems
-        if (snow > 0)
-        {
-            drawContext.drawTexture(GOLEM_SNOW, draw_x, draw_y, 0, 0, 8, 8, 8, 8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.SNOW)
-                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            drawContext.drawText(tr, "x " + snow, draw_x, draw_y, color, true);
-            draw_x += 20;
-        }
-        if (plank > 0)
-        {
-            drawContext.drawTexture(GOLEM_PLANK, draw_x, draw_y, 0, 0, 8, 8, 8, 8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.PLANK)
-                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            drawContext.drawText(tr, "x " + plank, draw_x, draw_y, color, true);
-            draw_x += 20;
-        }
-
-        if (golemTotalRanged > 0) draw_y -= 12;
-        draw_x = start_x;
-
-        // Misc golems
-        if (mossy > 0)
-        {
-            drawContext.drawTexture(GOLEM_MOSSY, draw_x-4, draw_y, 0, 0, 16, 8, 16, 8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.MOSSY)
-                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            drawContext.drawText(tr, "x " + mossy, draw_x, draw_y, color, true);
-            draw_x += 20;
-        }
-        if (copper > 0)
-        {
-            drawContext.drawTexture(GOLEM_COPPER, draw_x-4, draw_y, 0, 0, 16, 16, 16, 16);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.COPPER)
-                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            drawContext.drawText(tr, "x " + copper, draw_x, draw_y, color, true);
-            draw_x += 20;
-        }
-        if (tuff > 0)
-        {
-            drawContext.drawTexture(GOLEM_TUFF, draw_x, draw_y, 0, 0, 8, 8, 8, 8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.TUFF)
-                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            drawContext.drawText(tr, "x " + tuff, draw_x, draw_y, color, true);
-            draw_x += 20;
-        }
-
-        if (golemTotalMisc > 0) draw_y -= 12;
-        draw_x = start_x;
-        // Piks
-        if (red > 0)
-        {
-            drawContext.drawTexture(PIK_RED, draw_x, draw_y, 0, 0, 8, 8, 8, 8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.PAWN_RED)
-                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            drawContext.drawText(tr, "x " + red, draw_x, draw_y, color, true);
-            draw_x += 20;
-        }
-        if (yellow > 0)
-        {
-            drawContext.drawTexture(PIK_YELLOW, draw_x - 4, draw_y, 0, 0, 16, 16, 16, 16);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.PAWN_YELLOW)
-                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            drawContext.drawText(tr, "x " + yellow, draw_x, draw_y, color, true);
-            draw_x += 20;
-        }
-        if (blue > 0)
-        {
-            drawContext.drawTexture(PIK_BLUE, draw_x, draw_y, 0, 0, 8, 8, 8, 8);
-            if (currentType == DataDandoriCount.FOLLOWER_TYPE.PAWN_BLUE)
-                drawContext.drawTexture(CURSOR, draw_x-4, draw_y-4, 0, 0, 16, 16, 16, 16);
-            draw_x += 12;
-            drawContext.drawText(tr, "x " + blue, draw_x, draw_y, color, true);
-            draw_x += 20;
-        }
+    private void drawPikCount(DrawContext drawContext, int x, int y, Identifier sprite, int width, int height, int count, boolean highlighted, int cursorX, int cursorY, TextRenderer tr, int textOffsetX, int textOffsetY, int textColor)
+    {
+        drawContext.drawTexture(sprite, x,y, 0,0, width,height, width,height);
+        if (highlighted)
+            drawContext.drawTexture(CURSOR, x + cursorX, y + cursorY, 0,0, 16, 16, 16, 16);
+        drawContext.drawText(tr, "x " + count, x + textOffsetX, y + textOffsetY, textColor, true);
     }
 }

@@ -38,6 +38,34 @@ public class ModItems
             new SpawnEggItem(ModEntities.ENTITY_GOLEM_TUFF, 0xDFDFDF, 0x424742,
                     new FabricItemSettings()));
 
+    public static final Item ITEM_SPAWN_GOLEM_AGENT = registerItem("item_spawn_golem_agent",
+            new SpawnEggItem(ModEntities.ENTITY_GOLEM_AGENT, 0xDFDFDF, 0x424742,
+                    new FabricItemSettings()));
+    public static final Item ITEM_INSTRUCTION_MOVE_FORWARD = registerItem("item_instruction_move_forward",
+            new ItemInstruction(new FabricItemSettings().maxCount(16), "item.golemfirststonemod.item_description.item_instruction_move_forward", 0));
+    public static final Item ITEM_INSTRUCTION_TURN_LEFT_90 = registerItem("item_instruction_turn_left_90",
+            new ItemInstruction(new FabricItemSettings().maxCount(2), "item.golemfirststonemod.item_description.item_instruction_turn_left_90", 0));
+    public static final Item ITEM_INSTRUCTION_TURN_RIGHT_90 = registerItem("item_instruction_turn_right_90",
+            new ItemInstruction(new FabricItemSettings().maxCount(2), "item.golemfirststonemod.item_description.item_instruction_turn_right_90", 0));
+    public static final Item ITEM_INSTRUCTION_IF_BLOCK = registerItem("item_instruction_if_block",
+            new ItemInstruction(new FabricItemSettings().maxCount(1), "item.golemfirststonemod.item_description.item_instruction_if_block", 2));
+    public static final Item ITEM_INSTRUCTION_IF_SOLID = registerItem("item_instruction_if_solid",
+            new ItemInstruction(new FabricItemSettings().maxCount(1), "item.golemfirststonemod.item_description.item_instruction_if_solid", 1));
+    public static final Item ITEM_INSTRUCTION_USE_BLOCK = registerItem("item_instruction_use_block",
+            new ItemInstruction(new FabricItemSettings().maxCount(1), "item.golemfirststonemod.item_description.item_instruction_use_block", 0));
+    public static final Item ITEM_INSTRUCTION_PLACE_BLOCK = registerItem("item_instruction_place_block",
+            new ItemInstruction(new FabricItemSettings().maxCount(1), "item.golemfirststonemod.item_description.item_instruction_place_block", 1));
+    public static final Item ITEM_INSTRUCTION_BREAK_BLOCK = registerItem("item_instruction_break_block",
+            new ItemInstruction(new FabricItemSettings().maxCount(1), "item.golemfirststonemod.item_description.item_instruction_break_block", 0));
+    public static final Item ITEM_INSTRUCTION_USE_TOOL = registerItem("item_instruction_use_tool",
+            new ItemInstruction(new FabricItemSettings().maxCount(64), "item.golemfirststonemod.item_description.item_instruction_use_tool", 0));
+    public static final Item ITEM_INSTRUCTION_ATTACK = registerItem("item_instruction_attack",
+            new ItemInstruction(new FabricItemSettings().maxCount(1), "item.golemfirststonemod.item_description.item_instruction_attack", 0));
+    public static final Item ITEM_INSTRUCTION_LOOP = registerItem("item_instruction_loop",
+            new ItemInstruction(new FabricItemSettings().maxCount(64), "item.golemfirststonemod.item_description.item_instruction_loop", 0));
+    public static final Item ITEM_INSTRUCTION_NOT = registerItem("item_instruction_not",
+            new ItemInstruction(new FabricItemSettings().maxCount(1), "item.golemfirststonemod.item_description.item_instruction_not", 1));
+
 
     public static final Item ITEM_DANDORI_CALL = registerItem("item_dandori_call",
             new ItemDandoriCall(new FabricItemSettings().maxCount(1)));
@@ -49,6 +77,8 @@ public class ModItems
             new ItemDandoriThrow(new FabricItemSettings().maxCount(1)));
     public static final Item ITEM_DANDORI_BANNER = registerItem("item_dandori_banner",
             new ItemDandoriBanner(new FabricItemSettings().maxCount(1)));
+    public static final Item ITEM_DANDORI_STAFF = registerItem("item_dandori_staff",
+            new ItemDandoriStaff(new FabricItemSettings().maxCount(1)));
 
     public static final Item ITEM_FLAME_OF_CREATION_BLUE = registerItem("item_flame_of_creation_blue",
             new Item(new FabricItemSettings().maxCount(16)));

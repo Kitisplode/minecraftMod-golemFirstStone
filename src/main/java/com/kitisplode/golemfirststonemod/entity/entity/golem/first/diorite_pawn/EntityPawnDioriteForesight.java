@@ -62,8 +62,8 @@ public class EntityPawnDioriteForesight extends EntityGolemMossy implements GeoE
         this.moveControl = new FlightMoveControl(this, 20, true);
         floatCycle = this.getRandom().nextInt(360);
         this.shieldStatusEffects.clear();
-        this.shieldStatusEffects.add(new StatusEffectInstance(StatusEffects.STRENGTH, 100, 2, false, true));
-        this.shieldStatusEffects.add(new StatusEffectInstance(StatusEffects.RESISTANCE, 100, 2, false, true));
+        this.shieldStatusEffects.add(new StatusEffectInstance(StatusEffects.STRENGTH, 100, 0, false, true));
+        this.shieldStatusEffects.add(new StatusEffectInstance(StatusEffects.RESISTANCE, 100, 0, false, true));
     }
 
     public static DefaultAttributeContainer.Builder setAttributes()
