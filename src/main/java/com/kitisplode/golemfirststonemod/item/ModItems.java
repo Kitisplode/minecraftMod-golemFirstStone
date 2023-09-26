@@ -91,6 +91,8 @@ public class ModItems
     public static final RegistryObject<Item> ITEM_INSTRUCTION_NOT = ITEMS.register("item_instruction_not",
             () -> new ItemInstruction(new Item.Properties().stacksTo(1), "item.golemfirststonemod.item_description.item_instruction_not",1));
 
+    public static final RegistryObject<Item> ITEM_GOLEM_KEY = ITEMS.register("item_golem_key",
+            () -> new ItemGolemKey(new Item.Properties().stacksTo(1)));
 
     // Called to actually register the items list.
     public static void register(IEventBus eventBus)

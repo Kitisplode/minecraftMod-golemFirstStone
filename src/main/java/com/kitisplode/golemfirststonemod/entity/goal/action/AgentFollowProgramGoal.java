@@ -1056,10 +1056,11 @@ public class AgentFollowProgramGoal extends Goal
             boolean result = false;
             BlockState bs = this.agent.level().getBlockState(bp);
             BlockState bsNew = null;
-            if (bs.is(Blocks.GRASS_BLOCK) && this.agent.level().isEmptyBlock(bp.above()))
+            BlockState bsPath = ShovelItem.getShovelPathingState(bs);
+            if (bsPath != null && this.agent.level().isEmptyBlock(bp.above()))
             {
                 this.agent.level().playSound(this.agent, bp, SoundEvents.SHOVEL_FLATTEN, SoundSource.BLOCKS, 1.0F, 1.0F);
-                bsNew = ShovelItem.getShovelPathingState(bs);
+                bsNew = bsPath;
             }
             else if (bs.getBlock() instanceof CampfireBlock && bs.getValue(CampfireBlock.LIT))
             {

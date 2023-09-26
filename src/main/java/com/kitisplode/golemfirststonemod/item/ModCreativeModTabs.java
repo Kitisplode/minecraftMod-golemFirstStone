@@ -49,6 +49,8 @@ public class ModCreativeModTabs
                         pOutput.accept(ModItems.ITEM_DANDORI_ATTACK.get());
                         pOutput.accept(ModItems.ITEM_DANDORI_DIG.get());
                         pOutput.accept(ModItems.ITEM_DANDORI_THROW.get());
+
+                        pOutput.accept(ModItems.ITEM_GOLEM_KEY.get());
                     })
                     .build());
 
