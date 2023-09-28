@@ -10,6 +10,7 @@ import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowSoftGoa
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriMoveToDeployPositionGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.PassiveAvoidEntityGoal;
 import com.kitisplode.golemfirststonemod.item.ModItems;
+import com.kitisplode.golemfirststonemod.sound.ModSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -17,6 +18,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
@@ -38,11 +40,13 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 
 public class EntityGolemKey extends AbstractGolemDandoriFollower implements IEntityDandoriFollower, GeoEntity
 {
-    public static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/item/golem_key.geo.json");
-    public static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/dungeons/golem_key.png");
-    public static final ResourceLocation TEXTURE_SCARED = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/dungeons/golem_key_scared.png");
-    public static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/item/golem_key.animation.json");
+    private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/item/golem_key.geo.json");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/dungeons/golem_key.png");
+    private static final ResourceLocation TEXTURE_SCARED = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/dungeons/golem_key_scared.png");
+    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/item/golem_key.animation.json");
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
+    public static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation.golem_key.idle");
+    public static final RawAnimation ANIMATION_WALK = RawAnimation.begin().thenLoop("animation.golem_key.walk");
 
     private static final EntityDataAccessor<Boolean> SCARED = SynchedEntityData.defineId(EntityGolemCobble.class, EntityDataSerializers.BOOLEAN);
 
@@ -116,10 +120,12 @@ public class EntityGolemKey extends AbstractGolemDandoriFollower implements IEnt
     @Override
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand)
     {
+        if (this.interactIsPlayerHoldingDandoriCall(pPlayer)) return InteractionResult.PASS;
         ItemStack playerItem = pPlayer.getItemInHand(pHand);
         if (playerItem.isEmpty())
         {
             ItemStack golemItem = this.makeItem();
+            this.level().playSound(this, this.blockPosition(), ModSounds.ENTITY_GOLEM_KEY_PICKUP.get(), SoundSource.NEUTRAL, 1.0f, this.level().getRandom().nextFloat() * 0.4F + 0.8F);
             pPlayer.setItemInHand(pHand, golemItem);
             this.remove(RemovalReason.DISCARDED);
         }
@@ -164,13 +170,11 @@ public class EntityGolemKey extends AbstractGolemDandoriFollower implements IEnt
     {
         return MODEL;
     }
-
     public ResourceLocation getTextureLocation()
     {
         if (this.getScared()) return TEXTURE_SCARED;
         else return TEXTURE;
     }
-
     public ResourceLocation getAnimationsLocation()
     {
         return ANIMATIONS;
@@ -183,8 +187,8 @@ public class EntityGolemKey extends AbstractGolemDandoriFollower implements IEnt
         {
             event.getController().setAnimationSpeed(1.00);
             if (getDeltaMovement().horizontalDistanceSqr() > 0.001D || event.isMoving())
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_key.walk"));
-        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_key.idle"));
+                return event.setAndContinue(ANIMATION_WALK);
+        return event.setAndContinue(ANIMATION_IDLE);
         }));
     }
 

@@ -1,6 +1,5 @@
 package com.kitisplode.golemfirststonemod.entity.client.renderer.other;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.client.model.other.EntityModelGolemAgent;
 import com.kitisplode.golemfirststonemod.entity.client.utils.AutoGlowingGeoLayerFixed;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.other.EntityGolemAgent;
@@ -10,11 +9,8 @@ import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.util.RenderUtils;
@@ -43,6 +39,7 @@ public class EntityRendererGolemAgent extends GeoEntityRenderer<EntityGolemAgent
         }
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
         renderHeldItem(entity, partialTick, poseStack, bufferSource, packedLight);
+        ((EntityModelGolemAgent)this.model).resetCustomAnimations();
     }
 
     private void renderHeldItem(EntityGolemAgent entity, float partialTick, PoseStack matrixStack, MultiBufferSource bufferSource, int packedLight)

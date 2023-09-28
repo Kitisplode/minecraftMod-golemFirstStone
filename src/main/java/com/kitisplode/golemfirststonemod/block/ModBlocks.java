@@ -8,15 +8,17 @@ import com.kitisplode.golemfirststonemod.block.golem_head.BlockHeadStone;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ButtonBlock;
-import net.minecraft.world.level.block.DropExperienceBlock;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -57,10 +59,16 @@ public class ModBlocks
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.DIORITE)));
     public static final RegistryObject<Block> BLOCK_BUTTON_COPPER = registerBlock("block_button_copper",
             ModBlocks::copperButton);
+    public static final RegistryObject<Block> BLOCK_KEY_LOCK = registerBlock("block_key_lock",
+            () -> new BlockKeyLock(BlockBehaviour.Properties.of().mapColor(MapColor.GOLD).instrument(NoteBlockInstrument.CHIME).strength(3.0F).requiresCorrectToolForDrops().isRedstoneConductor(ModBlocks::never)));
 
 
     private static ButtonBlock copperButton() {
         return new ButtonBlock(BlockBehaviour.Properties.of().noCollission().strength(0.5F).pushReaction(PushReaction.DESTROY), BlockSetType.STONE, 10, false);
+    }
+
+    private static boolean never(BlockState p_50806_, BlockGetter p_50807_, BlockPos p_50808_) {
+        return false;
     }
 
     // Private helper method to register each of the blocks' corresponding block items.

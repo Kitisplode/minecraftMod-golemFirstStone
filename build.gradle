@@ -151,7 +151,7 @@ dependencies {
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20:4.2')
+    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.2.2')
 
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html

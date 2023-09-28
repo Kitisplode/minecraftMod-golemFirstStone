@@ -1,5 +1,6 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem.first;
 
+import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
@@ -15,6 +16,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -52,6 +54,10 @@ import java.util.function.Predicate;
 
 public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
 {
+    private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/first_brick.geo.json");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/first/first_brick.png");
+    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/first_brick.animation.json");
+
     private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemFirstBrick.class, EntityDataSerializers.INT);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private static final int shieldHurtTime = 30;
@@ -293,6 +299,19 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
     @Override
     protected InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
         return InteractionResult.PASS;
+    }
+
+    public ResourceLocation getModelLocation()
+    {
+        return MODEL;
+    }
+    public ResourceLocation getTextureLocation()
+    {
+        return TEXTURE;
+    }
+    public ResourceLocation getAnimationsLocation()
+    {
+        return ANIMATIONS;
     }
 
     @Override

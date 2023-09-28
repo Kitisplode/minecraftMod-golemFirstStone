@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=down,powered=false": {
+      "model": "golemfirststonemod:block/block_key_lock",
+      "x": 90
+    },
+    "facing=down,powered=true": {
+      "model": "golemfirststonemod:block/block_key_unlock",
+      "x": 90
+    },
+    "facing=east,powered=false": {
+      "model": "golemfirststonemod:block/block_key_lock",
+      "y": 90
+    },
+    "facing=east,powered=true": {
+      "model": "golemfirststonemod:block/block_key_unlock",
+      "y": 90
+    },
+    "facing=north,powered=false": {
+      "model": "golemfirststonemod:block/block_key_lock"
+    },
+    "facing=north,powered=true": {
+      "model": "golemfirststonemod:block/block_key_unlock"
+    },
+    "facing=south,powered=false": {
+      "model": "golemfirststonemod:block/block_key_lock",
+      "y": 180
+    },
+    "facing=south,powered=true": {
+      "model": "golemfirststonemod:block/block_key_unlock",
+      "y": 180
+    },
+    "facing=up,powered=false": {
+      "model": "golemfirststonemod:block/block_key_lock",
+      "x": 270
+    },
+    "facing=up,powered=true": {
+      "model": "golemfirststonemod:block/block_key_unlock",
+      "x": 270
+    },
+    "facing=west,powered=false": {
+      "model": "golemfirststonemod:block/block_key_lock",
+      "y": 270
+    },
+    "facing=west,powered=true": {
+      "model": "golemfirststonemod:block/block_key_unlock",
+      "y": 270
+    }
+  }
+}

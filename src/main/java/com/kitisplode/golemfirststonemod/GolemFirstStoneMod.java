@@ -1,5 +1,6 @@
 package com.kitisplode.golemfirststonemod;
 
+import com.kitisplode.golemfirststonemod.block.ModBlockEntities;
 import com.kitisplode.golemfirststonemod.block.ModBlocks;
 import com.kitisplode.golemfirststonemod.client.gui.HudDandoriCount;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
@@ -47,6 +48,7 @@ public class GolemFirstStoneMod
         ModCreativeModTabs.register(modEventBus);
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
         ModEntities.register(modEventBus);
         ModSounds.register(modEventBus);
 

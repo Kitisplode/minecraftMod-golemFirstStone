@@ -63,6 +63,11 @@ import java.util.function.Predicate;
 
 public class EntityGolemTuff extends AbstractGolemDandoriFollower implements GeoEntity, IEntityDandoriFollower
 {
+    private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/golem_tuff.geo.json");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/tuff/golem_tuff.png");
+    private static final ResourceLocation TEXTURE_SLEEPING = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/tuff/golem_tuff_sleep.png");
+    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/golem_tuff.animation.json");
+
     private static final EntityDataAccessor<Integer> SLEEP_STATUS = SynchedEntityData.defineId(EntityGolemMossy.class, EntityDataSerializers.INT);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     protected static final double dandoriMoveRange = 3;
@@ -75,8 +80,6 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
 
     static final Predicate<ItemEntity> ALLOWED_ITEMS = itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive();
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/tuff/golem_tuff.png");
-    private static final ResourceLocation TEXTURE_SLEEPING = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/tuff/golem_tuff_sleep.png");
 
     public EntityGolemTuff(EntityType<? extends IronGolem> pEntityType, Level pLevel)
     {
@@ -277,9 +280,9 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
             this.endSleep();
             return InteractionResult.SUCCESS;
         }
-        ItemStack playerItem = pPlayer.getItemInHand(pHand);
-        if (playerItem.is(ModItems.ITEM_DANDORI_STAFF.get())) return InteractionResult.PASS;
+        if (this.interactIsPlayerHoldingDandoriCall(pPlayer)) return InteractionResult.PASS;
         if (isSleeping()) return InteractionResult.PASS;
+        ItemStack playerItem = pPlayer.getItemInHand(pHand);
         ItemStack golemItem = this.getItemInHand(InteractionHand.MAIN_HAND);
         if (!golemItem.isEmpty() && pHand == InteractionHand.MAIN_HAND && playerItem.isEmpty())
         {
@@ -327,10 +330,18 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
         this.level().addFreshEntity(sound);
     }
 
-    public ResourceLocation getTexture()
+    public ResourceLocation getModelLocation()
+    {
+        return MODEL;
+    }
+    public ResourceLocation getTextureLocation()
     {
         if (getSleepStatus() > 0) return TEXTURE_SLEEPING;
         return TEXTURE;
+    }
+    public ResourceLocation getAnimationsLocation()
+    {
+        return ANIMATIONS;
     }
 
     @Override

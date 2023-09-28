@@ -2,14 +2,17 @@ package com.kitisplode.golemfirststonemod.entity.entity.golem;
 
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDandoriCount;
+import com.kitisplode.golemfirststonemod.item.item.ItemDandoriCall;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -17,6 +20,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,6 +64,7 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
         if (this.getOwnerUUID() != null) {
             pCompound.putUUID("Owner", this.getOwnerUUID());
         }
+        if (this.getDeployPosition() != null) pCompound.put("DeployPos", NbtUtils.writeBlockPos(this.getDeployPosition()));
     }
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
@@ -74,10 +80,11 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
                 this.setOwnerUUID(uuid);
             } catch (Throwable throwable) {}
         }
+        if (pCompound.contains("DeployPos")) this.setDeployPosition(NbtUtils.readBlockPos(pCompound.getCompound("DeployPos")));
     }
     @Nullable
     public UUID getOwnerUUID() {
-        return this.entityData.get(OWNER_UUID).orElse((UUID)null);
+        return this.entityData.get(OWNER_UUID).orElse(null);
     }
 
     public void setOwnerUUID(@Nullable UUID pUuid) {
@@ -202,5 +209,12 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
     {
         if (this.isDandoriOn()) return 6.0d;
         return this.getAttributeValue(Attributes.FOLLOW_RANGE);
+    }
+
+    protected boolean interactIsPlayerHoldingDandoriCall(Player pPlayer)
+    {
+        ItemStack playerItemMainHand = pPlayer.getItemInHand(InteractionHand.MAIN_HAND);
+        ItemStack playerItemOffHand = pPlayer.getItemInHand(InteractionHand.OFF_HAND);
+        return playerItemMainHand.getItem() instanceof ItemDandoriCall || playerItemOffHand.getItem() instanceof ItemDandoriCall;
     }
 }

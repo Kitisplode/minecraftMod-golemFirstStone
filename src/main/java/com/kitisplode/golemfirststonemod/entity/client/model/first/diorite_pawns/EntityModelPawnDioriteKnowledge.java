@@ -1,14 +1,13 @@
 package com.kitisplode.golemfirststonemod.entity.client.model.first.diorite_pawns;
 
-import com.kitisplode.golemfirststonemod.entity.entity.golem.first.diorite_pawns.EntityPawnDioriteAction;
+import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelWithCustomAnimations;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.diorite_pawns.EntityPawnDioriteKnowledge;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.model.GeoModel;
 
-public class EntityModelPawnDioriteKnowledge extends GeoModel<EntityPawnDioriteKnowledge>
+public class EntityModelPawnDioriteKnowledge extends EntityModelWithCustomAnimations<EntityPawnDioriteKnowledge>
 {
 	@Override
 	public ResourceLocation getModelResource(EntityPawnDioriteKnowledge animatable)
@@ -36,6 +35,7 @@ public class EntityModelPawnDioriteKnowledge extends GeoModel<EntityPawnDioriteK
 			CoreGeoBone whole = getAnimationProcessor().getBone("whole");
 			if (whole != null)
 			{
+				this.savedBones.add(new SavedBone(whole.getRotX(), "whole", SavedBone.TYPES.ROTX));
 				whole.setRotX(animatable.getThrowAngle() * Mth.DEG_TO_RAD);
 			}
 		}

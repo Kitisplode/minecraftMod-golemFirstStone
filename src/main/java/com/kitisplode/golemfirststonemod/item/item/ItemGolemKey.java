@@ -1,15 +1,23 @@
 package com.kitisplode.golemfirststonemod.item.item;
 
+import com.kitisplode.golemfirststonemod.block.ModBlocks;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.dungeons.EntityGolemKey;
 import com.kitisplode.golemfirststonemod.item.client.ItemRendererGolemKey;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EndPortalFrameBlock;
+import net.minecraft.world.level.block.ObserverBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.extensions.IForgeItem;
 import software.bernie.geckolib.animatable.GeoItem;

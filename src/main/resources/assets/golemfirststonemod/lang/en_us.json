@@ -47,6 +47,7 @@
   "block.golemfirststonemod.block_villager_brick": "Golem Lapidarist Workstation",
   "block.golemfirststonemod.block_villager_diorite": "Golem Goldsmith Workstation",
   "block.golemfirststonemod.block_button_copper": "Copper Button",
+  "block.golemfirststonemod.block_key_lock": "Lock",
 
   "entity.golemfirststonemod.entity_golem_first_stone": "First of Stone",
   "entity.golemfirststonemod.entity_golem_first_oak": "First of Oak",
@@ -139,6 +140,10 @@
   "sound.golemfirststonemod.item_dandori_attack_win": "Golem Dandori Attack - Success",
   "sound.golemfirststonemod.item_dandori_throw": "Golem pawn thrown",
   "sound.golemfirststonemod.entity_villager_dandori_pluck": "Golem pawn attention",
+  "sound.golemfirststonemod.entity_golem_key_pickup": "Key Golem picked up",
+  "sound.golemfirststonemod.entity_golem_key_unlock": "Key clicking",
+  "sound.golemfirststonemod.entity_golem_key_lock": "Key clicking",
+  "sound.golemfirststonemod.entity_golem_key_happy": "Key Golem coo",
 
   "creativetab.golemfirststonemod": "Golem Dandori",
   "creativetab.golemfirststonemodagent": "Golem Dandori: Agent"

@@ -18,15 +18,10 @@ public class EntityRendererGolemFirstBrick extends GeoEntityRenderer<EntityGolem
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(EntityGolemFirstBrick animatable)
-	{
-		return new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/first/first_brick.png");
-	}
-
-	@Override
 	public void render(EntityGolemFirstBrick entity, float entityYaw, float partialTick, PoseStack poseStack,
 					   MultiBufferSource bufferSource, int packedLight)
 	{
 		super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+		((EntityModelGolemFirstBrick)this.model).resetCustomAnimations();
 	}
 }

@@ -47,5 +47,33 @@
     "sounds": [
       "golemfirststonemod:item_dandori_banner_02"
     ]
+  },
+  "entity_golem_key_pickup":
+  {
+    "subtitle": "sound.golemfirststonemod.entity_golem_key_pickup",
+    "sounds": [
+      "golemfirststonemod:entity_golem_key_pickup"
+    ]
+  },
+  "entity_golem_key_lock":
+  {
+    "subtitle": "sound.golemfirststonemod.entity_golem_key_lock",
+    "sounds": [
+      "golemfirststonemod:entity_golem_key_lock"
+    ]
+  },
+  "entity_golem_key_unlock":
+  {
+    "subtitle": "sound.golemfirststonemod.entity_golem_key_unlock",
+    "sounds": [
+      "golemfirststonemod:entity_golem_key_unlock"
+    ]
+  },
+  "entity_golem_key_happy":
+  {
+    "subtitle": "sound.golemfirststonemod.entity_golem_key_happy",
+    "sounds": [
+      "golemfirststonemod:entity_golem_key_happy"
+    ]
   }
 }

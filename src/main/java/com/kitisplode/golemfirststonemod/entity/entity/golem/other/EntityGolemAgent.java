@@ -57,11 +57,14 @@ import javax.annotation.Nullable;
 
 public class EntityGolemAgent extends AbstractGolemDandoriFollower implements ContainerListener, InventoryCarrier, HasCustomInventoryScreen, GeoEntity, IEntityDandoriFollower
 {
-    public static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/golem_agent.geo.json");
-    public static final ResourceLocation TEXTURE_OFF = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/other/golem_agent_off.png");
-    public static final ResourceLocation TEXTURE_ON = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/other/golem_agent.png");
+    private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/golem_agent.geo.json");
+    private static final ResourceLocation TEXTURE_OFF = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/other/golem_agent_off.png");
+    private static final ResourceLocation TEXTURE_ON = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/other/golem_agent.png");
     public static final ResourceLocation GLOWMASK = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/other/golem_agent_glowmask.png");
-    public static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/golem_agent.animation.json");
+    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/golem_agent.animation.json");
+
+    public static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation.golem_agent.idle");
+    public static final RawAnimation ANIMATION_WALK = RawAnimation.begin().thenLoop("animation.golem_agent.walk");
 
     public static final byte ENTITY_EVENT_TOOL_BROKEN = 47;
 
@@ -309,8 +312,7 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     @Override
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand)
     {
-        ItemStack playerItem = pPlayer.getItemInHand(pHand);
-        if (playerItem.is(ModItems.ITEM_DANDORI_STAFF.get())) return InteractionResult.PASS;
+        if (this.interactIsPlayerHoldingDandoriCall(pPlayer)) return InteractionResult.PASS;
         if (this.getActive()) return InteractionResult.PASS;
         this.openCustomInventoryScreen(pPlayer);
         return InteractionResult.sidedSuccess(this.level().isClientSide);
@@ -404,14 +406,12 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     {
         return MODEL;
     }
-
     public ResourceLocation getTextureLocation()
     {
         if (!this.getActive())
             return TEXTURE_OFF;
         return TEXTURE_ON;
     }
-
     public ResourceLocation getAnimationsLocation()
     {
         return ANIMATIONS;
@@ -426,9 +426,9 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
 
             event.getController().setAnimationSpeed(1.00);
             if (getDeltaMovement().horizontalDistanceSqr() > 0.001D || event.isMoving())
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_agent.walk"));
+                return event.setAndContinue(ANIMATION_WALK);
 
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_agent.idle"));
+            return event.setAndContinue(ANIMATION_IDLE);
         }));
     }
 

@@ -20,6 +20,10 @@ public class ModSounds
     public static final RegistryObject<SoundEvent> ITEM_DANDORI_ATTACK_WIN = registerSoundEvent("item_dandori_attack_win");
     public static final RegistryObject<SoundEvent> ITEM_DANDORI_THROW = registerSoundEvent("item_dandori_throw");
     public static final RegistryObject<SoundEvent> ENTITY_VILLAGER_DANDORI_PLUCK = registerSoundEvent("entity_villager_dandori_pluck");
+    public static final RegistryObject<SoundEvent> ENTITY_GOLEM_KEY_PICKUP = registerSoundEvent("entity_golem_key_pickup");
+    public static final RegistryObject<SoundEvent> ENTITY_GOLEM_KEY_UNLOCK = registerSoundEvent("entity_golem_key_unlock");
+    public static final RegistryObject<SoundEvent> ENTITY_GOLEM_KEY_LOCK = registerSoundEvent("entity_golem_key_lock");
+    public static final RegistryObject<SoundEvent> ENTITY_GOLEM_KEY_HAPPY = registerSoundEvent("entity_golem_key_happy");
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String name)
     {

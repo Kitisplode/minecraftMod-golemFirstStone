@@ -1,34 +1,32 @@
 package com.kitisplode.golemfirststonemod.entity.client.model.legends;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemMossy;
+import com.kitisplode.golemfirststonemod.entity.client.model.EntityModelWithCustomAnimations;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemPlank;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
-public class EntityModelGolemPlank extends GeoModel<EntityGolemPlank>
+public class EntityModelGolemPlank extends EntityModelWithCustomAnimations<EntityGolemPlank>
 {
 	@Override
 	public ResourceLocation getModelResource(EntityGolemPlank animatable)
 	{
-		return new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/golem_plank.geo.json");
+		return animatable.getModelLocation();
 	}
 
 	@Override
 	public ResourceLocation getTextureResource(EntityGolemPlank animatable)
 	{
-		return new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/golem_plank.png");
+		return animatable.getTextureLocation();
 	}
 
 	@Override
 	public ResourceLocation getAnimationResource(EntityGolemPlank animatable)
 	{
-		return new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/golem_plank.animation.json");
+		return animatable.getAnimationsLocation();
 	}
 
 	@Override
@@ -38,6 +36,8 @@ public class EntityModelGolemPlank extends GeoModel<EntityGolemPlank>
 		if (head != null)
 		{
 			EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
+			this.savedBones.add(new SavedBone(head.getRotX(), "head", SavedBone.TYPES.ROTX));
+			this.savedBones.add(new SavedBone(head.getRotY(), "head", SavedBone.TYPES.ROTY));
 			head.setRotX(Mth.clamp(entityData.headPitch(), -20.0f, 20.0f) * Mth.DEG_TO_RAD);
 			head.setRotY(Mth.clamp(entityData.netHeadYaw(), -20.0f, 20.0f) * Mth.DEG_TO_RAD);
 		}
@@ -47,6 +47,7 @@ public class EntityModelGolemPlank extends GeoModel<EntityGolemPlank>
 			CoreGeoBone whole = getAnimationProcessor().getBone("whole");
 			if (whole != null)
 			{
+				this.savedBones.add(new SavedBone(whole.getRotX(), "whole", SavedBone.TYPES.ROTX));
 				whole.setRotX(animatable.getThrowAngle() * Mth.DEG_TO_RAD);
 			}
 		}

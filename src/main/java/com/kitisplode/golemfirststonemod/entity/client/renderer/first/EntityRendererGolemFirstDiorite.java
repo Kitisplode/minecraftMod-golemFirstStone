@@ -1,19 +1,15 @@
 package com.kitisplode.golemfirststonemod.entity.client.renderer.first;
 
-import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.client.model.first.EntityModelGolemFirstDiorite;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import com.kitisplode.golemfirststonemod.util.ExtraMath;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -32,17 +28,12 @@ public class EntityRendererGolemFirstDiorite extends GeoEntityRenderer<EntityGol
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(EntityGolemFirstDiorite animatable)
-	{
-		return new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/first/first_diorite.png");
-	}
-
-	@Override
 	public void render(EntityGolemFirstDiorite entity, float entityYaw, float partialTick, PoseStack poseStack,
 					   MultiBufferSource bufferSource, int packedLight)
 	{
 		super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
 		renderHeadFlame(entity, partialTick, poseStack, bufferSource, 15728640);
+		((EntityModelGolemFirstDiorite)this.model).resetCustomAnimations();
 	}
 
 	private void renderHeadFlame(EntityGolemFirstDiorite entity, float partialTick, PoseStack matrixStack, MultiBufferSource bufferSource, int packedLight)

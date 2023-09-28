@@ -1,5 +1,6 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem.legends;
 
+import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.EntityPawn;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
@@ -14,6 +15,7 @@ import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -51,6 +53,10 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 
 public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
 {
+    public static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/golem_grindstone.geo.json");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/legends/golem_grindstone.png");
+    public static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/golem_grindstone.animation.json");
+
     private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemGrindstone.class, EntityDataSerializers.INT);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private static final float attackSpeed = 0.7f;
@@ -190,8 +196,7 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
     @NotNull
     public InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand)
     {
-        ItemStack playerItem = pPlayer.getItemInHand(pHand);
-        if (playerItem.is(ModItems.ITEM_DANDORI_STAFF.get())) return InteractionResult.PASS;
+        if (this.interactIsPlayerHoldingDandoriCall(pPlayer)) return InteractionResult.PASS;
         if (!this.getPassengers().isEmpty()) return super.mobInteract(pPlayer, pHand);
         if (this.getOwner() != pPlayer) return super.mobInteract(pPlayer, pHand);
         this.doPlayerRide(pPlayer);
@@ -276,6 +281,19 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
     {
         this.setDeployPosition(null);
         return super.getDismountLocationForPassenger(pPassenger);
+    }
+
+    public ResourceLocation getModelLocation()
+    {
+        return MODEL;
+    }
+    public ResourceLocation getTextureLocation()
+    {
+        return TEXTURE;
+    }
+    public ResourceLocation getAnimationsLocation()
+    {
+        return ANIMATIONS;
     }
 
     @Override

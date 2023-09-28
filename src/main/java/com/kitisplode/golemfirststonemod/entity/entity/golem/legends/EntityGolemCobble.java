@@ -1,5 +1,6 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem.legends;
 
+import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityCanAttackBlocks;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
@@ -11,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
@@ -46,6 +48,10 @@ import java.util.function.Predicate;
 
 public class EntityGolemCobble extends AbstractGolemDandoriFollower implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower, IEntityCanAttackBlocks
 {
+    public static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/golem_cobble.geo.json");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/legends/golem_cobble.png");
+    public static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/golem_cobble.animation.json");
+
     private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemCobble.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> LEFT_ARM = SynchedEntityData.defineId(EntityGolemCobble.class, EntityDataSerializers.BOOLEAN);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
@@ -220,6 +226,19 @@ public class EntityGolemCobble extends AbstractGolemDandoriFollower implements G
         }
 
         return true;
+    }
+
+    public ResourceLocation getModelLocation()
+    {
+        return MODEL;
+    }
+    public ResourceLocation getTextureLocation()
+    {
+        return TEXTURE;
+    }
+    public ResourceLocation getAnimationsLocation()
+    {
+        return ANIMATIONS;
     }
 
     @Override

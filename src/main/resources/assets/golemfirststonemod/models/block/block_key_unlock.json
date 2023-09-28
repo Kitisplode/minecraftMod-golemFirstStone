@@ -1,0 +1,7 @@
+{
+    "parent": "golemfirststonemod:block/block_key_lock",
+    "textures": {
+        "front": "golemfirststonemod:block/block_key_unlock",
+        "bottom": "minecraft:block/observer_back_on"
+    }
+}

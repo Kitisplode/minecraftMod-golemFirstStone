@@ -7,7 +7,6 @@ import com.mojang.math.Axis;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -29,17 +28,12 @@ public class EntityRendererGolemTuff extends GeoEntityRenderer<EntityGolemTuff>
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(EntityGolemTuff animatable)
-	{
-		return animatable.getTexture();
-	}
-
-	@Override
 	public void render(EntityGolemTuff entity, float entityYaw, float partialTick, PoseStack poseStack,
 					   MultiBufferSource bufferSource, int packedLight)
 	{
 		super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
 		renderHeldItem(entity, partialTick, poseStack, bufferSource, packedLight);
+		((EntityModelGolemTuff)this.model).resetCustomAnimations();
 	}
 
 	private void renderHeldItem(EntityGolemTuff entity, float partialTick, PoseStack matrixStack, MultiBufferSource bufferSource, int packedLight)

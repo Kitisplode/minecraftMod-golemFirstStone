@@ -56,6 +56,13 @@ import java.util.function.Predicate;
 
 public class EntityGolemCopper extends AbstractGolemDandoriFollower implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower, IEntityCanAttackBlocks
 {
+    private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/golem_copper.geo.json");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/copper/golem_copper.png");
+    private static final ResourceLocation TEXTURE_EXPOSED = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/copper/golem_copper_exposed.png");
+    private static final ResourceLocation TEXTURE_WEATHERED = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/copper/golem_copper_weathered.png");
+    private static final ResourceLocation TEXTURE_OXIDIZED = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/copper/golem_copper_oxidized.png");
+    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/golem_copper.animation.json");
+
     private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemCopper.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> OXIDATION = SynchedEntityData.defineId(EntityGolemCopper.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> WAXED = SynchedEntityData.defineId(EntityGolemCopper.class, EntityDataSerializers.BOOLEAN);
@@ -69,12 +76,6 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
     private BlockPos blockTarget;
     private static final Predicate<BlockState> bsPredicate = blockState -> blockState != null
             && ((blockState.is(BlockTags.BUTTONS)));
-
-
-    private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/copper/golem_copper.png");
-    private static final ResourceLocation TEXTURE_EXPOSED = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/copper/golem_copper_exposed.png");
-    private static final ResourceLocation TEXTURE_WEATHERED = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/copper/golem_copper_weathered.png");
-    private static final ResourceLocation TEXTURE_OXIDIZED = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/copper/golem_copper_oxidized.png");
 
     public EntityGolemCopper(EntityType<? extends IronGolem> pEntityType, Level pLevel)
     {
@@ -219,6 +220,15 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
     }
 
     @Override
+    protected void updateDeployPosition()
+    {
+        if (this.getDeployPosition() != null)
+        {
+            if (this.distanceToSqr(this.getDeployPosition().getCenter()) < 4) this.setDeployPosition(null);
+        }
+    }
+
+    @Override
     public boolean tryAttack()
     {
        return false;
@@ -321,13 +331,21 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
         }
     }
 
-    public ResourceLocation getTexture()
+    public ResourceLocation getModelLocation()
+    {
+        return MODEL;
+    }
+    public ResourceLocation getTextureLocation()
     {
         int oxidation = this.getOxidation();
         if (oxidation == 0) return TEXTURE;
         if (oxidation == 1) return TEXTURE_EXPOSED;
         if (oxidation == 2) return TEXTURE_WEATHERED;
         return TEXTURE_OXIDIZED;
+    }
+    public ResourceLocation getAnimationsLocation()
+    {
+        return ANIMATIONS;
     }
 
     @Override
