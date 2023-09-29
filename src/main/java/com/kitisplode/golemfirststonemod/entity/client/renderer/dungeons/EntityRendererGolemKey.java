@@ -1,9 +1,7 @@
 package com.kitisplode.golemfirststonemod.entity.client.renderer.dungeons;
 
 import com.kitisplode.golemfirststonemod.entity.client.model.dungeons.EntityModelGolemKey;
-import com.kitisplode.golemfirststonemod.entity.client.model.other.EntityModelGolemAgent;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.dungeons.EntityGolemKey;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.other.EntityGolemAgent;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

@@ -2,6 +2,8 @@ package com.kitisplode.golemfirststonemod.block;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.block.entity.BlockEntityKeyLock;
+import com.kitisplode.golemfirststonemod.block.entity.client.BlockEntityRendererKeyLock;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -21,5 +23,11 @@ public class ModBlockEntities
 
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
+    }
+
+
+    public static void registerRenderers()
+    {
+        BlockEntityRenderers.register(ModBlockEntities.BLOCK_KEY_LOCK.get(), context -> new BlockEntityRendererKeyLock());
     }
 }

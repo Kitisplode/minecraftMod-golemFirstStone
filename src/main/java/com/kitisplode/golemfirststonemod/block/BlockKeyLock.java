@@ -3,6 +3,7 @@ package com.kitisplode.golemfirststonemod.block;
 import com.kitisplode.golemfirststonemod.block.entity.BlockEntityKeyLock;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -11,13 +12,13 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
@@ -62,20 +63,17 @@ public class BlockKeyLock extends ObserverBlock implements EntityBlock
                     pLevel.playSound(null, pPos, ModSounds.ENTITY_GOLEM_KEY_UNLOCK.get(), SoundSource.BLOCKS, 1.0f, pLevel.getRandom().nextFloat() * 0.4F + 0.8F);
                     return InteractionResult.sidedSuccess(pLevel.isClientSide);
                 }
-                else return InteractionResult.CONSUME;
             }
-            else
+            else if (playerItem.isEmpty())
             {
                 ItemStack golemItem = blockEntityKeyLock.removeItem(0, 1);
-                if (!pPlayer.getInventory().add(golemItem)) {
-                    pPlayer.drop(golemItem, false);
-                }
+                pPlayer.setItemInHand(pHand, golemItem);
                 pLevel.gameEvent(pPlayer, GameEvent.BLOCK_CHANGE, pPos);
                 pLevel.playSound(null, pPos, ModSounds.ENTITY_GOLEM_KEY_UNLOCK.get(), SoundSource.BLOCKS, 1.0f, pLevel.getRandom().nextFloat() * 0.4F + 0.8F);
                 return InteractionResult.sidedSuccess(pLevel.isClientSide);
             }
         }
-        return InteractionResult.PASS;
+        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
     }
 
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {

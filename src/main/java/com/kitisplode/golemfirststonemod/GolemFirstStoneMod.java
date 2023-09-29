@@ -102,6 +102,7 @@ public class GolemFirstStoneMod
             ModItems.registerModelPredicates();
             ModBlocks.registerRenderLayers();
             ModEntities.registerRenderers();
+            ModBlockEntities.registerRenderers();
             ModMenus.registerScreens();
         }
 
