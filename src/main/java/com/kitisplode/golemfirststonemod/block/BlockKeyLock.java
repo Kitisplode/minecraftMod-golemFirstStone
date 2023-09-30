@@ -3,7 +3,6 @@ package com.kitisplode.golemfirststonemod.block;
 import com.kitisplode.golemfirststonemod.block.entity.BlockEntityKeyLock;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -12,9 +11,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -51,6 +50,8 @@ public class BlockKeyLock extends ObserverBlock implements EntityBlock
     {
         BlockEntity be = pLevel.getBlockEntity(pPos);
         ItemStack playerItem = pPlayer.getItemInHand(pHand);
+        if (pHit.getDirection() != pState.getValue(DirectionalBlock.FACING))
+            return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
         if (be instanceof BlockEntityKeyLock blockEntityKeyLock)
         {
             if (blockEntityKeyLock.isEmpty())

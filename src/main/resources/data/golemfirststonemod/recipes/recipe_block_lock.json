@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "~~~",
+    "~#~",
+    "~~~"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:observer"
+    },
+    "~": {
+      "item": "minecraft:gold_block"
+    }
+  },
+  "result": {
+    "item": "golemfirststonemod:block_key_lock"
+  }
+
+}

@@ -126,7 +126,7 @@ public class BlockEntityKeyLock extends BlockEntity implements Container, GeoBlo
     {
         Direction direction = this.getBlockState().getValue(DirectionalBlock.FACING);
         BlockPos bp = this.getBlockPos().relative(direction);
-        return (this.level.getBrightness(LightLayer.BLOCK, bp) + 1) * 32;
+        return (this.level.getBrightness(LightLayer.BLOCK, bp)) * 31;
     }
 
     public ResourceLocation getModelLocation()
