@@ -42,6 +42,9 @@ public class ModItems
     public static final RegistryObject<Item> ITEM_SPAWN_GOLEM_TUFF = ITEMS.register("item_spawn_golem_tuff",
             () -> new ForgeSpawnEggItem(ModEntities.ENTITY_GOLEM_TUFF, 0xDFDFDF, 0x424742,
                     new Item.Properties()));
+    public static final RegistryObject<Item> ITEM_SPAWN_GOLEM_KEY = ITEMS.register("item_spawn_golem_key",
+            () -> new ForgeSpawnEggItem(ModEntities.ENTITY_GOLEM_KEY, 0xDFDFDF, 0x424742,
+                    new Item.Properties()));
 
 
     public static final RegistryObject<Item> ITEM_DANDORI_CALL = ITEMS.register("item_dandori_call",

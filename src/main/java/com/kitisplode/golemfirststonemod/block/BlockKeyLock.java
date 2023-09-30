@@ -11,20 +11,22 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.DirectionalBlock;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.ObserverBlock;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class BlockKeyLock extends ObserverBlock implements EntityBlock
 {
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public BlockKeyLock(Properties pProperties)
     {
         super(pProperties);
@@ -85,14 +87,50 @@ public class BlockKeyLock extends ObserverBlock implements EntityBlock
                     for(int i = 0; i < blockEntityKeyLock.getContainerSize(); ++i) {
                         ItemStack itemstack = blockEntityKeyLock.getItem(i);
                         if (!itemstack.isEmpty()) {
-                            Containers.dropItemStack(pLevel, (double)pPos.getX(), (double)pPos.getY(), (double)pPos.getZ(), itemstack);
+                            Containers.dropItemStack(pLevel, pPos.getX(), pPos.getY(), pPos.getZ(), itemstack);
                         }
                     }
                     blockEntityKeyLock.clearContent();
                     pLevel.updateNeighbourForOutputSignal(pPos, this);
                 }
             }
+            if (!pState.is(pNewState.getBlock())) {
+                if (!pLevel.isClientSide && pState.getValue(POWERED) && pLevel.getBlockTicks().hasScheduledTick(pPos, this)) {
+                    this.updateNeighborsInFront(pLevel, pPos, pState.setValue(POWERED, Boolean.valueOf(false)));
+                }
+            }
             super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
         }
+    }
+
+    protected void updateNeighborsInFront(Level pLevel, BlockPos pPos, BlockState pState) {
+        Direction direction = pState.getValue(FACING);
+        BlockPos blockpos = pPos.relative(direction.getOpposite());
+        pLevel.neighborChanged(blockpos, this, pPos);
+        pLevel.updateNeighborsAtExceptFromFacing(blockpos, this, direction);
+    }
+    public boolean isSignalSource(BlockState pState) {
+        return true;
+    }
+    public int getDirectSignal(BlockState pBlockState, BlockGetter pBlockAccess, BlockPos pPos, Direction pSide) {
+        return pBlockState.getSignal(pBlockAccess, pPos, pSide);
+    }
+    public int getSignal(BlockState pBlockState, BlockGetter pBlockAccess, BlockPos pPos, Direction pSide) {
+        return pBlockState.getValue(POWERED) && pBlockState.getValue(FACING) == pSide ? 15 : 0;
+    }
+    public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving)
+    {
+        if (!pState.is(pOldState.getBlock()))
+        {
+            if (!pLevel.isClientSide() && pState.getValue(POWERED) && !pLevel.getBlockTicks().hasScheduledTick(pPos, this))
+            {
+                BlockState blockstate = pState.setValue(POWERED, Boolean.valueOf(false));
+                pLevel.setBlock(pPos, blockstate, 18);
+                this.updateNeighborsInFront(pLevel, pPos, blockstate);
+            }
+        }
+    }
+    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+        return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite());
     }
 }

@@ -1,9 +1,9 @@
 package com.kitisplode.golemfirststonemod.block.entity;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
+import com.kitisplode.golemfirststonemod.block.BlockKeyLock;
 import com.kitisplode.golemfirststonemod.block.ModBlockEntities;
 import com.kitisplode.golemfirststonemod.item.ModItems;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -35,7 +35,8 @@ public class BlockEntityKeyLock extends BlockEntity implements Container, GeoBlo
     public static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/item/golem_key.animation.json");
 
     public static final RawAnimation ANIMATION_EMPTY = RawAnimation.begin().thenPlayAndHold("animation.golem_key.gone");
-    public static final RawAnimation ANIMATION_INSERTED = RawAnimation.begin().thenPlay("animation.golem_key.inserted").thenLoop("animation.golem_key.inserted_loop");
+    public static final RawAnimation ANIMATION_INSERTED = RawAnimation.begin().thenPlayAndHold("animation.golem_key.inserted");
+    public static final RawAnimation ANIMATION_INSERTED_LOOP = RawAnimation.begin().thenLoop("animation.golem_key.inserted_loop");
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -118,15 +119,14 @@ public class BlockEntityKeyLock extends BlockEntity implements Container, GeoBlo
     private void updateState()
     {
         BlockState bs = this.getBlockState();
-        bs = bs.setValue(ObserverBlock.POWERED, Boolean.valueOf(!this.isEmpty()));
+        bs = bs.setValue(BlockKeyLock.POWERED, Boolean.valueOf(!this.isEmpty()));
         Objects.requireNonNull(this.level).setBlock(this.worldPosition, bs, 3);
     }
 
-    public int getLightForKey()
+    public BlockPos getKeyPosition()
     {
         Direction direction = this.getBlockState().getValue(DirectionalBlock.FACING);
-        BlockPos bp = this.getBlockPos().relative(direction);
-        return (this.level.getBrightness(LightLayer.BLOCK, bp)) * 31;
+        return this.getBlockPos().relative(direction);
     }
 
     public ResourceLocation getModelLocation()
@@ -148,7 +148,7 @@ public class BlockEntityKeyLock extends BlockEntity implements Container, GeoBlo
         controllerRegistrar.add(new AnimationController<>(this, "controller", 0, event ->
         {
             BlockState bs = this.getBlockState();
-            if (bs.getValue(ObserverBlock.POWERED))
+            if (bs.getValue(BlockKeyLock.POWERED))
             {
                 return event.setAndContinue(ANIMATION_INSERTED);
             }

@@ -42,6 +42,8 @@ import net.minecraft.client.renderer.entity.TippableArrowRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -208,6 +210,7 @@ public class ModEntities
         event.put(ModEntities.ENTITY_PAWN_TERRACOTTA.get(), EntityPawn.setAttributes());
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static void registerRenderers()
     {
         EntityRenderers.register(ModEntities.ENTITY_GOLEM_FIRST_STONE.get(), EntityRendererGolemFirstStone::new);

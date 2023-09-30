@@ -48,8 +48,8 @@ public class GolemFirstStoneMod
         ModCreativeModTabs.register(modEventBus);
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
-        ModBlockEntities.register(modEventBus);
         ModEntities.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
         ModSounds.register(modEventBus);
 
         ModPOIs.POI_TYPES.register(modEventBus);
