@@ -1,23 +1,17 @@
 package com.kitisplode.golemfirststonemod.item.item;
 
-import com.kitisplode.golemfirststonemod.block.ModBlocks;
+import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.ModEntities;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.dungeons.EntityGolemKey;
 import com.kitisplode.golemfirststonemod.item.client.ItemRendererGolemKey;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.EndPortalFrameBlock;
-import net.minecraft.world.level.block.ObserverBlock;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.extensions.IForgeItem;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -25,7 +19,6 @@ import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.Animation;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -34,6 +27,10 @@ import java.util.function.Consumer;
 
 public class ItemGolemKey extends Item implements GeoItem, IForgeItem
 {
+    public static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/dungeons/golem_key.png");
+    public static final ResourceLocation TEXTURE_SCARED = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/dungeons/golem_key_scared.png");
+
+    private static final RawAnimation ANIMATION_CARRIED = RawAnimation.begin().thenLoop("animation.golem_key.carried");
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public ItemGolemKey(Properties pProperties)
@@ -90,13 +87,18 @@ public class ItemGolemKey extends Item implements GeoItem, IForgeItem
         });
     }
 
+    public ResourceLocation getTextureLocation()
+    {
+        return TEXTURE_SCARED;
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar)
     {
         controllerRegistrar.add(new AnimationController<GeoAnimatable>(this, "controller", 0, event ->
         {
             event.getController().setAnimationSpeed(2.00);
-            return event.setAndContinue(RawAnimation.begin().then("animation.golem_key.carried", Animation.LoopType.LOOP));
+            return event.setAndContinue(ANIMATION_CARRIED);
         }));
     }
 

@@ -45,8 +45,8 @@ public class EntityGolemKey extends AbstractGolemDandoriFollower implements IEnt
     private static final ResourceLocation TEXTURE_SCARED = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/dungeons/golem_key_scared.png");
     private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/item/golem_key.animation.json");
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-    public static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation.golem_key.idle");
-    public static final RawAnimation ANIMATION_WALK = RawAnimation.begin().thenLoop("animation.golem_key.walk");
+    private static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation.golem_key.idle");
+    private static final RawAnimation ANIMATION_WALK = RawAnimation.begin().thenLoop("animation.golem_key.walk");
 
     private static final EntityDataAccessor<Boolean> SCARED = SynchedEntityData.defineId(EntityGolemCobble.class, EntityDataSerializers.BOOLEAN);
 

@@ -50,33 +50,54 @@ public class BlockKeyLock extends ObserverBlock implements EntityBlock
 
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit)
     {
+        InteractionResult result = this.useInner(pState, pLevel, pPos, pPlayer, pHand, pHit);
+        if (result != null) return result;
+        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+    }
+
+    private InteractionResult useInner(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit)
+    {
         BlockEntity be = pLevel.getBlockEntity(pPos);
         ItemStack playerItem = pPlayer.getItemInHand(pHand);
-        if (pHit.getDirection() != pState.getValue(DirectionalBlock.FACING))
-            return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
         if (be instanceof BlockEntityKeyLock blockEntityKeyLock)
         {
-            if (blockEntityKeyLock.isEmpty())
+            if (pHit.getDirection() == pState.getValue(DirectionalBlock.FACING).getOpposite())
             {
-                if (playerItem.is(ModItems.ITEM_GOLEM_KEY.get()))
+                if (playerItem.isEmpty()) blockEntityKeyLock.setItem(1, ItemStack.EMPTY);
+                else blockEntityKeyLock.setItem(1, playerItem.copy());
+                return InteractionResult.sidedSuccess(pLevel.isClientSide);
+            }
+            else if (pHit.getDirection() == pState.getValue(DirectionalBlock.FACING))
+            {
+                if (blockEntityKeyLock.getItem(0).isEmpty())
                 {
-                    blockEntityKeyLock.setItem(0, playerItem.copy());
-                    playerItem.shrink(1);
-                    pLevel.playSound(null, pPos, ModSounds.ENTITY_GOLEM_KEY_HAPPY.get(), SoundSource.NEUTRAL, 1.0f, pLevel.getRandom().nextFloat() * 0.4F + 0.8F);
+                    if (playerItem.is(ModItems.ITEM_GOLEM_KEY.get()))
+                    {
+                        if (blockEntityKeyLock.isUnlocked(playerItem))
+                        {
+                            blockEntityKeyLock.setItem(0, playerItem.copy());
+                            playerItem.shrink(1);
+                            pLevel.playSound(null, pPos, ModSounds.ENTITY_GOLEM_KEY_HAPPY.get(), SoundSource.NEUTRAL, 1.0f, pLevel.getRandom().nextFloat() * 0.4F + 0.8F);
+                            pLevel.playSound(null, pPos, ModSounds.ENTITY_GOLEM_KEY_UNLOCK.get(), SoundSource.BLOCKS, 1.0f, pLevel.getRandom().nextFloat() * 0.4F + 0.8F);
+                            return InteractionResult.sidedSuccess(pLevel.isClientSide);
+                        }
+                        else
+                        {
+                            pLevel.playSound(null, pPos, ModSounds.ENTITY_GOLEM_KEY_UNLOCK.get(), SoundSource.BLOCKS, 1.0f, pLevel.getRandom().nextFloat() * 0.4F + 0.8F);
+                            return InteractionResult.CONSUME;
+                        }
+                    }
+                } else if (playerItem.isEmpty())
+                {
+                    ItemStack golemItem = blockEntityKeyLock.removeItem(0, 1);
+                    pPlayer.setItemInHand(pHand, golemItem);
+                    pLevel.gameEvent(pPlayer, GameEvent.BLOCK_CHANGE, pPos);
                     pLevel.playSound(null, pPos, ModSounds.ENTITY_GOLEM_KEY_UNLOCK.get(), SoundSource.BLOCKS, 1.0f, pLevel.getRandom().nextFloat() * 0.4F + 0.8F);
                     return InteractionResult.sidedSuccess(pLevel.isClientSide);
                 }
             }
-            else if (playerItem.isEmpty())
-            {
-                ItemStack golemItem = blockEntityKeyLock.removeItem(0, 1);
-                pPlayer.setItemInHand(pHand, golemItem);
-                pLevel.gameEvent(pPlayer, GameEvent.BLOCK_CHANGE, pPos);
-                pLevel.playSound(null, pPos, ModSounds.ENTITY_GOLEM_KEY_UNLOCK.get(), SoundSource.BLOCKS, 1.0f, pLevel.getRandom().nextFloat() * 0.4F + 0.8F);
-                return InteractionResult.sidedSuccess(pLevel.isClientSide);
-            }
         }
-        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+        return null;
     }
 
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
@@ -84,11 +105,9 @@ public class BlockKeyLock extends ObserverBlock implements EntityBlock
             BlockEntity blockentity = pLevel.getBlockEntity(pPos);
             if (blockentity instanceof BlockEntityKeyLock blockEntityKeyLock) {
                 if (!blockEntityKeyLock.isEmpty()) {
-                    for(int i = 0; i < blockEntityKeyLock.getContainerSize(); ++i) {
-                        ItemStack itemstack = blockEntityKeyLock.getItem(i);
-                        if (!itemstack.isEmpty()) {
-                            Containers.dropItemStack(pLevel, pPos.getX(), pPos.getY(), pPos.getZ(), itemstack);
-                        }
+                    ItemStack itemstack = blockEntityKeyLock.getItem(0);
+                    if (!itemstack.isEmpty()) {
+                        Containers.dropItemStack(pLevel, pPos.getX(), pPos.getY(), pPos.getZ(), itemstack);
                     }
                     blockEntityKeyLock.clearContent();
                     pLevel.updateNeighbourForOutputSignal(pPos, this);

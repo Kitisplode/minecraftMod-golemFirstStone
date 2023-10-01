@@ -3,7 +3,6 @@ package com.kitisplode.golemfirststonemod.block.entity;
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.block.BlockKeyLock;
 import com.kitisplode.golemfirststonemod.block.ModBlockEntities;
-import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -13,11 +12,10 @@ import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.DirectionalBlock;
-import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -27,6 +25,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Objects;
 
+import static com.kitisplode.golemfirststonemod.block.BlockKeyLock.POWERED;
+
 public class BlockEntityKeyLock extends BlockEntity implements Container, GeoBlockEntity
 {
     public static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/item/golem_key.geo.json");
@@ -34,13 +34,13 @@ public class BlockEntityKeyLock extends BlockEntity implements Container, GeoBlo
     public static final ResourceLocation TEXTURE_SCARED = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/dungeons/golem_key_scared.png");
     public static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/item/golem_key.animation.json");
 
-    public static final RawAnimation ANIMATION_EMPTY = RawAnimation.begin().thenPlayAndHold("animation.golem_key.gone");
-    public static final RawAnimation ANIMATION_INSERTED = RawAnimation.begin().thenPlayAndHold("animation.golem_key.inserted");
-    public static final RawAnimation ANIMATION_INSERTED_LOOP = RawAnimation.begin().thenLoop("animation.golem_key.inserted_loop");
+    private static final RawAnimation ANIMATION_EMPTY = RawAnimation.begin().thenPlayAndHold("animation.golem_key.gone");
+    private static final RawAnimation ANIMATION_INSERTED = RawAnimation.begin().thenPlayAndHold("animation.golem_key.inserted");
+    private static final RawAnimation ANIMATION_INSERTED_LOOP = RawAnimation.begin().thenLoop("animation.golem_key.inserted_loop");
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    private static final int slotCount = 1;
+    private static final int slotCount = 2;
     private final NonNullList<ItemStack> items = NonNullList.withSize(slotCount, ItemStack.EMPTY);
 
     public BlockEntityKeyLock(BlockPos pPos, BlockState pBlockState)
@@ -55,6 +55,18 @@ public class BlockEntityKeyLock extends BlockEntity implements Container, GeoBlo
 
     protected void saveAdditional(CompoundTag pTag) {
         ContainerHelper.saveAllItems(pTag, this.items, true);
+    }
+
+    @NotNull
+    public CompoundTag getUpdateTag()
+    {
+        CompoundTag nbt = super.getUpdateTag();
+        saveAdditional(nbt);
+        return nbt;
+    }
+    public void handleUpdateTag(CompoundTag nbt)
+    {
+        super.handleUpdateTag(nbt);
     }
 
     @Override
@@ -87,7 +99,6 @@ public class BlockEntityKeyLock extends BlockEntity implements Container, GeoBlo
         if (!itemstack.isEmpty()) {
             this.updateState();
         }
-
         return itemstack;
     }
 
@@ -100,10 +111,8 @@ public class BlockEntityKeyLock extends BlockEntity implements Container, GeoBlo
     @Override
     public void setItem(int pSlot, ItemStack pStack)
     {
-        if (pStack.is(ModItems.ITEM_GOLEM_KEY.get())) {
-            this.items.set(pSlot, pStack);
-            this.updateState();
-        }
+        this.items.set(pSlot, pStack);
+        this.updateState();
     }
 
     public boolean stillValid(Player pPlayer) {
@@ -119,13 +128,35 @@ public class BlockEntityKeyLock extends BlockEntity implements Container, GeoBlo
     private void updateState()
     {
         BlockState bs = this.getBlockState();
-        bs = bs.setValue(BlockKeyLock.POWERED, Boolean.valueOf(!this.isEmpty()));
+        bs = bs.setValue(POWERED, Boolean.valueOf(!this.getItem(0).isEmpty()));
         Objects.requireNonNull(this.level).setBlock(this.worldPosition, bs, 3);
+    }
+
+    public boolean isUnlocked(ItemStack actualKey)
+    {
+        if (actualKey.isEmpty()) return false;
+        else
+        {
+            ItemStack comparison = this.getItem(1);
+            if (comparison.isEmpty()) return true;
+            else
+            {
+                String actualKeyName = actualKey.getHoverName().getString();
+                String comparisonName = comparison.getHoverName().getString();
+                return actualKeyName.equals(comparisonName);
+            }
+        }
     }
 
     public BlockPos getKeyPosition()
     {
         Direction direction = this.getBlockState().getValue(DirectionalBlock.FACING);
+        return this.getBlockPos().relative(direction);
+    }
+
+    public BlockPos getBackPosition()
+    {
+        Direction direction = this.getBlockState().getValue(DirectionalBlock.FACING).getOpposite();
         return this.getBlockPos().relative(direction);
     }
 
@@ -147,8 +178,7 @@ public class BlockEntityKeyLock extends BlockEntity implements Container, GeoBlo
     {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 0, event ->
         {
-            BlockState bs = this.getBlockState();
-            if (bs.getValue(BlockKeyLock.POWERED))
+            if (this.getBlockState().getValue(POWERED))
             {
                 return event.setAndContinue(ANIMATION_INSERTED);
             }

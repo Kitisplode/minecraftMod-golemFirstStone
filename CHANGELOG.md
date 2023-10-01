@@ -115,3 +115,8 @@
         - Currently available only in creative mode / with cheats, i'm not yet sure about survival integration
     + Added Dandori Staff item
         - It's the Dandori Call item, except you click directly on the golems you want to follow you instead.
+
+# 0.0.12
+    + Added Key Golem
+    + Added Lock Block
+    + Fixed issue with the Agent Screen breaking the server version of the mod

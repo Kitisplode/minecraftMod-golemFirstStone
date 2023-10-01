@@ -11,4 +11,9 @@ public class ItemRendererGolemKey extends GeoItemRenderer<ItemGolemKey>
     public ItemRendererGolemKey() {
         super(new DefaultedItemGeoModel<>(new ResourceLocation(GolemFirstStoneMod.MOD_ID, "golem_key")));
     }
+
+    public ResourceLocation getTextureLocation(ItemGolemKey animatable)
+    {
+        return animatable.getTextureLocation();
+    }
 }

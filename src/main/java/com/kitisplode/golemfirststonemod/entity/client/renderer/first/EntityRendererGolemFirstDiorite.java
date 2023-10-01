@@ -58,8 +58,6 @@ public class EntityRendererGolemFirstDiorite extends GeoEntityRenderer<EntityGol
 		matrixStack.translate(0,-0.25,0);
 		matrixStack.scale(1.5f, 1.5f, 1.5f);
 
-//		VertexConsumer vc = bufferSource.getBuffer(RenderType.eyes(new ResourceLocation( "textures/block/soul_campfire_fire.png")));
-
 		this.itemInHandRenderer.renderItem(entity, itemStack, ItemDisplayContext.GROUND, false, matrixStack, bufferSource, packedLight);
 		matrixStack.popPose();
 	}
