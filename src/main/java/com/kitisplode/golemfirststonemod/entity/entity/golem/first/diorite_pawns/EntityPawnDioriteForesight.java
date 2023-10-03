@@ -47,7 +47,11 @@ public class EntityPawnDioriteForesight extends EntityGolemMossy implements GeoE
     private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/diorite_foresight.geo.json");
     private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_foresight.png");
     public static final ResourceLocation GLOW_TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_foresight_glowmask.png");
-    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/diorite_foresight.animation.json");
+    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/entity/golem/first/pawn/diorite_foresight.animation.json");
+
+    private static final RawAnimation ANIMATION_ATTACK_WINDUP = RawAnimation.begin().then("animation.diorite_foresight.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_ATTACK = RawAnimation.begin().then("animation.diorite_foresight.attack", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation.diorite_foresight.idle");
 
     private LivingEntity owner;
 
@@ -240,12 +244,12 @@ public class EntityPawnDioriteForesight extends EntityGolemMossy implements GeoE
                 if (pGolem.getAttackState() == 1)
                 {
                     event.getController().setAnimationSpeed(1.00);
-                    return event.setAndContinue(RawAnimation.begin().then("animation.diorite_foresight.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                    return event.setAndContinue(ANIMATION_ATTACK_WINDUP);
                 }
                 event.getController().setAnimationSpeed(1.00);
-                return event.setAndContinue(RawAnimation.begin().then("animation.diorite_foresight.attack", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                return event.setAndContinue(ANIMATION_ATTACK);
             }
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.diorite_foresight.idle"));
+            return event.setAndContinue(ANIMATION_IDLE);
         }));
     }
 }

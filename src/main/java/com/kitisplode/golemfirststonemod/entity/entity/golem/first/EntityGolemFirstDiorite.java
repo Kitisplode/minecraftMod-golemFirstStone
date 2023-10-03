@@ -50,7 +50,13 @@ public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implem
 {
     private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/first_diorite.geo.json");
     private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/first/first_diorite.png");
-    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/first_diorite.animation.json");
+    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/entity/golem/first/first_diorite.animation.json");
+
+    private static final RawAnimation ANIMATION_ATTACK_WINDUP = RawAnimation.begin().then("animation.first_diorite.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_ATTACK = RawAnimation.begin().then("animation.first_diorite.attack", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_ATTACK_END = RawAnimation.begin().then("animation.first_diorite.attack_end", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_WALK = RawAnimation.begin().thenLoop("animation.first_diorite.walk");
+    private static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation.first_diorite.idle");
 
     private static final EntityDataAccessor<Integer> SUMMON_STATE = SynchedEntityData.defineId(EntityGolemFirstDiorite.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> SUMMON_COOLDOWN = SynchedEntityData.defineId(EntityGolemFirstDiorite.class, EntityDataSerializers.BOOLEAN);
@@ -270,13 +276,13 @@ public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implem
                 {
                     case 1:
                         event.getController().setAnimationSpeed(0.5);
-                        return event.setAndContinue(RawAnimation.begin().then("animation.first_diorite.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                        return event.setAndContinue(ANIMATION_ATTACK_WINDUP);
                     case 2:
                         event.getController().setAnimationSpeed(1.00);
-                        return event.setAndContinue(RawAnimation.begin().then("animation.first_diorite.attack_charge", Animation.LoopType.LOOP));
+                        return event.setAndContinue(ANIMATION_ATTACK);
                     default:
                         event.getController().setAnimationSpeed(1.00);
-                        return event.setAndContinue(RawAnimation.begin().then("animation.first_diorite.attack_end", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                        return event.setAndContinue(ANIMATION_ATTACK_END);
                 }
             }
             else
@@ -284,9 +290,9 @@ public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implem
                 event.getController().setAnimationSpeed(1.00);
                 pGolem.setSummonState(0);
                 if (getDeltaMovement().horizontalDistanceSqr() > 0.001D || event.isMoving())
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.first_diorite.walk"));
+                    return event.setAndContinue(ANIMATION_WALK);
             }
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.first_diorite.idle"));
+            return event.setAndContinue(ANIMATION_IDLE);
         }));
     }
 

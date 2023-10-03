@@ -25,7 +25,12 @@ public class EntityPawnDioriteKnowledge extends EntityGolemPlank implements GeoE
     private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/diorite_knowledge.geo.json");
     private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_knowledge.png");
     public static final ResourceLocation GLOW_TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_knowledge_glowmask.png");
-    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/diorite_knowledge.animation.json");
+    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/entity/golem/first/pawn/diorite_knowledge.animation.json");
+
+    private static final RawAnimation ANIMATION_ATTACK_WINDUP = RawAnimation.begin().then("animation.diorite_knowledge.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_ATTACK = RawAnimation.begin().then("animation.diorite_knowledge.attack", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_WALK = RawAnimation.begin().thenLoop("animation.diorite_knowledge.walk");
+    private static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation.diorite_knowledge.idle");
 
     private LivingEntity owner;
 
@@ -124,19 +129,19 @@ public class EntityPawnDioriteKnowledge extends EntityGolemPlank implements GeoE
                 if (pGolem.getAttackState() == 1)
                 {
                     event.getController().setAnimationSpeed(2.00);
-                    return event.setAndContinue(RawAnimation.begin().then("animation.diorite_knowledge.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                    return event.setAndContinue(ANIMATION_ATTACK_WINDUP);
                 }
                 event.getController().setAnimationSpeed(2.00);
-                return event.setAndContinue(RawAnimation.begin().then("animation.diorite_knowledge.attack", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                return event.setAndContinue(ANIMATION_ATTACK);
             }
             else
             {
                 event.getController().setAnimationSpeed(1.00);
                 pGolem.setAttackState(0);
                 if (getDeltaMovement().horizontalDistanceSqr() > 0.001D || event.isMoving())
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.diorite_knowledge.walk"));
+                    return event.setAndContinue(ANIMATION_WALK);
             }
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.diorite_knowledge.idle"));
+            return event.setAndContinue(ANIMATION_IDLE);
         }));
     }
 }

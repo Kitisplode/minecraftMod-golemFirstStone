@@ -24,7 +24,14 @@ public class EntityPawnDioriteAction extends EntityGolemCobble implements GeoEnt
     public static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/diorite_action.geo.json");
     public static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_action.png");
     public static final ResourceLocation GLOW_TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_action_glowmask.png");
-    public static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/diorite_action.animation.json");
+    public static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/entity/golem/first/pawn/diorite_action.animation.json");
+
+    private static final RawAnimation ANIMATION_ATTACK_WINDUP_RIGHT = RawAnimation.begin().then("animation.diorite_action_2.attack_windup_right", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_ATTACK_WINDUP_LEFT = RawAnimation.begin().then("animation.diorite_action_2.attack_windup_left", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_ATTACK_RIGHT = RawAnimation.begin().then("animation.diorite_action_2.attack_right", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_ATTACK_LEFT = RawAnimation.begin().then("animation.diorite_action_2.attack_left", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_WALK = RawAnimation.begin().thenLoop("animation.diorite_action_2.walk");
+    private static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation.diorite_action_2.idle");
 
     private LivingEntity owner;
 
@@ -118,21 +125,21 @@ public class EntityPawnDioriteAction extends EntityGolemCobble implements GeoEnt
                 if (pGolem.getAttackState() == 1)
                 {
                     event.getController().setAnimationSpeed(4.00);
-                    if (!this.getLeftArm()) return event.setAndContinue(RawAnimation.begin().then("animation.diorite_action_2.attack_windup_right", Animation.LoopType.HOLD_ON_LAST_FRAME));
-                    return event.setAndContinue(RawAnimation.begin().then("animation.diorite_action_2.attack_windup_left", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                    if (!this.getLeftArm()) return event.setAndContinue(ANIMATION_ATTACK_WINDUP_RIGHT);
+                    return event.setAndContinue(ANIMATION_ATTACK_WINDUP_LEFT);
                 }
                 event.getController().setAnimationSpeed(4.00);
-                if (!this.getLeftArm()) return event.setAndContinue(RawAnimation.begin().then("animation.diorite_action_2.attack_right", Animation.LoopType.HOLD_ON_LAST_FRAME));
-                return event.setAndContinue(RawAnimation.begin().then("animation.diorite_action_2.attack_left", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                if (!this.getLeftArm()) return event.setAndContinue(ANIMATION_ATTACK_RIGHT);
+                return event.setAndContinue(ANIMATION_ATTACK_LEFT);
             }
             else
             {
                 event.getController().setAnimationSpeed(1.00);
                 pGolem.setAttackState(0);
                 if (getDeltaMovement().horizontalDistanceSqr() > 0.001D || event.isMoving())
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.diorite_action_2.walk"));
+                    return event.setAndContinue(ANIMATION_WALK);
             }
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.diorite_action_2.idle"));
+            return event.setAndContinue(ANIMATION_IDLE);
         }));
     }
 }

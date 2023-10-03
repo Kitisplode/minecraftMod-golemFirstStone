@@ -47,7 +47,12 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
 {
     public static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/golem_mossy.geo.json");
     public static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/legends/golem_mossy.png");
-    public static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/golem_mossy.animation.json");
+    public static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/entity/golem/legends/golem_mossy.animation.json");
+
+    private static final RawAnimation ANIMATION_ATTACK_WINDUP = RawAnimation.begin().then("animation.golem_mossy.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_ATTACK = RawAnimation.begin().then("animation.golem_mossy.attack", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_WALK = RawAnimation.begin().thenLoop("animation.golem_mossy.walk");
+    private static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation.golem_mossy.idle");
 
     private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemMossy.class, EntityDataSerializers.INT);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
@@ -262,19 +267,19 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
                 if (pGolem.getAttackState() == 1)
                 {
                     event.getController().setAnimationSpeed(0.50);
-                    return event.setAndContinue(RawAnimation.begin().then("animation.golem_mossy.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                    return event.setAndContinue(ANIMATION_ATTACK_WINDUP);
                 }
                 event.getController().setAnimationSpeed(1.00);
-                return event.setAndContinue(RawAnimation.begin().then("animation.golem_mossy.attack", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                return event.setAndContinue(ANIMATION_ATTACK);
             }
             else
             {
                 event.getController().setAnimationSpeed(1.00);
                 pGolem.setAttackState(0);
                 if (getDeltaMovement().horizontalDistanceSqr() > 0.001D || event.isMoving())
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_mossy.walk"));
+                    return event.setAndContinue(ANIMATION_WALK);
             }
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_mossy.idle"));
+            return event.setAndContinue(ANIMATION_IDLE);
         }));
     }
 

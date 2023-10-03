@@ -61,7 +61,7 @@ public class EntityGolemAgent extends AbstractGolemDandoriFollower implements Co
     private static final ResourceLocation TEXTURE_OFF = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/other/golem_agent_off.png");
     private static final ResourceLocation TEXTURE_ON = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/other/golem_agent.png");
     public static final ResourceLocation GLOWMASK = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/other/golem_agent_glowmask.png");
-    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/golem_agent.animation.json");
+    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/entity/golem/other/golem_agent.animation.json");
 
     public static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation.golem_agent.idle");
     public static final RawAnimation ANIMATION_WALK = RawAnimation.begin().thenLoop("animation.golem_agent.walk");

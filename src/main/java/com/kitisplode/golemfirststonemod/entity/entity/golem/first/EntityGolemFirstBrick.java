@@ -56,7 +56,13 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
 {
     private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/first_brick.geo.json");
     private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/first/first_brick.png");
-    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/first_brick.animation.json");
+    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/entity/golem/first/first_brick.animation.json");
+
+    private static final RawAnimation ANIMATION_ATTACK_WINDUP = RawAnimation.begin().then("animation.first_brick.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_ATTACK = RawAnimation.begin().then("animation.first_brick.attack", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_ATTACK_END = RawAnimation.begin().then("animation.first_brick.attack_end", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_WALK = RawAnimation.begin().thenLoop("animation.first_brick.walk");
+    private static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation.first_brick.idle");
 
     private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemFirstBrick.class, EntityDataSerializers.INT);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
@@ -326,13 +332,13 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
                 {
                     case 1:
                         event.getController().setAnimationSpeed(0.5);
-                        return event.setAndContinue(RawAnimation.begin().then("animation.first_brick.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                        return event.setAndContinue(ANIMATION_ATTACK_WINDUP);
                     case 2, 3:
                         event.getController().setAnimationSpeed(1.00);
-                        return event.setAndContinue(RawAnimation.begin().then("animation.first_brick.attack", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                        return event.setAndContinue(ANIMATION_ATTACK);
                     default:
                         event.getController().setAnimationSpeed(1.00);
-                        return event.setAndContinue(RawAnimation.begin().then("animation.first_brick.attack_end", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                        return event.setAndContinue(ANIMATION_ATTACK_END);
                 }
             }
             else
@@ -340,9 +346,9 @@ public class EntityGolemFirstBrick extends AbstractGolemDandoriFollower implemen
                 event.getController().setAnimationSpeed(1.00);
                 pGolem.setAttackState(0);
                 if (getDeltaMovement().horizontalDistanceSqr() > 0.001D || event.isMoving())
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.first_brick.walk"));
+                    return event.setAndContinue(ANIMATION_WALK);
             }
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.first_brick.idle"));
+            return event.setAndContinue(ANIMATION_IDLE);
         }));
     }
 

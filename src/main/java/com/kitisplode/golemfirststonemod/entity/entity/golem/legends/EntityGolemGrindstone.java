@@ -55,7 +55,16 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
 {
     public static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/golem_grindstone.geo.json");
     public static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/legends/golem_grindstone.png");
-    public static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/golem_grindstone.animation.json");
+    public static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/entity/golem/legends/golem_grindstone.animation.json");
+
+    private static final RawAnimation ANIMATION_ATTACK_WINDUP = RawAnimation.begin().then("animation.golem_grindstone.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_ATTACK = RawAnimation.begin().thenLoop("animation.golem_grindstone.attack");
+    private static final RawAnimation ANIMATION_ATTACK_END = RawAnimation.begin().then("animation.golem_grindstone.attack_end", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_CARRY_FORWARD = RawAnimation.begin().thenLoop("animation.golem_grindstone.carry");
+    private static final RawAnimation ANIMATION_CARRY_IDLE = RawAnimation.begin().thenLoop("animation.golem_grindstone.carry_idle");
+    private static final RawAnimation ANIMATION_CARRY_BACKWARD = RawAnimation.begin().thenLoop("animation.golem_grindstone.carry_backwards");
+    private static final RawAnimation ANIMATION_WALK = RawAnimation.begin().thenLoop("animation.golem_grindstone.walk");
+    private static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation.golem_grindstone.idle");
 
     private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemGrindstone.class, EntityDataSerializers.INT);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
@@ -307,15 +316,15 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
                 if (pGolem.getAttackState() == 1)
                 {
                     event.getController().setAnimationSpeed(1.00);
-                    return event.setAndContinue(RawAnimation.begin().then("animation.golem_grindstone.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                    return event.setAndContinue(ANIMATION_ATTACK_WINDUP);
                 }
                 else if (pGolem.getAttackState() == 2)
                 {
                     event.getController().setAnimationSpeed(2.00);
-                    return event.setAndContinue(RawAnimation.begin().then("animation.golem_grindstone.attack", Animation.LoopType.LOOP));
+                    return event.setAndContinue(ANIMATION_ATTACK);
                 }
                 event.getController().setAnimationSpeed(1.00);
-                return event.setAndContinue(RawAnimation.begin().then("animation.golem_grindstone.attack_end", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                return event.setAndContinue(ANIMATION_ATTACK_END);
             }
             else
             {
@@ -328,16 +337,16 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriFollower implemen
                     {
                         if (pGolem.movingBackwards)
                         {
-                            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_grindstone.carry_backwards"));
+                            return event.setAndContinue(ANIMATION_CARRY_BACKWARD);
                         }
-                        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_grindstone.carry"));
+                        return event.setAndContinue(ANIMATION_CARRY_FORWARD);
                     }
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_grindstone.walk"));
+                    return event.setAndContinue(ANIMATION_WALK);
                 }
                 else if (hasPassengers)
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_grindstone.carry_idle"));
+                    return event.setAndContinue(ANIMATION_CARRY_IDLE);
             }
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_grindstone.idle"));
+            return event.setAndContinue(ANIMATION_IDLE);
         }));
     }
 

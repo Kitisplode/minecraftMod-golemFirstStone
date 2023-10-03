@@ -47,7 +47,12 @@ public class EntityGolemPlank extends AbstractGolemDandoriFollower implements Ge
 {
     private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/golem_plank.geo.json");
     private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/legends/golem_plank.png");
-    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/golem_plank.animation.json");
+    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/entity/golem/legends/golem_plank.animation.json");
+
+    private static final RawAnimation ANIMATION_ATTACK_WINDUP = RawAnimation.begin().then("animation.golem_plank.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_ATTACK = RawAnimation.begin().then("animation.golem_plank.attack", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_WALK = RawAnimation.begin().thenLoop("animation.golem_plank.walk");
+    private static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation.golem_plank.idle");
 
     private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemPlank.class, EntityDataSerializers.INT);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
@@ -196,19 +201,19 @@ public class EntityGolemPlank extends AbstractGolemDandoriFollower implements Ge
                 if (pGolem.getAttackState() == 1)
                 {
                     event.getController().setAnimationSpeed(2.00);
-                    return event.setAndContinue(RawAnimation.begin().then("animation.golem_plank.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                    return event.setAndContinue(ANIMATION_ATTACK_WINDUP);
                 }
                 event.getController().setAnimationSpeed(2.00);
-                return event.setAndContinue(RawAnimation.begin().then("animation.golem_plank.attack", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                return event.setAndContinue(ANIMATION_ATTACK);
             }
             else
             {
                 event.getController().setAnimationSpeed(1.00);
                 pGolem.setAttackState(0);
                 if (getDeltaMovement().horizontalDistanceSqr() > 0.001D || event.isMoving())
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_plank.walk"));
+                    return event.setAndContinue(ANIMATION_WALK);
             }
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_plank.idle"));
+            return event.setAndContinue(ANIMATION_IDLE);
         }));
     }
 

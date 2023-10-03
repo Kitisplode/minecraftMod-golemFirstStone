@@ -5,13 +5,9 @@ import com.kitisplode.golemfirststonemod.entity.entity.effect.EntitySoundRepeate
 import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemMossy;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
-import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
-import com.kitisplode.golemfirststonemod.entity.entity.projectile.EntityProjectileAoEOwnerAware;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowSoftGoal;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriMoveToDeployPositionGoal;
-import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoalRanged;
-import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +15,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -28,25 +23,15 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.Zoglin;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -58,7 +43,6 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Predicate;
 
 public class EntityGolemTuff extends AbstractGolemDandoriFollower implements GeoEntity, IEntityDandoriFollower
@@ -66,7 +50,13 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
     private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/golem_tuff.geo.json");
     private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/tuff/golem_tuff.png");
     private static final ResourceLocation TEXTURE_SLEEPING = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/tuff/golem_tuff_sleep.png");
-    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/golem_tuff.animation.json");
+    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/entity/golem/vote/golem_tuff.animation.json");
+
+    private static final RawAnimation ANIMATION_SIT_WINDUP = RawAnimation.begin().then("animation.golem_tuff.sit_start", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_SIT = RawAnimation.begin().then("animation.golem_tuff.sit", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_SIT_END = RawAnimation.begin().then("animation.golem_tuff.sit_stop", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_WALK = RawAnimation.begin().thenLoop("animation.golem_tuff.walk");
+    private static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation.golem_tuff.idle");
 
     private static final EntityDataAccessor<Integer> SLEEP_STATUS = SynchedEntityData.defineId(EntityGolemMossy.class, EntityDataSerializers.INT);
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
@@ -79,7 +69,6 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
     private boolean wantsToSleep = false;
 
     static final Predicate<ItemEntity> ALLOWED_ITEMS = itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive();
-
 
     public EntityGolemTuff(EntityType<? extends IronGolem> pEntityType, Level pLevel)
     {
@@ -355,16 +344,16 @@ public class EntityGolemTuff extends AbstractGolemDandoriFollower implements Geo
             {
                 switch (sleepStatus)
                 {
-                    case 1: return event.setAndContinue(RawAnimation.begin().then("animation.golem_tuff.sit_start", Animation.LoopType.HOLD_ON_LAST_FRAME));
-                    case 2: return event.setAndContinue(RawAnimation.begin().then("animation.golem_tuff.sit", Animation.LoopType.HOLD_ON_LAST_FRAME));
-                    case 3: return event.setAndContinue(RawAnimation.begin().then("animation.golem_tuff.sit_stop", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                    case 1: return event.setAndContinue(ANIMATION_SIT_WINDUP);
+                    case 2: return event.setAndContinue(ANIMATION_SIT);
+                    case 3: return event.setAndContinue(ANIMATION_SIT_END);
                     default: break;
                 }
             }
             event.getController().setAnimationSpeed(1.00);
             if (pGolem.getDeltaMovement().horizontalDistanceSqr() > 0.001D || event.isMoving())
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_tuff.walk"));
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_tuff.idle"));
+                return event.setAndContinue(ANIMATION_WALK);
+            return event.setAndContinue(ANIMATION_IDLE);
         }));
     }
 

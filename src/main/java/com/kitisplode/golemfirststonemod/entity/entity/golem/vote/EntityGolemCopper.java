@@ -61,7 +61,15 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
     private static final ResourceLocation TEXTURE_EXPOSED = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/copper/golem_copper_exposed.png");
     private static final ResourceLocation TEXTURE_WEATHERED = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/copper/golem_copper_weathered.png");
     private static final ResourceLocation TEXTURE_OXIDIZED = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/copper/golem_copper_oxidized.png");
-    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/golem_copper.animation.json");
+    private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/entity/golem/vote/golem_copper.animation.json");
+
+    private static final RawAnimation ANIMATION_ATTACK_WINDUP = RawAnimation.begin().then("animation.golem_copper.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_ATTACK = RawAnimation.begin().then("animation.golem_copper.attack", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_ATTACK_END = RawAnimation.begin().then("animation.golem_copper.attack_end", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_WALK = RawAnimation.begin().thenLoop("animation.golem_copper.walk");
+    private static final RawAnimation ANIMATION_WALK_EXPOSED = RawAnimation.begin().thenLoop("animation.golem_copper.walk_exposed");
+    private static final RawAnimation ANIMATION_WALK_WEATHERED = RawAnimation.begin().thenLoop("animation.golem_copper.walk_weathered");
+    private static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation.golem_copper.idle");
 
     private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemCopper.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> OXIDATION = SynchedEntityData.defineId(EntityGolemCopper.class, EntityDataSerializers.INT);
@@ -365,15 +373,15 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
                 if (pGolem.getAttackState() == 1)
                 {
                     event.getController().setAnimationSpeed(2.00);
-                    return event.setAndContinue(RawAnimation.begin().then("animation.golem_copper.attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                    return event.setAndContinue(ANIMATION_ATTACK_WINDUP);
                 }
                 if (pGolem.getAttackState() == 2)
                 {
                     event.getController().setAnimationSpeed(2.00);
-                    return event.setAndContinue(RawAnimation.begin().then("animation.golem_copper.attack", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                    return event.setAndContinue(ANIMATION_ATTACK);
                 }
                 event.getController().setAnimationSpeed(2.00);
-                return event.setAndContinue(RawAnimation.begin().then("animation.golem_copper.attack_end", Animation.LoopType.HOLD_ON_LAST_FRAME));
+                return event.setAndContinue(ANIMATION_ATTACK_END);
             }
             else
             {
@@ -383,19 +391,19 @@ public class EntityGolemCopper extends AbstractGolemDandoriFollower implements G
                     if (oxidation == 0)
                     {
                         event.getController().setAnimationSpeed(1.00);
-                        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_copper.walk"));
+                        return event.setAndContinue(ANIMATION_WALK);
                     }
                     if (oxidation == 1)
                     {
                         event.getController().setAnimationSpeed(0.75);
-                        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_copper.walk_exposed"));
+                        return event.setAndContinue(ANIMATION_WALK_EXPOSED);
                     }
                     event.getController().setAnimationSpeed(0.50);
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_copper.walk_weathered"));
+                    return event.setAndContinue(ANIMATION_WALK_WEATHERED);
                 }
             }
             event.getController().setAnimationSpeed(1.00);
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.golem_copper.idle"));
+            return event.setAndContinue(ANIMATION_IDLE);
         }));
     }
 
