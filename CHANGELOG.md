@@ -120,3 +120,4 @@
     + Added Key Golem
     + Added Lock Block
     + Fixed issue with the Agent Screen breaking the server version of the mod
+    + Fixed issue with custom animations affecting all entities of the same type
