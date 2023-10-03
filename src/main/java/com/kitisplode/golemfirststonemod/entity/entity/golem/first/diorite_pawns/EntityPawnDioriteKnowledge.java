@@ -22,7 +22,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 
 public class EntityPawnDioriteKnowledge extends EntityGolemPlank implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower
 {
-    private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/diorite_knowledge.geo.json");
+    private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/entity/golem/first/pawn/diorite_knowledge.geo.json");
     private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_knowledge.png");
     public static final ResourceLocation GLOW_TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/pawn/diorite/diorite_knowledge_glowmask.png");
     private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/entity/golem/first/pawn/diorite_knowledge.animation.json");

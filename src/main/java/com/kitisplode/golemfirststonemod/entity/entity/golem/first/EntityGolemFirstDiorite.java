@@ -48,7 +48,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 
 public class EntityGolemFirstDiorite extends AbstractGolemDandoriFollower implements GeoEntity, IEntitySummoner, IEntityDandoriFollower
 {
-    private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/first_diorite.geo.json");
+    private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/entity/golem/first/first_diorite.geo.json");
     private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/first/first_diorite.png");
     private static final ResourceLocation ANIMATIONS = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "animations/entity/golem/first/first_diorite.animation.json");
 

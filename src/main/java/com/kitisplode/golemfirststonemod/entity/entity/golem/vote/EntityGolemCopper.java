@@ -56,7 +56,7 @@ import java.util.function.Predicate;
 
 public class EntityGolemCopper extends AbstractGolemDandoriFollower implements GeoEntity, IEntityWithDelayedMeleeAttack, IEntityDandoriFollower, IEntityCanAttackBlocks
 {
-    private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/golem_copper.geo.json");
+    private static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/entity/golem/vote/golem_copper.geo.json");
     private static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/copper/golem_copper.png");
     private static final ResourceLocation TEXTURE_EXPOSED = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/copper/golem_copper_exposed.png");
     private static final ResourceLocation TEXTURE_WEATHERED = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/vote/copper/golem_copper_weathered.png");
