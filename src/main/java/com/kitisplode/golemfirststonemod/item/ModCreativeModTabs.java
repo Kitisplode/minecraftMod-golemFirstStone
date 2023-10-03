@@ -44,6 +44,7 @@ public class ModCreativeModTabs
                         pOutput.accept(ModItems.ITEM_SPAWN_GOLEM_MOSSY.get());
                         pOutput.accept(ModItems.ITEM_SPAWN_GOLEM_GRINDSTONE.get());
                         pOutput.accept(ModItems.ITEM_SPAWN_GOLEM_KEY.get());
+                        pOutput.accept(ModItems.ITEM_SPAWN_GOLEM_PRISON.get());
 
                         pOutput.accept(ModItems.ITEM_DANDORI_CALL.get());
                         pOutput.accept(ModItems.ITEM_DANDORI_BANNER.get());

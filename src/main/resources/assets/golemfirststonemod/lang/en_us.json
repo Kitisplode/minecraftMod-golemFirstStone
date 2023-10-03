@@ -9,6 +9,7 @@
   "item.golemfirststonemod.item_spawn_golem_tuff": "Tuff Golem Spawn",
   "item.golemfirststonemod.item_spawn_golem_agent": "Agent Golem Spawn",
   "item.golemfirststonemod.item_spawn_golem_key": "Key Golem Spawn",
+  "item.golemfirststonemod.item_spawn_golem_prison": "Prison Golem Spawn",
 
   "item.golemfirststonemod.item_golem_key": "Key Golem",
 
@@ -66,6 +67,8 @@
   "entity.golemfirststonemod.entity_golem_tuff": "Tuff Golem",
   "entity.golemfirststonemod.entity_golem_copper": "Copper Golem",
   "entity.golemfirststonemod.entity_golem_agent": "Agent Golem",
+  "entity.golemfirststonemod.entity_golem_key": "Key Golem",
+  "entity.golemfirststonemod.entity_golem_prison": "Prison Golem",
 
   "entity.golemfirststonemod.entity_pawn_terracotta": "Terracota Pawn",
   "entity.golemfirststonemod.entity_villager_dandori": "Dandori Acolyte",
