@@ -83,7 +83,7 @@ public class BlockKeyLock extends ObserverBlock implements EntityBlock
                         }
                         else
                         {
-                            pLevel.playSound(null, pPos, ModSounds.ENTITY_GOLEM_KEY_UNLOCK.get(), SoundSource.BLOCKS, 1.0f, pLevel.getRandom().nextFloat() * 0.4F + 0.8F);
+                            pLevel.playSound(null, pPos, ModSounds.ENTITY_GOLEM_KEY_LOCK.get(), SoundSource.BLOCKS, 1.0f, pLevel.getRandom().nextFloat() * 0.4F + 0.8F);
                             return InteractionResult.CONSUME;
                         }
                     }
@@ -92,7 +92,7 @@ public class BlockKeyLock extends ObserverBlock implements EntityBlock
                     ItemStack golemItem = blockEntityKeyLock.removeItem(0, 1);
                     pPlayer.setItemInHand(pHand, golemItem);
                     pLevel.gameEvent(pPlayer, GameEvent.BLOCK_CHANGE, pPos);
-                    pLevel.playSound(null, pPos, ModSounds.ENTITY_GOLEM_KEY_UNLOCK.get(), SoundSource.BLOCKS, 1.0f, pLevel.getRandom().nextFloat() * 0.4F + 0.8F);
+                    pLevel.playSound(null, pPos, ModSounds.ENTITY_GOLEM_KEY_LOCK.get(), SoundSource.BLOCKS, 1.0f, pLevel.getRandom().nextFloat() * 0.4F + 0.8F);
                     return InteractionResult.sidedSuccess(pLevel.isClientSide);
                 }
             }

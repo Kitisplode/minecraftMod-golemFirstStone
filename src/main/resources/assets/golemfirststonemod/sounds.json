@@ -75,5 +75,26 @@
     "sounds": [
       "golemfirststonemod:entity_golem_key_happy"
     ]
+  },
+  "entity_golem_prison_step":
+  {
+    "subtitle": "sound.golemfirststonemod.entity_golem_prison_step",
+    "sounds": [
+      "golemfirststonemod:entity_golem_prison_step"
+    ]
+  },
+  "entity_golem_prison_hurt":
+  {
+    "subtitle": "sound.golemfirststonemod.entity_golem_prison_hurt",
+    "sounds": [
+      "golemfirststonemod:entity_golem_prison_hurt"
+    ]
+  },
+  "entity_golem_prison_death":
+  {
+    "subtitle": "sound.golemfirststonemod.entity_golem_prison_death",
+    "sounds": [
+      "golemfirststonemod:entity_golem_prison_death"
+    ]
   }
 }

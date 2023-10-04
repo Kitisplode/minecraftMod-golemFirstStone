@@ -61,7 +61,8 @@ public class ModBlocks
             ModBlocks::copperButton);
     public static final RegistryObject<Block> BLOCK_KEY_LOCK = registerBlock("block_key_lock",
             () -> new BlockKeyLock(BlockBehaviour.Properties.of().mapColor(MapColor.GOLD).instrument(NoteBlockInstrument.CHIME).strength(3.0F).requiresCorrectToolForDrops().isRedstoneConductor(ModBlocks::never)));
-
+    public static final RegistryObject<Block> BLOCK_PATH_GOLEM_PRISON = registerBlock("block_path_golem_prison",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
 
     private static ButtonBlock copperButton() {
         return new ButtonBlock(BlockBehaviour.Properties.of().noCollission().strength(0.5F).pushReaction(PushReaction.DESTROY), BlockSetType.STONE, 10, false);

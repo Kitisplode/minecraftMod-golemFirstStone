@@ -33,6 +33,7 @@ public class ModCreativeModTabs
                         pOutput.accept(ModBlocks.BLOCK_VILLAGER_BRICK.get());
                         pOutput.accept(ModBlocks.BLOCK_VILLAGER_DIORITE.get());
                         pOutput.accept(ModBlocks.BLOCK_KEY_LOCK.get());
+                        pOutput.accept(ModBlocks.BLOCK_PATH_GOLEM_PRISON.get());
                         pOutput.accept(ModBlocks.BLOCK_BUTTON_COPPER.get());
                         // Items
 //                        pOutput.accept(ModItems.ITEM_SPAWN_PAWN_FIRST_DIORITE.get());

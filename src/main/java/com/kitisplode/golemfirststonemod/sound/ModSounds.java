@@ -24,6 +24,9 @@ public class ModSounds
     public static final RegistryObject<SoundEvent> ENTITY_GOLEM_KEY_UNLOCK = registerSoundEvent("entity_golem_key_unlock");
     public static final RegistryObject<SoundEvent> ENTITY_GOLEM_KEY_LOCK = registerSoundEvent("entity_golem_key_lock");
     public static final RegistryObject<SoundEvent> ENTITY_GOLEM_KEY_HAPPY = registerSoundEvent("entity_golem_key_happy");
+    public static final RegistryObject<SoundEvent> ENTITY_GOLEM_PRISON_STEP = registerSoundEvent("entity_golem_prison_step");
+    public static final RegistryObject<SoundEvent> ENTITY_GOLEM_PRISON_HURT = registerSoundEvent("entity_golem_prison_hurt");
+    public static final RegistryObject<SoundEvent> ENTITY_GOLEM_PRISON_DEATH = registerSoundEvent("entity_golem_prison_death");
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String name)
     {

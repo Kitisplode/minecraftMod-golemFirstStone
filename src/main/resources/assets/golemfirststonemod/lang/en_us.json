@@ -50,6 +50,7 @@
   "block.golemfirststonemod.block_villager_diorite": "Golem Goldsmith Workstation",
   "block.golemfirststonemod.block_button_copper": "Copper Button",
   "block.golemfirststonemod.block_key_lock": "Lock",
+  "block.golemfirststonemod.block_path_golem_prison": "Prison Golem Patrol Waypoint",
 
   "entity.golemfirststonemod.entity_golem_first_stone": "First of Stone",
   "entity.golemfirststonemod.entity_golem_first_oak": "First of Oak",
@@ -148,6 +149,9 @@
   "sound.golemfirststonemod.entity_golem_key_unlock": "Key clicking",
   "sound.golemfirststonemod.entity_golem_key_lock": "Key clicking",
   "sound.golemfirststonemod.entity_golem_key_happy": "Key Golem coo",
+  "sound.golemfirststonemod.entity_golem_prison_step": "Prison Golem step",
+  "sound.golemfirststonemod.entity_golem_prison_hurt": "Prison Golem hurt",
+  "sound.golemfirststonemod.entity_golem_prison_death": "Prison Golem snarl",
 
   "creativetab.golemfirststonemod": "Golem Dandori",
   "creativetab.golemfirststonemodagent": "Golem Dandori: Agent"

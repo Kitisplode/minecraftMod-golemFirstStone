@@ -20,4 +20,6 @@ public class ModPOIs
             ModBlocks.BLOCK_VILLAGER_BRICK.get().getStateDefinition().getPossibleStates()), 1, 1));
     public static RegistryObject<PoiType> POI_VILLAGER_DIORITE = POI_TYPES.register("poi_villager_diorite", () -> new PoiType(ImmutableSet.copyOf(
             ModBlocks.BLOCK_VILLAGER_DIORITE.get().getStateDefinition().getPossibleStates()), 1, 1));
+    public static RegistryObject<PoiType> POI_PATH_GOLEM_PRISON = POI_TYPES.register("poi_path_golem_prison", () -> new PoiType(ImmutableSet.copyOf(
+            ModBlocks.BLOCK_PATH_GOLEM_PRISON.get().getStateDefinition().getPossibleStates()), 1, 1));
 }
