@@ -96,5 +96,33 @@
     "sounds": [
       "golemfirststonemod:entity_golem_prison_death"
     ]
+  },
+  "entity_golem_prison_search":
+  {
+    "subtitle": "sound.golemfirststonemod.entity_golem_prison_search",
+    "sounds": [
+      "golemfirststonemod:entity_golem_prison_search"
+    ]
+  },
+  "entity_golem_prison_continue":
+  {
+    "subtitle": "sound.golemfirststonemod.entity_golem_prison_continue",
+    "sounds": [
+      "golemfirststonemod:entity_golem_prison_continue"
+    ]
+  },
+  "entity_golem_prison_attack":
+  {
+    "subtitle": "sound.golemfirststonemod.entity_golem_prison_attack",
+    "sounds": [
+      "golemfirststonemod:entity_golem_prison_attack"
+    ]
+  },
+  "entity_golem_prison_alert":
+  {
+    "subtitle": "sound.golemfirststonemod.entity_golem_prison_alert",
+    "sounds": [
+      "golemfirststonemod:entity_golem_prison_alert"
+    ]
   }
 }

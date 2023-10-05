@@ -20,6 +20,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -216,5 +217,14 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
         ItemStack playerItemMainHand = pPlayer.getItemInHand(InteractionHand.MAIN_HAND);
         ItemStack playerItemOffHand = pPlayer.getItemInHand(InteractionHand.OFF_HAND);
         return playerItemMainHand.getItem() instanceof ItemDandoriCall || playerItemOffHand.getItem() instanceof ItemDandoriCall;
+    }
+
+    public boolean canAttack(LivingEntity pTarget)
+    {
+        if (pTarget instanceof Creeper) return false;
+        return pTarget != this.getOwner();
+    }
+    public boolean canAttackType(EntityType<?> pType) {
+        return pType != EntityType.CREEPER && super.canAttackType(pType);
     }
 }

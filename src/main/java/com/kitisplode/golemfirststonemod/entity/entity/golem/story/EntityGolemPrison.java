@@ -1,32 +1,40 @@
 package com.kitisplode.golemfirststonemod.entity.entity.golem.story;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.entity.entity.golem.legends.EntityGolemCobble;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowSoftGoal;
+import com.kitisplode.golemfirststonemod.entity.goal.action.MultiStageAttackGoalRanged;
+import com.kitisplode.golemfirststonemod.entity.goal.target.PrisonGolemTargetSpotlightGoal;
 import com.kitisplode.golemfirststonemod.sound.ModSounds;
 import com.kitisplode.golemfirststonemod.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiRecord;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
-import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.Path;
@@ -43,7 +51,7 @@ import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 
-public class EntityGolemPrison extends PathfinderMob implements Enemy, GeoEntity
+public class EntityGolemPrison extends AbstractGolemDandoriFollower implements IEntityWithDelayedMeleeAttack, IEntityDandoriFollower, GeoEntity
 {
     public static final ResourceLocation MODEL = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "geo/entity/golem/story/golem_prison.geo.json");
     public static final ResourceLocation TEXTURE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/entity/golem/story/golem_prison.png");
@@ -55,16 +63,19 @@ public class EntityGolemPrison extends PathfinderMob implements Enemy, GeoEntity
     private static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation.golem_prison.idle");
     private static final RawAnimation ANIMATION_WALK_DAMAGED = RawAnimation.begin().thenLoop("animation.golem_prison.walk_damaged");
     private static final RawAnimation ANIMATION_IDLE_DAMAGED = RawAnimation.begin().thenLoop("animation.golem_prison.idle_damaged");
+    private static final RawAnimation ANIMATION_ATTACK_WINDUP = RawAnimation.begin().thenPlayAndHold("animation.golem_prison.attack_windup");
+    private static final RawAnimation ANIMATION_ATTACK = RawAnimation.begin().thenPlayAndHold("animation.golem_prison.attack");
 
-    private static final EntityDataAccessor<Boolean> LIGHT_ON = SynchedEntityData.defineId(EntityGolemCobble.class, EntityDataSerializers.BOOLEAN);
-    private BlockPos deployPosition;
+    private static final EntityDataAccessor<Boolean> LIGHT_ON = SynchedEntityData.defineId(EntityGolemPrison.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(EntityGolemPrison.class, EntityDataSerializers.INT);
     private ArrayList<BlockPos> previousDeployPositions = new ArrayList<>();
 
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-    public EntityGolemPrison(EntityType<? extends PathfinderMob> pEntityType, Level pLevel)
+    public EntityGolemPrison(EntityType<? extends IronGolem> pEntityType, Level pLevel)
     {
         super(pEntityType, pLevel);
     }
+
 
     public static AttributeSupplier.Builder createAttributes()
     {
@@ -83,35 +94,38 @@ public class EntityGolemPrison extends PathfinderMob implements Enemy, GeoEntity
     @Override
     protected void registerGoals()
     {
-        // move to and attack current target goal
-        this.goalSelector.addGoal(2, new PrisonGolemFindNextDeployPositionGoal(this, 5, 10, ModTags.POIs.PATH_GOLEM_PRISON));
-        this.goalSelector.addGoal(3, new PrisonGolemMoveToDeployPositionGoal(this, 0.75f, 1.0f));
+        this.goalSelector.addGoal(0, new DandoriFollowHardGoal(this, 1.2,dandoriMoveRange, dandoriSeeRange));
+        this.goalSelector.addGoal(1, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
+
+        this.goalSelector.addGoal(2, new MultiStageAttackGoalRanged(this, 1.5, true, 6.0D, new int[]{22, 10}));
+        this.goalSelector.addGoal(3, new PrisonGolemFindNextDeployPositionGoal(this, 100, 200, ModTags.POIs.PATH_GOLEM_PRISON));
+        this.goalSelector.addGoal(4, new PrisonGolemMoveToDeployPositionGoal(this, 0.75f, 1.0f));
+
+        this.goalSelector.addGoal(5, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, 0));
 
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-        // target anything seen in the search light
+        this.targetSelector.addGoal(3, new PrisonGolemTargetSpotlightGoal<>(this, LivingEntity.class, 1, true, true, null));
+//        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 1, true, true, null));
     }
 
-    public void setDeployPosition(BlockPos bp)
+    public void tick()
     {
-        this.deployPosition = bp;
+        super.tick();
+        if (this.getTarget() != null && !this.getTarget().isAlive()) this.setTarget(null);
     }
-    public BlockPos getDeployPosition()
-    {
-        return this.deployPosition;
-    }
+
     @Override
     protected void defineSynchedData()
     {
         super.defineSynchedData();
         if (!this.entityData.hasItem(LIGHT_ON)) this.entityData.define(LIGHT_ON, true);
+        if (!this.entityData.hasItem(ATTACK_STATE)) this.entityData.define(ATTACK_STATE, 0);
     }
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        if (this.getDeployPosition() != null) pCompound.put("DeployPos", NbtUtils.writeBlockPos(this.getDeployPosition()));
     }
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        if (pCompound.contains("DeployPos")) this.setDeployPosition(NbtUtils.readBlockPos(pCompound.getCompound("DeployPos")));
     }
     public boolean getLightOn()
     {
@@ -120,6 +134,32 @@ public class EntityGolemPrison extends PathfinderMob implements Enemy, GeoEntity
     public void setLightOn(boolean pBoolean)
     {
         this.entityData.set(LIGHT_ON, pBoolean);
+    }
+    @Override
+    public int getAttackState()
+    {
+        return this.entityData.get(ATTACK_STATE);
+    }
+    @Override
+    public void setAttackState(int pInt)
+    {
+        this.entityData.set(ATTACK_STATE, pInt);
+    }
+    private float getAttackDamage() {
+        return (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE);
+    }
+    @Override
+    public boolean tryAttack()
+    {
+        if (this.getAttackState() != 2) return false;
+        if (getTarget() != null && this.getTarget().distanceToSqr(this) < Mth.square(3))
+        {
+            this.playSound(ModSounds.ENTITY_GOLEM_PRISON_ATTACK.get(), 1.0F, this.getRandom().nextFloat() * 0.4F + 0.8F);
+            getTarget().hurt(this.damageSources().mobAttack(this), getAttackDamage());
+//            getTarget().setDeltaMovement(getTarget().getDeltaMovement().scale(0.35d));
+            this.doEnchantDamageEffects(this, getTarget());
+        }
+        return true;
     }
 
     public boolean canSpawnSprintParticle() {
@@ -156,8 +196,19 @@ public class EntityGolemPrison extends PathfinderMob implements Enemy, GeoEntity
     {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 0, event ->
         {
-//            EntityGolemPrison pGolem = event.getAnimatable();
-            event.getController().setAnimationSpeed(0.50);
+            EntityGolemPrison pGolem = event.getAnimatable();
+            if (pGolem.getAttackState() > 0)
+            {
+                if (pGolem.getAttackState() == 1)
+                {
+                    event.getController().setAnimationSpeed(2.00);
+                    return event.setAndContinue(ANIMATION_ATTACK_WINDUP);
+                }
+                event.getController().setAnimationSpeed(1.00);
+                return event.setAndContinue(ANIMATION_ATTACK);
+            }
+            if (pGolem.getTarget() == null) event.getController().setAnimationSpeed(0.50);
+            else event.getController().setAnimationSpeed(1.00);
             if (getDeltaMovement().horizontalDistanceSqr() > 0.001D || event.isMoving())
                 return event.setAndContinue(ANIMATION_WALK);
             return event.setAndContinue(ANIMATION_IDLE);
@@ -201,8 +252,6 @@ public class EntityGolemPrison extends PathfinderMob implements Enemy, GeoEntity
         }
         @Override
         public void stop() {
-            Vec3 pos = this.golemPrison.getDeployPosition().getCenter();
-            this.golemPrison.setPos(pos.x(), this.golemPrison.getY(), pos.z());
             this.golemPrison.setDeployPosition(null);
             this.golemPrison.getNavigation().stop();
         }
@@ -217,10 +266,13 @@ public class EntityGolemPrison extends PathfinderMob implements Enemy, GeoEntity
                 }
                 else if (this.path == null || !this.golemPrison.getNavigation().isInProgress())
                 {
-                    this.golemPrison.getNavigation().setMaxVisitedNodesMultiplier(2.0f);
                     this.path = this.golemPrison.getNavigation().createPath(bp, 1);
                     if (this.path != null) this.golemPrison.getNavigation().moveTo(this.path, this.speed);
-                    this.golemPrison.getNavigation().resetMaxVisitedNodesMultiplier();
+                }
+                if (bp.distToCenterSqr(this.golemPrison.position()) <= Mth.square(this.proximityDistance))
+                {
+                    Vec3 pos = bp.getCenter();
+                    this.golemPrison.setPos(pos.x(), this.golemPrison.getY(), pos.z());
                 }
             }
         }
@@ -233,6 +285,8 @@ public class EntityGolemPrison extends PathfinderMob implements Enemy, GeoEntity
         private int waitTimer;
         private final EntityGolemPrison golemPrison;
         private final TagKey<PoiType> poiType;
+        private int currentMult = -1;
+        private float lookDir;
         public PrisonGolemFindNextDeployPositionGoal(EntityGolemPrison mob, int waitTimeMin, int waitTimeMax, TagKey<PoiType> poiType)
         {
             this.golemPrison = mob;
@@ -254,8 +308,30 @@ public class EntityGolemPrison extends PathfinderMob implements Enemy, GeoEntity
         @Override
         public void start()
         {
+            this.currentMult = this.golemPrison.getRandom().nextIntBetweenInclusive(0,1);
+            if (this.currentMult == 0) this.currentMult = -1;
+            this.lookDir = 0;
             this.waitTimer = this.golemPrison.getRandom().nextIntBetweenInclusive(this.waitTimeMin, this.waitTimeMax);
             this.golemPrison.setDeployPosition(this.findNewDeployPosition());
+        }
+        @Override
+        public void tick()
+        {
+//            this.golemPrison.setYHeadRot(this.rotateTowards(this.golemPrison.getYHeadRot(), this.lookDir, 10));
+            this.golemPrison.setYHeadRot(Mth.lerp(0.3f, this.golemPrison.getYHeadRot(), this.golemPrison.getYRot() + 90 * this.currentMult));
+            if (this.waitTimer % 30 == 0)
+            {
+//                this.lookDir = this.golemPrison.getYRot() + 45 * this.currentMult;
+//                if (this.lookDir >= 360) this.lookDir -= 360;
+//                else if (this.lookDir < 0) this.lookDir += 360;
+                if (this.waitTimer > 25) this.golemPrison.playSound(ModSounds.ENTITY_GOLEM_PRISON_SEARCH.get(), 1.0f, this.golemPrison.getRandom().nextFloat() * 0.4F + 0.8F);
+                else
+                {
+                    this.currentMult = 0;
+                    this.golemPrison.playSound(ModSounds.ENTITY_GOLEM_PRISON_CONTINUE.get(), 1.0f, this.golemPrison.getRandom().nextFloat() * 0.4F + 0.8F);
+                }
+                this.currentMult *= -1;
+            }
         }
         private BlockPos findNewDeployPosition()
         {
@@ -269,6 +345,7 @@ public class EntityGolemPrison extends PathfinderMob implements Enemy, GeoEntity
             })).toList();
             if (list.size() == 2) return list.get(1);
             else if (list.size() == 1) return list.get(0);
+            else if (list.size() == 0) return null;
             int i = 0;
             for (; i < list.size(); i++)
             {

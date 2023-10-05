@@ -152,6 +152,10 @@
   "sound.golemfirststonemod.entity_golem_prison_step": "Prison Golem step",
   "sound.golemfirststonemod.entity_golem_prison_hurt": "Prison Golem hurt",
   "sound.golemfirststonemod.entity_golem_prison_death": "Prison Golem snarl",
+  "sound.golemfirststonemod.entity_golem_prison_search": "Prison Golem groan",
+  "sound.golemfirststonemod.entity_golem_prison_continue": "Prison Golem huff",
+  "sound.golemfirststonemod.entity_golem_prison_attack": "Prison Golem attack",
+  "sound.golemfirststonemod.entity_golem_prison_alert": "Prison Golem bellow",
 
   "creativetab.golemfirststonemod": "Golem Dandori",
   "creativetab.golemfirststonemodagent": "Golem Dandori: Agent"
