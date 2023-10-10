@@ -2,6 +2,7 @@ package com.kitisplode.golemfirststonemod.entity.entity.golem.story;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.AbstractGolemDandoriFollower;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.dungeons.EntityGolemKey;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityDandoriFollower;
 import com.kitisplode.golemfirststonemod.entity.entity.interfaces.IEntityWithDelayedMeleeAttack;
 import com.kitisplode.golemfirststonemod.entity.goal.action.DandoriFollowHardGoal;
@@ -228,6 +229,9 @@ public class EntityGolemPrison extends AbstractGolemDandoriFollower implements I
         private final double proximityDistance;
         private final double speed;
         private Path path;
+        private Vec3 previousPos = null;
+        private int stayPutTime = 20;
+        private int stayPutTimer = 0;
         public PrisonGolemMoveToDeployPositionGoal(EntityGolemPrison mob, double proximityDistance, double speed)
         {
             this.golemPrison = mob;
@@ -243,8 +247,16 @@ public class EntityGolemPrison extends AbstractGolemDandoriFollower implements I
         }
         public boolean canContinueToUse()
         {
+            if (this.previousPos != null && this.previousPos.equals(this.golemPrison.position()))
+            {
+                if (--stayPutTimer <= 0) return false;
+            }
+            else stayPutTimer = stayPutTime;
+            this.previousPos = this.golemPrison.position();
             BlockPos bp = this.golemPrison.getDeployPosition();
             return bp != null && (bp.distToCenterSqr(this.golemPrison.position()) > Mth.square(this.proximityDistance));
+//            return (bp != null && bp.distToCenterSqr(this.golemPrison.position()) > Mth.square(this.proximityDistance)
+//                    || (this.path != null && !this.golemPrison.getNavigation().isInProgress()));
         }
         public void start()
         {
@@ -254,6 +266,7 @@ public class EntityGolemPrison extends AbstractGolemDandoriFollower implements I
         public void stop() {
             this.golemPrison.setDeployPosition(null);
             this.golemPrison.getNavigation().stop();
+            this.previousPos = null;
         }
         @Override
         public void tick() {
@@ -352,10 +365,14 @@ public class EntityGolemPrison extends AbstractGolemDandoriFollower implements I
                 BlockPos pos = list.get(i);
                 if (!this.golemPrison.previousDeployPositions.contains(pos))
                 {
+                    if (Math.abs(pos.getY() - this.golemPrison.blockPosition().getY()) > 3) continue;
+//                    Path path = this.golemPrison.getNavigation().createPath(pos, 1);
+//                    if (path == null || !path.canReach()) continue;
                     this.golemPrison.previousDeployPositions.add(0, pos);
                     break;
                 }
             }
+            if (i >= list.size()) return null;
             return list.get(i);
         }
     }

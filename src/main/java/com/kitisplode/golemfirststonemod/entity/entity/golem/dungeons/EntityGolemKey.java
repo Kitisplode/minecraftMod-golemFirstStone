@@ -18,6 +18,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -82,6 +83,7 @@ public class EntityGolemKey extends AbstractGolemDandoriFollower implements IEnt
     }
     public void setScared(boolean pBoolean)
     {
+        if (pBoolean) this.playSound(ModSounds.ENTITY_GOLEM_KEY_PANIC.get(), 1, this.getRandom().nextFloat() * 0.4F + 0.8F);
         this.entityData.set(SCARED, pBoolean);
     }
 
@@ -165,6 +167,10 @@ public class EntityGolemKey extends AbstractGolemDandoriFollower implements IEnt
             }
         }
         super.remove(pReason);
+    }
+
+    protected SoundEvent getAmbientSound() {
+        return null;
     }
 
     public ResourceLocation getModelLocation()

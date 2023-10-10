@@ -113,7 +113,7 @@ public class EntityGolemMossy extends AbstractGolemDandoriFollower implements Ge
     @Override
     protected void registerGoals()
     {
-        this.attackGoal = new MultiStageAttackGoalRanged(this, 1.0, true, 4.0D, new int[]{80, 20});
+        this.attackGoal = new MultiStageAttackGoalRanged(this, 1.0, true, 4.0D, new int[]{100, 20});
 
         this.goalSelector.addGoal(0, new DandoriFollowHardGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));
         this.goalSelector.addGoal(1, new DandoriFollowSoftGoal(this, 1.2, dandoriMoveRange, dandoriSeeRange));

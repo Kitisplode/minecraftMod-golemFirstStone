@@ -149,6 +149,7 @@
   "sound.golemfirststonemod.entity_golem_key_unlock": "Key clicking",
   "sound.golemfirststonemod.entity_golem_key_lock": "Key clicking",
   "sound.golemfirststonemod.entity_golem_key_happy": "Key Golem coo",
+  "sound.golemfirststonemod.entity_golem_key_panic": "Key Golem panic",
   "sound.golemfirststonemod.entity_golem_prison_step": "Prison Golem step",
   "sound.golemfirststonemod.entity_golem_prison_hurt": "Prison Golem hurt",
   "sound.golemfirststonemod.entity_golem_prison_death": "Prison Golem snarl",

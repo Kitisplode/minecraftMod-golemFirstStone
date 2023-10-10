@@ -1,0 +1,15 @@
+{
+  "name": "golemfirststonemod:prison/start_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "golemfirststonemod:prison/watchtower",
+        "processors": "minecraft:mossify_20_percent",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

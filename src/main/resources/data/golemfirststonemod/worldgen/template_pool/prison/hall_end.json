@@ -1,0 +1,15 @@
+{
+  "name": "golemfirststonemod:prison/hall_end",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "golemfirststonemod:prison/hall_end",
+        "processors": "minecraft:mossify_20_percent",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

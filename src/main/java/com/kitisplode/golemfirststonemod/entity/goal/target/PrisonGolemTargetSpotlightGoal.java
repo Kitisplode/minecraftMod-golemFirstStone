@@ -42,6 +42,10 @@ public class PrisonGolemTargetSpotlightGoal<T extends LivingEntity> extends Near
         this.mob.playSound(ModSounds.ENTITY_GOLEM_PRISON_ALERT.get(), 1.25f, 1.0f);
     }
 
+    protected AABB getTargetSearchArea(double pTargetDistance) {
+        return this.mob.getBoundingBox().inflate(pTargetDistance, 1.0D, pTargetDistance);
+    }
+
     protected void findTarget() {
 //        if (this.targetType != Player.class && this.targetType != ServerPlayer.class)
         {

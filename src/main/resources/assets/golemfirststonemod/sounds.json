@@ -76,6 +76,13 @@
       "golemfirststonemod:entity_golem_key_happy"
     ]
   },
+  "entity_golem_key_panic":
+  {
+    "subtitle": "sound.golemfirststonemod.entity_golem_key_panic",
+    "sounds": [
+      "golemfirststonemod:entity_golem_key_panic"
+    ]
+  },
   "entity_golem_prison_step":
   {
     "subtitle": "sound.golemfirststonemod.entity_golem_prison_step",

@@ -1,0 +1,19 @@
+{
+  "structures": [
+    {
+      "structure": "golemfirststonemod:structure_prison",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 1642136953,
+    "spacing": 128,
+    "separation": 100,
+    "type": "minecraft:random_spread",
+    "frequency": 0.2,
+    "exclusion_zone": {
+      "chunk_count": 10,
+      "other_set": "minecraft:villages"
+    }
+  }
+}

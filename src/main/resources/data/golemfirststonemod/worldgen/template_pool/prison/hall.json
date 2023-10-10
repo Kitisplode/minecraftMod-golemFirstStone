@@ -1,0 +1,33 @@
+{
+  "name": "golemfirststonemod:prison/hall",
+  "fallback": "golemfirststonemod:prison/hall_end",
+  "elements": [
+    {
+      "weight": 2,
+      "element": {
+        "location": "golemfirststonemod:prison/hall_small",
+        "processors": "minecraft:mossify_20_percent",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "golemfirststonemod:prison/hall_trading",
+        "processors": "minecraft:mossify_20_percent",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "golemfirststonemod:prison/hall_corner",
+        "processors": "minecraft:mossify_20_percent",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

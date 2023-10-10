@@ -27,24 +27,16 @@ public class PassiveAvoidEntityGoal<T extends LivingEntity> extends Goal
     @Nullable
     protected Path path;
     protected final PathNavigation pathNav;
-    /** Class of entity this behavior seeks to avoid */
     protected final Class<T> avoidClass;
     protected final Predicate<LivingEntity> avoidPredicate;
     protected final Predicate<LivingEntity> predicateOnAvoidEntity;
     private final TargetingConditions avoidEntityTargeting;
 
-    /**
-     * Goal that helps mobs avoid mobs of a specific class
-     */
     public PassiveAvoidEntityGoal(PathfinderMob pMob, Class<T> pEntityClassToAvoid, float pMaxDistance, double pWalkSpeedModifier, double pSprintSpeedModifier) {
         this(pMob, pEntityClassToAvoid, (p_25052_) -> {
             return true;
         }, pMaxDistance, pWalkSpeedModifier, pSprintSpeedModifier, EntitySelector.NO_CREATIVE_OR_SPECTATOR::test);
     }
-
-    /**
-     * Goal that helps mobs avoid mobs of a specific class
-     */
     public PassiveAvoidEntityGoal(PathfinderMob pMob, Class<T> pEntityClassToAvoid, Predicate<LivingEntity> pAvoidPredicate, float pMaxDistance, double pWalkSpeedModifier, double pSprintSpeedModifier, Predicate<LivingEntity> pPredicateOnAvoidEntity) {
         this.mob = pMob;
         this.avoidClass = pEntityClassToAvoid;
@@ -57,20 +49,11 @@ public class PassiveAvoidEntityGoal<T extends LivingEntity> extends Goal
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
         this.avoidEntityTargeting = TargetingConditions.forNonCombat().range(pMaxDistance).selector(pPredicateOnAvoidEntity.and(pAvoidPredicate));
     }
-
-    /**
-     * Goal that helps mobs avoid mobs of a specific class
-     */
     public PassiveAvoidEntityGoal(PathfinderMob pMob, Class<T> pEntityClassToAvoid, float pMaxDistance, double pWalkSpeedModifier, double pSprintSpeedModifier, Predicate<LivingEntity> pPredicateOnAvoidEntity) {
         this(pMob, pEntityClassToAvoid, (p_25049_) -> {
             return true;
         }, pMaxDistance, pWalkSpeedModifier, pSprintSpeedModifier, pPredicateOnAvoidEntity);
     }
-
-    /**
-     * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
-     * method as well.
-     */
     public boolean canUse() {
         this.toAvoid = this.mob.level().getNearestEntity(this.mob.level().getEntitiesOfClass(this.avoidClass, this.mob.getBoundingBox().inflate((double)this.maxDist, 3.0D, (double)this.maxDist), (p_148078_) -> {
             return true;
@@ -89,17 +72,9 @@ public class PassiveAvoidEntityGoal<T extends LivingEntity> extends Goal
             }
         }
     }
-
-    /**
-     * Returns whether an in-progress EntityAIBase should continue executing
-     */
     public boolean canContinueToUse() {
         return !this.pathNav.isDone();
     }
-
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
     public void start() {
         this.pathNav.moveTo(this.path, this.walkSpeedModifier);
         if (this.mob instanceof EntityGolemKey keyGolem)
@@ -107,10 +82,6 @@ public class PassiveAvoidEntityGoal<T extends LivingEntity> extends Goal
             keyGolem.setScared(true);
         }
     }
-
-    /**
-     * Reset the task's internal state. Called when this task is interrupted by another one
-     */
     public void stop() {
         this.toAvoid = null;
         if (this.mob instanceof EntityGolemKey keyGolem)
@@ -118,10 +89,6 @@ public class PassiveAvoidEntityGoal<T extends LivingEntity> extends Goal
             keyGolem.setScared(false);
         }
     }
-
-    /**
-     * Keep ticking a continuous task that has already been started
-     */
     public void tick() {
         if (this.mob.distanceToSqr(this.toAvoid) < Mth.square(this.maxDist / 2)) {
             this.mob.getNavigation().setSpeedModifier(this.sprintSpeedModifier);
