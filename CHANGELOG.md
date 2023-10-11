@@ -121,3 +121,8 @@
     + Added Lock Block
     + Fixed issue with the Agent Screen breaking the server version of the mod
     + Fixed issue with custom animations affecting all entities of the same type
+
+# 0.0.13
+    + Added Prison Golem
+    + Added Prison Golem path node block (with WIP texture lol)
+    + Added (WIP) Prison structure

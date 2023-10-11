@@ -1,6 +1,7 @@
 package com.kitisplode.golemfirststonemod.util;
 
 import com.kitisplode.golemfirststonemod.entity.entity.golem.*;
+import com.kitisplode.golemfirststonemod.entity.entity.golem.dungeons.EntityGolemKey;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstBrick;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstDiorite;
 import com.kitisplode.golemfirststonemod.entity.entity.golem.first.EntityGolemFirstOak;
@@ -27,7 +28,7 @@ public class DataDandoriCount
     public enum FOLLOWER_TYPE {FIRST_STONE, FIRST_OAK, FIRST_BRICK, FIRST_DIORITE,
         IRON, COBBLE, GRINDSTONE,
         SNOW, PLANK,
-        MOSSY, COPPER, TUFF, AGENT,
+        MOSSY, COPPER, TUFF, AGENT, KEY,
         PAWN_RED, PAWN_YELLOW, PAWN_BLUE};
     private Map<FOLLOWER_TYPE, Integer> followerCounts = new HashMap<>();
     private int totalCount = 0;
@@ -56,6 +57,7 @@ public class DataDandoriCount
             if (entity instanceof EntityGolemTuff) key = FOLLOWER_TYPE.TUFF;
             if (entity instanceof EntityGolemCopper) key = FOLLOWER_TYPE.COPPER;
             if (entity instanceof EntityGolemAgent) key = FOLLOWER_TYPE.AGENT;
+            if (entity instanceof EntityGolemKey) key = FOLLOWER_TYPE.KEY;
             if (entity instanceof EntityGolemFirstStone) key = FOLLOWER_TYPE.FIRST_STONE;
             if (entity instanceof EntityGolemFirstOak) key = FOLLOWER_TYPE.FIRST_OAK;
             if (entity instanceof EntityGolemFirstBrick) key = FOLLOWER_TYPE.FIRST_BRICK;
@@ -127,6 +129,7 @@ public class DataDandoriCount
         if (type == FOLLOWER_TYPE.TUFF && entity instanceof EntityGolemTuff) return true;
         if (type == FOLLOWER_TYPE.COPPER && entity instanceof EntityGolemCopper) return true;
         if (type == FOLLOWER_TYPE.AGENT && entity instanceof EntityGolemAgent) return true;
+        if (type == FOLLOWER_TYPE.KEY && entity instanceof EntityGolemKey) return true;
         if (type == FOLLOWER_TYPE.FIRST_STONE && entity instanceof EntityGolemFirstStone) return true;
         if (type == FOLLOWER_TYPE.FIRST_OAK && entity instanceof EntityGolemFirstOak) return true;
         if (type == FOLLOWER_TYPE.FIRST_BRICK && entity instanceof EntityGolemFirstBrick) return true;

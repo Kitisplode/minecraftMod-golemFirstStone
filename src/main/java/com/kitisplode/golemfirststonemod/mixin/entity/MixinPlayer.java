@@ -39,6 +39,7 @@ public abstract class MixinPlayer extends LivingEntity implements IEntityWithDan
     private static final EntityDataAccessor<Integer> DANDORI_COPPER = SynchedEntityData.defineId(MixinPlayer.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DANDORI_TUFF = SynchedEntityData.defineId(MixinPlayer.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DANDORI_AGENT = SynchedEntityData.defineId(MixinPlayer.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DANDORI_KEY = SynchedEntityData.defineId(MixinPlayer.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DANDORI_FIRST_STONE = SynchedEntityData.defineId(MixinPlayer.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DANDORI_FIRST_OAK = SynchedEntityData.defineId(MixinPlayer.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DANDORI_FIRST_BRICK = SynchedEntityData.defineId(MixinPlayer.class, EntityDataSerializers.INT);
@@ -71,6 +72,7 @@ public abstract class MixinPlayer extends LivingEntity implements IEntityWithDan
         if (!this.entityData.hasItem(DANDORI_COPPER)) this.entityData.define(DANDORI_COPPER, 0);
         if (!this.entityData.hasItem(DANDORI_TUFF)) this.entityData.define(DANDORI_TUFF, 0);
         if (!this.entityData.hasItem(DANDORI_AGENT)) this.entityData.define(DANDORI_AGENT, 0);
+        if (!this.entityData.hasItem(DANDORI_KEY)) this.entityData.define(DANDORI_KEY, 0);
         if (!this.entityData.hasItem(DANDORI_FIRST_STONE)) this.entityData.define(DANDORI_FIRST_STONE, 0);
         if (!this.entityData.hasItem(DANDORI_FIRST_OAK)) this.entityData.define(DANDORI_FIRST_OAK, 0);
         if (!this.entityData.hasItem(DANDORI_FIRST_BRICK)) this.entityData.define(DANDORI_FIRST_BRICK, 0);
@@ -113,6 +115,7 @@ public abstract class MixinPlayer extends LivingEntity implements IEntityWithDan
         this.setTrackedInt(DANDORI_COPPER, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.COPPER));
         this.setTrackedInt(DANDORI_TUFF, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.TUFF));
         this.setTrackedInt(DANDORI_AGENT, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.AGENT));
+        this.setTrackedInt(DANDORI_KEY, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.KEY));
         this.setTrackedInt(DANDORI_FIRST_STONE, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.FIRST_STONE));
         this.setTrackedInt(DANDORI_FIRST_OAK, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.FIRST_OAK));
         this.setTrackedInt(DANDORI_FIRST_BRICK, dandoriCount.getFollowerCount(DataDandoriCount.FOLLOWER_TYPE.FIRST_BRICK));
@@ -184,6 +187,10 @@ public abstract class MixinPlayer extends LivingEntity implements IEntityWithDan
     public int getDandoriCountAgent()
     {
         return this.entityData.get(DANDORI_AGENT);
+    }
+    public int getDandoriCountKey()
+    {
+        return this.entityData.get(DANDORI_KEY);
     }
     public int getDandoriCountFirstStone()
     {

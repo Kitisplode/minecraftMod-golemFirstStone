@@ -25,6 +25,7 @@ public class HudDandoriCount implements IGuiOverlay
     private static final ResourceLocation GOLEM_TUFF = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_tuff.png");
     private static final ResourceLocation GOLEM_COPPER = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_copper.png");
     private static final ResourceLocation GOLEM_AGENT = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_agent.png");
+    private static final ResourceLocation GOLEM_KEY = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/golem_key.png");
     private static final ResourceLocation FIRST_STONE = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_stone.png");
     private static final ResourceLocation FIRST_OAK = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_oak.png");
     private static final ResourceLocation FIRST_BRICK = new ResourceLocation(GolemFirstStoneMod.MOD_ID, "textures/hud/dandori/first_brick.png");
@@ -58,18 +59,16 @@ public class HudDandoriCount implements IGuiOverlay
         int copper = player.getDandoriCountCopper();
         int tuff = player.getDandoriCountTuff();
         int agent = player.getDandoriCountAgent();
+        int key = player.getDandoriCountKey();
         int firstStone = player.getDandoriCountFirstStone();
         int firstOak = player.getDandoriCountFirstOak();
         int firstBrick = player.getDandoriCountFirstBrick();
         int firstDiorite = player.getDandoriCountFirstDiorite();
-
-        int[] golemCounts = {firstStone, firstOak, firstBrick, firstDiorite, iron, cobble, grindstone, snow, plank, mossy, copper, tuff, agent, red, yellow, blue};
-
-        int golemTotal = 0;
+        int[] golemCounts = {firstStone, firstOak, firstBrick, firstDiorite, iron, cobble, grindstone, snow, plank, mossy, copper, tuff, agent, key, red, yellow, blue};
 
         DataDandoriCount.FOLLOWER_TYPE currentType = player.getDandoriCurrentType();
 
-        final int perRow = 3;
+        final int perRow = 84;
         final int start_x = 12;//width / 2 - 90;
         int draw_x = start_x;
         int draw_y = (int)((float)height * 0.95f);
@@ -94,20 +93,17 @@ public class HudDandoriCount implements IGuiOverlay
             if (type == DataDandoriCount.FOLLOWER_TYPE.COPPER) drawPikCount(guiGraphics, draw_x-4, draw_y, GOLEM_COPPER, 16,16, golemCounts[i], isCurrentType,0,-4, mc.font, 16,0, color);
             if (type == DataDandoriCount.FOLLOWER_TYPE.TUFF) drawPikCount(guiGraphics, draw_x, draw_y, GOLEM_TUFF, 8,8, golemCounts[i], isCurrentType,-4,-4, mc.font, 12,0, color);
             if (type == DataDandoriCount.FOLLOWER_TYPE.AGENT) drawPikCount(guiGraphics, draw_x, draw_y, GOLEM_AGENT, 8,8, golemCounts[i], isCurrentType,-4,-4, mc.font, 12,0, color);
+            if (type == DataDandoriCount.FOLLOWER_TYPE.KEY) drawPikCount(guiGraphics, draw_x, draw_y-8, GOLEM_KEY, 8,16, golemCounts[i], isCurrentType,-4,-4, mc.font, 12,8, color);
             if (type == DataDandoriCount.FOLLOWER_TYPE.PAWN_RED) drawPikCount(guiGraphics, draw_x, draw_y, PIK_RED, 8,8, golemCounts[i], isCurrentType,-4,-4, mc.font, 12,0, color);
             if (type == DataDandoriCount.FOLLOWER_TYPE.PAWN_YELLOW) drawPikCount(guiGraphics, draw_x-4, draw_y, PIK_YELLOW, 16,16, golemCounts[i], isCurrentType,0,-4, mc.font, 16,0, color);
             if (type == DataDandoriCount.FOLLOWER_TYPE.PAWN_BLUE) drawPikCount(guiGraphics, draw_x, draw_y, PIK_BLUE, 8,8, golemCounts[i], isCurrentType,-4,-4, mc.font, 12,0, color);
 
-            if (++golemTotal >= perRow)
+            if (i < 4) draw_x += 42;
+            else draw_x += 32;
+            if (draw_x >= perRow)
             {
                 draw_x = start_x;
                 draw_y -= 18;
-                golemTotal = 0;
-            }
-            else
-            {
-                if (i < 4) draw_x += 42;
-                else draw_x += 32;
             }
         }
     }
