@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "~~~",
+    "~#~",
+    "~~~"
+  ],
+  "key": {
+    "#": {
+      "item": "golemfirststonemod:item_flame_of_creation_blue"
+    },
+    "~": {
+      "item": "minecraft:clay_ball"
+    }
+  },
+  "result": {
+    "item": "golemfirststonemod:block_head_clay"
+  }
+
+}

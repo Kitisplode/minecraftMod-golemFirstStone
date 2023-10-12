@@ -1,10 +1,7 @@
 package com.kitisplode.golemfirststonemod.block;
 
 import com.kitisplode.golemfirststonemod.GolemFirstStoneMod;
-import com.kitisplode.golemfirststonemod.block.golem_head.BlockHeadBrick;
-import com.kitisplode.golemfirststonemod.block.golem_head.BlockHeadDiorite;
-import com.kitisplode.golemfirststonemod.block.golem_head.BlockHeadOak;
-import com.kitisplode.golemfirststonemod.block.golem_head.BlockHeadStone;
+import com.kitisplode.golemfirststonemod.block.golem_head.*;
 import com.kitisplode.golemfirststonemod.item.ModItems;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -49,6 +46,9 @@ public class ModBlocks
             () -> new BlockHeadDiorite(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).noOcclusion()));
     public static final RegistryObject<Block> BLOCK_CORE_DIORITE = registerBlock("block_core_diorite",
             () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.POLISHED_DIORITE), ConstantInt.of(50)));
+    public static final RegistryObject<Block> BLOCK_HEAD_CLAY = registerBlock("block_head_clay",
+            () -> new BlockHeadClay(BlockBehaviour.Properties.copy(Blocks.CLAY).noOcclusion()));
+
     public static final RegistryObject<Block> BLOCK_VILLAGER_STONE = registerBlock("block_villager_stone",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE)));
     public static final RegistryObject<Block> BLOCK_VILLAGER_OAK = registerBlock("block_villager_oak",

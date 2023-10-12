@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "golemfirststonemod:block/block_head_clay_front",
+    "side": "golemfirststonemod:block/block_head_clay_side",
+    "top": "minecraft:block/clay",
+    "particle": "minecraft:block/clay"
+  }
+}

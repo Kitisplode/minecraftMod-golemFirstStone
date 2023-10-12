@@ -20,6 +20,7 @@ public class ModCreativeModTabs
                     .title(Component.translatable("creativetab.golemfirststonemod"))        // Fetch the tab name translation
                     .displayItems((pParameters, pOutput) -> {                                    // List included items
                         // Blocks
+                        pOutput.accept(ModBlocks.BLOCK_HEAD_CLAY.get());
                         pOutput.accept(ModBlocks.BLOCK_HEAD_STONE.get());
                         pOutput.accept(ModBlocks.BLOCK_CORE_STONE.get());
                         pOutput.accept(ModBlocks.BLOCK_HEAD_OAK.get());
