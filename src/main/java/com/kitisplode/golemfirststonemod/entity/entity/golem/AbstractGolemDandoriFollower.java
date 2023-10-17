@@ -221,11 +221,12 @@ abstract public class AbstractGolemDandoriFollower extends IronGolem implements 
 
     public boolean canAttack(LivingEntity pTarget)
     {
+        if (pTarget == this.getOwner()) return false;
         if (pTarget instanceof IEntityDandoriFollower dandoriFollower && dandoriFollower.getOwner() == this.getOwner()) return false;
-        if (pTarget instanceof Creeper) return false;
-        return pTarget != this.getOwner();
+        return super.canAttack(pTarget);
     }
     public boolean canAttackType(EntityType<?> pType) {
-        return pType != EntityType.CREEPER && super.canAttackType(pType);
+        if (pType == EntityType.CREEPER) return false;
+        return pType != EntityType.GHAST;
     }
 }

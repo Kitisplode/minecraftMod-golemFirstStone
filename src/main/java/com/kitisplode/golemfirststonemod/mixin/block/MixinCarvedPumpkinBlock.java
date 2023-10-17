@@ -39,6 +39,17 @@ public abstract class MixinCarvedPumpkinBlock extends HorizontalDirectionalBlock
             Predicate<BlockState> spawnBlocKPredicate = blockState -> blockState != null
                     && (blockState.is(Blocks.CARVED_PUMPKIN)
                     || blockState.is(Blocks.JACK_O_LANTERN));
+            patternList.add(new GolemPatternIron(spawnBlocKPredicate));
+            patternList.add(new GolemPatternSnow(spawnBlocKPredicate));
+            patternList.add(new GolemPatternCobble(spawnBlocKPredicate));
+            patternList.add(new GolemPatternPlank(spawnBlocKPredicate));
+            patternList.add(new GolemPatternMossy(spawnBlocKPredicate));
+            patternList.add(new GolemPatternGrindstone(spawnBlocKPredicate));
+            patternList.add(new GolemPatternTuff(spawnBlocKPredicate));
+            patternList.add(new GolemPatternCopper(spawnBlocKPredicate));
+            patternList.add(new GolemPatternAgent(spawnBlocKPredicate));
+            patternList.add(new GolemPatternKey(spawnBlocKPredicate));
+
             patternList.add(new GolemPatternTerracotta(spawnBlocKPredicate));
             patternList.add(new GolemPatternTerracottaBlue(spawnBlocKPredicate));
             patternList.add(new GolemPatternTerracottaPink(spawnBlocKPredicate));
